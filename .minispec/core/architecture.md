@@ -16,7 +16,7 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `browser.ts` — `createBrowserManager()`: opens the persistent Playwright context on the configured profile on first use (Edge, then Chrome, unless a channel is set) and reuses it, one operation at a time; a headed request (login) relaunches it with a window; a closed window means a new launch on the next call. With no system browser, it starts the Chromium download in the background and answers `BrowserDownloadingError` until it ends (ADR-001).
 - `chromiumInstaller.ts` — `installChromium()`: `playwright-core`'s CLI from `node_modules`, its output on stderr.
 - `sessionCookies.ts` — the session cookies Chromium drops on close, saved in the profile and restored on launch (ADR-007).
-- `moodle/session.ts` — whether a page has a real user logged in (`notloggedin` body class, `M.cfg.userId`, a logout link; never visible texts), `openSitePage()` for tools (throws `NotLoggedInError`, which names `login`).
+- `moodle/session.ts` — whether a page has a real user logged in (`notloggedin` body class, `M.cfg.userId`, login and logout links to tell a guest; never visible texts), `openSitePage()` for tools (throws `NotLoggedInError`, which names `login`).
 - `moodle/ajax.ts` — `callService()`: one of Moodle's AJAX services, called from a kept logged-in tab with its `sesskey` (ADR-008); a stale tab is replaced, a session error becomes `NotLoggedInError`.
 - `instructions.ts` — the server's usage rules for any client.
 - `moodle/site.ts` — `findMoodleSite()`: a site's base URL from any of its pages, fetched without the browser (`M.cfg.wwwroot`).

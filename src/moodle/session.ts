@@ -14,8 +14,10 @@ export interface SessionFacts {
   notLoggedIn: boolean;
   /** `M.cfg.userId`: 0 when logged out; `null` on a page that isn't Moodle's (an SSO provider's). */
   userId: number | null;
-  /** A logout link: present for a real user, absent for a guest, who also has a user id. */
+  /** A logout link, in the user menu of a real user's pages. */
   hasLogoutLink: boolean;
+  /** A login link: a guest (who also has a user id) gets one and no logout link. */
+  hasLoginLink: boolean;
 }
 
 export function readSessionFacts(page: Page): Promise<SessionFacts> {
@@ -30,6 +32,7 @@ export function readSessionFacts(page: Page): Promise<SessionFacts> {
       notLoggedIn: g.document.body?.classList.contains("notloggedin") ?? true,
       userId: typeof userId === "number" ? userId : null,
       hasLogoutLink: g.document.querySelector('a[href*="/login/logout.php"]') !== null,
+      hasLoginLink: g.document.querySelector('a[href*="/login/index.php"]') !== null,
     };
   });
 }
@@ -38,7 +41,10 @@ export function readSessionFacts(page: Page): Promise<SessionFacts> {
 export function isLoggedIn(url: string, siteUrl: string, facts: SessionFacts): boolean {
   if (!url.startsWith(siteUrl)) return false;
   if (url.startsWith(new URL("login/", siteUrl).href)) return false;
-  return !facts.notLoggedIn && (facts.userId ?? 0) > 0 && facts.hasLogoutLink;
+  // Pages without the navigation bar (the assignment grader) have neither link (confirmed empirically,
+  // Moodle 5.2): only a login link without a logout one means a guest.
+  const guest = facts.hasLoginLink && !facts.hasLogoutLink;
+  return !facts.notLoggedIn && (facts.userId ?? 0) > 0 && !guest;
 }
 
 /** Whether `page`, as it is now, shows the site with a real user logged in. */

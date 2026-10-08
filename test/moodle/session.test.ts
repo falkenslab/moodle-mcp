@@ -7,17 +7,21 @@ const browser = await launchTestBrowser();
 after(() => browser?.close());
 
 describe("isLoggedIn", () => {
-  const user = { notLoggedIn: false, userId: 5, hasLogoutLink: true };
+  const user = { notLoggedIn: false, userId: 5, hasLogoutLink: true, hasLoginLink: false };
 
   it("accepts a site page with a real user", () => {
     assert.equal(isLoggedIn(`${SITE}my/`, SITE, user), true);
   });
 
+  it("accepts a page without the navigation bar, like the assignment grader", () => {
+    assert.equal(isLoggedIn(`${SITE}mod/assign/view.php?id=3&action=grader`, SITE, { ...user, hasLogoutLink: false }), true);
+  });
+
   it("rejects the login page, other sites, logged-out pages and guests", () => {
     assert.equal(isLoggedIn(`${SITE}login/index.php`, SITE, user), false);
     assert.equal(isLoggedIn("https://sso.example.org/", SITE, user), false);
-    assert.equal(isLoggedIn(`${SITE}my/`, SITE, { notLoggedIn: true, userId: 0, hasLogoutLink: false }), false);
-    assert.equal(isLoggedIn(`${SITE}my/`, SITE, { notLoggedIn: false, userId: 1, hasLogoutLink: false }), false);
+    assert.equal(isLoggedIn(`${SITE}my/`, SITE, { notLoggedIn: true, userId: 0, hasLogoutLink: false, hasLoginLink: true }), false);
+    assert.equal(isLoggedIn(`${SITE}my/`, SITE, { notLoggedIn: false, userId: 1, hasLogoutLink: false, hasLoginLink: true }), false);
     assert.equal(isLoggedIn(`${SITE}my/`, SITE, { ...user, userId: null }), false);
   });
 });
@@ -33,8 +37,8 @@ describe("readSessionFacts", { skip: !browser && "no system browser" }, () => {
   }
 
   it("reads a logged-in page, a login page and a page that isn't Moodle's", async () => {
-    assert.deepEqual(await factsOf(moodlePage({ userId: 7 })), { notLoggedIn: false, userId: 7, hasLogoutLink: true });
-    assert.deepEqual(await factsOf(moodlePage({ userId: 0 })), { notLoggedIn: true, userId: 0, hasLogoutLink: false });
+    assert.deepEqual(await factsOf(moodlePage({ userId: 7 })), { notLoggedIn: false, userId: 7, hasLogoutLink: true, hasLoginLink: false });
+    assert.deepEqual(await factsOf(moodlePage({ userId: 0 })), { notLoggedIn: true, userId: 0, hasLogoutLink: false, hasLoginLink: true });
     assert.equal((await factsOf("<html><body>An identity provider</body></html>")).userId, null);
   });
 });
