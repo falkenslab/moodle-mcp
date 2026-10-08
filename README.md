@@ -4,7 +4,7 @@ An [MCP](https://modelcontextprotocol.io) server that works a Moodle site throug
 
 You log in yourself, in a browser window the server opens: it never sees or stores your password. Your session is kept in a browser profile folder outside the server.
 
-Status: early development. Today it has `login`, `list_courses` and `server_info`; the Moodle tools come one by one.
+Status: early development. Today it has `configure`, `login`, `list_courses` and `server_info`; the Moodle tools come one by one.
 
 ## Requirements
 
@@ -13,11 +13,14 @@ Status: early development. Today it has `login`, `list_courses` and `server_info
 
 ## Configuration
 
-Each setting is an environment variable or a command-line argument; the argument wins.
+Nothing is required at startup. There are two ways to configure the server, and they can be mixed:
+
+- **At run time, by the client.** The `configure` tool sets the site (`url`: the site or any page of it, such as a course URL), `headless` and `profileDir` for the running server. It checks that the URL is a Moodle site and keeps everything in memory: the server writes no settings. When a tool needs the site and has none, it tells the client to call `configure`, so an agent can pass the values from its own configuration or ask you. This is how a plugin can ship the server with a fixed `.mcp.json`.
+- **At startup, the standard way.** Environment variables or command-line arguments (the argument wins) give starting values, which `configure` can still change.
 
 | Variable | Argument | Default | Meaning |
 | --- | --- | --- | --- |
-| `MOODLE_URL` | `--url` | (required) | The Moodle site, e.g. `https://campus.example.org` |
+| `MOODLE_URL` | `--url` | none | The Moodle site, e.g. `https://campus.example.org` |
 | `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | Browser profile folder that keeps your session; it can't be inside the server's folder |
 | `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome | Browser to use: `msedge` or `chrome` |
 | `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | Run the browser without a window (logging in always shows one) |
@@ -53,7 +56,7 @@ Or share it with a project in its `.mcp.json`:
 }
 ```
 
-Claude Desktop takes the same `mcpServers` entry in its `claude_desktop_config.json`. Ask the client to call `server_info` to check the configuration it's running with.
+Without `env`, the client configures it with `configure` the first time a tool needs the site. Claude Desktop takes the same `mcpServers` entry in its `claude_desktop_config.json`. Ask the client to call `server_info` to check the configuration it's running with and where each value came from.
 
 ## Development
 

@@ -13,7 +13,7 @@ const browser: BrowserManager = {
 };
 
 async function connect() {
-  const config = { moodleUrl: "https://user:secret@moodle.example.org/", profileDir: "/profiles/moodle", channel: undefined, headless: true };
+  const config = { moodleUrl: "https://user:secret@moodle.example.org/", profileDir: "/profiles/moodle", channel: undefined, headless: true, sources: { moodleUrl: "environment" as const, profileDir: "default" as const, channel: "default" as const, headless: "default" as const } };
   const server = createServer({ config, browser });
   const client = new Client({ name: "test", version: "0.0.0" });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();

@@ -1,5 +1,7 @@
 # ADR-003: Generic configuration and instructions
 
+> Partly superseded by ADR-009: `configure` sets the configuration at run time, and nothing is required at startup.
+
 ## Decision
 
 The server is configured only by environment variables or command-line arguments (arguments win): the site's URL (`MOODLE_URL`, `--url`), the profile folder (`MOODLE_MCP_PROFILE_DIR`, `--profile-dir`), the browser channel and headless mode. Its usage rules go in the MCP server's `instructions` field, which every client reads.

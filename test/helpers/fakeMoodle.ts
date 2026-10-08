@@ -6,10 +6,16 @@ export const SITE = "http://moodle.test/";
  * A Moodle page reduced to what the server reads: the body class, `M.cfg` (`wwwroot`, `sesskey`,
  * `userId`), the logout link in the user menu and the page heading, as Moodle 5.2 renders them.
  */
-export function moodlePage({ userId, heading = "Dashboard", guest = false, sesskey = "s1" }: { userId: number; heading?: string; guest?: boolean; sesskey?: string }): string {
+export function moodlePage({
+  userId,
+  heading = "Dashboard",
+  guest = false,
+  sesskey = "s1",
+  wwwroot = "http://moodle.test",
+}: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string }): string {
   const loggedIn = userId > 0;
   return `<!DOCTYPE html><html><head><title>${heading}</title>
-<script>var M = {}; M.cfg = {"wwwroot":"http:\\/\\/moodle.test","sesskey":"${sesskey}","userId":${userId}};</script></head>
+<script>var M = {}; M.cfg = {"wwwroot":${JSON.stringify(wwwroot).replaceAll("/", "\\/")},"sesskey":"${sesskey}","userId":${userId}};</script></head>
 <body class="${loggedIn ? "" : "notloggedin"}">
 <nav>${loggedIn && !guest ? '<div class="usermenu"><a href="http://moodle.test/login/logout.php?sesskey=x">Log out</a></div>' : '<a href="http://moodle.test/login/index.php">Log in</a>'}</nav>
 <div id="page-header"><div class="page-header-headings"><h1>${heading}</h1></div></div>

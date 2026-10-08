@@ -60,7 +60,7 @@ describe("list_courses", { skip: !browser && "no system browser" }, () => {
       saveSession: async () => undefined,
       close: async () => undefined,
     };
-    const config = { moodleUrl: SITE, profileDir: "/profiles/moodle", channel: undefined, headless: true };
+    const config = { moodleUrl: SITE, profileDir: "/profiles/moodle", channel: undefined, headless: true, sources: { moodleUrl: "environment" as const, profileDir: "default" as const, channel: "default" as const, headless: "default" as const } };
     const server = createServer({ config, browser: manager });
     const client = new Client({ name: "test", version: "0.0.0" });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();

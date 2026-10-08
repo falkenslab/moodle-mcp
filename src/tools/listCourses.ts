@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { requireSiteUrl } from "../config.js";
 import { callService } from "../moodle/ajax.js";
 import type { RegisterTool } from "./types.js";
 
@@ -86,9 +87,10 @@ export const registerListCourses: RegisterTool = (server, { config, browser }) =
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ classification = "all" }) => {
+      const siteUrl = requireSiteUrl(config);
       const { courses } = await callService<{ courses: MoodleCourse[] }>(
         await browser.context(),
-        config.moodleUrl,
+        siteUrl,
         "core_course_get_enrolled_courses_by_timeline_classification",
         { classification: CLASSIFICATIONS[classification], limit: 0, offset: 0, sort: "fullname" },
       );

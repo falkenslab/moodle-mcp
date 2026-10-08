@@ -28,7 +28,8 @@ async function main(): Promise<void> {
   process.on("SIGTERM", shutdown);
 
   await server.connect(new StdioServerTransport());
-  console.error(`moodle-mcp ${PACKAGE_VERSION} running on stdio for ${new URL(config.moodleUrl).origin}`);
+  const site = config.moodleUrl ? new URL(config.moodleUrl).origin : "no site yet (configure)";
+  console.error(`moodle-mcp ${PACKAGE_VERSION} running on stdio for ${site}`);
 }
 
 main().catch((error: unknown) => {

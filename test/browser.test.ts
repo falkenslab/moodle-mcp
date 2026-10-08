@@ -18,7 +18,7 @@ after(async () => {
 });
 
 function config(overrides: Partial<Config> = {}): Config {
-  return { moodleUrl: "http://localhost:8080/", profileDir, channel: undefined, headless: true, ...overrides };
+  return { moodleUrl: "http://localhost:8080/", profileDir, channel: undefined, headless: true, sources: { moodleUrl: "environment" as const, profileDir: "default" as const, channel: "default" as const, headless: "default" as const }, ...overrides };
 }
 
 function cookie(name: string, expires = -1): Cookie {

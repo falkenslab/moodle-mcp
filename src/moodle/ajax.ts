@@ -19,8 +19,8 @@ const SESSION_ERRORS = new Set(["servicerequireslogin", "invalidsesskey"]);
 // A light page that needs a session: the tab only lends its cookies and `M.cfg.sesskey`.
 const SERVICE_PAGE = "user/preferences.php";
 
-/** The tab kept open per context for service calls (ADR-008). */
-const servicePages = new WeakMap<BrowserContext, Page>();
+/** The tab kept open per context for service calls (ADR-008), and the site it belongs to. */
+const servicePages = new WeakMap<BrowserContext, { page: Page; siteUrl: string }>();
 
 /** The response of `lib/ajax/service.php` for one request: `data`, or throws. */
 export function parseServiceResponse<T>(methodname: string, status: number, body: string): T {
@@ -63,10 +63,11 @@ async function postFromPage(page: Page, methodname: string, args: unknown): Prom
 
 async function servicePage(context: BrowserContext, siteUrl: string, fresh: boolean): Promise<Page> {
   const current = servicePages.get(context);
-  if (current && !current.isClosed() && !fresh) return current;
-  await current?.close().catch(() => undefined);
+  // `configure` may have changed the site since the tab was opened.
+  if (current && !current.page.isClosed() && current.siteUrl === siteUrl && !fresh) return current.page;
+  await current?.page.close().catch(() => undefined);
   const page = await openSitePage(context, siteUrl, SERVICE_PAGE);
-  servicePages.set(context, page);
+  servicePages.set(context, { page, siteUrl });
   return page;
 }
 

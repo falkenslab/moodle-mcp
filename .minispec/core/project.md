@@ -8,7 +8,7 @@
 
 - Exposes Moodle as domain tools (`list_courses`, `list_assignments`, `get_submissions`…), never as generic browser actions (ADR-004).
 - Drives the system's Edge or Chrome with `playwright-core` (ADR-001), on a persistent profile where the person logs in by hand (ADR-002).
-- Configured only by environment variables or arguments; its usage rules travel in the MCP server's `instructions` (ADR-003).
+- Configured at run time by the client with `configure`, or by optional environment variables and arguments (ADR-003, ADR-009); its usage rules travel in the MCP server's `instructions`.
 - Ships as one bundled `dist/server.mjs` with a `moodle-mcp` bin, over stdio (ADR-005).
 
 ## For whom
@@ -22,7 +22,7 @@ Let an agent work in a Moodle course with the person's own session, through tool
 
 ## Status
 
-Version 0.x: the server, its configuration, `login`, `list_courses` and `server_info` exist; the Moodle tools come one by one (see `features/`).
+Version 0.x: the server, its configuration, `configure`, `login`, `list_courses` and `server_info` exist; the Moodle tools come one by one (see `features/`).
 
 ## Test site
 

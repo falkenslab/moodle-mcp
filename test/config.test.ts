@@ -21,7 +21,13 @@ describe("loadConfig", () => {
       MOODLE_MCP_CHANNEL: "Chrome",
       MOODLE_MCP_HEADLESS: "false",
     });
-    assert.deepEqual(config, { moodleUrl: "https://moodle.example.org/campus/", profileDir: PROFILE, channel: "chrome", headless: false });
+    assert.deepEqual(config, {
+      moodleUrl: "https://moodle.example.org/campus/",
+      profileDir: PROFILE,
+      channel: "chrome",
+      headless: false,
+      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment" },
+    });
   });
 
   it("lets arguments override environment variables", () => {
@@ -33,6 +39,14 @@ describe("loadConfig", () => {
     assert.equal(config.moodleUrl, "http://localhost:8080/");
     assert.equal(config.channel, "msedge");
     assert.equal(config.headless, false);
+    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument" });
+  });
+
+  it("starts without a site, and treats empty variables as unset", () => {
+    const config = load([], { MOODLE_URL: "", MOODLE_MCP_CHANNEL: " " });
+    assert.equal(config.moodleUrl, undefined);
+    assert.equal(config.sources.moodleUrl, undefined);
+    assert.equal(config.channel, undefined);
   });
 
   it("defaults to a profile under the home folder, any channel and headless", () => {
@@ -46,8 +60,7 @@ describe("loadConfig", () => {
     assert.equal(load(["--url", "http://localhost:8080/my/?x=1#top"]).moodleUrl, "http://localhost:8080/my/");
   });
 
-  it("requires an http or https URL", () => {
-    assert.throws(() => load([]), ConfigError);
+  it("requires an http or https URL when one is given", () => {
     assert.throws(() => load(["--url", "not a url"]), ConfigError);
     assert.throws(() => load(["--url", "ftp://moodle.example.org"]), ConfigError);
   });

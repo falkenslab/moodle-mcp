@@ -1,6 +1,6 @@
 import type { BrowserContext, Page } from "playwright-core";
 import { z } from "zod";
-import { redactUrl } from "../config.js";
+import { redactUrl, requireSiteUrl } from "../config.js";
 import { NotLoggedInError, openSitePage, pageIsLoggedIn } from "../moodle/session.js";
 import type { RegisterTool } from "./types.js";
 
@@ -90,7 +90,7 @@ export const registerLogin: RegisterTool = (server, { config, browser }) => {
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ timeoutSeconds = DEFAULT_TIMEOUT_SECONDS }, extra) => {
-      const siteUrl = config.moodleUrl;
+      const siteUrl = requireSiteUrl(config);
       const result = (status: LoginResult["status"], user: { userId: number; fullName: string }) => {
         const output: LoginResult = { status, ...user, siteUrl: redactUrl(siteUrl) };
         return { content: [{ type: "text" as const, text: JSON.stringify(output, null, 2) }], structuredContent: output };

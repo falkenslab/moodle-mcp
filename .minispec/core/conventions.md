@@ -8,7 +8,7 @@
 - Tools return `structuredContent` matching an `outputSchema`, plus the same data as JSON text for clients that ignore it. Schemas avoid nullable types (an optional field instead), which some clients reject; the Inspector's `--cli` with `--method tools/list --strict` checks them (see the README).
 - stdout belongs to the MCP protocol: logs and diagnostics go to stderr only.
 - No credentials anywhere in the repo: code, tests, fixtures, docs. Tool results never include passwords, cookies or session tokens.
-- Configuration is read only in `src/config.ts`; the rest of the code receives a `Config`.
+- Configuration is read only in `src/config.ts` and changed only by `configure`; the rest of the code reads the shared `Config` when it needs a value, never copying it at startup, and gets the site with `requireSiteUrl()`.
 - Tools read Moodle through its AJAX services with `callService()` when one gives what they need, and scrape pages only otherwise (ADR-008). Every tool that reads a site page opens it with `openSitePage()` (`src/moodle/session.ts`), so a missing session always gives the same error naming `login`.
 - Tests mirror `src/` under `test/`; a bug fixed gets a regression test.
 - Doc comments explain *why*, and mark Moodle or Playwright behavior verified by hand as "confirmed empirically" (with the Moodle version).
