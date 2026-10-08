@@ -22,7 +22,7 @@ Let an agent work in a Moodle course with the person's own session, through tool
 
 ## Status
 
-Version 0.x: the server, its configuration, `login` and `server_info` exist; the Moodle tools come one by one (see `features/`).
+Version 0.x: the server, its configuration, `login`, `list_courses` and `server_info` exist; the Moodle tools come one by one (see `features/`).
 
 ## Test site
 
