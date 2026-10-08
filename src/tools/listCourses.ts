@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
 import { callService } from "../moodle/ajax.js";
+import { decodeEntities } from "../moodle/text.js";
 import type { RegisterTool } from "./types.js";
 
 // "all" includes the courses the person hid from their dashboard: an agent shouldn't miss them.
@@ -43,16 +44,6 @@ export interface MoodleCourse {
   progress?: number | null;
   hasprogress?: boolean;
   timeaccess?: number | null;
-}
-
-// Moodle formats names for HTML (`format_string`): plain text for the client.
-function decodeEntities(text: string): string {
-  return text.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|#039|nbsp);/gi, (entity, code: string) => {
-    const lower = code.toLowerCase();
-    if (lower.startsWith("#x")) return String.fromCodePoint(parseInt(lower.slice(2), 16));
-    if (lower.startsWith("#")) return String.fromCodePoint(parseInt(lower.slice(1), 10));
-    return { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " }[lower] ?? entity;
-  });
 }
 
 /** Unix seconds as ISO 8601; Moodle uses 0 for "none". */

@@ -23,6 +23,8 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/configure.ts` — `configure`: URL, headless, profile folder, in memory (ADR-009); closes the browser when the profile or the mode changes.
 - `tools/login.ts` — `login`: returns the user if the session is alive; else a window at the login page, waiting (with progress notifications) until the person is back on the site logged in.
 - `tools/listCourses.ts` — `list_courses`: the person's courses, from `core_course_get_enrolled_courses_by_timeline_classification`.
+- `tools/listAssignments.ts` — `list_assignments`: a course's assignments by course module id, from `core_courseformat_get_state`.
+- `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text.
 - `tools/index.ts` — the list of tools; `tools/<tool>.ts` — one tool each: its schemas, annotations and handler, receiving a `ToolContext` (`config`, `browser`).
 - `version.ts` — the package name and version, from `package.json` (inlined by esbuild).
 
