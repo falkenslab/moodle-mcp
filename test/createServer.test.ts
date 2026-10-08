@@ -2,18 +2,13 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import type { BrowserManager } from "../src/browser.js";
 import { createServer } from "../src/createServer.js";
+import { fakeBrowserManager, testConfig } from "./helpers/fixtures.js";
 
-const browser: BrowserManager = {
-  context: () => Promise.reject(new Error("server_info must not open the browser")),
-  openChannel: () => undefined,
-  saveSession: async () => undefined,
-  close: async () => undefined,
-};
+const browser = fakeBrowserManager();
 
 async function connect() {
-  const config = { moodleUrl: "https://user:secret@moodle.example.org/", profileDir: "/profiles/moodle", channel: undefined, headless: true, sources: { moodleUrl: "environment" as const, profileDir: "default" as const, channel: "default" as const, headless: "default" as const } };
+  const config = testConfig({ moodleUrl: "https://user:secret@moodle.example.org/" });
   const server = createServer({ config, browser });
   const client = new Client({ name: "test", version: "0.0.0" });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();

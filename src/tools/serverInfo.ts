@@ -1,3 +1,4 @@
+import { chromium } from "playwright-core";
 import { z } from "zod";
 import { redactUrl } from "../config.js";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "../version.js";
@@ -10,13 +11,16 @@ export const serverInfoSchema = {
   version: z.string(),
   moodleUrl: z.string().optional().describe("The Moodle site, without credentials; missing until configured"),
   profileDir: z.string().describe("The browser's persistent profile folder"),
-  channel: z.string().describe('The configured browser: "msedge", "chrome" or "auto" (Edge, then Chrome)'),
+  channel: z.string().describe('The configured browser: "msedge", "chrome", "chromium" or "auto" (Edge, then Chrome, then the downloaded Chromium)'),
   headless: z.boolean(),
+  downloadBrowser: z.boolean().describe("Whether Chromium may be downloaded when no system browser is found"),
   sources: z
-    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source })
+    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source })
     .describe("Where each setting came from: configure, argument, environment or default"),
   browserOpen: z.boolean().describe("Whether the browser is running"),
   openChannel: z.string().optional().describe("The browser actually running, if any"),
+  chromiumPath: z.string().optional().describe("Where the downloaded Chromium is, when it's the one running"),
+  chromiumDownload: z.enum(["downloading", "failed"]).optional().describe("Whether Chromium is being downloaded, or the last download failed"),
   node: z.string(),
 };
 
@@ -32,9 +36,12 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     profileDir: config.profileDir,
     channel: config.channel ?? "auto",
     headless: config.headless,
+    downloadBrowser: config.downloadBrowser,
     sources: { ...config.sources },
     browserOpen: openChannel !== undefined,
     openChannel,
+    chromiumPath: openChannel === "chromium" ? chromium.executablePath() : undefined,
+    chromiumDownload: browser.chromiumDownload(),
     node: process.version,
   };
 }

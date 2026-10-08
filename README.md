@@ -9,7 +9,7 @@ Status: early development. Today it has `configure`, `login`, `list_courses` and
 ## Requirements
 
 - Node.js 20 or later.
-- Microsoft Edge or Google Chrome installed.
+- Microsoft Edge or Google Chrome installed. Without either, the server downloads Chromium (about 180 MB) the first time it needs a browser, into `PLAYWRIGHT_BROWSERS_PATH` or Playwright's usual cache.
 
 ## Configuration
 
@@ -22,8 +22,9 @@ Nothing is required at startup. There are two ways to configure the server, and 
 | --- | --- | --- | --- |
 | `MOODLE_URL` | `--url` | none | The Moodle site, e.g. `https://campus.example.org` |
 | `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | Browser profile folder that keeps your session; it can't be inside the server's folder |
-| `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome | Browser to use: `msedge` or `chrome` |
+| `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome, then Chromium | Browser to use: `msedge`, `chrome` or `chromium` (the one the server downloads) |
 | `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | Run the browser without a window (logging in always shows one) |
+| `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | Download Chromium when no system browser is found |
 
 ## Logging in
 

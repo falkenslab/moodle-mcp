@@ -4,8 +4,10 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { z } from "zod";
 
-/** Installed browsers Playwright can launch without downloading one (ADR-001). */
-export const CHANNELS = ["msedge", "chrome"] as const;
+/** Browsers already on the machine, tried in this order (ADR-001). */
+export const SYSTEM_CHANNELS = ["msedge", "chrome"] as const;
+/** Every browser the server can launch: the system's, or the Chromium it downloads when there is none. */
+export const CHANNELS = [...SYSTEM_CHANNELS, "chromium"] as const;
 export type Channel = (typeof CHANNELS)[number];
 
 /** Where a setting's value came from: the `configure` tool wins over arguments, which win over the environment (ADR-009). */
@@ -20,11 +22,13 @@ export interface Config {
   moodleUrl: string | undefined;
   /** The browser's persistent profile, absolute (ADR-002). */
   profileDir: string;
-  /** The browser to launch; `undefined` tries each of `CHANNELS` in order. */
+  /** The browser to launch; `undefined` tries the system's, then the downloaded Chromium. */
   channel: Channel | undefined;
+  /** Whether Chromium may be downloaded when no system browser is found (ADR-001). */
+  downloadBrowser: boolean;
   /** Whether the browser runs without a window (the login tool always shows one). */
   headless: boolean;
-  sources: { moodleUrl?: SettingSource; profileDir: SettingSource; channel: SettingSource; headless: SettingSource };
+  sources: { moodleUrl?: SettingSource; profileDir: SettingSource; channel: SettingSource; headless: SettingSource; downloadBrowser: SettingSource };
 }
 
 /** A setting invalid at startup (the server stops with this message) or in `configure`. */
@@ -46,8 +50,9 @@ Every setting is optional here: a client can also give them with the configure t
 Options (each overrides its environment variable):
   --url <url>           Moodle site URL                      MOODLE_URL
   --profile-dir <dir>   Browser profile folder               MOODLE_MCP_PROFILE_DIR (default: ~/.moodle-mcp/profile)
-  --channel <name>      Browser: msedge or chrome            MOODLE_MCP_CHANNEL (default: msedge, then chrome)
+  --channel <name>      Browser: msedge, chrome or chromium  MOODLE_MCP_CHANNEL (default: msedge, then chrome, then chromium)
   --headless / --headed Run the browser without a window     MOODLE_MCP_HEADLESS (default: true)
+  --no-download-browser Never download Chromium              MOODLE_MCP_DOWNLOAD_BROWSER (default: true)
   --help                Show this help
   --version             Show the version`;
 
@@ -74,6 +79,16 @@ function pick(argument: string | undefined, environment: string | undefined): { 
   return undefined;
 }
 
+/** A boolean setting, true by default: the argument's value, else the variable's. */
+function pickBoolean(argument: boolean | undefined, variable: string, env: NodeJS.ProcessEnv): { value: boolean; source: SettingSource } {
+  if (argument !== undefined) return { value: argument, source: "argument" };
+  const text = env[variable];
+  if (!text?.trim()) return { value: true, source: "default" };
+  const parsed = booleanText.safeParse(text);
+  if (!parsed.success) throw new ConfigError(`${variable} must be true or false, not "${text}".`);
+  return { value: parsed.data, source: "environment" };
+}
+
 /**
  * Reads the starting configuration from command-line arguments and environment variables, all
  * optional (ADR-003, ADR-009). Returns `"help"` or `"version"` when asked for them; throws
@@ -92,6 +107,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         channel: { type: "string" },
         headless: { type: "boolean" },
         headed: { type: "boolean" },
+        "no-download-browser": { type: "boolean" },
         help: { type: "boolean" },
         version: { type: "boolean" },
       },
@@ -106,28 +122,21 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const profile = pick(values["profile-dir"], env.MOODLE_MCP_PROFILE_DIR);
   const channel = pick(values.channel, env.MOODLE_MCP_CHANNEL);
 
-  let headless = true;
-  let headlessSource: SettingSource = "default";
-  if (values.headed || values.headless) {
-    headless = !values.headed;
-    headlessSource = "argument";
-  } else if (env.MOODLE_MCP_HEADLESS?.trim()) {
-    const parsed = booleanText.safeParse(env.MOODLE_MCP_HEADLESS);
-    if (!parsed.success) throw new ConfigError(`MOODLE_MCP_HEADLESS must be true or false, not "${env.MOODLE_MCP_HEADLESS}".`);
-    headless = parsed.data;
-    headlessSource = "environment";
-  }
+  const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env);
+  const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env);
 
   return {
     moodleUrl: url ? parseMoodleUrl(url.value) : undefined,
     profileDir: parseProfileDir(profile?.value ?? DEFAULT_PROFILE_DIR, packageRoot),
     channel: channel ? parseChannel(channel.value) : undefined,
-    headless,
+    headless: headless.value,
+    downloadBrowser: downloadBrowser.value,
     sources: {
       ...(url ? { moodleUrl: url.source } : {}),
       profileDir: profile?.source ?? "default",
       channel: channel?.source ?? "default",
-      headless: headlessSource,
+      headless: headless.source,
+      downloadBrowser: downloadBrowser.source,
     },
   };
 }

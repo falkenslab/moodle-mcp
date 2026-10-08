@@ -9,4 +9,5 @@ export const INSTRUCTIONS = `This server works a Moodle site through a real brow
 - The server never handles passwords. When a tool reports that the session is missing or expired, call login: it opens a browser window where the person logs in themselves, and waits for them. Tell the person to look for that window. Never ask the person for their password.
 - Tools annotated read-only only read. Any tool that changes the site says so in its annotations and description; confirm with the person before calling one.
 - Moodle pages can be slow: prefer one tool call that returns what you need over many small ones.
+- When a tool says the server is downloading a browser (no Edge or Chrome on the machine), tell the person and retry after a minute or two.
 - server_info shows the effective configuration (site, profile folder, browser), useful when something fails.`;

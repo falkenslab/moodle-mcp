@@ -3,9 +3,10 @@ import { after, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
-import type { BrowserManager, ContextOptions } from "../../src/browser.js";
+import type { ContextOptions } from "../../src/browser.js";
 import { createServer } from "../../src/createServer.js";
 import { LoginTimeoutError, LoginWindowClosedError, waitForLogin } from "../../src/tools/login.js";
+import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle } from "../helpers/fakeMoodle.js";
 
 const browser = await launchTestBrowser();
@@ -68,13 +69,12 @@ describe("login tool", { skip: !browser && "no system browser" }, () => {
   async function connect(context: BrowserContext) {
     const requests: ContextOptions[] = [];
     let closed = 0;
-    const manager: BrowserManager = {
+    const manager = fakeBrowserManager({
       context: async (options = {}) => (requests.push(options), context),
       openChannel: () => "msedge",
-      saveSession: async () => undefined,
       close: async () => void closed++,
-    };
-    const config = { moodleUrl: SITE, profileDir: "/profiles/moodle", channel: undefined, headless: true, sources: { moodleUrl: "environment" as const, profileDir: "default" as const, channel: "default" as const, headless: "default" as const } };
+    });
+    const config = testConfig({ moodleUrl: SITE });
     const server = createServer({ config, browser: manager });
     const client = new Client({ name: "test", version: "0.0.0" });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();

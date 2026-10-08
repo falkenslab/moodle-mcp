@@ -5,9 +5,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, before, describe, it } from "node:test";
 import type { BrowserContext, Cookie } from "playwright-core";
-import { BrowserNotFoundError, createBrowserManager } from "../src/browser.js";
+import { BrowserDownloadingError, BrowserNotFoundError, createBrowserManager } from "../src/browser.js";
 import type { Config } from "../src/config.js";
 import { SESSION_COOKIES_FILE } from "../src/sessionCookies.js";
+import { testConfig } from "./helpers/fixtures.js";
 
 let profileDir: string;
 before(async () => {
@@ -18,7 +19,7 @@ after(async () => {
 });
 
 function config(overrides: Partial<Config> = {}): Config {
-  return { moodleUrl: "http://localhost:8080/", profileDir, channel: undefined, headless: true, sources: { moodleUrl: "environment" as const, profileDir: "default" as const, channel: "default" as const, headless: "default" as const }, ...overrides };
+  return testConfig({ profileDir, ...overrides });
 }
 
 function cookie(name: string, expires = -1): Cookie {
@@ -122,6 +123,72 @@ describe("createBrowserManager", () => {
     const second = createBrowserManager(config(), fakeLaunch(["msedge"], () => fakeContext([cookie("Persistent", 2_000_000_000)])).launch);
     const reopened = (await second.context()) as BrowserContext & { jar: Cookie[] };
     assert.deepEqual(reopened.jar.map((c) => c.name).sort(), ["MoodleSession", "Persistent"]);
+  });
+
+  describe("with no system browser", () => {
+    /** An installer that "downloads" Chromium when `finish` is called, or fails. */
+    function fakeInstall(installed: string[]) {
+      let calls = 0;
+      let finish!: (ok?: boolean) => void;
+      const install = () => {
+        calls++;
+        return new Promise<void>((resolve, reject) => {
+          finish = (ok = true) => {
+            if (!ok) return reject(new Error("network down"));
+            installed.push("chromium");
+            resolve();
+          };
+        });
+      };
+      return { install, calls: () => calls, finish: (ok?: boolean) => finish(ok) };
+    }
+    const settle = () => new Promise((resolve) => setTimeout(resolve, 10));
+
+    it("downloads Chromium once, answers meanwhile, then launches it", async () => {
+      const installed: string[] = [];
+      const { calls, launch } = fakeLaunch(installed);
+      const installer = fakeInstall(installed);
+      const browser = createBrowserManager(config(), launch, installer.install);
+      await assert.rejects(browser.context(), BrowserDownloadingError);
+      await assert.rejects(browser.context(), /Neither Microsoft Edge nor Google Chrome is available, so the server is downloading it/);
+      assert.equal(installer.calls(), 1);
+      assert.equal(browser.chromiumDownload(), "downloading");
+      installer.finish();
+      await settle();
+      assert.equal(browser.chromiumDownload(), undefined);
+      await browser.context();
+      assert.equal(browser.openChannel(), "chromium");
+      assert.deepEqual(calls.map((c) => c.channel), ["msedge", "chrome", "chromium", "msedge", "chrome", "msedge", "chrome", "chromium"]);
+    });
+
+    it("downloads again after a failed download, saying so", async () => {
+      const installed: string[] = [];
+      const installer = fakeInstall(installed);
+      const browser = createBrowserManager(config(), fakeLaunch(installed).launch, installer.install);
+      await assert.rejects(browser.context(), BrowserDownloadingError);
+      installer.finish(false);
+      await settle();
+      assert.equal(browser.chromiumDownload(), "failed");
+      await assert.rejects(browser.context(), /previous download failed \(network down\)/);
+      assert.equal(installer.calls(), 2);
+    });
+
+    it("doesn't download when it's turned off", async () => {
+      const installer = fakeInstall([]);
+      const { calls, launch } = fakeLaunch([]);
+      const browser = createBrowserManager(config({ downloadBrowser: false }), launch, installer.install);
+      await assert.rejects(browser.context(), (error: unknown) => error instanceof BrowserNotFoundError && /MOODLE_MCP_DOWNLOAD_BROWSER/.test(error.message));
+      assert.equal(installer.calls(), 0);
+      assert.deepEqual(calls.map((c) => c.channel), ["msedge", "chrome"]);
+    });
+
+    it("goes straight to Chromium when that channel is chosen", async () => {
+      const installed = ["msedge", "chromium"];
+      const { calls, launch } = fakeLaunch(installed);
+      const browser = createBrowserManager(config({ channel: "chromium" }), launch, fakeInstall(installed).install);
+      await browser.context();
+      assert.deepEqual(calls.map((c) => c.channel), ["chromium"]);
+    });
   });
 
   it("tries only the configured channel and explains a missing browser", async () => {

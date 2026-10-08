@@ -20,26 +20,29 @@ describe("loadConfig", () => {
       MOODLE_MCP_PROFILE_DIR: PROFILE,
       MOODLE_MCP_CHANNEL: "Chrome",
       MOODLE_MCP_HEADLESS: "false",
+      MOODLE_MCP_DOWNLOAD_BROWSER: "no",
     });
     assert.deepEqual(config, {
       moodleUrl: "https://moodle.example.org/campus/",
       profileDir: PROFILE,
       channel: "chrome",
       headless: false,
-      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment" },
+      downloadBrowser: false,
+      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment" },
     });
   });
 
   it("lets arguments override environment variables", () => {
-    const config = load(["--url", "http://localhost:8080", "--channel", "msedge", "--headed"], {
+    const config = load(["--url", "http://localhost:8080", "--channel", "chromium", "--headed", "--no-download-browser"], {
       MOODLE_URL: "https://other.example.org",
       MOODLE_MCP_CHANNEL: "chrome",
       MOODLE_MCP_HEADLESS: "true",
     });
     assert.equal(config.moodleUrl, "http://localhost:8080/");
-    assert.equal(config.channel, "msedge");
+    assert.equal(config.channel, "chromium");
     assert.equal(config.headless, false);
-    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument" });
+    assert.equal(config.downloadBrowser, false);
+    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument" });
   });
 
   it("starts without a site, and treats empty variables as unset", () => {
@@ -54,6 +57,7 @@ describe("loadConfig", () => {
     assert.equal(config.profileDir, path.join(homedir(), ".moodle-mcp", "profile"));
     assert.equal(config.channel, undefined);
     assert.equal(config.headless, true);
+    assert.equal(config.downloadBrowser, true);
   });
 
   it("drops the query and fragment from the site URL", () => {

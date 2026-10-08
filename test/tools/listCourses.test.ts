@@ -3,9 +3,9 @@ import { after, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
-import type { BrowserManager } from "../../src/browser.js";
 import { createServer } from "../../src/createServer.js";
 import { toCourse, type MoodleCourse } from "../../src/tools/listCourses.js";
+import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "../helpers/fakeMoodle.js";
 
 const browser = await launchTestBrowser();
@@ -54,13 +54,8 @@ describe("list_courses", { skip: !browser && "no system browser" }, () => {
   async function connect(state: FakeMoodleState): Promise<{ client: Client; context: BrowserContext }> {
     const context = await browser!.newContext();
     await serveFakeMoodle(context, state);
-    const manager: BrowserManager = {
-      context: async () => context,
-      openChannel: () => "msedge",
-      saveSession: async () => undefined,
-      close: async () => undefined,
-    };
-    const config = { moodleUrl: SITE, profileDir: "/profiles/moodle", channel: undefined, headless: true, sources: { moodleUrl: "environment" as const, profileDir: "default" as const, channel: "default" as const, headless: "default" as const } };
+    const manager = fakeBrowserManager({ context: async () => context, openChannel: () => "msedge" });
+    const config = testConfig({ moodleUrl: SITE });
     const server = createServer({ config, browser: manager });
     const client = new Client({ name: "test", version: "0.0.0" });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();

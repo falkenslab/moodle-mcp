@@ -1,6 +1,7 @@
 import { mkdir } from "node:fs/promises";
 import { chromium, type BrowserContext } from "playwright-core";
-import { CHANNELS, type Channel, type Config } from "./config.js";
+import { installChromium, type InstallChromium } from "./chromiumInstaller.js";
+import { SYSTEM_CHANNELS, type Channel, type Config } from "./config.js";
 import { restoreSessionCookies, saveSessionCookies } from "./sessionCookies.js";
 
 type LaunchPersistentContext = typeof chromium.launchPersistentContext;
@@ -19,14 +20,21 @@ export interface BrowserManager {
   context(options?: ContextOptions): Promise<BrowserContext>;
   /** The channel of the open context, or `undefined` while none is open. */
   openChannel(): Channel | undefined;
+  /** Whether Chromium is being downloaded, or the last download failed (ADR-001). */
+  chromiumDownload(): "downloading" | "failed" | undefined;
   /** Saves the session cookies of the open context, if any (ADR-007). */
   saveSession(): Promise<void>;
   close(): Promise<void>;
 }
 
-/** No installed browser could be launched (ADR-001). */
+/** No installed browser could be launched, and Chromium can't be downloaded (ADR-001). */
 export class BrowserNotFoundError extends Error {
   override name = "BrowserNotFoundError";
+}
+
+/** No browser yet: Chromium is downloading in the background, and the call should be retried later. */
+export class BrowserDownloadingError extends Error {
+  override name = "BrowserDownloadingError";
 }
 
 // Playwright's message when a channel isn't installed: "Chromium distribution 'msedge' is not found",
@@ -45,8 +53,34 @@ interface Open {
 export function createBrowserManager(
   config: Config,
   launch: LaunchPersistentContext = chromium.launchPersistentContext.bind(chromium),
+  install: InstallChromium = installChromium,
 ): BrowserManager {
   let open: Open | undefined;
+  // The download runs in the background, outside the queue: it takes minutes, longer than some
+  // clients wait for a tool call, so calls meanwhile answer at once that it's downloading.
+  let download: Promise<void> | undefined;
+  let downloadFailure: string | undefined;
+
+  function startDownload(): BrowserDownloadingError {
+    const retry = downloadFailure ? ` The previous download failed (${downloadFailure}); trying again.` : "";
+    downloadFailure = undefined;
+    download ??= install().then(
+      () => {
+        download = undefined;
+      },
+      (error: unknown) => {
+        download = undefined;
+        downloadFailure = (error as Error).message ?? String(error);
+      },
+    );
+    return downloading(retry);
+  }
+
+  function downloading(extra = ""): BrowserDownloadingError {
+    return new BrowserDownloadingError(
+      `${config.channel === "chromium" ? "Chromium isn't downloaded yet" : "Neither Microsoft Edge nor Google Chrome is available"}, so the server is downloading it (about 180 MB, into PLAYWRIGHT_BROWSERS_PATH or the user's ms-playwright cache).${extra} Tell the person, and try again in a minute or two.`,
+    );
+  }
   // One operation at a time: two launches on the same profile would fail.
   let queue: Promise<unknown> = Promise.resolve();
   function exclusive<T>(operation: () => Promise<T>): Promise<T> {
@@ -57,9 +91,10 @@ export function createBrowserManager(
 
   async function launchFirstAvailable(headed: boolean): Promise<Open> {
     await mkdir(config.profileDir, { recursive: true });
-    const channels = config.channel ? [config.channel] : CHANNELS;
+    const channels: Channel[] = config.channel ? [config.channel] : [...SYSTEM_CHANNELS, ...(config.downloadBrowser ? (["chromium"] as const) : [])];
     const missing: string[] = [];
     for (const channel of channels) {
+      if (channel === "chromium" && download) throw downloading();
       let context: BrowserContext;
       try {
         // A window keeps its own size; a fixed viewport would leave it half empty.
@@ -67,6 +102,7 @@ export function createBrowserManager(
       } catch (error) {
         const message = (error as Error).message ?? String(error);
         if (!NOT_INSTALLED.test(message)) throw error;
+        if (channel === "chromium" && config.downloadBrowser) throw startDownload();
         missing.push(channel);
         continue;
       }
@@ -80,7 +116,7 @@ export function createBrowserManager(
       return opened;
     }
     throw new BrowserNotFoundError(
-      `No browser found (tried ${missing.join(", ")}). Install Microsoft Edge or Google Chrome, or choose another with MOODLE_MCP_CHANNEL.`,
+      `No browser found (tried ${missing.join(", ")}). Install Microsoft Edge or Google Chrome${config.downloadBrowser ? "" : ", or let the server download Chromium (MOODLE_MCP_DOWNLOAD_BROWSER=true)"}, or choose another with MOODLE_MCP_CHANNEL.`,
     );
   }
 
@@ -103,6 +139,7 @@ export function createBrowserManager(
       });
     },
     openChannel: () => open?.channel,
+    chromiumDownload: () => (download ? "downloading" : downloadFailure ? "failed" : undefined),
     saveSession: () =>
       exclusive(async () => {
         if (open) await saveSessionCookies(open.context, config.profileDir);

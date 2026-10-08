@@ -10,7 +10,7 @@ The browser's persistent user-data folder (`MOODLE_MCP_PROFILE_DIR`): it keeps t
 
 ## Channel
 
-Which installed browser Playwright launches: `msedge` or `chrome` (ADR-001).
+Which browser Playwright launches: the system's `msedge` or `chrome`, or `chromium`, the one the server downloads when neither is installed (ADR-001).
 
 ## Domain tool
 

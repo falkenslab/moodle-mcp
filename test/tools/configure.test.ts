@@ -5,10 +5,10 @@ import path from "node:path";
 import { after, before, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import type { BrowserManager } from "../../src/browser.js";
 import type { Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
 import { moodlePage } from "../helpers/fakeMoodle.js";
+import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 
 // A site that answers like Moodle under /moodle, and like something else elsewhere.
 let site: Server;
@@ -25,12 +25,7 @@ after(() => new Promise<void>((resolve) => site.close(() => resolve())));
 
 async function connect(config: Config) {
   let closes = 0;
-  const browser: BrowserManager = {
-    context: () => Promise.reject(new Error("no browser in these tests")),
-    openChannel: () => undefined,
-    saveSession: async () => undefined,
-    close: async () => void closes++,
-  };
+  const browser = fakeBrowserManager({ close: async () => void closes++ });
   const server = createServer({ config, browser });
   const client = new Client({ name: "test", version: "0.0.0" });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
@@ -39,7 +34,9 @@ async function connect(config: Config) {
 }
 
 function unconfigured(): Config {
-  return { moodleUrl: undefined, profileDir: path.resolve("/profiles/a"), channel: undefined, headless: true, sources: { profileDir: "default", channel: "default", headless: "default" } };
+  const config = testConfig({ moodleUrl: undefined, profileDir: path.resolve("/profiles/a") });
+  delete config.sources.moodleUrl;
+  return config;
 }
 
 describe("configure", () => {
