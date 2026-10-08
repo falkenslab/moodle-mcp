@@ -19,7 +19,7 @@
     "moodle-mcp": "dist/server.mjs"
   },
   "files": [
-    "dist"
+    "dist/server.mjs"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
