@@ -1,11 +1,21 @@
 # Glossary
 
-> Domain terms. Use these names; don't invent others. Delete these hints.
+## Site
 
-## <Term>
+The Moodle installation the server works on, given by `MOODLE_URL`.
 
-<Short definition.>
+## Profile
 
-## <Term>
+The browser's persistent user-data folder (`MOODLE_MCP_PROFILE_DIR`): it keeps the person's Moodle session between runs. Only one browser can use it at a time.
 
-<Short definition.>
+## Channel
+
+Which installed browser Playwright launches: `msedge` or `chrome` (ADR-001).
+
+## Domain tool
+
+An MCP tool named after a Moodle task (`list_courses`), with Playwright hidden inside (ADR-004).
+
+## Client
+
+Whatever starts the server and calls its tools: Claude Code, Claude Desktop, an agent (miyagi through its plugin).
