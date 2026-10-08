@@ -24,6 +24,8 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/login.ts` — `login`: returns the user if the session is alive; else a window at the login page, waiting (with progress notifications) until the person is back on the site logged in.
 - `tools/listCourses.ts` — `list_courses`: the person's courses, from `core_course_get_enrolled_courses_by_timeline_classification`.
 - `tools/listAssignments.ts` — `list_assignments`: a course's assignments by course module id, from `core_courseformat_get_state`.
+- `moodle/assign.ts` — an assignment's instance and context ids from its grader page (cached in memory; no service gives them), participants and their dates through `mod_assign_list_participants` and `mod_assign_get_participant`, and a submission's content from the grader panel fragment (`core_get_fragment`), read by class in a blank tab.
+- `tools/getSubmissions.ts` — `get_submissions`: every participant's status, dates and, by default, content.
 - `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text.
 - `tools/index.ts` — the list of tools; `tools/<tool>.ts` — one tool each: its schemas, annotations and handler, receiving a `ToolContext` (`config`, `browser`).
 - `version.ts` — the package name and version, from `package.json` (inlined by esbuild).

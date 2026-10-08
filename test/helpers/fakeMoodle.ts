@@ -12,13 +12,15 @@ export function moodlePage({
   guest = false,
   sesskey = "s1",
   wwwroot = "http://moodle.test",
-}: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string }): string {
+  body = "",
+}: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string; body?: string }): string {
   const loggedIn = userId > 0;
   return `<!DOCTYPE html><html><head><title>${heading}</title>
 <script>var M = {}; M.cfg = {"wwwroot":${JSON.stringify(wwwroot).replaceAll("/", "\\/")},"sesskey":"${sesskey}","userId":${userId}};</script></head>
 <body class="${loggedIn ? "" : "notloggedin"}">
 <nav>${loggedIn && !guest ? '<div class="usermenu"><a href="http://moodle.test/login/logout.php?sesskey=x">Log out</a></div>' : '<a href="http://moodle.test/login/index.php">Log in</a>'}</nav>
 <div id="page-header"><div class="page-header-headings"><h1>${heading}</h1></div></div>
+${body}
 </body></html>`;
 }
 
@@ -41,6 +43,8 @@ export interface FakeMoodleState {
   sesskey?: string;
   /** AJAX services by name: what each returns as `data` for its arguments. */
   services?: Record<string, (args: Record<string, unknown>) => unknown>;
+  /** Extra body HTML for the pages at these paths (logged in only). */
+  bodies?: Record<string, string>;
   /** Every page path served, for tests that count page loads. */
   pagesServed?: string[];
   /** Every service call received. */
@@ -72,6 +76,6 @@ export async function serveFakeMoodle(context: BrowserContext, state: FakeMoodle
     const html = (body: string) => route.fulfill({ status: 200, contentType: "text/html", body });
     if (!state.user) return html(moodlePage({ userId: 0, heading: "Log in", sesskey }));
     const heading = url.pathname === "/user/profile.php" ? state.user.fullName : "Dashboard";
-    return html(moodlePage({ userId: state.user.id, heading, sesskey }));
+    return html(moodlePage({ userId: state.user.id, heading, sesskey, body: state.bodies?.[url.pathname] }));
   });
 }
