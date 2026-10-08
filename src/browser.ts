@@ -18,8 +18,9 @@ export class BrowserNotFoundError extends Error {
   override name = "BrowserNotFoundError";
 }
 
-// Playwright's message when a channel's executable isn't installed (confirmed empirically, playwright-core 1.64).
-const NOT_INSTALLED = /is not found at|not installed|Executable doesn't exist/i;
+// Playwright's message when a channel isn't installed: "Chromium distribution 'msedge' is not found",
+// with " at <path>" only when it knows where to look (playwright-core 1.64).
+const NOT_INSTALLED = /distribution '[^']+' is not (found|supported)|Executable doesn't exist/i;
 
 export function createBrowserManager(
   config: Config,

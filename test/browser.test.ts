@@ -47,6 +47,17 @@ describe("createBrowserManager", () => {
     assert.equal(browser.openChannel(), "chrome");
   });
 
+  it("recognizes Playwright's message without an install location", async () => {
+    let calls = 0;
+    const launch = (async () => {
+      if (calls++ === 0) throw new Error("Chromium distribution 'msedge' is not found");
+      return fakeContext();
+    }) as never;
+    const browser = createBrowserManager(config(), launch);
+    await browser.context();
+    assert.equal(browser.openChannel(), "chrome");
+  });
+
   it("launches once for concurrent callers and reuses the context", async () => {
     const { calls, launch } = fakeLaunch(["msedge"]);
     const browser = createBrowserManager(config(), launch);
