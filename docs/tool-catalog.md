@@ -24,7 +24,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 - **Login cost every session.** 4–8 calls each time in teacher runs; 57 manual logins (CAS) in student runs; expiry in the middle of a quiz. Covered by `login` and the saved session (ADR-002, ADR-007).
 - **Output size.** Course pages in edit mode, quiz pages and PDFs overflowed the model's limit at least five times. Tools return compact JSON and paginate.
 - **Writes need a person's consent.** Teachers approved before publishing (4 approvals), and one resource went visible before approval. Students had 7 forum drafts rejected. Write tools create hidden by default where Moodle allows, say exactly what they'll change, and verify after.
-- **Students leave a trail.** padawan's rules ask for real page visits at a human pace, not direct file URLs or services. Student tools that "view" or "do" something go through the real pages, so Moodle logs the view and completion as for a person.
+- **Students leave a trail.** padawan's rules ask for real page visits at a human pace, not direct file URLs or services. Student tools that "view" or "do" something follow the `trail` setting (ADR-012): `realistic` by default, through the real pages, so Moodle logs the view and completion as for a person; `fast` where a client only wants the content.
 - **Fragile UI parts.** The activity chooser, the question type chooser, TinyMCE, the file picker and H5P iframes cost most retries. Tools go around them (direct form URLs, setting editor fields, draft area uploads).
 
 ## Session and identity
@@ -169,10 +169,10 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `add_grade_category` | New gradebook category | W | AJAX (`core_form_dynamic_form` `add_category`) | none | — |
 | `override_completion` | Mark an activity complete for a participant | W | AJAX (`core_completion_override_activity_completion_status`) | none | — |
 
-## Browser fallback and follow mode (proposed, needs an ADR)
+## Browser fallback and follow mode (ADR-010, ADR-011)
 
-- **Fallback tools.** Off by default (`MOODLE_MCP_BROWSER_TOOLS`): `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`, on the same session and profile. Limited to the configured site, never typing into password fields (ADR-002), snapshots limited to the main region and size-capped, annotated as writes except snapshot and screenshot. The instructions say to use them only when no domain tool covers the task, and to name the task, so the gaps show which tool to build next. Covers what domain tools won't: H5P, external escape rooms, SCORM upload until it has a tool.
-- **Follow mode.** With a visible browser, each domain tool also brings the window to the Moodle page it's working on, so a person can follow the agent. Slower; only when asked.
+- **Fallback tools.** Always available (ADR-010): `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`, on the same session and profile. Limited to the configured site, never typing into password fields (ADR-002), snapshots limited to the main region and size-capped, annotated as writes except snapshot and screenshot. The instructions say to use them only when no domain tool covers the task, and to name the task, so the gaps show which tool to build next. Covers what domain tools won't: H5P, external escape rooms, SCORM upload until it has a tool.
+- **Follow mode.** A setting (ADR-011): with a visible browser, each domain tool also brings the window to the Moodle page it's working on, so a person can follow the agent. Slower; only when asked.
 
 ## Suggested order
 

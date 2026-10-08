@@ -1,5 +1,7 @@
 # ADR-004: Domain tools, not browser tools
 
+> Amended by ADR-010: a small set of generic browser tools is always available as a fallback.
+
 ## Decision
 
 The server exposes Moodle tasks as tools (`list_courses`, `list_assignments`, `get_submissions`…), with Playwright inside. It never exposes generic browser actions (click, type, navigate, snapshot) as `@playwright/mcp` does. Tools that only read are annotated `readOnlyHint: true`.
