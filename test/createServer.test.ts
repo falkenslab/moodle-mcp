@@ -8,6 +8,7 @@ import { createServer } from "../src/createServer.js";
 const browser: BrowserManager = {
   context: () => Promise.reject(new Error("server_info must not open the browser")),
   openChannel: () => undefined,
+  saveSession: async () => undefined,
   close: async () => undefined,
 };
 

@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, before, describe, it } from "node:test";
-import type { BrowserContext } from "playwright-core";
+import type { BrowserContext, Cookie } from "playwright-core";
 import { BrowserNotFoundError, createBrowserManager } from "../src/browser.js";
 import type { Config } from "../src/config.js";
+import { SESSION_COOKIES_FILE } from "../src/sessionCookies.js";
 
 let profileDir: string;
 before(async () => {
@@ -20,20 +21,36 @@ function config(overrides: Partial<Config> = {}): Config {
   return { moodleUrl: "http://localhost:8080/", profileDir, channel: undefined, headless: true, ...overrides };
 }
 
-/** A context that only emits `close`, which is all the manager uses. */
-function fakeContext(): BrowserContext {
+function cookie(name: string, expires = -1): Cookie {
+  return { name, value: "v", domain: "localhost", path: "/", expires, httpOnly: true, secure: false, sameSite: "Lax" };
+}
+
+/** A context with what the manager uses: `close`, cookies and the navigation timeout. */
+function fakeContext(initialCookies: Cookie[] = []): BrowserContext & { jar: Cookie[] } {
   const emitter = new EventEmitter();
-  return Object.assign(emitter, { close: async () => void emitter.emit("close") }) as unknown as BrowserContext;
+  const jar = [...initialCookies];
+  return Object.assign(emitter, {
+    jar,
+    close: async () => void emitter.emit("close"),
+    cookies: async () => [...jar],
+    addCookies: async (cookies: Cookie[]) => void jar.push(...cookies),
+    setDefaultNavigationTimeout: () => undefined,
+  }) as unknown as BrowserContext & { jar: Cookie[] };
+}
+
+interface LaunchCall {
+  channel: string;
+  headless: boolean;
 }
 
 /** A launcher where the channels in `installed` work and the rest fail as Playwright does. */
-function fakeLaunch(installed: string[]) {
-  const calls: string[] = [];
-  const launch = async (_dir: string, options?: { channel?: string }) => {
+function fakeLaunch(installed: string[], makeContext = () => fakeContext()) {
+  const calls: LaunchCall[] = [];
+  const launch = async (_dir: string, options?: { channel?: string; headless?: boolean }) => {
     const channel = options?.channel ?? "";
-    calls.push(channel);
+    calls.push({ channel, headless: options?.headless ?? true });
     if (!installed.includes(channel)) throw new Error(`Chromium distribution '${channel}' is not found at C:\\nowhere`);
-    return fakeContext();
+    return makeContext();
   };
   return { calls, launch: launch as never };
 }
@@ -43,7 +60,7 @@ describe("createBrowserManager", () => {
     const { calls, launch } = fakeLaunch(["chrome"]);
     const browser = createBrowserManager(config(), launch);
     await browser.context();
-    assert.deepEqual(calls, ["msedge", "chrome"]);
+    assert.deepEqual(calls.map((c) => c.channel), ["msedge", "chrome"]);
     assert.equal(browser.openChannel(), "chrome");
   });
 
@@ -64,7 +81,7 @@ describe("createBrowserManager", () => {
     const [a, b] = await Promise.all([browser.context(), browser.context()]);
     assert.equal(a, b);
     assert.equal(await browser.context(), a);
-    assert.deepEqual(calls, ["msedge"]);
+    assert.equal(calls.length, 1);
   });
 
   it("opens a new context after the window is closed", async () => {
@@ -77,11 +94,41 @@ describe("createBrowserManager", () => {
     assert.equal(calls.length, 2);
   });
 
+  it("relaunches with a window when asked, and keeps the window for later calls", async () => {
+    const { calls, launch } = fakeLaunch(["msedge"]);
+    const browser = createBrowserManager(config(), launch);
+    await browser.context();
+    const headed = await browser.context({ headed: true });
+    assert.equal(await browser.context(), headed);
+    assert.deepEqual(calls.map((c) => c.headless), [true, false]);
+  });
+
+  it("opens with a window when the configuration isn't headless", async () => {
+    const { calls, launch } = fakeLaunch(["msedge"]);
+    await createBrowserManager(config({ headless: false }), launch).context();
+    assert.equal(calls[0]?.headless, false);
+  });
+
+  it("keeps session cookies across launches in the profile", async () => {
+    const { launch } = fakeLaunch(["msedge"]);
+    const first = createBrowserManager(config(), launch);
+    const context = (await first.context()) as BrowserContext & { jar: Cookie[] };
+    context.jar.push(cookie("MoodleSession"), cookie("Persistent", 2_000_000_000));
+    await first.close();
+    const saved = JSON.parse(await readFile(path.join(profileDir, SESSION_COOKIES_FILE), "utf8")) as Cookie[];
+    assert.deepEqual(saved.map((c) => c.name), ["MoodleSession"]);
+
+    // The browser dropped the session cookie and kept the persistent one, as Chromium does.
+    const second = createBrowserManager(config(), fakeLaunch(["msedge"], () => fakeContext([cookie("Persistent", 2_000_000_000)])).launch);
+    const reopened = (await second.context()) as BrowserContext & { jar: Cookie[] };
+    assert.deepEqual(reopened.jar.map((c) => c.name).sort(), ["MoodleSession", "Persistent"]);
+  });
+
   it("tries only the configured channel and explains a missing browser", async () => {
     const { calls, launch } = fakeLaunch(["msedge"]);
     const browser = createBrowserManager(config({ channel: "chrome" }), launch);
     await assert.rejects(browser.context(), BrowserNotFoundError);
-    assert.deepEqual(calls, ["chrome"]);
+    assert.deepEqual(calls.map((c) => c.channel), ["chrome"]);
   });
 
   it("passes other launch errors through and retries on the next call", async () => {
