@@ -3,8 +3,8 @@
 ## Runtime
 
 - Node.js ≥ 20, ESM, TypeScript with `NodeNext` resolution.
-- `@modelcontextprotocol/sdk` — the MCP server (`McpServer`) over stdio.
-- `zod` — tool input and output schemas, and the configuration.
+- `@modelcontextprotocol/sdk` — the MCP server (`McpServer`) over stdio. Bundled, so a dev dependency, like `zod` (ADR-005).
+- `zod` — tool input and output schemas.
 - `playwright-core` — browser automation with the system's Edge or Chrome, no bundled browsers (ADR-001).
 
 ## Tooling
