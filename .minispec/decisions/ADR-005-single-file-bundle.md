@@ -11,5 +11,6 @@ A single file starts fast and can be copied or vendored by a plugin without an `
 ## Consequences
 
 - Whether bundling `playwright-core` really breaks is checked with the current version (`features/bundle-playwright-core.md`); if it works, it goes inside and `bundleDependencies` is dropped.
+- Bundled dependencies (the MCP SDK, zod) are `devDependencies`: installing the package doesn't fetch what is already inside `dist/server.mjs`. Only what stays outside is a dependency.
 - `tsc` only typechecks; esbuild does not, so `typecheck` runs before a release.
 - Nothing is published to npm without the owner's explicit approval.
