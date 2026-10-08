@@ -9,7 +9,7 @@ When neither Edge nor Chrome is installed, the server downloads Chromium on its 
 - Today `browser.ts` throws `BrowserNotFoundError` after trying `msedge` and `chrome`.
 - `playwright-core` ships the installer (its CLI: `install chromium`) and the browser revisions it expects (`browsers.json`); it downloads into `PLAYWRIGHT_BROWSERS_PATH` when set, else the user's `ms-playwright` cache. No install script is involved, so it fits ADR-001.
 - A download takes minutes, longer than some clients wait for a tool call. On Linux, Chromium may also need system libraries that only `install-deps` (root) adds.
-- How the installer is located depends on `features/bundle-playwright-core.md`.
+- `playwright-core` stays in `node_modules` (ADR-005), so its CLI is there: `cli.js` next to the `package.json` that `require.resolve("playwright-core/package.json")` finds (an exported path).
 
 ## Changes
 

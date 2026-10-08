@@ -16,4 +16,4 @@
 
 ## Distribution (ADR-005)
 
-npm package with a `moodle-mcp` bin; `playwright-core` ships in `node_modules` (`bundleDependencies`) while it stays outside the bundle. Not published yet.
+npm package with a `moodle-mcp` bin; `playwright-core` ships in `node_modules` (`bundleDependencies`), outside the bundle. Not published yet.
