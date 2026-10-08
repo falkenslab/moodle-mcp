@@ -9,6 +9,7 @@
 - stdout belongs to the MCP protocol: logs and diagnostics go to stderr only.
 - No credentials anywhere in the repo: code, tests, fixtures, docs. Tool results never include passwords, cookies or session tokens.
 - Configuration is read only in `src/config.ts`; the rest of the code receives a `Config`.
+- Every tool that reads a site page opens it with `openSitePage()` (`src/moodle/session.ts`), so a missing session always gives the same error naming `login`.
 - Tests mirror `src/` under `test/`; a bug fixed gets a regression test.
 - Doc comments explain *why*, and mark Moodle or Playwright behavior verified by hand as "confirmed empirically" (with the Moodle version).
 - Documentation Markdown: one line per paragraph and list item, no horizontal rules between sections.

@@ -4,7 +4,7 @@ An [MCP](https://modelcontextprotocol.io) server that works a Moodle site throug
 
 You log in yourself, in a browser window the server opens: it never sees or stores your password. Your session is kept in a browser profile folder outside the server.
 
-Status: early development. Today it has the server, its configuration and a `server_info` tool; the Moodle tools come one by one.
+Status: early development. Today it has `login` and `server_info`; the Moodle tools come one by one.
 
 ## Requirements
 
@@ -21,6 +21,10 @@ Each setting is an environment variable or a command-line argument; the argument
 | `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | Browser profile folder that keeps your session; it can't be inside the server's folder |
 | `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome | Browser to use: `msedge` or `chrome` |
 | `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | Run the browser without a window (logging in always shows one) |
+
+## Logging in
+
+When a tool reports that there is no session, the client calls `login`: a browser window opens at the site's login page and the tool waits (5 minutes by default) until you log in there yourself, SSO included. The session is kept in the profile folder, together with `moodle-mcp-session-cookies.json` (Chromium forgets session cookies on close, so the server saves them), and survives restarts until Moodle ends it.
 
 The profile holds a live Moodle session: treat it like a password and keep it out of shared folders and repositories.
 
