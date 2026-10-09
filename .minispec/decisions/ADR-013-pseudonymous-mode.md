@@ -2,7 +2,7 @@
 
 ## Decision
 
-Tools never give other people's contact data (email, phone, address, IP), photos or profile fields, and give activity times only when asked. Beyond that, a pseudonymous mode, on by default (`MOODLE_MCP_PSEUDONYMIZE`, `--pseudonymize` / `--no-pseudonymize`, `configure`), replaces every other person with a stable alias: the client sees `A-7K3F9Q`, never a name, an email or a Moodle user id, and the person using the server resolves aliases on their own machine. Their own name and data stay visible: they are the one using the agent.
+Tools never give other people's contact data (email, phone, address, IP), photos or profile fields, and give activity times only when asked. Beyond that, a pseudonymous mode, on by default (`MOODLE_MCP_PSEUDONYMIZE`, `--pseudonymize` / `--no-pseudonymize`), replaces every other person with a stable alias: the client sees `A-7K3F9Q`, never a name, an email or a Moodle user id, and the person using the server resolves aliases on their own machine. Their own name and data stay visible: they are the one using the agent. Only the person turns it off, at start-up in the client's configuration (with a model that runs locally, say); `configure` can turn it on for the session, never off, or the agent could undo it (the same rule as ADR-015's scopes).
 
 - **A sibling library, not a server.** Aliases, the key, the local directory and the CLI live in `@falkenslab/pseudonym` (sibling repository `pseudonym`, its ADR-001 to ADR-003), which runs inside this server and exposes nothing to the client: an MCP server for it would hand the agent a `whois`. Until it's published, moodle-mcp depends on the sibling folder and bundles it.
 - **Aliases.** `A-` plus base32 of a keyed HMAC of the person's best identifier (pseudonym's ADR-002): Moodle's "ID number" field when set, else the email, else the Moodle user id at the site; the same person always gets the same alias, in every course and session. Cross-service linking is off by default.
@@ -22,3 +22,4 @@ The server's results go to a language model, often outside the EU. Teachers' tas
 - Losing the key loses the way back from old aliases, by design; `key export` is the backup.
 - Every tool that shows other people goes through one module (`src/people.ts`), and tests check that no name, email or user id leaks in pseudonymous mode.
 - Scopes (ADR-015) come first: a tool the person left out never reaches the model; pseudonymization applies to the `student-data` tools that are allowed.
+- Turning it off for a local model trusts the whole chain to stay local: the client, its logs and telemetry, any transcript sync. Minimization (no contact data, no profile fields) and the scopes apply either way.
