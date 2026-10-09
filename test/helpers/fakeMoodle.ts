@@ -26,9 +26,12 @@ ${body}
 </body></html>`;
 }
 
-/** The first system browser that launches headless, or `undefined` (tests needing it are skipped). */
+/**
+ * The first browser that launches headless: the system's Edge or Chrome, or Playwright's own Chromium
+ * (the test container, `npm run test:docker`); `undefined` skips the tests that need one.
+ */
 export async function launchTestBrowser(): Promise<Browser | undefined> {
-  for (const channel of ["msedge", "chrome"]) {
+  for (const channel of ["msedge", "chrome", "chromium"]) {
     try {
       return await chromium.launch({ channel, headless: true });
     } catch {

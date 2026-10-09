@@ -27,7 +27,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "tsx --test --test-concurrency=1 \"test/**/*.test.ts\"",
-    "inspect": "npx @modelcontextprotocol/inspector node dist/server.mjs"
+    "inspect": "npx @modelcontextprotocol/inspector node dist/server.mjs",
+    "test:docker": "node scripts/in-docker.mjs npm test"
   },
   "dependencies": {
     "playwright-core": "^1.64.0"

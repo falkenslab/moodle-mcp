@@ -11,6 +11,6 @@
 - No credentials anywhere in the repo: code, tests, fixtures, docs. Tool results never include passwords, cookies or session tokens.
 - Configuration is read only in `src/config.ts` and changed only by `configure`; the rest of the code reads the shared `Config` when it needs a value, never copying it at startup, and gets the site with `requireSiteUrl()`.
 - Tools read Moodle through its AJAX services with `callService()` when one gives what they need, and scrape pages only otherwise (ADR-008). Every tool that reads a site page opens it with `openSitePage()` (`src/moodle/session.ts`), so a missing session always gives the same error naming `login`.
-- Tests mirror `src/` under `test/`; a bug fixed gets a regression test. Test files run one at a time (`--test-concurrency=1`): each launches a real browser, and in parallel they ran up to 55 Edge processes at once on the developer's machine.
+- Tests mirror `src/` under `test/`; a bug fixed gets a regression test. Test files run one at a time (`--test-concurrency=1`): each launches a real browser. Anything that launches a browser (the tests, checks against the sandbox) runs in Docker (`npm run test:docker`, `scripts/in-docker.mjs`), never on the developer's desktop (asked by the owner, 9 October 2026).
 - Doc comments explain *why*, and mark Moodle or Playwright behavior verified by hand as "confirmed empirically" (with the Moodle version).
 - Documentation Markdown: one line per paragraph and list item, no horizontal rules between sections.

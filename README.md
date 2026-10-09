@@ -68,8 +68,11 @@ npm run build       # bundles src/ into dist/server.mjs
 npm run dev         # rebuilds on every change
 npm run typecheck
 npm run lint
-npm test
+npm test            # opens browsers on your machine
+npm run test:docker # the same, in a container with Playwright's Chromium: nothing opens on your desktop
 ```
+
+`test:docker` runs `scripts/in-docker.mjs`, which wraps any command the same way (`node scripts/in-docker.mjs <command>`): Playwright's image, the repository mounted with Linux `node_modules` of its own, and, when the Moodle sandbox is up, its network, with `localhost:8080` forwarded to it.
 
 To try the server by hand, the MCP Inspector opens a web UI on the built bundle (set `MOODLE_URL` in your shell first):
 

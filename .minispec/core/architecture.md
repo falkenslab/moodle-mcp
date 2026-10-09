@@ -53,6 +53,6 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 
 - `src/` — the server.
 - `test/` — `node:test` suites mirroring `src/`.
-- `scripts/` — build helpers (esbuild).
+- `scripts/` — build helpers (esbuild) and the Docker runner for anything that opens a browser (`in-docker.mjs`, `docker-proxy.mjs`).
 - `dist/server.mjs` — the bundle and the package's bin (not committed).
 - `.minispec/` — this specification; `.claude/skills/` — skills for developing this repo.
