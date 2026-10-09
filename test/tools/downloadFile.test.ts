@@ -24,6 +24,10 @@ before(async () => {
       response.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Content-Disposition": "inline; filename*=UTF-8''enunciado%20final.txt" });
       return response.end("Write a program.\n");
     }
+    if (request.url === "/media/lesson.mp4") {
+      response.writeHead(200, { "Content-Type": "video/mp4" });
+      return response.end("mp4");
+    }
     if (request.url === "/pluginfile.php/2/mod_folder/content/0/a.py?forcedownload=1") {
       response.writeHead(200, { "Content-Type": "text/x-python" });
       return response.end("print('a')\n");
@@ -78,6 +82,8 @@ describe("download_file", { skip: !browser && "no system browser" }, () => {
     assert.equal(second.name, "enunciado final (2).txt");
     assert.equal(((await download(`${origin}pluginfile.php/2/mod_folder/content/0/a.py?forcedownload=1`)).structuredContent as { name: string }).name, "a.py");
     assert.match(JSON.stringify((await download("https://example.org/x.pdf")).content), /isn't the site/);
+    // The same host, outside Moodle's path (a video library next to the campus).
+    assert.equal(((await download(`${origin}media/lesson.mp4`)).structuredContent as { name: string }).name, "lesson.mp4");
     assert.match(JSON.stringify((await download(`${origin}pluginfile.php/3/private.pdf`)).content), /no Moodle session/);
     assert.match(JSON.stringify((await download(`${origin}pluginfile.php/9/missing.txt`)).content), /answered 404/);
     const relative = await client.callTool({ name: "download_file", arguments: { url: `${origin}pluginfile.php/2/mod_folder/content/0/a.py?forcedownload=1`, destDir: "downloads" } });

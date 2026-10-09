@@ -1,4 +1,5 @@
 import type { Page } from "playwright-core";
+import { inPage } from "./inPage.js";
 
 /** Moodle formats names for HTML (`format_string`): plain text for the client. */
 export function decodeEntities(text: string): string {
@@ -50,4 +51,70 @@ export function readTexts(page: Page, selector: string): Promise<string[]> {
         .trim();
     });
   }, selector);
+}
+
+/** A video, audio or player found in a page's content. */
+export interface MediaItem {
+  kind: "video" | "audio" | "youtube" | "vimeo" | "embed";
+  url: string;
+  title?: string;
+}
+
+/**
+ * The media in the elements matching `selector`: `<video>`/`<audio>` and their sources, players in
+ * iframes, video.js's `data-setup` sources (Moodle's media filter turns a YouTube link into one), and
+ * plain links to media. YouTube URLs come back as `watch?v=` links. Read in the page.
+ */
+export function readMedia(page: Page, selector: string): Promise<MediaItem[]> {
+  return inPage(
+    page,
+    (selector: string) => {
+      interface El {
+        tagName: string;
+        title: string;
+        getAttribute(name: string): string | null;
+        querySelectorAll(s: string): ArrayLike<El>;
+      }
+      const roots = Array.from((globalThis as unknown as { document: El }).document.querySelectorAll(selector));
+      const found = new Map<string, MediaItem>();
+      const add = (raw: string | null | undefined, tag: string, title?: string | null) => {
+        if (!raw || raw.startsWith("blob:") || raw.startsWith("data:")) return;
+        let url: URL;
+        try {
+          url = new URL(raw, (globalThis as unknown as { location: { href: string } }).location.href);
+        } catch {
+          return;
+        }
+        const youtube = /(?:youtube(?:-nocookie)?\.com\/(?:embed\/|watch\?v=|shorts\/)|youtu\.be\/)([\w-]{6,})/.exec(url.href)?.[1];
+        let kind: MediaItem["kind"];
+        let href = url.href;
+        if (youtube) {
+          kind = "youtube";
+          href = `https://www.youtube.com/watch?v=${youtube}`;
+        } else if (/vimeo\.com\//.test(url.href)) kind = "vimeo";
+        else if (tag === "AUDIO" || /\.(mp3|ogg|oga|wav|m4a|aac)(\?|$)/i.test(url.pathname)) kind = "audio";
+        else if (tag === "VIDEO" || /\.(mp4|webm|m4v|mov|ogv|m3u8)(\?|$)/i.test(url.pathname)) kind = "video";
+        else if (tag === "IFRAME") kind = "embed";
+        else return;
+        if (!found.has(href)) found.set(href, { kind, url: href, ...(title ? { title } : {}) });
+      };
+      for (const root of roots) {
+        for (const el of Array.from(root.querySelectorAll("video, audio, source, iframe, a[href]"))) {
+          const media = el.tagName === "SOURCE" ? "VIDEO" : el.tagName;
+          add(el.getAttribute("src") ?? el.getAttribute("href"), media, el.getAttribute("title"));
+          for (const attribute of ["data-setup-lazy", "data-setup"]) {
+            const setup = el.getAttribute(attribute);
+            if (!setup) continue;
+            try {
+              for (const source of (JSON.parse(setup) as { sources?: { src?: string }[] }).sources ?? []) add(source.src, "VIDEO", el.getAttribute("title"));
+            } catch {
+              // Not JSON: nothing to read.
+            }
+          }
+        }
+      }
+      return Array.from(found.values());
+    },
+    selector,
+  );
 }

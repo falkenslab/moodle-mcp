@@ -11,6 +11,10 @@
 - Configured at run time by the client with `configure`, or by optional environment variables and arguments (ADR-003, ADR-009); its usage rules travel in the MCP server's `instructions`.
 - Ships as one bundled `dist/server.mjs` with a `moodle-mcp` bin, over stdio (ADR-005).
 
+## What it doesn't do
+
+- Watch, play or transcribe media: tools give a video's URL (`get_activity_content`'s `media`) or save the site's files (`download_file`); what to do with them is the client's (decided by the owner, 9 October 2026).
+
 ## For whom
 
 - Any MCP client: Claude Code, Claude Desktop, custom agents.

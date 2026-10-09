@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
 import { pause, readingSeconds } from "../moodle/pace.js";
 import { openSitePage } from "../moodle/session.js";
-import { readTexts } from "../moodle/text.js";
+import { readMedia, readTexts, type MediaItem } from "../moodle/text.js";
 import type { RegisterTool } from "./types.js";
 
 const TYPES = ["page", "book", "label", "url", "resource", "folder"] as const;
@@ -23,6 +23,10 @@ const outputSchema = {
   activity: z.object({ id: z.number().int(), type: z.enum(TYPES) }),
   text: z.string().optional().describe("Page and label content, as plain text with paragraphs and lists kept"),
   chapters: z.array(z.object({ title: z.string(), text: z.string() })).optional().describe("A book's chapters, in order"),
+  media: z
+    .array(z.object({ kind: z.enum(["video", "audio", "youtube", "vimeo", "embed"]), url: z.string(), title: z.string().optional() }))
+    .optional()
+    .describe("Videos, audio and players in a page's, label's or book's content: download_file saves the site's own files; the rest are links"),
   url: z.string().optional().describe("A URL resource's target"),
   files: z.array(link).optional().describe("A file resource's or a folder's files"),
   trail: z.enum(["realistic", "fast"]).describe("How it was read: realistic viewed it page by page at a reader's pace"),
@@ -97,10 +101,12 @@ export const registerGetActivityContent: RegisterTool = (server, { config, brows
         const selector = type === "page" ? "#region-main .generalbox" : `[data-for="cmitem"][data-id="${activityId}"] .activity-altcontent`;
         const page = await view(path, selector);
         output.text = (await readTexts(page, selector))[0] ?? "";
+        output.media = await readMedia(page, selector);
         await page.close();
         await readAsAPerson(output.text);
       } else if (type === "book") {
         output.chapters = [];
+        const media: MediaItem[] = [];
         if (realistic) {
           // Chapter by chapter, following "next", as a reader does.
           const page = await view(`mod/book/view.php?id=${activityId}`, "#region-main .book_content");
@@ -109,6 +115,7 @@ export const registerGetActivityContent: RegisterTool = (server, { config, brows
               const title = (await readTexts(page, "#region-main .book_content h3, #region-main .book_content h2"))[0] ?? "";
               const read = chapter(title, (await readTexts(page, "#region-main .book_content"))[0] ?? "");
               output.chapters.push(read);
+              media.push(...(await readMedia(page, "#region-main .book_content")));
               await readAsAPerson(read.text);
               const next = page.locator("#region-main a.btn-next").first();
               if ((await next.count()) === 0) break;
@@ -122,8 +129,11 @@ export const registerGetActivityContent: RegisterTool = (server, { config, brows
           const titles = await readTexts(page, ".book_chapter h2, .book_chapter h3");
           const bodies = await readTexts(page, ".book_chapter");
           output.chapters = bodies.map((body, i) => chapter(titles[i] ?? "", body));
+          media.push(...(await readMedia(page, ".book_chapter")));
           await page.close();
         }
+        // The same video can appear in several chapters: once each.
+        output.media = [...new Map(media.map((item) => [item.url, item])).values()];
       } else if (type === "url") {
         // forceview logs the view and shows the link instead of leaving the site.
         const page = await view(`mod/url/view.php?id=${activityId}&forceview=1`, ".urlworkaround a");

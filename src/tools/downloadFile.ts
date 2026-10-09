@@ -30,7 +30,7 @@ export const registerDownloadFile: RegisterTool = (server, { config, browser }) 
     {
       title: "Download a file from Moodle",
       description:
-        "Save a file of the Moodle site to a local folder, with the person's session: a resource's or folder's file (get_activity_content), an assignment's brief file or submitted file (get_assignment, get_submissions), a forum attachment (get_discussion). Only the configured site's URLs. Never overwrites: an existing name gets a number. Returns where it was saved.",
+        "Save a file of the Moodle site to a local folder, with the person's session: a resource's or folder's file (get_activity_content), an assignment's brief file or submitted file (get_assignment, get_submissions), a forum attachment (get_discussion). Only URLs of the configured site's host (its media too: videos it serves outside Moodle); external links (YouTube…) are for other tools. Never overwrites: an existing name gets a number. Returns where it was saved.",
       inputSchema: {
         url: z.string().url().describe("The file's URL on the site, as the other tools give it (…/pluginfile.php/…)"),
         destDir: z.string().describe("Absolute local folder to save into; created if missing"),
@@ -41,8 +41,9 @@ export const registerDownloadFile: RegisterTool = (server, { config, browser }) 
     async ({ url, destDir }) => {
       const siteUrl = requireSiteUrl(config);
       const target = new URL(url);
-      // The session's cookies go only to the configured site.
-      if (!target.href.startsWith(siteUrl)) throw new Error(`Only files of ${new URL(siteUrl).origin} can be downloaded with the session; ${target.origin} isn't the site.`);
+      // The session's cookies go only to the site's origin: its own files, and media the same host serves
+      // outside Moodle's path (a video library next to the campus).
+      if (target.origin !== new URL(siteUrl).origin) throw new Error(`Only files of ${new URL(siteUrl).origin} can be downloaded with the session; ${target.origin} isn't the site. Give that link to the person or another tool.`);
       if (!path.isAbsolute(destDir)) throw new Error(`Give destDir as an absolute path: "${destDir}".`);
       // The browser context's request API carries its cookies without opening a tab.
       const response = await (await browser.context()).request.get(target.href, { maxRedirects: 5 });
