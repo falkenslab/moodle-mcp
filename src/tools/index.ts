@@ -1,4 +1,5 @@
 import { registerConfigure } from "./configure.js";
+import { registerGetCourseStructure } from "./getCourseStructure.js";
 import { registerGetMe } from "./getMe.js";
 import { registerGetSubmissions } from "./getSubmissions.js";
 import { registerListAssignments } from "./listAssignments.js";
@@ -8,4 +9,4 @@ import { registerServerInfo } from "./serverInfo.js";
 import type { RegisterTool } from "./types.js";
 
 /** Every tool the server exposes, in the order clients list them. */
-export const TOOLS: RegisterTool[] = [registerConfigure, registerLogin, registerGetMe, registerListCourses, registerListAssignments, registerGetSubmissions, registerServerInfo];
+export const TOOLS: RegisterTool[] = [registerConfigure, registerLogin, registerGetMe, registerListCourses, registerGetCourseStructure, registerListAssignments, registerGetSubmissions, registerServerInfo];

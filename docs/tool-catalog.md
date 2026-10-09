@@ -43,7 +43,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
 | `list_courses` | My courses, by dates | R | AJAX | T, S every session | Done |
-| `get_course_structure` | Sections and activities with ids, type, visibility, restrictions, dates, my completion state | R | AJAX (`core_courseformat_get_state`) | T 110 course page loads; S 105 course + 101 section pages, 310 text searches for completion words | — |
+| `get_course_structure` | Sections and activities with ids, type, visibility, restrictions, dates, my completion state | R | AJAX (`core_courseformat_get_state`) | T 110 course page loads; S 105 course + 101 section pages, 310 text searches for completion words | Done |
 | `list_assignments` | A course's assignments | R | AJAX | T | Done |
 | `get_activity` | One activity's settings and description: dates, max grade, completion rules, attached files | R | Page (`view.php`, `modedit.php` for teachers) | T 16 edits started from `modedit.php?update=` | — |
 | `get_activities_overview` | Per type, the course's activities with due dates, submissions and what needs grading | R | AJAX (`core_courseformat_get_overview_information`, 5.x) | T "are there submissions pending to grade?" | — |

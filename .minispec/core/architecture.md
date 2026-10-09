@@ -23,7 +23,9 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/configure.ts` — `configure`: URL, headless, profile folder, in memory (ADR-009); closes the browser when the profile or the mode changes.
 - `tools/login.ts` — `login`: returns the user if the session is alive; else a window at the login page, waiting (with progress notifications) until the person is back on the site logged in.
 - `tools/listCourses.ts` — `list_courses`: the person's courses, from `core_course_get_enrolled_courses_by_timeline_classification`.
-- `tools/listAssignments.ts` — `list_assignments`: a course's assignments by course module id, from `core_courseformat_get_state`.
+- `moodle/course.ts` — a course's state (`core_courseformat_get_state`), shared by the course tools, and activity details (dates, restriction texts) from the course page and, for activities it doesn't show, their section pages.
+- `tools/getCourseStructure.ts` — `get_course_structure`: sections and activities with visibility, availability, restrictions and completion; dates and restriction texts with `details`.
+- `tools/listAssignments.ts` — `list_assignments`: a course's assignments by course module id, from the course state.
 - `moodle/assign.ts` — an assignment's instance and context ids from its grader page (cached in memory; no service gives them), participants and their dates through `mod_assign_list_participants` and `mod_assign_get_participant`, and a submission's content from the grader panel fragment (`core_get_fragment`), read by class in a blank tab.
 - `tools/getSubmissions.ts` — `get_submissions`: every participant's status, dates and, by default, content.
 - `moodle/user.ts` — a user by id, the site's name, a user's roles in a course (role links on their course profile) and what they can do there, asked of read-only services that need the capability (activity types they can add, the grader report).

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { redactUrl, requireSiteUrl } from "../config.js";
-import { callService, readPageConfig } from "../moodle/ajax.js";
+import { readPageConfig } from "../moodle/ajax.js";
+import { courseState } from "../moodle/course.js";
 import { courseAbilities, courseRoles, siteName, userById } from "../moodle/user.js";
 import type { RegisterTool } from "./types.js";
 
@@ -64,7 +65,7 @@ export const registerGetMe: RegisterTool = (server, { config, browser }) => {
       };
       if (courseId !== undefined) {
         // The course's state checks that it exists and the person can see it, and gives a section.
-        const state = JSON.parse(await callService<string>(context, siteUrl, "core_courseformat_get_state", { courseid: courseId })) as { section: { id: string }[] };
+        const state = await courseState(context, siteUrl, courseId);
         const abilities = await courseAbilities(context, siteUrl, courseId, Number(state.section[0]?.id ?? 0));
         output.course = { id: courseId, roles: await courseRoles(context, siteUrl, cfg.userId, courseId), ...abilities };
       }

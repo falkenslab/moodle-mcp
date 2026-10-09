@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { callService } from "../moodle/ajax.js";
+import { courseState, type CourseState } from "../moodle/course.js";
 import { decodeEntities } from "../moodle/text.js";
 import type { RegisterTool } from "./types.js";
 
@@ -19,12 +19,6 @@ const assignment = z.object({
 const outputSchema = { assignments: z.array(assignment) };
 
 export type Assignment = z.infer<typeof assignment>;
-
-/** The parts of `core_courseformat_get_state` this tool reads (Moodle 5.2). */
-export interface CourseState {
-  section: { id: string; number: number; title: string }[];
-  cm: { id: string; name: string; module: string; url?: string; visible: boolean; sectionid: string }[];
-}
 
 /** The course's assignments, in the course's order. */
 export function assignmentsOf(state: CourseState): Assignment[] {
@@ -56,8 +50,7 @@ export const registerListAssignments: RegisterTool = (server, { config, browser 
     },
     async ({ courseId }) => {
       const siteUrl = requireSiteUrl(config);
-      // The course page's own state: sections and activities, as a JSON string (ADR-008).
-      const state = JSON.parse(await callService<string>(await browser.context(), siteUrl, "core_courseformat_get_state", { courseid: courseId })) as CourseState;
+      const state = await courseState(await browser.context(), siteUrl, courseId);
       const output = { assignments: assignmentsOf(state) };
       return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
     },
