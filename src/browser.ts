@@ -37,6 +37,19 @@ export class BrowserDownloadingError extends Error {
   override name = "BrowserDownloadingError";
 }
 
+/** A window was asked for where there's no screen to show it (a container, a server). */
+export class NoDisplayError extends Error {
+  override name = "NoDisplayError";
+}
+
+/**
+ * Whether a window can be shown. On Linux it needs an X or Wayland display; without one (Docker, a
+ * server) the server refuses rather than trying, so it never reaches a display it wasn't given.
+ */
+export function canShowWindow(env: NodeJS.ProcessEnv = process.env, platform: NodeJS.Platform = process.platform): boolean {
+  return platform !== "linux" || Boolean(env.DISPLAY || env.WAYLAND_DISPLAY);
+}
+
 // Playwright's message when a channel isn't installed: "Chromium distribution 'msedge' is not found",
 // with " at <path>" only when it knows where to look (playwright-core 1.64).
 const NOT_INSTALLED = /distribution '[^']+' is not (found|supported)|Executable doesn't exist/i;
@@ -54,6 +67,7 @@ export function createBrowserManager(
   config: Config,
   launch: LaunchPersistentContext = chromium.launchPersistentContext.bind(chromium),
   install: InstallChromium = installChromium,
+  windowsPossible: () => boolean = canShowWindow,
 ): BrowserManager {
   let open: Open | undefined;
   // The download runs in the background, outside the queue: it takes minutes, longer than some
@@ -133,6 +147,11 @@ export function createBrowserManager(
       return exclusive(async () => {
         const wantHeaded = headed || !config.headless;
         if (open && (open.headed || !wantHeaded)) return open.context;
+        if (wantHeaded && !windowsPossible()) {
+          throw new NoDisplayError(
+            `There's no screen to show a browser window here (no DISPLAY or WAYLAND_DISPLAY), so ${headed ? "logging in by hand isn't possible" : "a headed browser can't open"}. Run the server headless (MOODLE_MCP_HEADLESS=true) with a profile already logged in, or where there's a screen.`,
+          );
+        }
         await closeOpen();
         open = await launchFirstAvailable(wantHeaded);
         return open.context;

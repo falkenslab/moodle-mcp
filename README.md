@@ -33,6 +33,8 @@ When a tool reports that there is no session, the client calls `login`: a browse
 
 The profile holds a live Moodle session: treat it like a password and keep it out of shared folders and repositories.
 
+Where there's no screen (Linux without `DISPLAY` or `WAYLAND_DISPLAY`: a container, a server), the server never opens a window: `login` and a headed configuration fail with a message instead. Log in where there's a screen and give the server that profile, headless.
+
 ## Use from Claude Code
 
 Build it first (see Development), then add it with the CLI:

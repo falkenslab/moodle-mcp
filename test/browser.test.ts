@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, before, describe, it } from "node:test";
 import type { BrowserContext, Cookie } from "playwright-core";
-import { BrowserDownloadingError, BrowserNotFoundError, createBrowserManager } from "../src/browser.js";
+import { BrowserDownloadingError, BrowserNotFoundError, NoDisplayError, canShowWindow, createBrowserManager } from "../src/browser.js";
 import type { Config } from "../src/config.js";
 import { SESSION_COOKIES_FILE } from "../src/sessionCookies.js";
 import { testConfig } from "./helpers/fixtures.js";
@@ -97,7 +97,7 @@ describe("createBrowserManager", () => {
 
   it("relaunches with a window when asked, and keeps the window for later calls", async () => {
     const { calls, launch } = fakeLaunch(["msedge"]);
-    const browser = createBrowserManager(config(), launch);
+    const browser = createBrowserManager(config(), launch, undefined, () => true);
     await browser.context();
     const headed = await browser.context({ headed: true });
     assert.equal(await browser.context(), headed);
@@ -106,8 +106,24 @@ describe("createBrowserManager", () => {
 
   it("opens with a window when the configuration isn't headless", async () => {
     const { calls, launch } = fakeLaunch(["msedge"]);
-    await createBrowserManager(config({ headless: false }), launch).context();
+    await createBrowserManager(config({ headless: false }), launch, undefined, () => true).context();
     assert.equal(calls[0]?.headless, false);
+  });
+
+  it("refuses a window where there's no screen, and stays headless otherwise", async () => {
+    const { calls, launch } = fakeLaunch(["msedge"]);
+    const browser = createBrowserManager(config(), launch, undefined, () => false);
+    await browser.context();
+    await assert.rejects(browser.context({ headed: true }), NoDisplayError);
+    await assert.rejects(createBrowserManager(config({ headless: false }), launch, undefined, () => false).context(), /MOODLE_MCP_HEADLESS=true/);
+    assert.deepEqual(calls.map((c) => c.headless), [true]);
+  });
+
+  it("sees a screen on Linux only with an X or Wayland display", () => {
+    assert.equal(canShowWindow({}, "linux"), false);
+    assert.equal(canShowWindow({ DISPLAY: ":0" }, "linux"), true);
+    assert.equal(canShowWindow({ WAYLAND_DISPLAY: "wayland-0" }, "linux"), true);
+    assert.equal(canShowWindow({}, "win32"), true);
   });
 
   it("keeps session cookies across launches in the profile", async () => {
