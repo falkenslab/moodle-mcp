@@ -12,5 +12,6 @@ The runs in `moodle-courses` needed operations no domain tool will cover soon (S
 
 - The `instructions` and each tool's description say to use them only when no domain tool covers the task, and to name the task; those gaps decide which domain tool comes next.
 - Guardrails in code, not in prompts: navigation stays on the configured site (and its files); typing into password fields is refused (ADR-002); snapshots cover the main region and are size-capped; no `evaluate`.
-- Annotations: snapshot and screenshot are read-only; the rest are writes, so clients can gate them.
+- Annotations: snapshot, screenshot and wait are read-only; the rest are writes, so clients can gate them, and a click is destructive (it may save, delete or submit).
+- A link or redirect off the site is cancelled and reported, leaving the page where it was.
 - Domain tools stay the norm (ADR-004's motivation holds): a task done often through the fallback becomes a domain tool.

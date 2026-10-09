@@ -26,7 +26,7 @@ Let an agent work in a Moodle course with the person's own session, through tool
 
 ## Status
 
-Version 0.x: the server, its configuration, `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `get_activity_content`, `list_assignments`, `get_submissions`, `list_discussions`, `get_discussion`, `get_my_grades`, `list_pending`, the quiz attempt tools, `get_assignment`, `save_submission`, `submit_assignment`, `download_file`, `get_survey`, `submit_survey`, `grade_submission`, `reply_to_post`, `create_discussion`, `create_activity`, `update_activity`, the course layout tools (`edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`), `show_browser` and `server_info` exist; the Moodle tools come one by one (see `features/`).
+Version 0.x: the server, its configuration, `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `get_activity_content`, `list_assignments`, `get_submissions`, `list_discussions`, `get_discussion`, `get_my_grades`, `list_pending`, the quiz attempt tools, `get_assignment`, `save_submission`, `submit_assignment`, `download_file`, `get_survey`, `submit_survey`, `grade_submission`, `reply_to_post`, `create_discussion`, `create_activity`, `update_activity`, the course layout tools (`edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`), `show_browser`, the browser fallback tools (`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`) and `server_info` exist; the Moodle tools come one by one (see `features/`).
 
 ## Test site
 

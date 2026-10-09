@@ -1,5 +1,6 @@
 import { registerCreateActivity, registerUpdateActivity } from "./activityForms.js";
 import { registerGetAssignment, registerSaveSubmission, registerSubmitAssignment } from "./assignSubmission.js";
+import { BROWSER_TOOLS } from "./browserTools.js";
 import { registerConfigure } from "./configure.js";
 import { registerAddSection, registerDeleteActivity, registerDeleteSection, registerDuplicateActivity, registerEditActivity, registerEditSection } from "./courseLayout.js";
 import { registerDownloadFile } from "./downloadFile.js";
@@ -60,5 +61,6 @@ export const TOOLS: RegisterTool[] = [
   registerEditSection,
   registerDeleteSection,
   registerShowBrowser,
+  ...BROWSER_TOOLS,
   registerServerInfo,
 ];

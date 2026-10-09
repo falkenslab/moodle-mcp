@@ -25,6 +25,7 @@ export function fakeBrowserManager(overrides: Partial<BrowserManager> = {}): Bro
     visible: () => false,
     setVisible: async () => undefined,
     show: async () => undefined,
+    tab: () => Promise.reject(new Error("this test opens no browser")),
     saveSession: async () => undefined,
     close: async () => undefined,
     ...overrides,

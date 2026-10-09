@@ -32,6 +32,8 @@ export interface BrowserManager {
   setVisible(visible: boolean): Promise<void>;
   /** While following, brings `url` (a site page) to the front of the window; best effort, never throws. */
   show(url: string): Promise<void>;
+  /** The one tab the browser tools work in (ADR-010), the same one following shows; opens the browser if needed. */
+  tab(): Promise<Page>;
   /** Saves the session cookies of the open context, if any (ADR-007). */
   saveSession(): Promise<void>;
   close(): Promise<void>;
@@ -151,6 +153,12 @@ export function createBrowserManager(
     );
   }
 
+  /** The working tab in `context`: the one already in use, else the window's first empty tab, else a new one. */
+  async function workTab(context: BrowserContext): Promise<Page> {
+    if (!followTab || followTab.isClosed()) followTab = context.pages().find((p) => p.url() === "about:blank") ?? (await context.newPage());
+    return followTab;
+  }
+
   async function closeOpen(): Promise<void> {
     const current = open;
     open = undefined;
@@ -193,15 +201,14 @@ export function createBrowserManager(
       const current = open;
       if (!shown || !current?.headed) return;
       try {
-        // The window's first, empty tab if it's still there, rather than leaving it blank beside ours.
-        if (!followTab || followTab.isClosed()) followTab = current.context.pages().find((p) => p.url() === "about:blank") ?? (await current.context.newPage());
-        const tab = followTab;
+        const tab = await workTab(current.context);
         if (tab.url() !== url) await tab.goto(url, { waitUntil: "domcontentloaded" });
         await tab.bringToFront();
       } catch {
         // Following is a courtesy: a page that doesn't load never changes the tool's result.
       }
     },
+    tab: async () => workTab(await manager.context()),
     openChannel: () => open?.channel,
     chromiumDownload: () => (download ? "downloading" : downloadFailure ? "failed" : undefined),
     saveSession: () =>

@@ -39,6 +39,8 @@ const script = [
 // Never a window: no display to reach (WSLg would show it on the desktop) and the server headless.
 const args = ["run", "--rm", "--init", "-v", `${root}:/work`, "-v", "moodle-mcp-node-modules:/work/node_modules", "-w", "/work", "-e", "CI=1"];
 args.push("-e", "DISPLAY=", "-e", "WAYLAND_DISPLAY=", "-e", "MOODLE_MCP_HEADLESS=true");
+// npm's cache outlives the container: `npx` tools (the Inspector) download once, not on every run.
+args.push("-v", "moodle-mcp-npm-cache:/root/.npm");
 if (sandboxUp) args.push("--network", NETWORK);
 if (process.env.MOODLE_MCP_DOCKER_MOUNT) args.push("-v", process.env.MOODLE_MCP_DOCKER_MOUNT);
 args.push(IMAGE, "bash", "-c", script);

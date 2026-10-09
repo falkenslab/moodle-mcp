@@ -5,7 +5,7 @@
 - Relative imports inside `src/` use explicit `.js` extensions (NodeNext).
 - One tool per file in `src/tools/`, registered from `src/tools/index.ts`; a small family of tools sharing schemas and result may share a file (`courseLayout.ts`). Tool names are snake_case Moodle verbs and nouns (`list_courses`), never browser actions (ADR-004).
 - Every tool declares its annotations: `readOnlyHint: true` when it only reads; `destructiveHint` and `idempotentHint` when it writes.
-- Tools return `structuredContent` matching an `outputSchema`, plus the same data as JSON text for clients that ignore it. Schemas avoid nullable types (an optional field instead), which some clients reject; the Inspector's `--cli` with `--method tools/list --strict` checks them (see the README).
+- Tools return `structuredContent` matching an `outputSchema`, plus the same data as JSON text for clients that ignore it; an image (`browser_screenshot`) is image content only. Schemas avoid nullable types (an optional field instead), which some clients reject; the Inspector's `--cli` with `--method tools/list --strict` checks them (see the README).
 - Page code that needs helper functions runs through `inPage()` (`src/moodle/inPage.ts`): under tsx (the tests) named functions get wrapped in a `__name` helper the page doesn't have. Plain `page.evaluate()` callbacks keep to anonymous callbacks and loops.
 - stdout belongs to the MCP protocol: logs and diagnostics go to stderr only.
 - No credentials anywhere in the repo: code, tests, fixtures, docs. Tool results never include passwords, cookies or session tokens.
