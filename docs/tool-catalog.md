@@ -64,8 +64,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_activity_media` | Videos in an activity: source, duration, host | R | Page | S 400 video polling calls, 60 calls to find sources | — |
 | `watch_video` | Play a video to the end at real speed, for completion | W (trail) | Page | S two courses depend on watched videos; one run took 29 h | — |
 | `download_media` | Save a video locally for transcription | R | Page | S 95 transcription runs | — |
-| `get_my_grades` | My grades, ranges and feedback in a course | R | Page (`/grade/report/user/index.php`) | S 9 sessions on progress and grades | — |
-| `list_pending` | What I still have to do: incomplete activities, restrictions, due dates | R | AJAX (`get_state`) + `get_my_grades` | S "what activities do I have left?"; the teacher-only progress report gave 404 | — |
+| `get_my_grades` | My grades, ranges and feedback in a course | R | Page (`/grade/report/user/index.php`) | S 9 sessions on progress and grades | Done |
+| `list_pending` | What I still have to do: incomplete activities, restrictions, due dates | R | AJAX (`get_state`) + `get_my_grades` | S "what activities do I have left?"; the teacher-only progress report gave 404 | Done |
 | `set_completion` | Mark an activity done or not done (manual completion) | W | AJAX (`core_completion_update_activity_completion_status_manually`) | none | — |
 
 ## Student: doing activities
