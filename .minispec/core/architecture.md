@@ -46,6 +46,8 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `moodle/submission.ts` — an assignment as the student sees it (status by class, the forms' hidden actions), saving a submission through the edit form, submitting through the confirm form (the site's statement accepted only when asked).
 - `tools/assignSubmission.ts` — `get_assignment`, `save_submission`, `submit_assignment`.
 - `tools/downloadFile.ts` — `download_file`: a site file saved locally through the browser context's request API (its cookies, no tab), only the site's host (its media outside Moodle's path too), never overwriting.
+- `moodle/survey.ts` — surveys (the questionnaire plugin and Moodle's feedback) through their forms, one layout per module: questions and fields read page by page (`gopage`, `sec`), answers checked against the form, filled and sent page by page, Moodle's complaints returned.
+- `tools/surveys.ts` — `get_survey`, `submit_survey`.
 - `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text; `readTexts()`: elements' text in a page, paragraphs and lists kept. `readMedia()`: videos, audio and players in content (video.js sources included), YouTube as `watch?v=` links.
 - `moodle/pace.ts` — reading at a person's pace for the realistic trail (ADR-012): bounded pauses with progress.
 - `tools/getActivityContent.ts` — `get_activity_content`: a page, book, label, URL, file or folder viewed as a person would (`forceview` for URLs and files), so Moodle logs the view; books chapter by chapter or from the print page, by trail; with the content's media.

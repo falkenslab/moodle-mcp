@@ -18,6 +18,7 @@ import { registerListPending } from "./listPending.js";
 import { registerLogin } from "./login.js";
 import { registerAnswerQuizQuestions, registerFinishQuizAttempt, registerGetAttemptReview, registerGetQuizAttempt, registerGetQuizInfo, registerStartQuizAttempt } from "./quizAttempts.js";
 import { registerServerInfo } from "./serverInfo.js";
+import { registerGetSurvey, registerSubmitSurvey } from "./surveys.js";
 import type { RegisterTool } from "./types.js";
 
 /** Every tool the server exposes, in the order clients list them. */
@@ -34,6 +35,8 @@ export const TOOLS: RegisterTool[] = [
   registerGetDiscussion,
   registerGetMyGrades,
   registerDownloadFile,
+  registerGetSurvey,
+  registerSubmitSurvey,
   registerListPending,
   registerGetQuizInfo,
   registerStartQuizAttempt,

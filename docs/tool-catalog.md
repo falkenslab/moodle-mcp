@@ -86,8 +86,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_discussion` | A discussion's posts as text, with attachments | R | AJAX (`mod_forum_get_discussion_posts`) | S, T | Done |
 | `reply_to_post` | Reply in a discussion | W | AJAX (`mod_forum_add_discussion_post`); Form when attaching files | S 12 posts after approval, 7 drafts rejected | Done |
 | `create_discussion` | Start a discussion, with attachments | W | Form (`post.php`) | S help request with a screenshot | Done |
-| `get_questionnaire` | A survey's questions (mod_questionnaire, mod_feedback) | R | Page | S end-of-course survey in every course, 29 questions | — |
-| `submit_questionnaire` | Answer and submit it, retrying server errors and checking it was recorded | W | Form | S 19–38 selects per run, 502 errors four times | — |
+| `get_questionnaire` | A survey's questions (mod_questionnaire, mod_feedback) | R | Page | S end-of-course survey in every course, 29 questions | Done as `get_survey` |
+| `submit_questionnaire` | Answer and submit it, retrying server errors and checking it was recorded | W | Form | S 19–38 selects per run, 502 errors four times | Done as `submit_survey` (a 5xx isn't retried: it says to check with `get_survey`) |
 | `answer_choice` | Answer a choice activity | W | Form | none | — |
 | `get_lesson_page` | Current page of a lesson | R | Page | S lesson gating an escape room | — |
 | `answer_lesson_page` | Answer it and move on | W | Form | S | — |
