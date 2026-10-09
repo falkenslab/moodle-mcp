@@ -30,6 +30,7 @@ Each Moodle area moodle-driver gains becomes MCP tools here: a schema, a descrip
 | `gradebook` | `get_grader_report`, `get_gradebook_setup`, `update_grade_item`, `add_grade_category` | Pseudonymized |
 | `messages-and-notifications` | `list_notifications`, `mark_notifications_read`, `list_conversations`, `get_conversation`, `send_message` | Pseudonymized; confirm before sending |
 
+- Each tool's scope (ADR-015) comes from the driver categories of the functions it calls, once `tool-scopes` is in.
 - Each new AJAX-only tool gets its page in `src/tools/follow.ts`; each driver error class that needs a tool's name or a setting gets a line in `src/tools/errors.ts`.
 - When moodle-driver's `api-tests` card is done, the tool tests here shrink to what MCP adds: schemas, annotations, error explanations, progress, following.
 

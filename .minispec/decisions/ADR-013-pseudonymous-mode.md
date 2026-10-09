@@ -21,3 +21,4 @@ The server's results go to a language model, often outside the EU. Teachers' tas
 - The alias protects against sending names by accident, not against an agent that reads the key or runs the CLI on the same machine: the README gives the client permissions that deny it.
 - Losing the key loses the way back from old aliases, by design; `key export` is the backup.
 - Every tool that shows other people goes through one module (`src/people.ts`), and tests check that no name, email or user id leaks in pseudonymous mode.
+- Scopes (ADR-015) come first: a tool the person left out never reaches the model; pseudonymization applies to the `student-data` tools that are allowed.
