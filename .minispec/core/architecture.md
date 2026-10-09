@@ -43,6 +43,8 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `moodle/inPage.ts` — `inPage()`: page code with helper functions, safe under tsx's keepNames.
 - `moodle/quiz.ts` — a quiz's page (rules, dates, attempt cards), an attempt's questions on every page (fields by form name, options with their labels), answers saved page by page, the finish form submitted directly, the review.
 - `tools/quizAttempts.ts` — `get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`.
+- `moodle/submission.ts` — an assignment as the student sees it (status by class, the forms' hidden actions), saving a submission through the edit form, submitting through the confirm form (the site's statement accepted only when asked).
+- `tools/assignSubmission.ts` — `get_assignment`, `save_submission`, `submit_assignment`.
 - `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text; `readTexts()`: elements' text in a page, paragraphs and lists kept.
 - `moodle/pace.ts` — reading at a person's pace for the realistic trail (ADR-012): bounded pauses with progress.
 - `tools/getActivityContent.ts` — `get_activity_content`: a page, book, label, URL, file or folder viewed as a person would (`forceview` for URLs and files), so Moodle logs the view; books chapter by chapter or from the print page, by trail.

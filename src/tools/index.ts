@@ -1,4 +1,5 @@
 import { registerCreateActivity, registerUpdateActivity } from "./activityForms.js";
+import { registerGetAssignment, registerSaveSubmission, registerSubmitAssignment } from "./assignSubmission.js";
 import { registerConfigure } from "./configure.js";
 import { registerAddSection, registerDeleteActivity, registerDeleteSection, registerDuplicateActivity, registerEditActivity, registerEditSection } from "./courseLayout.js";
 import { registerCreateDiscussion, registerReplyToPost } from "./forumPosts.js";
@@ -38,6 +39,9 @@ export const TOOLS: RegisterTool[] = [
   registerAnswerQuizQuestions,
   registerFinishQuizAttempt,
   registerGetAttemptReview,
+  registerGetAssignment,
+  registerSaveSubmission,
+  registerSubmitAssignment,
   registerGradeSubmission,
   registerReplyToPost,
   registerCreateDiscussion,
