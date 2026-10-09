@@ -16,7 +16,8 @@ export const registerGradeSubmission: RegisterTool = (server, { config, browser 
       inputSchema: {
         assignmentId: z.number().int().positive().describe("The assignment's id (course module id), as list_assignments gives it"),
         userId: z.number().int().positive().describe("The participant's user id, as get_submissions gives it"),
-        grade: z.union([z.number(), z.string()]).optional().describe("The grade, within the assignment's range or scale"),
+        // One type only: some clients reject a union of types (the Inspector's --strict).
+        grade: z.string().optional().describe('The grade as text: a number within the range ("7.5"), or a scale item'),
         feedback: z.string().optional().describe("Feedback comments (HTML)"),
         notify: z.boolean().optional().describe("Notify the student; Moodle's default when missing"),
         fields: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.array(z.string())])).optional().describe("Other grading form fields by name, e.g. a rubric's levels"),
@@ -33,7 +34,7 @@ export const registerGradeSubmission: RegisterTool = (server, { config, browser 
       const context = await browser.context();
       const ids = await assignmentIds(context, siteUrl, assignmentId);
       const values: Record<string, FieldValue> = { ...fields };
-      if (grade !== undefined) values.grade = String(grade);
+      if (grade !== undefined) values.grade = grade;
       if (feedback !== undefined) values[FEEDBACK_FIELD] = feedback;
       if (notify !== undefined) values.sendstudentnotifications = notify ? 1 : 0;
 

@@ -57,7 +57,7 @@ describe("grade_submission", { skip: !browser && "no system browser" }, () => {
   it("submits the panel's form as the grader does and reads the grade back", async () => {
     const { state, submitted } = moodle(true);
     const { client, context } = await connect(state);
-    const result = await client.callTool({ name: "grade_submission", arguments: { assignmentId: 31, userId: 7, grade: 7.5, feedback: "<p>Good</p>", notify: false } });
+    const result = await client.callTool({ name: "grade_submission", arguments: { assignmentId: 31, userId: 7, grade: "7.5", feedback: "<p>Good</p>", notify: false } });
     assert.notEqual(result.isError, true, JSON.stringify(result.content));
     assert.deepEqual(JSON.parse(JSON.stringify(result.structuredContent)), { changed: "Graded user 7 in assignment 31, with feedback.", grade: "7.5", feedback: "<p>Good</p>" });
     assert.equal(submitted[0]?.assignmentid, 210);
@@ -70,13 +70,13 @@ describe("grade_submission", { skip: !browser && "no system browser" }, () => {
 
   it("explains a refused grade and feedback an assignment doesn't take", async () => {
     const refusing = await connect(moodle(true, true).state);
-    const refused = await refusing.client.callTool({ name: "grade_submission", arguments: { assignmentId: 32, userId: 7, grade: 150 } });
+    const refused = await refusing.client.callTool({ name: "grade_submission", arguments: { assignmentId: 32, userId: 7, grade: "150" } });
     assert.equal(refused.isError, true);
     assert.match(JSON.stringify(refused.content), /Could not save grade\..*within the assignment's range/);
     await refusing.context.close();
 
     const plain = await connect(moodle(false).state);
-    const noComments = await plain.client.callTool({ name: "grade_submission", arguments: { assignmentId: 33, userId: 7, grade: 9, feedback: "<p>x</p>" } });
+    const noComments = await plain.client.callTool({ name: "grade_submission", arguments: { assignmentId: 33, userId: 7, grade: "9", feedback: "<p>x</p>" } });
     assert.match(JSON.stringify(noComments.content), /has no feedback comments/);
     const tool = (await plain.client.listTools()).tools.find((t) => t.name === "grade_submission");
     assert.equal(tool?.annotations?.readOnlyHint, false);
