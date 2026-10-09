@@ -1,5 +1,4 @@
-Done via `download_file` (same host) or the media's URL |Out of scope (owner, 9 October 2026): the agent gets the media's URL or file |Done as `get_activity_content`'s `media` |Done via `download_file` |Done via `download_file` |Done as `download_file` |Done |Done |Done |Done |Done |Done as `get_quiz_attempt` |Done |Done |Done |Done inside `create_activity` |Done as `update_activity` |Done via `create_activity` |Done via `create_activity` settings |Done via `create_activity` settings |Done via `create_activity` |Done via `create_activity` |Done via `create_activity` |Done via `create_activity` |Done via `create_activity` |Done as `create_activity` |Done as `delete_activity` |Done as `duplicate_activity` |Done as `edit_activity` |Done as `edit_activity` |Done as `edit_activity` |Done |Done as `edit_section` |Done as `edit_section` |Done |# Tool catalog
-
+# Tool catalog
 Candidate domain tools for moodle-mcp, by use case, for teachers and students. It's a roadmap, not a commitment: each tool gets its own MiniSpec feature when its turn comes.
 
 ## Sources
@@ -60,10 +59,10 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
 | `get_activity_content` | Read a page, label, book (all chapters or one), URL resource or HTML package as text; logs the view | R | Page | S 621 page loads, 34 book chapters, 43 HTML package pages, 84 tab switches | Done |
-| `download_resource` | Save a course file (PDF, docx…) locally, through the session | R | Page (`resource/view.php?redirect=0`, then `pluginfile.php`) | S files saved 2–5 times, `.bin` names, base64 overflows | — |
-| `get_activity_media` | Videos in an activity: source, duration, host | R | Page | S 400 video polling calls, 60 calls to find sources | — |
-| `watch_video` | Play a video to the end at real speed, for completion | W (trail) | Page | S two courses depend on watched videos; one run took 29 h | — |
-| `download_media` | Save a video locally for transcription | R | Page | S 95 transcription runs | — |
+| `download_resource` | Save a course file (PDF, docx…) locally, through the session | R | Page (`resource/view.php?redirect=0`, then `pluginfile.php`) | S files saved 2–5 times, `.bin` names, base64 overflows | Done as `download_file` |
+| `get_activity_media` | Videos in an activity: source, duration, host | R | Page | S 400 video polling calls, 60 calls to find sources | Done as `get_activity_content`'s `media` |
+| `watch_video` | Play a video to the end at real speed, for completion | W (trail) | Page | S two courses depend on watched videos; one run took 29 h | Out of scope (owner, 9 October 2026): the agent gets the media's URL or file |
+| `download_media` | Save a video locally for transcription | R | Page | S 95 transcription runs | Done via `download_file` (same host) or the media's URL |
 | `get_my_grades` | My grades, ranges and feedback in a course | R | Page (`/grade/report/user/index.php`) | S 9 sessions on progress and grades | Done |
 | `list_pending` | What I still have to do: incomplete activities, restrictions, due dates | R | AJAX (`get_state`) + `get_my_grades` | S "what activities do I have left?"; the teacher-only progress report gave 404 | Done |
 | `set_completion` | Mark an activity done or not done (manual completion) | W | AJAX (`core_completion_update_activity_completion_status_manually`) | none | — |
@@ -72,16 +71,16 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
-| `get_quiz_info` | Attempts allowed and used, grading method, pass mark, time limit, dates, past attempts | R | Page | S about 30 attempts, 2nd attempts below 8/10 | — |
-| `start_quiz_attempt` | Start or continue an attempt; questions with type, text, images, options | W | Form | S 683 attempt page loads | — |
-| `answer_quiz_questions` | Save answers to questions of an attempt | W | Form | S one click per option, repeated clicks | — |
-| `get_attempt_summary` | Which questions are answered before finishing | R | Page | S 86 summary pages | — |
-| `finish_quiz_attempt` | Submit the attempt (asks for consent) | W | Form | S approval before each submit | — |
-| `get_attempt_review` | Grade, per-question correctness and feedback | R | Page | S 45 review pages | — |
-| `get_assignment` | Brief, attached files, dates, submission types, my status, grade, feedback | R | Page + AJAX (`mod_assign_get_participant`) | S final task brief and template | — |
-| `save_submission` | Save online text and files as a draft | W | Form (draft area upload) | S 1 PDF submission | — |
-| `submit_assignment` | Submit for grading, accepting the statement | W | Form | S 1 | — |
-| `list_forums` | A course's forums | R | AJAX (`get_state`) | S, T | — |
+| `get_quiz_info` | Attempts allowed and used, grading method, pass mark, time limit, dates, past attempts | R | Page | S about 30 attempts, 2nd attempts below 8/10 | Done |
+| `start_quiz_attempt` | Start or continue an attempt; questions with type, text, images, options | W | Form | S 683 attempt page loads | Done |
+| `answer_quiz_questions` | Save answers to questions of an attempt | W | Form | S one click per option, repeated clicks | Done |
+| `get_attempt_summary` | Which questions are answered before finishing | R | Page | S 86 summary pages | Done as `get_quiz_attempt` |
+| `finish_quiz_attempt` | Submit the attempt (asks for consent) | W | Form | S approval before each submit | Done |
+| `get_attempt_review` | Grade, per-question correctness and feedback | R | Page | S 45 review pages | Done |
+| `get_assignment` | Brief, attached files, dates, submission types, my status, grade, feedback | R | Page + AJAX (`mod_assign_get_participant`) | S final task brief and template | Done |
+| `save_submission` | Save online text and files as a draft | W | Form (draft area upload) | S 1 PDF submission | Done |
+| `submit_assignment` | Submit for grading, accepting the statement | W | Form | S 1 | Done |
+| `list_forums` | A course's forums | R | AJAX (`get_state`) | S, T | Done via `get_course_structure` (type `forum`) |
 | `list_discussions` | A forum's discussions: author role, replies, last post, unanswered | R | Page (`forum/view.php`) | S 95 forum pages; T "check the questions forum" | Done |
 | `get_discussion` | A discussion's posts as text, with attachments | R | AJAX (`mod_forum_get_discussion_posts`) | S, T | Done |
 | `reply_to_post` | Reply in a discussion | W | AJAX (`mod_forum_add_discussion_post`); Form when attaching files | S 12 posts after approval, 7 drafts rejected | Done |
@@ -98,27 +97,27 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
 | `update_course` | Course full name, short name, summary | W | Form (`course/edit.php`) | T renamed with approval | — |
-| `add_section` | Add a section with name and summary | W | AJAX (`core_courseformat_update_course` `section_add`) + `update_section` | T 3 sections added | — |
-| `update_section` | Rename, summary, visibility | W | AJAX (`core_update_inplace_editable`, `section_hide`/`show`) + Form (`editsection.php`) for the summary | T 12 renames, 25–35 s each | — |
-| `move_section` | Reorder sections | W | AJAX (`section_move_after`) | none | — |
-| `delete_section` | Delete a section | W | AJAX (`section_delete`) | none | — |
-| `create_module` | Create an activity or resource of any type in a section, hidden by default: name, description, content, files, display and completion settings | W | Form (`course/modedit.php?add=`) | T 10 pages, 4 labels, 2 files, 1 quiz; the activity chooser failed in both workspaces | — |
-| `create_page` | Page with rich HTML and embedded images | W | Form, via `create_module` | T TinyMCE written by script 17 times; 5 images through the image dialog | — |
-| `create_label` | Text and media block | W | Form, via `create_module` | T | — |
-| `create_file_resource` | File resource from a local file | W | Form + draft area upload | T PDF and HTML game uploads | — |
-| `create_url_resource` | Link to an external page, with display mode | W | Form | none | — |
-| `create_folder` | Folder with several files | W | Form | none | — |
-| `create_assignment` | Assignment with dates, submission types and grading | W | Form | none (assignments existed) | — |
-| `create_quiz` | Quiz shell with timing, attempts, grading | W | Form | T 1 quiz shell | — |
-| `create_forum` | Forum of a given type | W | Form | none | — |
-| `update_module` | Change an activity's settings or content | W | Form (`modedit.php?update=`) | T 16 edits: renames, rewritten pages and labels | — |
-| `rename_module` | Rename only | W | AJAX (`core_update_inplace_editable` `activityname`) | T 5 renames | — |
-| `set_module_visibility` | Show, hide, or make available but not shown | W | AJAX (`cm_show`, `cm_hide`, `cm_stealth`) | T publishing after approval, hidden drafts | — |
-| `move_module` | Move to another section or position | W | AJAX (`cm_move`) | T quiz moved after new pages, verified by screenshot | — |
-| `duplicate_module` | Duplicate an activity | W | AJAX (`cm_duplicate`) | none | — |
-| `delete_module` | Delete an activity | W | AJAX (`cm_delete`) | T 1 page deleted | — |
-| `upload_files` | Upload local files to a draft area for a form (used by the tools above) | W | Page (`repository/repository_ajax.php`) | T file picker took 8 calls and a wrong first try | — |
-| `get_module_file` | Download a file stored in an activity | R | Page (`pluginfile.php`) | T PDF opened to capture slides | — |
+| `add_section` | Add a section with name and summary | W | AJAX (`core_courseformat_update_course` `section_add`) + `update_section` | T 3 sections added | Done |
+| `update_section` | Rename, summary, visibility | W | AJAX (`core_update_inplace_editable`, `section_hide`/`show`) + Form (`editsection.php`) for the summary | T 12 renames, 25–35 s each | Done as `edit_section` |
+| `move_section` | Reorder sections | W | AJAX (`section_move_after`) | none | Done as `edit_section` |
+| `delete_section` | Delete a section | W | AJAX (`section_delete`) | none | Done |
+| `create_module` | Create an activity or resource of any type in a section, hidden by default: name, description, content, files, display and completion settings | W | Form (`course/modedit.php?add=`) | T 10 pages, 4 labels, 2 files, 1 quiz; the activity chooser failed in both workspaces | Done as `create_activity` |
+| `create_page` | Page with rich HTML and embedded images | W | Form, via `create_module` | T TinyMCE written by script 17 times; 5 images through the image dialog | Done via `create_activity` |
+| `create_label` | Text and media block | W | Form, via `create_module` | T | Done via `create_activity` |
+| `create_file_resource` | File resource from a local file | W | Form + draft area upload | T PDF and HTML game uploads | Done via `create_activity` |
+| `create_url_resource` | Link to an external page, with display mode | W | Form | none | Done via `create_activity` |
+| `create_folder` | Folder with several files | W | Form | none | Done via `create_activity` |
+| `create_assignment` | Assignment with dates, submission types and grading | W | Form | none (assignments existed) | Done via `create_activity` |
+| `create_quiz` | Quiz shell with timing, attempts, grading | W | Form | T 1 quiz shell | Done via `create_activity` |
+| `create_forum` | Forum of a given type | W | Form | none | Done via `create_activity` |
+| `update_module` | Change an activity's settings or content | W | Form (`modedit.php?update=`) | T 16 edits: renames, rewritten pages and labels | Done as `update_activity` |
+| `rename_module` | Rename only | W | AJAX (`core_update_inplace_editable` `activityname`) | T 5 renames | Done as `edit_activity` |
+| `set_module_visibility` | Show, hide, or make available but not shown | W | AJAX (`cm_show`, `cm_hide`, `cm_stealth`) | T publishing after approval, hidden drafts | Done as `edit_activity` |
+| `move_module` | Move to another section or position | W | AJAX (`cm_move`) | T quiz moved after new pages, verified by screenshot | Done as `edit_activity` |
+| `duplicate_module` | Duplicate an activity | W | AJAX (`cm_duplicate`) | none | Done as `duplicate_activity` |
+| `delete_module` | Delete an activity | W | AJAX (`cm_delete`) | T 1 page deleted | Done as `delete_activity` |
+| `upload_files` | Upload local files to a draft area for a form (used by the tools above) | W | Page (`repository/repository_ajax.php`) | T file picker took 8 calls and a wrong first try | Done inside `create_activity` |
+| `get_module_file` | Download a file stored in an activity | R | Page (`pluginfile.php`) | T PDF opened to capture slides | Done via `download_file` |
 
 ## Teacher: assignments and grading
 
@@ -127,7 +126,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_submissions` | Participants' status, dates and content of one assignment | R | Fragment + AJAX | T "are there submissions pending?" | Done |
 | `get_assignment_settings` | Dates, submission types, grading method, max grade | R | Page | T read descriptions and dates | — |
 | `get_rubric` | Grading method, rubric or marking guide criteria and levels | R | Page (`grade/grading/manage.php`) or Fragment | T rubric read as text: 6 criteria, 4 levels | — |
-| `download_submission_files` | Save a participant's submitted files locally | R | Page (`pluginfile.php`) | none | — |
+| `download_submission_files` | Save a participant's submitted files locally | R | Page (`pluginfile.php`) | none | Done via `download_file` |
 | `grade_submission` | Grade (points, scale or rubric levels) with feedback text and files, notifying or not | W | AJAX (`mod_assign_submit_grading_form`, form from the `gradingpanel` fragment) | none yet: no submissions existed; a core need | Done |
 | `grant_extension` | Extend the due date for some participants | W | Form (`view.php?action=grantextension`) | none | — |
 
@@ -142,7 +141,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `import_questions` | Import GIFT or Moodle XML into a bank | W | Form (question import page, with upload) | T quiz left empty after failing the type chooser; GIFT researched | — |
 | `create_question` | One question of a given type | W | Form (`question/bank/editquestion/question.php`) | T failed twice | — |
 | `add_questions_to_quiz` | Add existing or random questions | W | Form (`quiz/edit.php`); AJAX for random (`mod_quiz_add_random_questions`) | T | — |
-| `update_quiz_settings` | Timing, attempts, review options | W | Form (`modedit.php`) | none | — |
+| `update_quiz_settings` | Timing, attempts, review options | W | Form (`modedit.php`) | none | Done via `update_activity` |
 | `set_quiz_override` | Per-user or group overrides | W | AJAX (`mod_quiz_save_overrides`) | none | — |
 
 ## Teacher: forums and communication
