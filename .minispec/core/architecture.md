@@ -36,6 +36,8 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/getMyGrades.ts`, `tools/listPending.ts` — `get_my_grades`, and `list_pending`: tracked activities not complete, or ungraded ones where completion isn't tracked, with dates and restrictions.
 - `moodle/editor.ts` — the course editor's actions through `core_courseformat_update_course`, renames through `core_update_inplace_editable`, the course format from the course page's body class.
 - `tools/courseLayout.ts` — `edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`: each returns the course structure after the change.
+- `moodle/forms.ts` — Moodle forms in the browser: fields set by name (TinyMCE editors through their API), local files uploaded to a draft area as the file picker does, submit, validation errors by field (`#id_error_<field>`).
+- `tools/activityForms.ts` — `create_activity` (any type, hidden by default) and `update_activity`, through `course/modedit.php`; any setting by its form field name.
 - `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text; `readTexts()`: elements' text in a page, paragraphs and lists kept.
 - `moodle/pace.ts` — reading at a person's pace for the realistic trail (ADR-012): bounded pauses with progress.
 - `tools/getActivityContent.ts` — `get_activity_content`: a page, book, label, URL, file or folder viewed as a person would (`forceview` for URLs and files), so Moodle logs the view; books chapter by chapter or from the print page, by trail.
