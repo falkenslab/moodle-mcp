@@ -1,10 +1,7 @@
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { assignmentIds, fillGradingForm, gradingPanelHtml, panelGrade, submitGradingForm } from "@falkenslab/moodle-driver";
-import type { FieldValue } from "@falkenslab/moodle-driver";
+import { gradeSubmission } from "@falkenslab/moodle-driver";
+import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
-
-const FEEDBACK_FIELD = "assignfeedbackcomments_editor[text]";
 
 export const registerGradeSubmission: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
@@ -29,31 +26,6 @@ export const registerGradeSubmission: RegisterTool = (server, { config, browser 
       },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
-    async ({ assignmentId, userId, grade, feedback, notify, fields }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const ids = await assignmentIds(context, siteUrl, assignmentId);
-      const values: Record<string, FieldValue> = { ...fields };
-      if (grade !== undefined) values.grade = grade;
-      if (feedback !== undefined) values[FEEDBACK_FIELD] = feedback;
-      if (notify !== undefined) values.sendstudentnotifications = notify ? 1 : 0;
-
-      // A blank tab holds the panel's form: nothing of the grader's page needs to load.
-      const page = await context.newPage();
-      try {
-        const serialized = await fillGradingForm(page, await gradingPanelHtml(context, siteUrl, ids.contextId, userId), values).catch((error: Error) => {
-          if (feedback !== undefined && error.message.includes(FEEDBACK_FIELD)) {
-            throw new Error("This assignment has no feedback comments: grade it without feedback, or turn feedback comments on in its settings (update_activity).");
-          }
-          throw error;
-        });
-        await submitGradingForm(context, siteUrl, ids.instanceId, userId, serialized);
-        const saved = await panelGrade(page, await gradingPanelHtml(context, siteUrl, ids.contextId, userId));
-        const output = { changed: `Graded user ${userId} in assignment ${assignmentId}${feedback !== undefined ? ", with feedback" : ""}.`, ...saved };
-        return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
-      } finally {
-        await page.close().catch(() => undefined);
-      }
-    },
+    async ({ assignmentId, userId, ...grading }) => reply(await gradeSubmission(...(await onSite(config, browser)), assignmentId, userId, grading)),
   );
 };

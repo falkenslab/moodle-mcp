@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { listDiscussions } from "@falkenslab/moodle-driver";
+import { forumDiscussions } from "@falkenslab/moodle-driver";
+import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {
@@ -21,11 +21,6 @@ const outputSchema = {
   ),
 };
 
-/** Unix seconds as ISO 8601. */
-function isoDate(seconds: number | undefined): string | undefined {
-  return seconds ? new Date(seconds * 1000).toISOString() : undefined;
-}
-
 export const registerListDiscussions: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "list_discussions",
@@ -37,21 +32,6 @@ export const registerListDiscussions: RegisterTool = (server, { config, browser 
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ forumId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const rows = await listDiscussions(await browser.context(), siteUrl, forumId);
-      const output = {
-        discussions: rows.map((row) => ({
-          id: row.id,
-          subject: row.subject,
-          author: row.author,
-          started: isoDate(row.started),
-          lastPost: { author: row.lastPost.author, time: isoDate(row.lastPost.time), postId: row.lastPost.postId },
-          replies: row.replies,
-          locked: row.locked,
-        })),
-      };
-      return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
-    },
+    async ({ forumId }) => reply({ discussions: await forumDiscussions(...(await onSite(config, browser)), forumId) }),
   );
 };

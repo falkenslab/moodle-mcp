@@ -4,7 +4,6 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext, Route } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
-import { readQuestions } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, moodlePage, serveFakeMoodle } from "@falkenslab/moodle-driver/testing";
 
@@ -81,24 +80,6 @@ function fakeQuiz() {
   return { saved, routes };
 }
 
-describe("readQuestions", { skip: !browser && "no system browser" }, () => {
-  it("reads slots, types, states, text and fields with their options, without screen-reader text", async () => {
-    const page = await browser!.newPage();
-    await page.setContent(`<body>${Q1.replace("STATE1", "notyetanswered").replace("CHECKED1", "")}${Q2}${Q3}</body>`);
-    const [q1, q2, q3] = await readQuestions(page);
-    assert.deepEqual([q1?.slot, q1?.type, q1?.state, q1?.text], [1, "truefalse", "notyetanswered", "The answer is true."]);
-    assert.deepEqual(q1?.fields, [{ name: "q9:1_answer", kind: "choice", options: [{ value: "1", label: "True" }, { value: "0", label: "False" }] }]);
-    assert.deepEqual(q2?.fields.map((f) => [f.name, f.kind, f.label, f.value]), [
-      ["q9:2_choice0", "checkbox", "Three", "0"],
-      ["q9:2_choice1", "checkbox", "Two", "0"],
-    ]);
-    assert.equal(q3?.text, "Classify.");
-    assert.deepEqual(q3?.images, [`${SITE}pluginfile.php/1/question/questiontext/1/frog.png`]);
-    assert.deepEqual(q3?.fields[0], { name: "q9:3_sub0", kind: "select", label: "frog", options: [{ value: "0", label: "Choose..." }, { value: "1", label: "mammal" }, { value: "2", label: "amphibian" }], value: "0" });
-    assert.deepEqual(JSON.parse(JSON.stringify(q3?.fields[1])), { name: "q9:3_notes", kind: "text" });
-    await page.close();
-  });
-});
 
 describe("quiz attempt tools", { skip: !browser && "no system browser" }, () => {
   async function connect() {

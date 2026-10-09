@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { discussionPosts, htmlToTexts } from "@falkenslab/moodle-driver";
-import { decodeEntities } from "@falkenslab/moodle-driver";
+import { discussion } from "@falkenslab/moodle-driver";
+import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {
@@ -26,11 +25,6 @@ const outputSchema = {
   ),
 };
 
-/** Unix seconds as ISO 8601. */
-function isoDate(seconds: number): string {
-  return new Date(seconds * 1000).toISOString();
-}
-
 export const registerGetDiscussion: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "get_discussion",
@@ -42,30 +36,6 @@ export const registerGetDiscussion: RegisterTool = (server, { config, browser })
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ discussionId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const { posts, forumid, courseid } = await discussionPosts(context, siteUrl, discussionId);
-      const texts = await htmlToTexts(
-        context,
-        posts.map((post) => post.message),
-      );
-      const output = {
-        discussion: { id: discussionId, forumId: forumid, courseId: courseid },
-        posts: posts.map((post, i) => ({
-          id: post.id,
-          parentId: post.parentid ?? undefined,
-          subject: decodeEntities(post.subject),
-          author: { id: post.author.id, fullName: post.author.fullname },
-          created: isoDate(post.timecreated),
-          modified: post.timemodified && post.timemodified - post.timecreated > 60 ? isoDate(post.timemodified) : undefined,
-          text: texts[i] ?? "",
-          attachments: (post.attachments ?? []).map((file) => ({ name: file.filename, url: file.url ?? file.fileurl ?? "" })),
-          privateReply: post.isprivatereply ?? false,
-          unread: post.unread ?? undefined,
-        })),
-      };
-      return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
-    },
+    async ({ discussionId }) => reply(await discussion(...(await onSite(config, browser)), discussionId)),
   );
 };

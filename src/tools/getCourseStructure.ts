@@ -1,16 +1,12 @@
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { activityDetails, courseState, type ActivityDetails, type CourseState } from "@falkenslab/moodle-driver";
-import { decodeEntities } from "@falkenslab/moodle-driver";
+import { COMPLETION_STATES, courseStructure } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {
   courseId: z.number().int().positive().describe("The course's id, as list_courses gives it"),
   details: z.boolean().optional().describe("Also read the course page for each activity's dates and restriction text (slower; default false)"),
 };
-
-// Moodle's completion states (COMPLETION_INCOMPLETE … COMPLETION_COMPLETE_FAIL).
-const COMPLETION_STATES = ["incomplete", "complete", "complete-pass", "complete-fail"] as const;
 
 const activity = z.object({
   id: z.number().int().describe("The course module id, which the activity tools take"),
@@ -44,46 +40,6 @@ const outputSchema = {
   sections: z.array(section),
 };
 
-type Section = z.infer<typeof section>;
-
-/** The state as sections with their activities, in the course's order; details merged when given. */
-export function structureOf(state: CourseState, details?: Map<number, ActivityDetails>): Section[] {
-  const cms = new Map(state.cm.map((cm) => [cm.id, cm]));
-  return state.section.map((s) => {
-    const ids = s.cmlist ?? state.cm.filter((cm) => cm.sectionid === s.id).map((cm) => cm.id);
-    const activities = ids.flatMap((id) => {
-      const cm = cms.get(id);
-      if (!cm) return [];
-      const extra = details?.get(Number(cm.id));
-      const state = cm.istrackeduser && cm.completionstate !== undefined ? COMPLETION_STATES[cm.completionstate] : undefined;
-      return [
-        {
-          id: Number(cm.id),
-          name: decodeEntities(cm.name),
-          type: cm.module,
-          url: cm.url,
-          visible: cm.visible,
-          availableToMe: (cm.uservisible ?? true) && (cm.accessvisible ?? true),
-          restricted: cm.hascmrestrictions ?? false,
-          completion: state ? { state, complete: cm.isoverallcomplete ?? state !== "incomplete" } : undefined,
-          dates: extra && extra.dates.length > 0 ? extra.dates : undefined,
-          restriction: extra?.restriction,
-        },
-      ];
-    });
-    return {
-      id: Number(s.id),
-      number: s.number,
-      title: decodeEntities(s.title),
-      visible: s.visible ?? true,
-      restricted: s.hasrestrictions ?? false,
-      url: s.sectionurl,
-      parentSectionId: s.parentsectionid ? Number(s.parentsectionid) : undefined,
-      activities,
-    };
-  });
-}
-
 export const registerGetCourseStructure: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "get_course_structure",
@@ -96,11 +52,7 @@ export const registerGetCourseStructure: RegisterTool = (server, { config, brows
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ courseId, details = false }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const state = await courseState(context, siteUrl, courseId);
-      const extra = details ? await activityDetails(context, siteUrl, courseId, state) : undefined;
-      const output = { course: { id: courseId, url: state.course?.baseurl }, sections: structureOf(state, extra) };
+      const output = await courseStructure(...(await onSite(config, browser)), courseId, { details });
       return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
     },
   );

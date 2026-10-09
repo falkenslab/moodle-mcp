@@ -1,7 +1,7 @@
 // get_survey and submit_survey: the questionnaire plugin and Moodle's feedback, through their forms.
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
 import { getSurvey, submitSurvey } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const activityId = z.number().int().positive().describe("The survey's id (course module id), as get_course_structure gives it");
@@ -33,7 +33,7 @@ export const registerGetSurvey: RegisterTool = (server, { config, browser }) => 
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ activityId, type }) => reply({ ...(await getSurvey(await browser.context(), requireSiteUrl(config), activityId, type)) }),
+    async ({ activityId, type }) => reply({ ...(await getSurvey(...(await onSite(config, browser)), activityId, type)) }),
   );
 };
 
@@ -49,7 +49,7 @@ export const registerSubmitSurvey: RegisterTool = (server, { config, browser }) 
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     },
     async ({ activityId, type, responses }) => {
-      const { messages } = await submitSurvey(await browser.context(), requireSiteUrl(config), activityId, type, responses);
+      const { messages } = await submitSurvey(...(await onSite(config, browser)), activityId, type, responses);
       return reply({ changed: `Submitted ${type} ${activityId}.`, messages });
     },
   );

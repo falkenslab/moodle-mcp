@@ -1,8 +1,8 @@
 // get_activities_overview, list_deadlines and get_course_updates: what's due, what needs doing and
 // what changed, from Moodle's services, without opening each activity.
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
 import { activitiesOverview, courseUpdates, deadlines } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const courseId = z.number().int().positive().describe("The course's id, from list_courses");
@@ -33,7 +33,7 @@ export const registerGetActivitiesOverview: RegisterTool = (server, { config, br
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ courseId, type }) => reply({ activities: await activitiesOverview(await browser.context(), requireSiteUrl(config), courseId, type) }),
+    async ({ courseId, type }) => reply({ activities: await activitiesOverview(...(await onSite(config, browser)), courseId, type) }),
   );
 };
 
@@ -65,7 +65,7 @@ export const registerListDeadlines: RegisterTool = (server, { config, browser })
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ courseId, days }) => reply({ deadlines: await deadlines(await browser.context(), requireSiteUrl(config), { courseId, days }) }),
+    async ({ courseId, days }) => reply({ deadlines: await deadlines(...(await onSite(config, browser)), { courseId, days }) }),
   );
 };
 
@@ -95,7 +95,7 @@ export const registerGetCourseUpdates: RegisterTool = (server, { config, browser
     },
     async ({ courseId, since }) => {
       const from = since ? new Date(since) : new Date(Date.now() - 7 * 86_400_000);
-      return reply({ since: from.toISOString(), activities: await courseUpdates(await browser.context(), requireSiteUrl(config), courseId, from) });
+      return reply({ since: from.toISOString(), activities: await courseUpdates(...(await onSite(config, browser)), courseId, from) });
     },
   );
 };

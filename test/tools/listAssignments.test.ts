@@ -5,7 +5,6 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
 import type { CourseState } from "@falkenslab/moodle-driver";
-import { assignmentsOf } from "../../src/tools/listAssignments.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -25,14 +24,6 @@ const STATE: CourseState = {
   ],
 };
 
-describe("assignmentsOf", () => {
-  it("keeps the assignments, with their sections, in the course's order", () => {
-    assert.deepEqual(assignmentsOf(STATE), [
-      { id: 21, name: "Exercise '1'", url: `${SITE}mod/assign/view.php?id=21`, visible: true, section: { number: 1, title: "Variables & types" } },
-      { id: 22, name: "Draft task", url: `${SITE}mod/assign/view.php?id=22`, visible: false, section: { number: 0, title: "General" } },
-    ]);
-  });
-});
 
 describe("list_assignments", { skip: !browser && "no system browser" }, () => {
   async function connect(state: FakeMoodleState): Promise<{ client: Client; context: BrowserContext }> {

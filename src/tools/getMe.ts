@@ -1,8 +1,7 @@
 import { z } from "zod";
-import { redactUrl, requireSiteUrl } from "../config.js";
-import { readPageConfig } from "@falkenslab/moodle-driver";
-import { courseState } from "@falkenslab/moodle-driver";
-import { courseAbilities, courseRoles, siteName, userById } from "@falkenslab/moodle-driver";
+import { redactUrl } from "../config.js";
+import { whoAmI } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {
@@ -29,13 +28,6 @@ const outputSchema = {
     .optional(),
 };
 
-type Me = z.infer<z.ZodObject<typeof outputSchema>>;
-
-/** Unix seconds as ISO 8601; Moodle uses 0 for "never". */
-function isoDate(seconds: number | undefined): string | undefined {
-  return seconds ? new Date(seconds * 1000).toISOString() : undefined;
-}
-
 export const registerGetMe: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "get_me",
@@ -48,28 +40,10 @@ export const registerGetMe: RegisterTool = (server, { config, browser }) => {
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ courseId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const cfg = await readPageConfig(context, siteUrl);
-      const user = await userById(context, siteUrl, cfg.userId);
-      const output: Me = {
-        userId: cfg.userId,
-        username: user?.username,
-        fullName: user?.fullname ?? "",
-        email: user?.email,
-        language: cfg.language,
-        timeZone: cfg.timeZone,
-        firstAccess: isoDate(user?.firstaccess),
-        lastAccess: isoDate(user?.lastaccess),
-        site: { name: await siteName(context, siteUrl), url: redactUrl(siteUrl) },
-      };
-      if (courseId !== undefined) {
-        // The course's state checks that it exists and the person can see it, and gives a section.
-        const state = await courseState(context, siteUrl, courseId);
-        const abilities = await courseAbilities(context, siteUrl, courseId, Number(state.section[0]?.id ?? 0));
-        output.course = { id: courseId, roles: await courseRoles(context, siteUrl, cfg.userId, courseId), ...abilities };
-      }
-      return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
+      const output = await whoAmI(...(await onSite(config, browser)), courseId);
+      // The site's URL may hold credentials: never in a tool's result (ADR-003).
+      output.site.url = redactUrl(output.site.url);
+      return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: { ...output } };
     },
   );
 };

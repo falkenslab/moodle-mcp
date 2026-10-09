@@ -8,7 +8,6 @@ import { after, before, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { createServer } from "../../src/createServer.js";
-import { fileNameFor } from "../../src/tools/downloadFile.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { launchTestBrowser } from "@falkenslab/moodle-driver/testing";
 
@@ -52,15 +51,6 @@ after(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-describe("fileNameFor", () => {
-  it("takes Content-Disposition's name, else the URL's, never a path", () => {
-    assert.equal(fileNameFor(new URL("http://x/pluginfile.php/1/a/b/c.pdf"), "attachment; filename*=UTF-8''informe%20final.pdf"), "informe final.pdf");
-    assert.equal(fileNameFor(new URL("http://x/pluginfile.php/1/a/b/c.pdf"), 'attachment; filename="notas.docx"'), "notas.docx");
-    assert.equal(fileNameFor(new URL("http://x/pluginfile.php/1/a/b/c%20d.pdf?forcedownload=1"), undefined), "c d.pdf");
-    assert.equal(fileNameFor(new URL("http://x/f"), 'attachment; filename="../../evil.sh"'), "evil.sh");
-    assert.equal(fileNameFor(new URL("http://x/f"), 'attachment; filename=".."'), "download");
-  });
-});
 
 describe("download_file", { skip: !browser && "no system browser" }, () => {
   async function connect() {

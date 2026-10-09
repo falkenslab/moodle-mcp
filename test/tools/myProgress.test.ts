@@ -5,7 +5,6 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
 import type { CourseState } from "@falkenslab/moodle-driver";
-import { readGradeRows } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -28,25 +27,6 @@ ${item(23, "assign", "Task 2", "-", "0–10")}
 <tr class="cat_1 lastrow"><th class="level1 baggt column-itemname">Course total</th><td class="level1 baggt item column-grade"><div>8.00</div></td><td class="level1 baggt item column-range">0–30</td></tr>
 </tbody></table>`;
 
-describe("readGradeRows", { skip: !browser && "no system browser" }, () => {
-  it("reads items, categories and the total by cell classes, without the action menus", async () => {
-    const page = await browser!.newPage();
-    await page.setContent(REPORT);
-    const rows = await readGradeRows(page);
-    assert.deepEqual(
-      rows.map((r) => [r.kind, r.name, r.activityId, r.grade, r.range, r.feedback]),
-      [
-        ["category", "Programming", undefined, undefined, undefined, undefined],
-        ["item", "Quiz 1", 21, "8.00", "0–10", "Well done"],
-        ["item", "Task 1", 22, undefined, "0–10", undefined],
-        ["item", "Task 2", 23, undefined, "0–10", undefined],
-        ["courseTotal", "Course total", undefined, "8.00", "0–30", undefined],
-      ],
-    );
-    assert.equal(rows[1]?.activityType, "quiz");
-    await page.close();
-  });
-});
 
 describe("get_my_grades and list_pending", { skip: !browser && "no system browser" }, () => {
   async function connect(state: FakeMoodleState): Promise<{ client: Client; context: BrowserContext }> {

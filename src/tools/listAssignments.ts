@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { courseState, type CourseState } from "@falkenslab/moodle-driver";
-import { decodeEntities } from "@falkenslab/moodle-driver";
+import { listAssignments } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {
@@ -18,25 +17,6 @@ const assignment = z.object({
 
 const outputSchema = { assignments: z.array(assignment) };
 
-export type Assignment = z.infer<typeof assignment>;
-
-/** The course's assignments, in the course's order. */
-export function assignmentsOf(state: CourseState): Assignment[] {
-  const sections = new Map(state.section.map((section) => [section.id, section]));
-  return state.cm
-    .filter((cm) => cm.module === "assign")
-    .map((cm) => {
-      const section = sections.get(cm.sectionid);
-      return {
-        id: Number(cm.id),
-        name: decodeEntities(cm.name),
-        url: cm.url ?? "",
-        visible: cm.visible,
-        section: { number: section?.number ?? 0, title: decodeEntities(section?.title ?? "") },
-      };
-    });
-}
-
 export const registerListAssignments: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "list_assignments",
@@ -49,9 +29,7 @@ export const registerListAssignments: RegisterTool = (server, { config, browser 
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ courseId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const state = await courseState(await browser.context(), siteUrl, courseId);
-      const output = { assignments: assignmentsOf(state) };
+      const output = { assignments: await listAssignments(...(await onSite(config, browser)), courseId) };
       return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
     },
   );

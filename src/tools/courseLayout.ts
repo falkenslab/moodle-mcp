@@ -1,10 +1,8 @@
 // The course layout tools: one file for six small tools that share their schemas and result.
-import type { BrowserContext } from "playwright-core";
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { courseState } from "@falkenslab/moodle-driver";
-import { editCourse, renameActivity, renameSection } from "@falkenslab/moodle-driver";
-import { section, structureOf } from "./getCourseStructure.js";
+import { ACTIVITY_VISIBILITIES, addSection, deleteActivity, deleteSection, duplicateActivity, editActivity, editSection } from "@falkenslab/moodle-driver";
+import { section } from "./getCourseStructure.js";
+import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const courseId = z.number().int().positive().describe("The course's id, as list_courses gives it");
@@ -18,13 +16,6 @@ const resultSchema = {
   sections: z.array(section).describe("The course's structure after the change, as get_course_structure gives it"),
 };
 
-async function result(context: BrowserContext, siteUrl: string, course: number, changed: string, newId?: number) {
-  const output = { changed, newId, sections: structureOf(await courseState(context, siteUrl, course)) };
-  return { content: [{ type: "text" as const, text: JSON.stringify(output, null, 2) }], structuredContent: output };
-}
-
-const VISIBILITY_ACTIONS = { shown: "cm_show", hidden: "cm_hide", stealth: "cm_stealth" } as const;
-
 export const registerEditActivity: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "edit_activity",
@@ -36,31 +27,14 @@ export const registerEditActivity: RegisterTool = (server, { config, browser }) 
         courseId,
         activityId,
         name: z.string().min(1).optional(),
-        visibility: z.enum(["shown", "hidden", "stealth"]).optional(),
+        visibility: z.enum(ACTIVITY_VISIBILITIES).optional(),
         sectionId: sectionId.optional().describe("Move it to the end of this section"),
         beforeActivityId: activityId.optional().describe("Move it before this activity (in that activity's section)"),
       },
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
-    async ({ courseId, activityId, name, visibility, sectionId, beforeActivityId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const done: string[] = [];
-      if (name !== undefined) {
-        await renameActivity(context, siteUrl, activityId, name);
-        done.push(`renamed to "${name}"`);
-      }
-      if (visibility !== undefined) {
-        await editCourse(context, siteUrl, courseId, VISIBILITY_ACTIONS[visibility], [activityId]);
-        done.push(`made ${visibility}`);
-      }
-      if (sectionId !== undefined || beforeActivityId !== undefined) {
-        await editCourse(context, siteUrl, courseId, "cm_move", [activityId], { sectionId, activityId: beforeActivityId });
-        done.push(beforeActivityId !== undefined ? `moved before activity ${beforeActivityId}` : `moved to the end of section ${sectionId}`);
-      }
-      return result(context, siteUrl, courseId, done.length > 0 ? `Activity ${activityId} ${done.join(", ")}.` : "Nothing to change.");
-    },
+    async ({ courseId, activityId, ...change }) => reply(await editActivity(...(await onSite(config, browser)), courseId, activityId, change)),
   );
 };
 
@@ -74,14 +48,7 @@ export const registerDuplicateActivity: RegisterTool = (server, { config, browse
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ courseId, activityId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const before = new Set((await courseState(context, siteUrl, courseId)).cm.map((cm) => cm.id));
-      await editCourse(context, siteUrl, courseId, "cm_duplicate", [activityId]);
-      const copy = (await courseState(context, siteUrl, courseId)).cm.find((cm) => !before.has(cm.id));
-      return result(context, siteUrl, courseId, `Activity ${activityId} duplicated${copy ? ` as ${copy.id}` : ""}.`, copy ? Number(copy.id) : undefined);
-    },
+    async ({ courseId, activityId }) => reply(await duplicateActivity(...(await onSite(config, browser)), courseId, activityId)),
   );
 };
 
@@ -95,12 +62,7 @@ export const registerDeleteActivity: RegisterTool = (server, { config, browser }
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     },
-    async ({ courseId, activityId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      await editCourse(context, siteUrl, courseId, "cm_delete", [activityId]);
-      return result(context, siteUrl, courseId, `Activity ${activityId} deleted.`);
-    },
+    async ({ courseId, activityId }) => reply(await deleteActivity(...(await onSite(config, browser)), courseId, activityId)),
   );
 };
 
@@ -114,15 +76,7 @@ export const registerAddSection: RegisterTool = (server, { config, browser }) =>
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ courseId, name, afterSectionId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const before = new Set((await courseState(context, siteUrl, courseId)).section.map((s) => s.id));
-      await editCourse(context, siteUrl, courseId, "section_add", [], { sectionId: afterSectionId });
-      const added = (await courseState(context, siteUrl, courseId)).section.find((s) => !before.has(s.id));
-      if (added && name !== undefined) await renameSection(context, siteUrl, courseId, Number(added.id), name);
-      return result(context, siteUrl, courseId, `Section ${added?.id ?? "?"} added${name !== undefined ? ` as "${name}"` : ""}.`, added ? Number(added.id) : undefined);
-    },
+    async ({ courseId, ...section }) => reply(await addSection(...(await onSite(config, browser)), courseId, section)),
   );
 };
 
@@ -142,24 +96,7 @@ export const registerEditSection: RegisterTool = (server, { config, browser }) =
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
-    async ({ courseId, sectionId, name, visible, afterSectionId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const done: string[] = [];
-      if (name !== undefined) {
-        await renameSection(context, siteUrl, courseId, sectionId, name);
-        done.push(`renamed to "${name}"`);
-      }
-      if (visible !== undefined) {
-        await editCourse(context, siteUrl, courseId, visible ? "section_show" : "section_hide", [sectionId]);
-        done.push(visible ? "shown" : "hidden");
-      }
-      if (afterSectionId !== undefined) {
-        await editCourse(context, siteUrl, courseId, "section_move_after", [sectionId], { sectionId: afterSectionId });
-        done.push(`moved after section ${afterSectionId}`);
-      }
-      return result(context, siteUrl, courseId, done.length > 0 ? `Section ${sectionId} ${done.join(", ")}.` : "Nothing to change.");
-    },
+    async ({ courseId, sectionId, ...change }) => reply(await editSection(...(await onSite(config, browser)), courseId, sectionId, change)),
   );
 };
 
@@ -173,11 +110,6 @@ export const registerDeleteSection: RegisterTool = (server, { config, browser })
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     },
-    async ({ courseId, sectionId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      await editCourse(context, siteUrl, courseId, "section_delete", [sectionId]);
-      return result(context, siteUrl, courseId, `Section ${sectionId} deleted, with its activities.`);
-    },
+    async ({ courseId, sectionId }) => reply(await deleteSection(...(await onSite(config, browser)), courseId, sectionId)),
   );
 };

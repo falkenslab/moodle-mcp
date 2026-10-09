@@ -4,8 +4,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
-import { readActivityDetails, type CourseState } from "@falkenslab/moodle-driver";
-import { structureOf } from "../../src/tools/getCourseStructure.js";
+import { type CourseState } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -32,36 +31,7 @@ const COURSE_PAGE = `<ul><li class="activity" data-for="cmitem" data-id="20"></l
 <li class="activity" data-for="cmitem" data-id="21"><div data-region="activity-dates"><div class="date-item"><span class="date-item-label">Opened:</span> Monday, 5 October</div><div class="date-item"><span class="date-item-label">Closes:</span> Friday, 9 October</div></div></li></ul>`;
 const SECTION_PAGE = `<ul><li class="activity" data-for="cmitem" data-id="22"><div class="availabilityinfo">Not available unless: You achieve a pass in <a href="#">Quiz 1</a></div></li></ul>`;
 
-describe("structureOf", () => {
-  it("nests activities in their sections, with completion, availability and subsections", () => {
-    const [general, unit, practice] = structureOf(STATE);
-    assert.deepEqual(general?.activities.map((a) => [a.id, a.completion]), [
-      [20, { state: "complete", complete: true }],
-      [21, { state: "complete-fail", complete: false }],
-    ]);
-    assert.equal(unit?.title, "Unit 1 & 2");
-    assert.equal(unit?.restricted, true);
-    assert.deepEqual(unit?.activities[0] && { availableToMe: unit.activities[0].availableToMe, restricted: unit.activities[0].restricted, completion: unit.activities[0].completion }, {
-      availableToMe: false,
-      restricted: true,
-      completion: { state: "incomplete", complete: false },
-    });
-    assert.equal(practice?.parentSectionId, 11);
-  });
-});
 
-describe("readActivityDetails", { skip: !browser && "no system browser" }, () => {
-  it("reads dates and restrictions as the page shows them", async () => {
-    const page = await browser!.newPage();
-    await page.setContent(COURSE_PAGE + SECTION_PAGE);
-    assert.deepEqual(await readActivityDetails(page), [
-      { id: 20, dates: [], restriction: undefined },
-      { id: 21, dates: [{ label: "Opened", value: "Monday, 5 October" }, { label: "Closes", value: "Friday, 9 October" }], restriction: undefined },
-      { id: 22, dates: [], restriction: "Not available unless: You achieve a pass in Quiz 1" },
-    ]);
-    await page.close();
-  });
-});
 
 describe("get_course_structure", { skip: !browser && "no system browser" }, () => {
   async function connect(state: FakeMoodleState): Promise<{ client: Client; context: BrowserContext }> {

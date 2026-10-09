@@ -4,7 +4,6 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
-import { readDiscussionRows } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, ServiceFailure, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -25,17 +24,6 @@ function row(id: number, subject: string, author: string, started: number, last:
 
 const FORUM_PAGE = `<table>${row(2, "Can a variable change?", "Ada Lovelace", 1_790_000_000, { author: "Alan Turing", time: 1_790_000_600, post: 3 }, 1)}${row(1, "Bool question", "Grace Hopper", 1_789_000_000, { author: "Grace Hopper", time: 1_789_000_000, post: 1 }, 0, true)}</table>`;
 
-describe("readDiscussionRows", { skip: !browser && "no system browser" }, () => {
-  it("reads subject, people, times, replies and lock without the page's texts", async () => {
-    const page = await browser!.newPage();
-    await page.setContent(FORUM_PAGE);
-    assert.deepEqual(await readDiscussionRows(page), [
-      { id: 2, subject: "Can a variable change?", author: "Ada Lovelace", started: 1_790_000_000, lastPost: { author: "Alan Turing", time: 1_790_000_600, postId: 3 }, replies: 1, locked: false },
-      { id: 1, subject: "Bool question", author: "Grace Hopper", started: 1_789_000_000, lastPost: { author: "Grace Hopper", time: 1_789_000_000, postId: 1 }, replies: 0, locked: true },
-    ]);
-    await page.close();
-  });
-});
 
 describe("forum tools", { skip: !browser && "no system browser" }, () => {
   async function connect(state: FakeMoodleState): Promise<{ client: Client; context: BrowserContext }> {

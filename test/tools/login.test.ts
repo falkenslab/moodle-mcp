@@ -5,7 +5,6 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import type { ContextOptions } from "@falkenslab/moodle-driver";
 import { createServer } from "../../src/createServer.js";
-import { LoginTimeoutError, LoginWindowClosedError, waitForLogin } from "../../src/tools/login.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle } from "@falkenslab/moodle-driver/testing";
 
@@ -36,34 +35,6 @@ function logInLater(context: BrowserContext, state: State, delayMs: number) {
   }, 20);
 }
 
-describe("waitForLogin", { skip: !browser && "no system browser" }, () => {
-  it("returns once the page shows the site logged in", async () => {
-    const state: State = {};
-    const context = await fakeSite(state);
-    const page = await context.newPage();
-    await page.goto(`${SITE}login/index.php`);
-    logInLater(context, state, 300);
-    await waitForLogin(page, SITE, { timeoutMs: 10_000, pollMs: 50 });
-    assert.equal(page.url(), `${SITE}my/`);
-    await context.close();
-  });
-
-  it("gives up after the timeout", async () => {
-    const context = await fakeSite({});
-    const page = await context.newPage();
-    await page.goto(`${SITE}login/index.php`);
-    await assert.rejects(waitForLogin(page, SITE, { timeoutMs: 200, pollMs: 50 }), LoginTimeoutError);
-    await context.close();
-  });
-
-  it("notices the window being closed", async () => {
-    const context = await fakeSite({});
-    const page = await context.newPage();
-    await page.goto(`${SITE}login/index.php`);
-    setTimeout(() => void context.close(), 200);
-    await assert.rejects(waitForLogin(page, SITE, { timeoutMs: 10_000, pollMs: 50 }), LoginWindowClosedError);
-  });
-});
 
 describe("login tool", { skip: !browser && "no system browser" }, () => {
   async function connect(context: BrowserContext) {

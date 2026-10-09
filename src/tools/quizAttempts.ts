@@ -1,8 +1,7 @@
 // The quiz tools: one file for six tools that share the question and detail schemas.
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { pause, readingSeconds } from "@falkenslab/moodle-driver";
-import { finishAttempt, quizInfo, readAttempt, readReview, saveAnswers, startAttempt, type Question } from "@falkenslab/moodle-driver";
+import { answerQuizQuestions, finishQuizAttempt, quizInfo, readAttempt, readReview, startQuizAttempt } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const quizId = z.number().int().positive().describe("The quiz's id (course module id), as get_course_structure gives it");
@@ -51,7 +50,7 @@ export const registerGetQuizInfo: RegisterTool = (server, { config, browser }) =
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ quizId }) => reply({ ...(await quizInfo(await browser.context(), requireSiteUrl(config), quizId)) }),
+    async ({ quizId }) => reply({ ...(await quizInfo(...(await onSite(config, browser)), quizId)) }),
   );
 };
 
@@ -66,12 +65,7 @@ export const registerStartQuizAttempt: RegisterTool = (server, { config, browser
       outputSchema: { attemptId: z.number().int(), questions: z.array(question) },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ quizId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const id = await startAttempt(context, siteUrl, quizId);
-      return reply({ attemptId: id, questions: await readAttempt(context, siteUrl, id) });
-    },
+    async ({ quizId }) => reply(await startQuizAttempt(...(await onSite(config, browser)), quizId)),
   );
 };
 
@@ -85,7 +79,7 @@ export const registerGetQuizAttempt: RegisterTool = (server, { config, browser }
       outputSchema: { attemptId: z.number().int(), questions: z.array(question) },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ attemptId }) => reply({ attemptId, questions: await readAttempt(await browser.context(), requireSiteUrl(config), attemptId) }),
+    async ({ attemptId }) => reply({ attemptId, questions: await readAttempt(...(await onSite(config, browser)), attemptId) }),
   );
 };
 
@@ -104,21 +98,12 @@ export const registerAnswerQuizQuestions: RegisterTool = (server, { config, brow
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ attemptId, answers }, extra) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
+      // Clients that pass a progress token keep waiting while the reading pause reports progress.
       const progressToken = extra._meta?.progressToken;
-      const beforeSave =
-        config.trail === "realistic"
-          ? async (questions: Question[]) => {
-              // A reader takes the questions and their options in before answering.
-              const seconds = readingSeconds(questions.map((q) => [q.text, ...q.fields.flatMap((f) => [f.label ?? "", ...(f.options ?? []).map((o) => o.label)])].join(" ")).join(" "));
-              await pause(seconds, (elapsed) => {
-                if (progressToken !== undefined) void extra.sendNotification({ method: "notifications/progress", params: { progressToken, progress: elapsed, total: seconds, message: "Reading the questions" } }).catch(() => undefined);
-              });
-            }
-          : undefined;
-      await saveAnswers(context, siteUrl, attemptId, answers, beforeSave);
-      return reply({ attemptId, questions: await readAttempt(context, siteUrl, attemptId) });
+      const onProgress = (elapsed: number, total: number) => {
+        if (progressToken !== undefined) void extra.sendNotification({ method: "notifications/progress", params: { progressToken, progress: elapsed, total, message: "Reading the questions" } }).catch(() => undefined);
+      };
+      return reply(await answerQuizQuestions(...(await onSite(config, browser)), attemptId, answers, { trail: config.trail, onProgress }));
     },
   );
 };
@@ -134,13 +119,7 @@ export const registerFinishQuizAttempt: RegisterTool = (server, { config, browse
       outputSchema: { attemptId: z.number().int(), finished: z.boolean(), review: z.object({ summary: z.array(detail), questions: z.array(question) }).optional() },
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     },
-    async ({ attemptId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      await finishAttempt(context, siteUrl, attemptId);
-      const review = await readReview(context, siteUrl, attemptId).catch(() => undefined);
-      return reply({ attemptId, finished: true, review });
-    },
+    async ({ attemptId }) => reply(await finishQuizAttempt(...(await onSite(config, browser)), attemptId)),
   );
 };
 
@@ -154,6 +133,6 @@ export const registerGetAttemptReview: RegisterTool = (server, { config, browser
       outputSchema: { summary: z.array(detail), questions: z.array(question) },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ attemptId }) => reply({ ...(await readReview(await browser.context(), requireSiteUrl(config), attemptId)) }),
+    async ({ attemptId }) => reply({ ...(await readReview(...(await onSite(config, browser)), attemptId)) }),
   );
 };

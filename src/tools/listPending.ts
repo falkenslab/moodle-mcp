@@ -1,8 +1,6 @@
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
-import { activityDetails, courseState } from "@falkenslab/moodle-driver";
-import { myGrades } from "@falkenslab/moodle-driver";
-import { structureOf } from "./getCourseStructure.js";
+import { pendingActivities } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {
@@ -27,7 +25,6 @@ const outputSchema = {
   ),
 };
 
-type Pending = z.infer<z.ZodObject<typeof outputSchema>>["pending"][number];
 
 export const registerListPending: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
@@ -41,37 +38,7 @@ export const registerListPending: RegisterTool = (server, { config, browser }) =
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ courseId }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      const state = await courseState(context, siteUrl, courseId);
-      const sections = structureOf(state, await activityDetails(context, siteUrl, courseId, state));
-      const ungraded = new Set(
-        (await myGrades(context, siteUrl, courseId).catch(() => [])).filter((row) => row.kind === "item" && row.activityId && !row.grade).map((row) => row.activityId),
-      );
-
-      const completionTracked = state.cm.some((cm) => cm.istrackeduser && cm.completionstate !== undefined);
-      const pending: Pending[] = [];
-      for (const section of sections) {
-        for (const activity of section.activities) {
-          if (!activity.visible && !activity.availableToMe) continue;
-          const tracked = activity.completion !== undefined;
-          const reason = tracked ? (activity.completion!.complete ? undefined : "incomplete") : ungraded.has(activity.id) ? "not-graded" : undefined;
-          if (!reason) continue;
-          pending.push({
-            activityId: activity.id,
-            name: activity.name,
-            type: activity.type,
-            url: activity.url,
-            section: { number: section.number, title: section.title },
-            reason,
-            completion: activity.completion?.state,
-            availableToMe: activity.availableToMe,
-            dates: activity.dates,
-            restriction: activity.restriction,
-          });
-        }
-      }
-      const output = { completionTracked, pending };
+      const output = await pendingActivities(...(await onSite(config, browser)), courseId);
       return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
     },
   );

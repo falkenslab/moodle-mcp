@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
 import { logOut } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 export const registerLogout: RegisterTool = (server, { config, browser }) => {
@@ -14,7 +14,7 @@ export const registerLogout: RegisterTool = (server, { config, browser }) => {
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async () => {
-      const ended = await logOut(await browser.context(), requireSiteUrl(config));
+      const ended = await logOut(...(await onSite(config, browser)));
       // The saved session cookies follow (ADR-007): a restart doesn't bring the old session back.
       await browser.saveSession();
       const output = { status: ended ? ("logged-out" as const) : ("not-logged-in" as const) };

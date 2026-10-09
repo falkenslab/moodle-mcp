@@ -1,9 +1,7 @@
 // The student's assignment tools: one file for three tools that share the assignment's schema.
-import { access } from "node:fs/promises";
-import path from "node:path";
 import { z } from "zod";
-import { requireSiteUrl } from "../config.js";
 import { saveSubmission, studentAssignment, submitForGrading } from "@falkenslab/moodle-driver";
+import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const assignmentId = z.number().int().positive().describe("The assignment's id (course module id), as get_course_structure gives it");
@@ -25,15 +23,6 @@ const assignmentSchema = {
 
 const reply = <T extends Record<string, unknown>>(output: T) => ({ content: [{ type: "text" as const, text: JSON.stringify(output, null, 2) }], structuredContent: output });
 
-async function checkFiles(files: string[]): Promise<void> {
-  for (const file of files) {
-    if (!path.isAbsolute(file)) throw new Error(`Give files as absolute paths: "${file}".`);
-    await access(file).catch(() => {
-      throw new Error(`There's no file at ${file}.`);
-    });
-  }
-}
-
 export const registerGetAssignment: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "get_assignment",
@@ -44,7 +33,7 @@ export const registerGetAssignment: RegisterTool = (server, { config, browser })
       outputSchema: assignmentSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ assignmentId }) => reply({ ...(await studentAssignment(await browser.context(), requireSiteUrl(config), assignmentId)) }),
+    async ({ assignmentId }) => reply({ ...(await studentAssignment(...(await onSite(config, browser)), assignmentId)) }),
   );
 };
 
@@ -59,14 +48,7 @@ export const registerSaveSubmission: RegisterTool = (server, { config, browser }
       outputSchema: assignmentSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ assignmentId, onlineText, files }) => {
-      if (onlineText === undefined && (!files || files.length === 0)) throw new Error("Give onlineText, files or both.");
-      if (files) await checkFiles(files);
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      await saveSubmission(context, siteUrl, assignmentId, { onlineText, files });
-      return reply({ ...(await studentAssignment(context, siteUrl, assignmentId)) });
-    },
+    async ({ assignmentId, onlineText, files }) => reply({ ...(await saveSubmission(...(await onSite(config, browser)), assignmentId, { onlineText, files })) }),
   );
 };
 
@@ -81,11 +63,6 @@ export const registerSubmitAssignment: RegisterTool = (server, { config, browser
       outputSchema: assignmentSchema,
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     },
-    async ({ assignmentId, acceptStatement = false }) => {
-      const siteUrl = requireSiteUrl(config);
-      const context = await browser.context();
-      await submitForGrading(context, siteUrl, assignmentId, acceptStatement);
-      return reply({ ...(await studentAssignment(context, siteUrl, assignmentId)) });
-    },
+    async ({ assignmentId, acceptStatement = false }) => reply({ ...(await submitForGrading(...(await onSite(config, browser)), assignmentId, acceptStatement)) }),
   );
 };
