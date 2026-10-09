@@ -14,7 +14,7 @@ describe("readSubmissionContent", { skip: !browser && "no system browser" }, () 
     const content = await readSubmissionContent(page, PANEL);
     await page.close();
     assert.deepEqual(content, [
-      { plugin: "onlinetext", text: "First paragraph, with x = 1.\n\nSecond\nline & more.\n\n- one\n\n- two", files: [] },
+      { plugin: "onlinetext", text: "First paragraph, with x = 1.\n\nSecond\nline & more.\n\n- one\n- two", files: [] },
       { plugin: "file", text: "essay.pdf", files: [{ name: "essay.pdf", url: "http://moodle.test/pluginfile.php/17/assignsubmission_file/submission_files/8/essay.pdf?forcedownload=1" }] },
       { plugin: "onlinetext", text: "Short answer.", files: [] },
     ]);

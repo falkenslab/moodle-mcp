@@ -4,7 +4,7 @@ An [MCP](https://modelcontextprotocol.io) server that works a Moodle site throug
 
 You log in yourself, in a browser window the server opens: it never sees or stores your password. Your session is kept in a browser profile folder outside the server.
 
-Status: early development. Today it has `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `list_assignments`, `get_submissions` and `server_info`; the Moodle tools come one by one.
+Status: early development. Today it has `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `get_activity_content`, `list_assignments`, `get_submissions` and `server_info`; the Moodle tools come one by one.
 
 ## Requirements
 

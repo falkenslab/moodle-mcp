@@ -132,7 +132,8 @@ export function readSubmissionContent(page: Page, html: string): Promise<PluginC
         else {
           const isBlock = BLOCKS.has(item.nodeName);
           raw += item.nodeName === "LI" ? "\n- " : isBlock ? "\n" : "";
-          stack.push(isBlock ? "\n" : "", ...Array.from(item.childNodes).reverse());
+          // A list item ends where the next one starts: no blank line between items.
+          stack.push(isBlock && item.nodeName !== "LI" ? "\n" : "", ...Array.from(item.childNodes).reverse());
         }
       }
       const text = raw

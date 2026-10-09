@@ -59,7 +59,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
-| `get_activity_content` | Read a page, label, book (all chapters or one), URL resource or HTML package as text; logs the view | R | Page | S 621 page loads, 34 book chapters, 43 HTML package pages, 84 tab switches | — |
+| `get_activity_content` | Read a page, label, book (all chapters or one), URL resource or HTML package as text; logs the view | R | Page | S 621 page loads, 34 book chapters, 43 HTML package pages, 84 tab switches | Done |
 | `download_resource` | Save a course file (PDF, docx…) locally, through the session | R | Page (`resource/view.php?redirect=0`, then `pluginfile.php`) | S files saved 2–5 times, `.bin` names, base64 overflows | — |
 | `get_activity_media` | Videos in an activity: source, duration, host | R | Page | S 400 video polling calls, 60 calls to find sources | — |
 | `watch_video` | Play a video to the end at real speed, for completion | W (trail) | Page | S two courses depend on watched videos; one run took 29 h | — |

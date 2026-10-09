@@ -30,7 +30,9 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/getSubmissions.ts` — `get_submissions`: every participant's status, dates and, by default, content.
 - `moodle/user.ts` — a user by id, the site's name, a user's roles in a course (role links on their course profile) and what they can do there, asked of read-only services that need the capability (activity types they can add, the grader report).
 - `tools/getMe.ts` — `get_me`: who the person is and, for a course, their roles and whether they can edit and grade.
-- `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text.
+- `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text; `readTexts()`: elements' text in a page, paragraphs and lists kept.
+- `moodle/pace.ts` — reading at a person's pace for the realistic trail (ADR-012): bounded pauses with progress.
+- `tools/getActivityContent.ts` — `get_activity_content`: a page, book, label, URL, file or folder viewed as a person would (`forceview` for URLs and files), so Moodle logs the view; books chapter by chapter or from the print page, by trail.
 - `tools/index.ts` — the list of tools; `tools/<tool>.ts` — one tool each: its schemas, annotations and handler, receiving a `ToolContext` (`config`, `browser`).
 - `version.ts` — the package name and version, from `package.json` (inlined by esbuild).
 
