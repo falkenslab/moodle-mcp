@@ -40,6 +40,9 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/courseLayout.ts` — `edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`: each returns the course structure after the change.
 - `moodle/forms.ts` — Moodle forms in the browser: fields set by name (TinyMCE editors through their API), local files uploaded to a draft area as the file picker does, submit, validation errors by field (`#id_error_<field>`).
 - `tools/activityForms.ts` — `create_activity` (any type, hidden by default) and `update_activity`, through `course/modedit.php`; any setting by its form field name.
+- `moodle/inPage.ts` — `inPage()`: page code with helper functions, safe under tsx's keepNames.
+- `moodle/quiz.ts` — a quiz's page (rules, dates, attempt cards), an attempt's questions on every page (fields by form name, options with their labels), answers saved page by page, the finish form submitted directly, the review.
+- `tools/quizAttempts.ts` — `get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`.
 - `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text; `readTexts()`: elements' text in a page, paragraphs and lists kept.
 - `moodle/pace.ts` — reading at a person's pace for the realistic trail (ADR-012): bounded pauses with progress.
 - `tools/getActivityContent.ts` — `get_activity_content`: a page, book, label, URL, file or folder viewed as a person would (`forceview` for URLs and files), so Moodle logs the view; books chapter by chapter or from the print page, by trail.

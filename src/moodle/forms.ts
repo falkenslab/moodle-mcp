@@ -54,8 +54,8 @@ export function formValue(page: Page, name: string): Promise<string | undefined>
  * selects (several values for a multiple one), checkboxes and radios. Throws `FormError` naming the
  * fields the form doesn't have.
  */
-export async function setFields(page: Page, values: Record<string, FieldValue>): Promise<void> {
-  const missing = await page.evaluate((values) => {
+export async function setFields(page: Page, values: Record<string, FieldValue>, formSelector = "form.mform"): Promise<void> {
+  const missing = await page.evaluate(({ values, formSelector }) => {
     interface Field {
       type: string;
       id: string;
@@ -70,7 +70,7 @@ export async function setFields(page: Page, values: Record<string, FieldValue>):
       tinymce?: { get(id: string): { setContent(html: string): void; save(): void } | null };
       Event: new (type: string, init: { bubbles: boolean }) => unknown;
     };
-    const form = g.document.querySelector("form.mform");
+    const form = g.document.querySelector(formSelector);
     const notFound: string[] = [];
     for (const [name, value] of Object.entries(values)) {
       const all = Array.from(form?.querySelectorAll(`[name="${name}"]`) ?? []);
@@ -98,7 +98,7 @@ export async function setFields(page: Page, values: Record<string, FieldValue>):
       }
     }
     return notFound;
-  }, values);
+  }, { values, formSelector });
   if (missing.length > 0) {
     throw new FormError("The form has no such field:", missing.map((field) => ({ field, message: "not in this form; check its name in Moodle's form" })));
   }

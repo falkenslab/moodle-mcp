@@ -14,6 +14,7 @@ import { registerListCourses } from "./listCourses.js";
 import { registerListDiscussions } from "./listDiscussions.js";
 import { registerListPending } from "./listPending.js";
 import { registerLogin } from "./login.js";
+import { registerAnswerQuizQuestions, registerFinishQuizAttempt, registerGetAttemptReview, registerGetQuizAttempt, registerGetQuizInfo, registerStartQuizAttempt } from "./quizAttempts.js";
 import { registerServerInfo } from "./serverInfo.js";
 import type { RegisterTool } from "./types.js";
 
@@ -31,6 +32,12 @@ export const TOOLS: RegisterTool[] = [
   registerGetDiscussion,
   registerGetMyGrades,
   registerListPending,
+  registerGetQuizInfo,
+  registerStartQuizAttempt,
+  registerGetQuizAttempt,
+  registerAnswerQuizQuestions,
+  registerFinishQuizAttempt,
+  registerGetAttemptReview,
   registerGradeSubmission,
   registerReplyToPost,
   registerCreateDiscussion,
