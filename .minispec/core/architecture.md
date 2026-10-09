@@ -3,66 +3,34 @@
 ## Flow
 
 ```
-MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) -> tools/<tool>.ts -> browser.ts (persistent context, system channel) -> Moodle pages
+MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions, errors explained, following)
+                                     -> tools/<tool>.ts (schema, description, one call) -> @falkenslab/moodle-driver -> Moodle
                          ^
                      config.ts (arguments + environment variables, then the configure tool)
 ```
 
+Everything that works Moodle is moodle-driver's (sibling repository, ADR-014): the browser and its profile, logging in, AJAX through the page, forms, and every Moodle area. This server adds what MCP needs.
+
 ## Key pieces (`src/`)
 
-- `server.ts` — the entry point (the bundle's): reads the configuration, connects stdio, closes the browser when the client leaves (stdin closed or a signal).
-- `createServer.ts` — the `McpServer` with its `instructions` and tools, apart from the entry point so tests drive it through an in-memory transport.
-- `config.ts` — `loadConfig(argv, env)`: the starting `Config`, all optional (arguments win over environment variables; an invalid value stops the server with a message on stderr). One `Config` object is shared by the tools and the browser, and `configure` changes it in place (ADR-009); `requireSiteUrl()` throws `NotConfiguredError`.
-- `browser.ts` — `createBrowserManager()`: opens the persistent Playwright context on the configured profile on first use (Edge, then Chrome, unless a channel is set) and reuses it, one operation at a time; a headed request (login) relaunches it with a window; a closed window means a new launch on the next call. With no system browser, it starts the Chromium download in the background and answers `BrowserDownloadingError` until it ends (ADR-001). Shown or hidden on demand (`setVisible`, ADR-011), following tools' pages in one tab (`show`); refuses a window where there's no screen.
-- `chromiumInstaller.ts` — `installChromium()`: `playwright-core`'s CLI from `node_modules`, its output on stderr.
-- `sessionCookies.ts` — the session cookies Chromium drops on close, saved in the profile and restored on launch (ADR-007).
-- `moodle/session.ts` — whether a page has a real user logged in (`notloggedin` body class, `M.cfg.userId`, login and logout links to tell a guest; never visible texts), `openSitePage()` for tools (throws `NotLoggedInError`, which names `login`).
-- `moodle/ajax.ts` — `callService()`: one of Moodle's AJAX services, called from a kept logged-in tab with its `sesskey` (ADR-008); a stale tab is replaced, a session error becomes `NotLoggedInError`; `readPageConfig()` reads that tab's `M.cfg` (user id, language, time zone).
+- `server.ts` — the entry point (the bundle's): reads the configuration, creates the driver's browser manager with it, connects stdio, closes the browser when the client leaves (stdin closed or a signal).
+- `createServer.ts` — the `McpServer` with its `instructions` and tools, apart from the entry point so tests drive it through an in-memory transport. It wraps every tool with `explainErrors` and `followTools`.
+- `config.ts` — `loadConfig(argv, env)`: the starting `Config`, all optional (arguments win over environment variables; an invalid value stops the server with a message on stderr). One `Config` object is shared by the tools and the driver's browser manager (it is the driver's `BrowserOptions`), and `configure` changes it in place (ADR-009); `requireSiteUrl()` throws `NotConfiguredError`. Channels, trails and the URL's parsing are the driver's.
 - `instructions.ts` — the server's usage rules for any client.
-- `moodle/site.ts` — `findMoodleSite()`: a site's base URL from any of its pages, fetched without the browser (`M.cfg.wwwroot`).
-- `tools/configure.ts` — `configure`: URL, headless, profile folder, in memory (ADR-009); closes the browser when the profile or the mode changes.
-- `tools/login.ts` — `login`: returns the user if the session is alive; else a window at the login page, waiting (with progress notifications) until the person is back on the site logged in.
-- `tools/listCourses.ts` — `list_courses`: the person's courses, from `core_course_get_enrolled_courses_by_timeline_classification`.
-- `moodle/course.ts` — a course's state (`core_courseformat_get_state`), shared by the course tools, and activity details (dates, restriction texts) from the course page and, for activities it doesn't show, their section pages.
-- `tools/getCourseStructure.ts` — `get_course_structure`: sections and activities with visibility, availability, restrictions and completion; dates and restriction texts with `details`.
-- `tools/listAssignments.ts` — `list_assignments`: a course's assignments by course module id, from the course state.
-- `moodle/assign.ts` — an assignment's instance and context ids from its grader page (cached in memory; no service gives them), participants and their dates through `mod_assign_list_participants` and `mod_assign_get_participant`, and a submission's content from the grader panel fragment (`core_get_fragment`), read by class in a blank tab.
-- `tools/getSubmissions.ts` — `get_submissions`: every participant's status, dates and, by default, content.
-- `tools/gradeSubmission.ts` — `grade_submission`: the grading panel's form filled in a blank tab, serialized as the grader does and sent to `mod_assign_submit_grading_form`; the saved grade and feedback read back.
-- `moodle/user.ts` — a user by id, the site's name, a user's roles in a course (role links on their course profile) and what they can do there, asked of read-only services that need the capability (activity types they can add, the grader report).
-- `tools/getMe.ts` — `get_me`: who the person is and, for a course, their roles and whether they can edit and grade.
-- `moodle/forum.ts` — a forum's discussions from its pages (rows read by data attributes, links and timestamps; the body id tells a forum page), a discussion's posts through `mod_forum_get_discussion_posts`, their HTML as text in a blank tab.
-- `tools/listDiscussions.ts`, `tools/getDiscussion.ts` — `list_discussions` (replies 0: unanswered) and `get_discussion`.
-- `tools/forumPosts.ts` — `reply_to_post` and `create_discussion` through Moodle's post form (`mod/forum/post.php`): subject prefilled for replies, attachments uploaded to its draft area, the forum's instance id from its page's quick-post form; empty messages refused.
-- `moodle/grades.ts` — the user grade report's rows (cell and row classes; action menus left out).
-- `tools/getMyGrades.ts`, `tools/listPending.ts` — `get_my_grades`, and `list_pending`: tracked activities not complete, or ungraded ones where completion isn't tracked, with dates and restrictions.
-- `moodle/editor.ts` — the course editor's actions through `core_courseformat_update_course`, renames through `core_update_inplace_editable`, the course format from the course page's body class.
-- `tools/courseLayout.ts` — `edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`: each returns the course structure after the change.
-- `moodle/forms.ts` — Moodle forms in the browser: fields set by name (TinyMCE editors through their API), local files uploaded to a draft area as the file picker does, submit, validation errors by field (`#id_error_<field>`).
-- `tools/activityForms.ts` — `create_activity` (any type, hidden by default) and `update_activity`, through `course/modedit.php`; any setting by its form field name.
-- `moodle/inPage.ts` — `inPage()`: page code with helper functions, safe under tsx's keepNames.
-- `moodle/quiz.ts` — a quiz's page (rules, dates, attempt cards), an attempt's questions on every page (fields by form name, options with their labels), answers saved page by page, the finish form submitted directly, the review.
-- `tools/quizAttempts.ts` — `get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`.
-- `moodle/submission.ts` — an assignment as the student sees it (status by class, the forms' hidden actions), saving a submission through the edit form, submitting through the confirm form (the site's statement accepted only when asked).
-- `tools/assignSubmission.ts` — `get_assignment`, `save_submission`, `submit_assignment`.
-- `tools/downloadFile.ts` — `download_file`: a site file saved locally through the browser context's request API (its cookies, no tab), only the site's host (its media outside Moodle's path too), never overwriting.
-- `moodle/survey.ts` — surveys (the questionnaire plugin and Moodle's feedback) through their forms, one layout per module: questions and fields read page by page (`gopage`, `sec`), answers checked against the form, filled and sent page by page, Moodle's complaints returned.
-- `tools/surveys.ts` — `get_survey`, `submit_survey`.
-- `moodle/overview.ts`, `tools/courseOverview.ts` — `get_activities_overview` (Moodle 5's `core_courseformat_get_overview_information`, each column read by its exporter; "resource" first, then the types still missing), `list_deadlines` (calendar action events, one course or all) and `get_course_updates` (`core_course_get_updates_since`, named from the course's state).
-- `moodle/siteInfo.ts`, `tools/getSiteInfo.ts` — `get_site_info`: the public configuration through `lib/ajax/service-nologin.php` (no session, no browser; Moodle shows its version to administrators only), and a course's addable types (`core_course_get_course_content_items`).
-- `tools/logout.ts` — `logout`: `logOut()` in `moodle/session.ts` follows the user menu's logout link (confirming when Moodle asks), then the saved session cookies are rewritten (ADR-007).
-- `tools/browserTools.ts` — the browser fallback tools (ADR-010): `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`, on the manager's one working tab (`tab()`, the tab following shows). Guards in code: a route keeps the tab's page on the site, password fields are refused, snapshots (Playwright's `ariaSnapshot` in `ai` mode, refs resolved with `getByRef`) cover `#region-main` and are cut at 30,000 characters; actions wait for `M.util.pending_js` like Moodle's Behat.
-- `tools/showBrowser.ts`, `tools/follow.ts` — `show_browser` (ADR-011), and the page each AJAX tool shows while the person watches, applied to every tool as `createServer` registers them.
-- `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text; `readTexts()`: elements' text in a page, paragraphs and lists kept. `readMedia()`: videos, audio and players in content (video.js sources included), YouTube as `watch?v=` links.
-- `moodle/pace.ts` — reading at a person's pace for the realistic trail (ADR-012): bounded pauses with progress.
-- `tools/getActivityContent.ts` — `get_activity_content`: a page, book, label, URL, file or folder viewed as a person would (`forceview` for URLs and files), so Moodle logs the view; books chapter by chapter or from the print page, by trail; with the content's media.
-- `tools/index.ts` — the list of tools; `tools/<tool>.ts` — one tool each: its schemas, annotations and handler, receiving a `ToolContext` (`config`, `browser`).
+- `tools/index.ts` — the list of tools; `tools/<tool>.ts` — one tool each (or a small family: `courseLayout.ts`, `quizAttempts.ts`, `assignSubmission.ts`, `courseOverview.ts`, `browserTools.ts`): its schemas, annotations, description, and a handler that calls the driver.
+- `tools/reply.ts` — `reply()`: structured content plus the same JSON as text; `onSite()`: the site checked before the browser opens, so a server without one says to configure it.
+- `tools/errors.ts` — the driver's errors in this server's terms: `NotLoggedInError` and login timeouts name `login`, browser and display errors name `MOODLE_MCP_*` settings.
+- `tools/follow.ts` — the Moodle page each AJAX tool shows while the person watches (ADR-011; the mechanism is the driver's).
+- `tools/configure.ts` — `configure`: URL (checked with the driver's `findMoodleSite`), headless, trail, profile folder, in memory (ADR-009); closes the browser when the profile or the mode changes.
+- `tools/login.ts`, `tools/logout.ts` — the driver's `logIn` with progress notifications while the person logs in; `logOut`.
+- `tools/showBrowser.ts` — `show_browser` (ADR-011).
+- `tools/browserTools.ts` — the browser fallback tools (ADR-010) on the driver's working tab: a route keeps the tab's page on the site, password fields are refused, snapshots (`ariaSnapshot` in `ai` mode, refs resolved with `getByRef`) cover `#region-main` and are cut at 30,000 characters; actions wait for `M.util.pending_js`.
+- `tools/serverInfo.ts` — `server_info`: the effective configuration, never secrets.
 - `version.ts` — the package name and version, from `package.json` (inlined by esbuild).
 
 ## Folder map
 
-- `src/` — the server.
-- `test/` — `node:test` suites mirroring `src/`.
-- `scripts/` — build helpers (esbuild) and the Docker runner for anything that opens a browser (`in-docker.mjs`, `docker-proxy.mjs`).
+- `src/` — the server; `test/` — `node:test` suites mirroring it, against the driver's fake Moodle (`@falkenslab/moodle-driver/testing`).
+- `scripts/` — the esbuild build (the driver bundled, `playwright-core` outside) and the Docker runner for anything that opens a browser, which mounts the sibling `moodle-driver` folder.
 - `dist/server.mjs` — the bundle and the package's bin (not committed).
-- `.minispec/` — this specification; `.claude/skills/` — skills for developing this repo.
+- `docs/tool-catalog.md` — candidate tools by use case; `.minispec/` — this specification.

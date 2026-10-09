@@ -7,7 +7,7 @@
 ## What it does
 
 - Exposes Moodle as domain tools (`list_courses`, `list_assignments`, `get_submissions`…), never as generic browser actions (ADR-004).
-- Drives the system's Edge or Chrome with `playwright-core`, or Chromium downloaded on first use when there is neither (ADR-001), on a persistent profile where the person logs in by hand (ADR-002).
+- Works Moodle through `@falkenslab/moodle-driver` (sibling repository, ADR-014): the system's Edge or Chrome, or Chromium downloaded on first use, on a persistent profile where the person logs in by hand.
 - Configured at run time by the client with `configure`, or by optional environment variables and arguments (ADR-003, ADR-009); its usage rules travel in the MCP server's `instructions`.
 - Ships as one bundled `dist/server.mjs` with a `moodle-mcp` bin, over stdio (ADR-005).
 

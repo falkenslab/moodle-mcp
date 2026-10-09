@@ -10,5 +10,5 @@ Consult **before** writing code.
 - The server never types, stores or asks for a password; the person logs in by hand (ADR-002).
 - Domain tools first (ADR-004); the generic browser tools are a guarded fallback for what none covers (ADR-010).
 - Reading first: a write tool comes only after the read tools it relies on, and says so in its annotations.
-- Moodle's HTML is not an API: each tool keeps its selectors to itself, prefers roles, labels and URLs over CSS classes, and fails with a clear message when the page isn't what it expects.
+- Moodle's pages, services and forms are the driver's business (ADR-014): no selector or service call in a tool.
 - The browser profile lives outside the server's folder, and is never committed (ADR-002).

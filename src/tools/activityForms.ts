@@ -1,4 +1,4 @@
-// create_activity and update_activity: Moodle's activity form, filled and submitted (ADR-008).
+// create_activity and update_activity: the driver fills and submits Moodle's activity form.
 import { z } from "zod";
 import { ACTIVITY_VISIBILITIES, createActivity, updateActivity } from "@falkenslab/moodle-driver";
 import { section } from "./getCourseStructure.js";

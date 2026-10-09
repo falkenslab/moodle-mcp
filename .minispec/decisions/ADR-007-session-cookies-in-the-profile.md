@@ -2,14 +2,12 @@
 
 ## Decision
 
-The server saves the browser's session cookies (those with no expiry) to `moodle-mcp-session-cookies.json` inside the profile folder after a login and whenever it closes the browser, and puts them back when it opens the profile again, unless the browser kept a newer one.
+Moved to moodle-driver's ADR-003 (session cookies saved in the profile) when the Moodle code became that library (ADR-014, 9 October 2026). This server follows it through the driver; what remains here is how its settings reach the driver.
 
 ## Motivation
 
-Chromium drops session cookies when a persistent profile closes, and Moodle's `MoodleSession` is one (confirmed empirically, Edge with playwright-core 1.64 and Moodle 5.2): the profile alone would forget the login on every restart of the server, against ADR-002. Chromium's "continue where you left off" setting keeps them, but depends on browser preferences and how the browser was closed; an explicit file doesn't. Playwright's `storageState` file was rejected as it replaces the profile's own state instead of adding to it.
+The decision is about working Moodle, which the driver does now; one copy, where the code is.
 
 ## Consequences
 
-- The file is as sensitive as the profile (a live session): written with owner-only permissions where the system honors them, never outside the profile.
-- A session still ends when Moodle says so (its session timeout, a logout, a password change); tools then report it and the client calls `login`.
-- A server killed without closing the browser keeps the cookies saved at the last login.
+- Read moodle-driver's ADR-003 for the decision itself.

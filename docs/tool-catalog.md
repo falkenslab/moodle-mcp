@@ -1,5 +1,5 @@
 # Tool catalog
-Candidate domain tools for moodle-mcp, by use case, for teachers and students. It's a roadmap, not a commitment: each tool gets its own MiniSpec feature when its turn comes.
+Candidate domain tools for moodle-mcp, by use case, for teachers and students. It's a roadmap, not a commitment: each tool gets its own MiniSpec feature when its turn comes. Since 9 October 2026 the Moodle work behind each tool (the "How" column) is moodle-driver's, with its own feature cards; this server's `driver-tools` card tracks which tools expose them.
 
 ## Sources
 

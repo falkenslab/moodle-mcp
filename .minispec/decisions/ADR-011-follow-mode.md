@@ -14,3 +14,4 @@ Most tools work through AJAX from a hidden service tab (ADR-008), so even a visi
 - Slower while shown (one more page load per call); no cost while hidden.
 - A window the person closes counts as "hide"; open tabs don't survive a switch, what was saved in Moodle does.
 - Without a screen (Linux without `DISPLAY` or `WAYLAND_DISPLAY`), `show_browser` fails with a clear message and the browser stays headless.
+- The mechanism (relaunching, following, the working tab) is moodle-driver's ADR-007; the tool, its instructions and each tool's page (`src/tools/follow.ts`) stay here.

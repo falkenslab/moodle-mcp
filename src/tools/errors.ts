@@ -1,7 +1,7 @@
 // The driver's errors speak of Moodle and the browser; a client needs to hear which tool or setting
 // fixes them. Applied to every tool as createServer registers them, like following (ADR-014).
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { BrowserNotFoundError, LoginTimeoutError, LoginWindowClosedError, NoDisplayError, NotLoggedInError } from "@falkenslab/moodle-driver";
+import { BrowserDownloadingError, BrowserNotFoundError, LoginTimeoutError, LoginWindowClosedError, NoDisplayError, NotLoggedInError } from "@falkenslab/moodle-driver";
 
 /** The same error, told in this server's terms: its tools, its settings. */
 export function explain(error: unknown): unknown {
@@ -10,6 +10,9 @@ export function explain(error: unknown): unknown {
   }
   if (error instanceof LoginTimeoutError || error instanceof LoginWindowClosedError) {
     return new Error(`${error.message} Call login again when the person is ready.`);
+  }
+  if (error instanceof BrowserDownloadingError) {
+    return new Error(`${error.message} Tell the person: the server needs a browser first.`);
   }
   if (error instanceof NoDisplayError) {
     return new Error(`${error.message} For this server: MOODLE_MCP_HEADLESS=true, or show_browser only where there's a screen.`);

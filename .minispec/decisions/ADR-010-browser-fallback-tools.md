@@ -15,3 +15,4 @@ The runs in `moodle-courses` needed operations no domain tool will cover soon (S
 - Annotations: snapshot, screenshot and wait are read-only; the rest are writes, so clients can gate them, and a click is destructive (it may save, delete or submit).
 - A link or redirect off the site is cancelled and reported, leaving the page where it was.
 - Domain tools stay the norm (ADR-004's motivation holds): a task done often through the fallback becomes a domain tool.
+- They work on moodle-driver's working tab (`BrowserManager.tab()`, its ADR-007); the tools and their guards stay here, as they're for agents.

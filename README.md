@@ -66,7 +66,10 @@ Without `env`, the client configures it with `configure` the first time a tool n
 
 ## Development
 
+All the Moodle work is in [moodle-driver](../moodle-driver), a sibling repository this server depends on (`file:../moodle-driver` until it's published): clone it next to this one and build it first. A change to how Moodle is read or written goes there; a tool here is a schema, a description and one driver call.
+
 ```bash
+(cd ../moodle-driver && npm install && npm run build)
 npm install
 npm run build       # bundles src/ into dist/server.mjs
 npm run dev         # rebuilds on every change
@@ -76,7 +79,7 @@ npm test            # opens browsers on your machine
 npm run test:docker # the same, in a container with Playwright's Chromium: nothing opens on your desktop
 ```
 
-`test:docker` runs `scripts/in-docker.mjs`, which wraps any command the same way (`node scripts/in-docker.mjs <command>`): Playwright's image, the repository mounted with Linux `node_modules` of its own, and, when the Moodle sandbox is up, its network, with `localhost:8080` forwarded to it.
+`test:docker` runs `scripts/in-docker.mjs`, which wraps any command the same way (`node scripts/in-docker.mjs <command>`): Playwright's image, the repository mounted with Linux `node_modules` of its own, the sibling `moodle-driver` mounted beside it, and, when the Moodle sandbox is up, its network, with `localhost:8080` forwarded to it. After changing the driver, rebuild it (`npm run build` there) before testing here.
 
 To try the server by hand, the MCP Inspector opens a web UI on the built bundle (set `MOODLE_URL` in your shell first):
 

@@ -12,11 +12,11 @@ In moodle-mcp, other people reach the client as aliases from `@falkenslab/pseudo
 
 ## Changes
 
-- `package.json`: `@falkenslab/pseudonym` from `file:../pseudonym` until it's published (esbuild bundles it); `scripts/in-docker.mjs` mounts the sibling folder so tests see it.
+- `package.json`: `@falkenslab/pseudonym` from `file:../pseudonym` until it's published (esbuild bundles it); `scripts/in-docker.mjs` mounts it beside `moodle-driver` so tests see it.
 - `config.ts`: `pseudonymize` (variable, argument, `configure`), default true; `server_info` shows it.
-- `moodle/people.ts`: a Moodle person to `remember()` (identifiers: the user's "ID number" field when set, the email, the Moodle user id at the site) and back with `resolve()`: `user: "A-…"` to the user id for write tools.
+- `src/people.ts`: a Moodle person to `remember()` (identifiers: the user's "ID number" field when set, the email, the Moodle user id at the site) and back with `resolve()`: `user: "A-…"` to the user id for write tools.
 - Minimization in every tool: no emails, phones, IPs, photos or profile fields of others, whatever the mode.
-- Existing tools through `people.ts`: names and user ids out, aliases in; URLs lose user ids.
+- Existing tools through `people.ts` (the driver gives people as user ids and full names; this server pseudonymizes them): names and user ids out, aliases in; URLs lose user ids.
 - Free text (submissions, posts): through pseudonym's `redact()` (its ADR-005, `redaction` feature): known participants' names to aliases, then emails, Spanish phones, DNI, NIE and ES IBANs to placeholders. Street addresses and dates of birth stay undetected: the README says so.
 - Browser fallback tools: snapshots redacted (known names, user ids in links), screenshots refused, in pseudonymous mode.
 - README: what each tool sends, the mode, the key's backup, the client permissions that keep the agent away from the key folder and the CLI.
