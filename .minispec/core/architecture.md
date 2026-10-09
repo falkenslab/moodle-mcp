@@ -30,6 +30,8 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/getSubmissions.ts` — `get_submissions`: every participant's status, dates and, by default, content.
 - `moodle/user.ts` — a user by id, the site's name, a user's roles in a course (role links on their course profile) and what they can do there, asked of read-only services that need the capability (activity types they can add, the grader report).
 - `tools/getMe.ts` — `get_me`: who the person is and, for a course, their roles and whether they can edit and grade.
+- `moodle/forum.ts` — a forum's discussions from its pages (rows read by data attributes, links and timestamps; the body id tells a forum page), a discussion's posts through `mod_forum_get_discussion_posts`, their HTML as text in a blank tab.
+- `tools/listDiscussions.ts`, `tools/getDiscussion.ts` — `list_discussions` (replies 0: unanswered) and `get_discussion`.
 - `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text; `readTexts()`: elements' text in a page, paragraphs and lists kept.
 - `moodle/pace.ts` — reading at a person's pace for the realistic trail (ADR-012): bounded pauses with progress.
 - `tools/getActivityContent.ts` — `get_activity_content`: a page, book, label, URL, file or folder viewed as a person would (`forceview` for URLs and files), so Moodle logs the view; books chapter by chapter or from the print page, by trail.

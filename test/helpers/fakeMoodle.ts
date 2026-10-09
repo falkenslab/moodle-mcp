@@ -13,11 +13,12 @@ export function moodlePage({
   sesskey = "s1",
   wwwroot = "http://moodle.test",
   body = "",
-}: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string; body?: string }): string {
+  bodyId = "",
+}: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string; body?: string; bodyId?: string }): string {
   const loggedIn = userId > 0;
   return `<!DOCTYPE html><html><head><title>${heading}</title>
 <script>var M = {}; M.cfg = {"wwwroot":${JSON.stringify(wwwroot).replaceAll("/", "\\/")},"sesskey":"${sesskey}","userId":${userId},"language":"en","usertimezone":"Europe/Madrid"};</script></head>
-<body class="${loggedIn ? "" : "notloggedin"}">
+<body${bodyId ? ` id="${bodyId}"` : ""} class="${loggedIn ? "" : "notloggedin"}">
 <nav>${loggedIn && !guest ? '<div class="usermenu"><a href="http://moodle.test/login/logout.php?sesskey=x">Log out</a></div>' : '<a href="http://moodle.test/login/index.php">Log in</a>'}</nav>
 <div id="page-header"><div class="page-header-headings"><h1>${heading}</h1></div></div>
 ${body}
@@ -89,6 +90,8 @@ export async function serveFakeMoodle(context: BrowserContext, state: FakeMoodle
     const html = (body: string) => route.fulfill({ status: 200, contentType: "text/html", body });
     if (!state.user) return html(moodlePage({ userId: 0, heading: "Log in", sesskey }));
     const heading = url.pathname === "/user/profile.php" ? state.user.fullName : "Dashboard";
-    return html(moodlePage({ userId: state.user.id, heading, sesskey, body: state.bodies?.[url.pathname] }));
+    // Moodle names each page in the body id: /mod/forum/view.php is page-mod-forum-view.
+    const bodyId = `page${url.pathname.replace(/\.php$/, "").replaceAll("/", "-")}`;
+    return html(moodlePage({ userId: state.user.id, heading, sesskey, body: state.bodies?.[url.pathname], bodyId }));
   });
 }
