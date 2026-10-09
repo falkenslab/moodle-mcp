@@ -2,6 +2,7 @@ import { registerCreateActivity, registerUpdateActivity } from "./activityForms.
 import { registerGetAssignment, registerSaveSubmission, registerSubmitAssignment } from "./assignSubmission.js";
 import { BROWSER_TOOLS } from "./browserTools.js";
 import { registerConfigure } from "./configure.js";
+import { registerGetActivitiesOverview, registerGetCourseUpdates, registerListDeadlines } from "./courseOverview.js";
 import { registerAddSection, registerDeleteActivity, registerDeleteSection, registerDuplicateActivity, registerEditActivity, registerEditSection } from "./courseLayout.js";
 import { registerDownloadFile } from "./downloadFile.js";
 import { registerCreateDiscussion, registerReplyToPost } from "./forumPosts.js";
@@ -44,6 +45,9 @@ export const TOOLS: RegisterTool[] = [
   registerGetSurvey,
   registerSubmitSurvey,
   registerListPending,
+  registerGetActivitiesOverview,
+  registerListDeadlines,
+  registerGetCourseUpdates,
   registerGetQuizInfo,
   registerStartQuizAttempt,
   registerGetQuizAttempt,

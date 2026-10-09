@@ -45,9 +45,9 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_course_structure` | Sections and activities with ids, type, visibility, restrictions, dates, my completion state | R | AJAX (`core_courseformat_get_state`) | T 110 course page loads; S 105 course + 101 section pages, 310 text searches for completion words | Done |
 | `list_assignments` | A course's assignments | R | AJAX | T | Done |
 | `get_activity` | One activity's settings and description: dates, max grade, completion rules, attached files | R | Page (`view.php`, `modedit.php` for teachers) | T 16 edits started from `modedit.php?update=` | — |
-| `get_activities_overview` | Per type, the course's activities with due dates, submissions and what needs grading | R | AJAX (`core_courseformat_get_overview_information`, 5.x) | T "are there submissions pending to grade?" | — |
-| `list_deadlines` | Upcoming due dates in one course or all | R | AJAX (`core_calendar_get_action_events_by_timesort`) | S deadlines read off course pages | — |
-| `get_course_updates` | What changed in a course since a date | R | AJAX (`core_course_get_updates_since`) | none; useful at session start | — |
+| `get_activities_overview` | Per type, the course's activities with due dates, submissions and what needs grading | R | AJAX (`core_courseformat_get_overview_information`, 5.x) | T "are there submissions pending to grade?" | Done |
+| `list_deadlines` | Upcoming due dates in one course or all | R | AJAX (`core_calendar_get_action_events_by_timesort`) | S deadlines read off course pages | Done (action events: what the person has to do) |
+| `get_course_updates` | What changed in a course since a date | R | AJAX (`core_course_get_updates_since`) | none; useful at session start | Done |
 | `list_notifications` | My notifications | R | AJAX (`message_popup_get_popup_notifications`) | S forum reply notifications | — |
 | `mark_notifications_read` | Mark them read | W | AJAX | S | — |
 | `list_conversations` | My message conversations | R | AJAX (`core_message_get_conversations`) | none | — |
