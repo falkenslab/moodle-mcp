@@ -34,8 +34,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `login` | Make sure there's a session; manual login, SSO included | W (session) | Page | T 23 logins; S 57 manual logins, CAS, expiry | Done |
 | `server_info` | Effective configuration | R | — | — | Done |
 | `get_me` | Who am I: user id, full name, email, language, time zone; with `courseId`, my roles there and what I can do (edit, grade) | R | AJAX (`M.cfg`, `core_user_get_users_by_field`, `core_courseformat_get_section_content_items`, `gradereport_grader_get_users_in_report`) + Page (`/user/view.php?id=&course=` for the roles) | S "which email will the certificate go to"; T telling students from teachers | Done |
-| `get_site_info` | Site name, Moodle version, language, installed activity and question types | R | AJAX (`tool_mobile_get_public_config`, `core_courseformat_get_section_content_items`) + Page | T listed 19 activity types and 17 question types by hand; tried to switch the language | — |
-| `logout` | End the session, to switch accounts (teacher/student in the sandbox) | W | Page | none | — |
+| `get_site_info` | Site name, Moodle version, language, installed activity and question types | R | AJAX (`tool_mobile_get_public_config`, `core_courseformat_get_section_content_items`) + Page | T listed 19 activity types and 17 question types by hand; tried to switch the language | Done (no version: Moodle shows it to administrators only; question types come with the question bank) |
+| `logout` | End the session, to switch accounts (teacher/student in the sandbox) | W | Page | none | Done |
 
 ## Courses and navigation (both roles)
 

@@ -9,6 +9,7 @@ import { registerGetActivityContent } from "./getActivityContent.js";
 import { registerGetCourseStructure } from "./getCourseStructure.js";
 import { registerGetDiscussion } from "./getDiscussion.js";
 import { registerGetMe } from "./getMe.js";
+import { registerGetSiteInfo } from "./getSiteInfo.js";
 import { registerGetMyGrades } from "./getMyGrades.js";
 import { registerGetSubmissions } from "./getSubmissions.js";
 import { registerGradeSubmission } from "./gradeSubmission.js";
@@ -17,6 +18,7 @@ import { registerListCourses } from "./listCourses.js";
 import { registerListDiscussions } from "./listDiscussions.js";
 import { registerListPending } from "./listPending.js";
 import { registerLogin } from "./login.js";
+import { registerLogout } from "./logout.js";
 import { registerAnswerQuizQuestions, registerFinishQuizAttempt, registerGetAttemptReview, registerGetQuizAttempt, registerGetQuizInfo, registerStartQuizAttempt } from "./quizAttempts.js";
 import { registerServerInfo } from "./serverInfo.js";
 import { registerShowBrowser } from "./showBrowser.js";
@@ -27,7 +29,9 @@ import type { RegisterTool } from "./types.js";
 export const TOOLS: RegisterTool[] = [
   registerConfigure,
   registerLogin,
+  registerLogout,
   registerGetMe,
+  registerGetSiteInfo,
   registerListCourses,
   registerGetCourseStructure,
   registerGetActivityContent,

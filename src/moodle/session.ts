@@ -78,3 +78,30 @@ export async function openSitePage(context: BrowserContext, siteUrl: string, pat
     throw error;
   }
 }
+
+/**
+ * Logs the person out of Moodle through the user menu's logout link (it carries the sesskey; without
+ * one Moodle asks to confirm, and the confirmation is accepted). Returns false when nobody was logged
+ * in. Only Moodle's session ends: a single sign-on provider may keep its own.
+ */
+export async function logOut(context: BrowserContext, siteUrl: string): Promise<boolean> {
+  const page = await context.newPage();
+  const home = new URL("my/", siteUrl).href;
+  try {
+    await page.goto(home, { waitUntil: "domcontentloaded" });
+    if (!(await pageIsLoggedIn(page, siteUrl))) return false;
+    const link = await page.locator('a[href*="/login/logout.php"]').first().getAttribute("href").catch(() => null);
+    // Moodle's redirect after logging out can abort this navigation (ERR_ABORTED, confirmed empirically,
+    // Moodle 5.2); whether the session ended is checked below either way.
+    await page.goto(new URL(link ?? "login/logout.php", siteUrl).href, { waitUntil: "domcontentloaded" }).catch((error: Error) => {
+      if (!/ERR_ABORTED/.test(error.message)) throw error;
+    });
+    const confirm = page.locator('form[action*="/login/logout.php"] [type="submit"]');
+    if ((await confirm.count()) > 0) await Promise.all([page.waitForNavigation({ waitUntil: "domcontentloaded" }), confirm.first().click()]);
+    await page.goto(home, { waitUntil: "domcontentloaded" });
+    if (await pageIsLoggedIn(page, siteUrl)) throw new Error("Moodle didn't end the session: the person is still logged in. Try again, or log out in the browser (show_browser).");
+    return true;
+  } finally {
+    await page.close().catch(() => undefined);
+  }
+}
