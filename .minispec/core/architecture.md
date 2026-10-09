@@ -17,7 +17,7 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `chromiumInstaller.ts` — `installChromium()`: `playwright-core`'s CLI from `node_modules`, its output on stderr.
 - `sessionCookies.ts` — the session cookies Chromium drops on close, saved in the profile and restored on launch (ADR-007).
 - `moodle/session.ts` — whether a page has a real user logged in (`notloggedin` body class, `M.cfg.userId`, login and logout links to tell a guest; never visible texts), `openSitePage()` for tools (throws `NotLoggedInError`, which names `login`).
-- `moodle/ajax.ts` — `callService()`: one of Moodle's AJAX services, called from a kept logged-in tab with its `sesskey` (ADR-008); a stale tab is replaced, a session error becomes `NotLoggedInError`.
+- `moodle/ajax.ts` — `callService()`: one of Moodle's AJAX services, called from a kept logged-in tab with its `sesskey` (ADR-008); a stale tab is replaced, a session error becomes `NotLoggedInError`; `readPageConfig()` reads that tab's `M.cfg` (user id, language, time zone).
 - `instructions.ts` — the server's usage rules for any client.
 - `moodle/site.ts` — `findMoodleSite()`: a site's base URL from any of its pages, fetched without the browser (`M.cfg.wwwroot`).
 - `tools/configure.ts` — `configure`: URL, headless, profile folder, in memory (ADR-009); closes the browser when the profile or the mode changes.
@@ -26,6 +26,8 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/listAssignments.ts` — `list_assignments`: a course's assignments by course module id, from `core_courseformat_get_state`.
 - `moodle/assign.ts` — an assignment's instance and context ids from its grader page (cached in memory; no service gives them), participants and their dates through `mod_assign_list_participants` and `mod_assign_get_participant`, and a submission's content from the grader panel fragment (`core_get_fragment`), read by class in a blank tab.
 - `tools/getSubmissions.ts` — `get_submissions`: every participant's status, dates and, by default, content.
+- `moodle/user.ts` — a user by id, the site's name, a user's roles in a course (role links on their course profile) and what they can do there, asked of read-only services that need the capability (activity types they can add, the grader report).
+- `tools/getMe.ts` — `get_me`: who the person is and, for a course, their roles and whether they can edit and grade.
 - `moodle/text.ts` — `decodeEntities()`: names Moodle formatted for HTML, as plain text.
 - `tools/index.ts` — the list of tools; `tools/<tool>.ts` — one tool each: its schemas, annotations and handler, receiving a `ToolContext` (`config`, `browser`).
 - `version.ts` — the package name and version, from `package.json` (inlined by esbuild).

@@ -16,7 +16,7 @@ export function moodlePage({
 }: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string; body?: string }): string {
   const loggedIn = userId > 0;
   return `<!DOCTYPE html><html><head><title>${heading}</title>
-<script>var M = {}; M.cfg = {"wwwroot":${JSON.stringify(wwwroot).replaceAll("/", "\\/")},"sesskey":"${sesskey}","userId":${userId}};</script></head>
+<script>var M = {}; M.cfg = {"wwwroot":${JSON.stringify(wwwroot).replaceAll("/", "\\/")},"sesskey":"${sesskey}","userId":${userId},"language":"en","usertimezone":"Europe/Madrid"};</script></head>
 <body class="${loggedIn ? "" : "notloggedin"}">
 <nav>${loggedIn && !guest ? '<div class="usermenu"><a href="http://moodle.test/login/logout.php?sesskey=x">Log out</a></div>' : '<a href="http://moodle.test/login/index.php">Log in</a>'}</nav>
 <div id="page-header"><div class="page-header-headings"><h1>${heading}</h1></div></div>
@@ -36,12 +36,19 @@ export async function launchTestBrowser(): Promise<Browser | undefined> {
   return undefined;
 }
 
+/** Thrown by a fake service to answer with Moodle's exception `errorcode`. */
+export class ServiceFailure extends Error {
+  constructor(readonly errorcode: string) {
+    super(errorcode);
+  }
+}
+
 export interface FakeMoodleState {
   /** The logged-in user; none means every page is the login page. */
   user?: { id: number; fullName: string };
   /** The session's sesskey: changing it makes older tabs' service calls fail with `invalidsesskey`. */
   sesskey?: string;
-  /** AJAX services by name: what each returns as `data` for its arguments. */
+  /** AJAX services by name: what each returns as `data` for its arguments; throwing `ServiceFailure` answers with that error code. */
   services?: Record<string, (args: Record<string, unknown>) => unknown>;
   /** Extra body HTML for the pages at these paths (logged in only). */
   bodies?: Record<string, string>;
@@ -70,7 +77,13 @@ export async function serveFakeMoodle(context: BrowserContext, state: FakeMoodle
       if (!state.user) return fail("servicerequireslogin");
       if (url.searchParams.get("sesskey") !== sesskey) return fail("invalidsesskey");
       const service = state.services?.[request.methodname];
-      return service ? json([{ error: false, data: service(request.args) }]) : fail("invalidrecord");
+      if (!service) return fail("invalidrecord");
+      try {
+        return json([{ error: false, data: service(request.args) }]);
+      } catch (error) {
+        if (error instanceof ServiceFailure) return fail(error.errorcode);
+        throw error;
+      }
     }
     state.pagesServed?.push(url.pathname);
     const html = (body: string) => route.fulfill({ status: 200, contentType: "text/html", body });

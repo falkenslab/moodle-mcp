@@ -90,3 +90,18 @@ export async function callService<T>(context: BrowserContext, siteUrl: string, m
   }
   throw new NotLoggedInError(); // Unreachable: the fresh attempt returns or throws.
 }
+
+/** What `M.cfg` says about the logged-in person on the kept service tab. */
+export interface PageConfig {
+  userId: number;
+  language: string;
+  timeZone: string;
+}
+
+export async function readPageConfig(context: BrowserContext, siteUrl: string): Promise<PageConfig> {
+  const page = await servicePage(context, siteUrl, false);
+  return page.evaluate(() => {
+    const cfg = (globalThis as unknown as { M: { cfg: { userId: number; language: string; usertimezone: string } } }).M.cfg;
+    return { userId: cfg.userId, language: cfg.language, timeZone: cfg.usertimezone };
+  });
+}
