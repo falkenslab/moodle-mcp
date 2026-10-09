@@ -1,4 +1,5 @@
 import { registerConfigure } from "./configure.js";
+import { registerAddSection, registerDeleteActivity, registerDeleteSection, registerDuplicateActivity, registerEditActivity, registerEditSection } from "./courseLayout.js";
 import { registerGetActivityContent } from "./getActivityContent.js";
 import { registerGetCourseStructure } from "./getCourseStructure.js";
 import { registerGetDiscussion } from "./getDiscussion.js";
@@ -14,4 +15,24 @@ import { registerServerInfo } from "./serverInfo.js";
 import type { RegisterTool } from "./types.js";
 
 /** Every tool the server exposes, in the order clients list them. */
-export const TOOLS: RegisterTool[] = [registerConfigure, registerLogin, registerGetMe, registerListCourses, registerGetCourseStructure, registerGetActivityContent, registerListAssignments, registerGetSubmissions, registerListDiscussions, registerGetDiscussion, registerGetMyGrades, registerListPending, registerServerInfo];
+export const TOOLS: RegisterTool[] = [
+  registerConfigure,
+  registerLogin,
+  registerGetMe,
+  registerListCourses,
+  registerGetCourseStructure,
+  registerGetActivityContent,
+  registerListAssignments,
+  registerGetSubmissions,
+  registerListDiscussions,
+  registerGetDiscussion,
+  registerGetMyGrades,
+  registerListPending,
+  registerEditActivity,
+  registerDuplicateActivity,
+  registerDeleteActivity,
+  registerAddSection,
+  registerEditSection,
+  registerDeleteSection,
+  registerServerInfo,
+];

@@ -28,7 +28,7 @@ const activity = z.object({
   restriction: z.string().optional().describe("With details: the restriction as the course page shows it"),
 });
 
-const section = z.object({
+export const section = z.object({
   id: z.number().int(),
   number: z.number().int(),
   title: z.string(),

@@ -1,4 +1,4 @@
-# Tool catalog
+Done as `delete_activity` |Done as `duplicate_activity` |Done as `edit_activity` |Done as `edit_activity` |Done as `edit_activity` |Done |Done as `edit_section` |Done as `edit_section` |Done |# Tool catalog
 
 Candidate domain tools for moodle-mcp, by use case, for teachers and students. It's a roadmap, not a commitment: each tool gets its own MiniSpec feature when its turn comes.
 

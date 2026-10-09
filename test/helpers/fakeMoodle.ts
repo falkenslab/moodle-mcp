@@ -14,11 +14,12 @@ export function moodlePage({
   wwwroot = "http://moodle.test",
   body = "",
   bodyId = "",
-}: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string; body?: string; bodyId?: string }): string {
+  bodyClass = "",
+}: { userId: number; heading?: string; guest?: boolean; sesskey?: string; wwwroot?: string; body?: string; bodyId?: string; bodyClass?: string }): string {
   const loggedIn = userId > 0;
   return `<!DOCTYPE html><html><head><title>${heading}</title>
 <script>var M = {}; M.cfg = {"wwwroot":${JSON.stringify(wwwroot).replaceAll("/", "\\/")},"sesskey":"${sesskey}","userId":${userId},"language":"en","usertimezone":"Europe/Madrid"};</script></head>
-<body${bodyId ? ` id="${bodyId}"` : ""} class="${loggedIn ? "" : "notloggedin"}">
+<body${bodyId ? ` id="${bodyId}"` : ""} class="${loggedIn ? "" : "notloggedin"} ${bodyClass}">
 <nav>${loggedIn && !guest ? '<div class="usermenu"><a href="http://moodle.test/login/logout.php?sesskey=x">Log out</a></div>' : '<a href="http://moodle.test/login/index.php">Log in</a>'}</nav>
 <div id="page-header"><div class="page-header-headings"><h1>${heading}</h1></div></div>
 ${body}
@@ -53,6 +54,8 @@ export interface FakeMoodleState {
   services?: Record<string, (args: Record<string, unknown>) => unknown>;
   /** Extra body HTML for the pages at these paths (logged in only). */
   bodies?: Record<string, string>;
+  /** Extra body classes for the pages at these paths, as Moodle adds (`format-topics` on a course page). */
+  bodyClasses?: Record<string, string>;
   /** Every page path served, for tests that count page loads. */
   pagesServed?: string[];
   /** Every service call received. */
@@ -92,6 +95,6 @@ export async function serveFakeMoodle(context: BrowserContext, state: FakeMoodle
     const heading = url.pathname === "/user/profile.php" ? state.user.fullName : "Dashboard";
     // Moodle names each page in the body id: /mod/forum/view.php is page-mod-forum-view.
     const bodyId = `page${url.pathname.replace(/\.php$/, "").replaceAll("/", "-")}`;
-    return html(moodlePage({ userId: state.user.id, heading, sesskey, body: state.bodies?.[url.pathname], bodyId }));
+    return html(moodlePage({ userId: state.user.id, heading, sesskey, body: state.bodies?.[url.pathname], bodyId, bodyClass: state.bodyClasses?.[url.pathname] }));
   });
 }
