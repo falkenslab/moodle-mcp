@@ -3,11 +3,11 @@ import { after, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
-import type { ContextOptions } from "../../src/browser.js";
+import type { ContextOptions } from "@falkenslab/moodle-driver";
 import { createServer } from "../../src/createServer.js";
 import { LoginTimeoutError, LoginWindowClosedError, waitForLogin } from "../../src/tools/login.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
-import { SITE, launchTestBrowser, serveFakeMoodle } from "../helpers/fakeMoodle.js";
+import { SITE, launchTestBrowser, serveFakeMoodle } from "@falkenslab/moodle-driver/testing";
 
 const browser = await launchTestBrowser();
 after(() => browser?.close());

@@ -2,7 +2,7 @@
 // what changed, from Moodle's services, without opening each activity.
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { activitiesOverview, courseUpdates, deadlines } from "../moodle/overview.js";
+import { activitiesOverview, courseUpdates, deadlines } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const courseId = z.number().int().positive().describe("The course's id, from list_courses");

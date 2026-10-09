@@ -1,7 +1,7 @@
 // get_survey and submit_survey: the questionnaire plugin and Moodle's feedback, through their forms.
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { getSurvey, submitSurvey } from "../moodle/survey.js";
+import { getSurvey, submitSurvey } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const activityId = z.number().int().positive().describe("The survey's id (course module id), as get_course_structure gives it");

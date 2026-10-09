@@ -5,10 +5,10 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import type { Trail } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
-import { readingSeconds } from "../../src/moodle/pace.js";
-import { readMedia, readTexts } from "../../src/moodle/text.js";
+import { readingSeconds } from "@falkenslab/moodle-driver";
+import { readMedia, readTexts } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
-import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "../helpers/fakeMoodle.js";
+import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
 const browser = await launchTestBrowser();
 after(() => browser?.close());

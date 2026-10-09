@@ -1,6 +1,6 @@
 // The entry point and the bundle's (dist/server.mjs): configuration, stdio, shutdown.
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { createBrowserManager } from "./browser.js";
+import { createBrowserManager } from "@falkenslab/moodle-driver";
 import { ConfigError, USAGE, loadConfig } from "./config.js";
 import { createServer } from "./createServer.js";
 import { PACKAGE_VERSION } from "./version.js";

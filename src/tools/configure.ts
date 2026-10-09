@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { parseProfileDir } from "../config.js";
-import { findMoodleSite } from "../moodle/site.js";
+import { findMoodleSite } from "@falkenslab/moodle-driver";
 import { serverInfo, serverInfoSchema } from "./serverInfo.js";
 import type { RegisterTool } from "./types.js";
 

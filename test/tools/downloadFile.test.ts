@@ -10,7 +10,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { createServer } from "../../src/createServer.js";
 import { fileNameFor } from "../../src/tools/downloadFile.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
-import { launchTestBrowser } from "../helpers/fakeMoodle.js";
+import { launchTestBrowser } from "@falkenslab/moodle-driver/testing";
 
 const browser = await launchTestBrowser();
 let site: Server;

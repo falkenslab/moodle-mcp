@@ -2,8 +2,8 @@
 import type { BrowserContext } from "playwright-core";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { courseState } from "../moodle/course.js";
-import { editCourse, renameActivity, renameSection } from "../moodle/editor.js";
+import { courseState } from "@falkenslab/moodle-driver";
+import { editCourse, renameActivity, renameSection } from "@falkenslab/moodle-driver";
 import { section, structureOf } from "./getCourseStructure.js";
 import type { RegisterTool } from "./types.js";
 

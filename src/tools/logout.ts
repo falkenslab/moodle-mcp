@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { logOut } from "../moodle/session.js";
+import { logOut } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 export const registerLogout: RegisterTool = (server, { config, browser }) => {

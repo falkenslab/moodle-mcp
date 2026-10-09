@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { courseActivityTypes, publicSiteInfo } from "../moodle/siteInfo.js";
+import { courseActivityTypes, publicSiteInfo } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 export const registerGetSiteInfo: RegisterTool = (server, { config, browser }) => {

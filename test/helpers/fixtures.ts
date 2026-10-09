@@ -1,5 +1,4 @@
 import path from "node:path";
-import type { BrowserManager } from "../../src/browser.js";
 import type { Config } from "../../src/config.js";
 
 /** A configuration as `loadConfig` would give it, with these values instead. */
@@ -16,18 +15,4 @@ export function testConfig(overrides: Partial<Config> = {}): Config {
   };
 }
 
-/** A browser manager that never launches anything, with these methods instead. */
-export function fakeBrowserManager(overrides: Partial<BrowserManager> = {}): BrowserManager {
-  return {
-    context: () => Promise.reject(new Error("this test opens no browser")),
-    openChannel: () => undefined,
-    chromiumDownload: () => undefined,
-    visible: () => false,
-    setVisible: async () => undefined,
-    show: async () => undefined,
-    tab: () => Promise.reject(new Error("this test opens no browser")),
-    saveSession: async () => undefined,
-    close: async () => undefined,
-    ...overrides,
-  };
-}
+export { fakeBrowserManager } from "@falkenslab/moodle-driver/testing";

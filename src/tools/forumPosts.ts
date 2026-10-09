@@ -5,8 +5,8 @@ import { access } from "node:fs/promises";
 import type { BrowserContext } from "playwright-core";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { formValue, openForm, setFields, submitForm, uploadToDraft, type FieldValue } from "../moodle/forms.js";
-import { forumInstanceId, listDiscussions } from "../moodle/forum.js";
+import { formValue, openForm, setFields, submitForm, uploadToDraft, type FieldValue } from "@falkenslab/moodle-driver";
+import { forumInstanceId, listDiscussions } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const common = {

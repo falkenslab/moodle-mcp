@@ -7,7 +7,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
-import { moodlePage } from "../helpers/fakeMoodle.js";
+import { moodlePage } from "@falkenslab/moodle-driver/testing";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 
 // A site that answers like Moodle under /moodle, and like something else elsewhere.

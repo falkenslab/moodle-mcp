@@ -1,9 +1,9 @@
 import type { Page } from "playwright-core";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { pause, readingSeconds } from "../moodle/pace.js";
-import { openSitePage } from "../moodle/session.js";
-import { readMedia, readTexts, type MediaItem } from "../moodle/text.js";
+import { pause, readingSeconds } from "@falkenslab/moodle-driver";
+import { openSitePage } from "@falkenslab/moodle-driver";
+import { readMedia, readTexts, type MediaItem } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const TYPES = ["page", "book", "label", "url", "resource", "folder"] as const;

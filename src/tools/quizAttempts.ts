@@ -1,8 +1,8 @@
 // The quiz tools: one file for six tools that share the question and detail schemas.
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { pause, readingSeconds } from "../moodle/pace.js";
-import { finishAttempt, quizInfo, readAttempt, readReview, saveAnswers, startAttempt, type Question } from "../moodle/quiz.js";
+import { pause, readingSeconds } from "@falkenslab/moodle-driver";
+import { finishAttempt, quizInfo, readAttempt, readReview, saveAnswers, startAttempt, type Question } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const quizId = z.number().int().positive().describe("The quiz's id (course module id), as get_course_structure gives it");

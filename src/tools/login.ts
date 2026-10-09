@@ -1,7 +1,7 @@
 import type { BrowserContext, Page } from "playwright-core";
 import { z } from "zod";
 import { redactUrl, requireSiteUrl } from "../config.js";
-import { NotLoggedInError, openSitePage, pageIsLoggedIn } from "../moodle/session.js";
+import { NotLoggedInError, openSitePage, pageIsLoggedIn } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const DEFAULT_TIMEOUT_SECONDS = 300;

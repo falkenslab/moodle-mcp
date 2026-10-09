@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { listDiscussions } from "../moodle/forum.js";
+import { listDiscussions } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {

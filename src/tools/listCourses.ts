@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { callService } from "../moodle/ajax.js";
-import { decodeEntities } from "../moodle/text.js";
+import { callService } from "@falkenslab/moodle-driver";
+import { decodeEntities } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 // "all" includes the courses the person hid from their dashboard: an agent shouldn't miss them.

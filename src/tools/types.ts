@@ -1,5 +1,5 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { BrowserManager } from "../browser.js";
+import type { BrowserManager } from "@falkenslab/moodle-driver";
 import type { Config } from "../config.js";
 
 /** What every tool gets: the configuration and the shared browser. */

@@ -6,7 +6,7 @@ import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
 import { toCourse, type MoodleCourse } from "../../src/tools/listCourses.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
-import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "../helpers/fakeMoodle.js";
+import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
 const browser = await launchTestBrowser();
 after(() => browser?.close());

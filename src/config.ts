@@ -2,17 +2,11 @@ import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import { CHANNELS, MoodleUrlError, TRAILS, parseSiteUrl, type Channel, type Trail } from "@falkenslab/moodle-driver";
 import { z } from "zod";
 
-/** Browsers already on the machine, tried in this order (ADR-001). */
-export const SYSTEM_CHANNELS = ["msedge", "chrome"] as const;
-/** Every browser the server can launch: the system's, or the Chromium it downloads when there is none. */
-export const CHANNELS = [...SYSTEM_CHANNELS, "chromium"] as const;
-export type Channel = (typeof CHANNELS)[number];
-
-/** How student tools view and do things (ADR-012): through the real pages at a human pace, or as fast as possible. */
-export const TRAILS = ["realistic", "fast"] as const;
-export type Trail = (typeof TRAILS)[number];
+// Channels and trails are the driver's (its ADR-001 and ADR-005); the server only picks among them.
+export { CHANNELS, SYSTEM_CHANNELS, TRAILS, type Channel, type Trail } from "@falkenslab/moodle-driver";
 
 /** Where a setting's value came from: the `configure` tool wins over arguments, which win over the environment (ADR-009). */
 export type SettingSource = "configure" | "argument" | "environment" | "default";
@@ -154,19 +148,11 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
 
 /** A site URL as the server keeps it: http(s), no query or fragment, ending in `/`. */
 export function parseMoodleUrl(value: string): string {
-  let url: URL;
   try {
-    url = new URL(value.trim());
-  } catch {
-    throw new ConfigError(`The Moodle URL isn't a valid URL: "${value}".`);
+    return parseSiteUrl(value);
+  } catch (error) {
+    throw error instanceof MoodleUrlError ? new ConfigError(error.message) : error;
   }
-  if (url.protocol !== "http:" && url.protocol !== "https:") {
-    throw new ConfigError(`The Moodle URL must be http or https, not "${value}".`);
-  }
-  url.search = "";
-  url.hash = "";
-  if (!url.pathname.endsWith("/")) url.pathname += "/";
-  return url.href;
 }
 
 /** A profile folder, absolute; never inside the server's own folder (ADR-002). */

@@ -4,9 +4,9 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
-import { readDiscussionRows } from "../../src/moodle/forum.js";
+import { readDiscussionRows } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
-import { SITE, ServiceFailure, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "../helpers/fakeMoodle.js";
+import { SITE, ServiceFailure, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
 const browser = await launchTestBrowser();
 after(() => browser?.close());

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { myGrades } from "../moodle/grades.js";
+import { myGrades } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {

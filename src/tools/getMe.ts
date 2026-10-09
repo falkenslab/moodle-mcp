@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { redactUrl, requireSiteUrl } from "../config.js";
-import { readPageConfig } from "../moodle/ajax.js";
-import { courseState } from "../moodle/course.js";
-import { courseAbilities, courseRoles, siteName, userById } from "../moodle/user.js";
+import { readPageConfig } from "@falkenslab/moodle-driver";
+import { courseState } from "@falkenslab/moodle-driver";
+import { courseAbilities, courseRoles, siteName, userById } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {

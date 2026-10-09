@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { activityDetails, courseState, type ActivityDetails, type CourseState } from "../moodle/course.js";
-import { decodeEntities } from "../moodle/text.js";
+import { activityDetails, courseState, type ActivityDetails, type CourseState } from "@falkenslab/moodle-driver";
+import { decodeEntities } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {

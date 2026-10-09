@@ -3,7 +3,7 @@ import { access } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { saveSubmission, studentAssignment, submitForGrading } from "../moodle/submission.js";
+import { saveSubmission, studentAssignment, submitForGrading } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const assignmentId = z.number().int().positive().describe("The assignment's id (course module id), as get_course_structure gives it");

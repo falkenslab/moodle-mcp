@@ -3,8 +3,8 @@ import { access } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { courseState } from "../moodle/course.js";
-import { formValue, openForm, setFields, submitForm, uploadToDraft, type FieldValue } from "../moodle/forms.js";
+import { courseState } from "@falkenslab/moodle-driver";
+import { formValue, openForm, setFields, submitForm, uploadToDraft, type FieldValue } from "@falkenslab/moodle-driver";
 import { section, structureOf } from "./getCourseStructure.js";
 import type { RegisterTool } from "./types.js";
 

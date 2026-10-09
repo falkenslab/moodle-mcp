@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { assignmentIds, gradingPanelHtml, listParticipants, participantDates, readSubmissionContent } from "../moodle/assign.js";
+import { assignmentIds, gradingPanelHtml, listParticipants, participantDates, readSubmissionContent } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {

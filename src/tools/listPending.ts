@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { activityDetails, courseState } from "../moodle/course.js";
-import { myGrades } from "../moodle/grades.js";
+import { activityDetails, courseState } from "@falkenslab/moodle-driver";
+import { myGrades } from "@falkenslab/moodle-driver";
 import { structureOf } from "./getCourseStructure.js";
 import type { RegisterTool } from "./types.js";
 

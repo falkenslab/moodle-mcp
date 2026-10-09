@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { assignmentIds, fillGradingForm, gradingPanelHtml, panelGrade, submitGradingForm } from "../moodle/assign.js";
-import type { FieldValue } from "../moodle/forms.js";
+import { assignmentIds, fillGradingForm, gradingPanelHtml, panelGrade, submitGradingForm } from "@falkenslab/moodle-driver";
+import type { FieldValue } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 const FEEDBACK_FIELD = "assignfeedbackcomments_editor[text]";

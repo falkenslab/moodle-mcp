@@ -31,6 +31,7 @@
     "test:docker": "node scripts/in-docker.mjs npm test"
   },
   "dependencies": {
+    "@falkenslab/moodle-driver": "file:../moodle-driver",
     "playwright-core": "^1.64.0"
   },
   "bundleDependencies": [

@@ -5,7 +5,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext, Route } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
-import { SITE, launchTestBrowser, moodlePage, serveFakeMoodle } from "../helpers/fakeMoodle.js";
+import { SITE, launchTestBrowser, moodlePage, serveFakeMoodle } from "@falkenslab/moodle-driver/testing";
 
 const browser = await launchTestBrowser();
 after(() => browser?.close());

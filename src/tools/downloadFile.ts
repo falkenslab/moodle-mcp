@@ -2,7 +2,7 @@ import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { NotLoggedInError } from "../moodle/session.js";
+import { NotLoggedInError } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
 
 /** A file name from Content-Disposition, else the URL's last segment; never a path. */

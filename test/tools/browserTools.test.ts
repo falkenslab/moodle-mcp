@@ -9,7 +9,7 @@ import type { BrowserContext, Page } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
 import { SNAPSHOT_LIMIT, onSite } from "../../src/tools/browserTools.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
-import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "../helpers/fakeMoodle.js";
+import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
 const browser = await launchTestBrowser();
 after(() => browser?.close());
