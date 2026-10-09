@@ -36,7 +36,9 @@ const script = [
   quoted,
 ].join("\n");
 
+// Never a window: no display to reach (WSLg would show it on the desktop) and the server headless.
 const args = ["run", "--rm", "--init", "-v", `${root}:/work`, "-v", "moodle-mcp-node-modules:/work/node_modules", "-w", "/work", "-e", "CI=1"];
+args.push("-e", "DISPLAY=", "-e", "WAYLAND_DISPLAY=", "-e", "MOODLE_MCP_HEADLESS=true");
 if (sandboxUp) args.push("--network", NETWORK);
 if (process.env.MOODLE_MCP_DOCKER_MOUNT) args.push("-v", process.env.MOODLE_MCP_DOCKER_MOUNT);
 args.push(IMAGE, "bash", "-c", script);
