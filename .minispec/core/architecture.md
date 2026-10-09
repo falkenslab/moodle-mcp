@@ -33,6 +33,7 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/getMe.ts` — `get_me`: who the person is and, for a course, their roles and whether they can edit and grade.
 - `moodle/forum.ts` — a forum's discussions from its pages (rows read by data attributes, links and timestamps; the body id tells a forum page), a discussion's posts through `mod_forum_get_discussion_posts`, their HTML as text in a blank tab.
 - `tools/listDiscussions.ts`, `tools/getDiscussion.ts` — `list_discussions` (replies 0: unanswered) and `get_discussion`.
+- `tools/forumPosts.ts` — `reply_to_post` and `create_discussion` through Moodle's post form (`mod/forum/post.php`): subject prefilled for replies, attachments uploaded to its draft area, the forum's instance id from its page's quick-post form; empty messages refused.
 - `moodle/grades.ts` — the user grade report's rows (cell and row classes; action menus left out).
 - `tools/getMyGrades.ts`, `tools/listPending.ts` — `get_my_grades`, and `list_pending`: tracked activities not complete, or ungraded ones where completion isn't tracked, with dates and restrictions.
 - `moodle/editor.ts` — the course editor's actions through `core_courseformat_update_course`, renames through `core_update_inplace_editable`, the course format from the course page's body class.

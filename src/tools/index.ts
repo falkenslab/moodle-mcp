@@ -1,6 +1,7 @@
 import { registerCreateActivity, registerUpdateActivity } from "./activityForms.js";
 import { registerConfigure } from "./configure.js";
 import { registerAddSection, registerDeleteActivity, registerDeleteSection, registerDuplicateActivity, registerEditActivity, registerEditSection } from "./courseLayout.js";
+import { registerCreateDiscussion, registerReplyToPost } from "./forumPosts.js";
 import { registerGetActivityContent } from "./getActivityContent.js";
 import { registerGetCourseStructure } from "./getCourseStructure.js";
 import { registerGetDiscussion } from "./getDiscussion.js";
@@ -31,6 +32,8 @@ export const TOOLS: RegisterTool[] = [
   registerGetMyGrades,
   registerListPending,
   registerGradeSubmission,
+  registerReplyToPost,
+  registerCreateDiscussion,
   registerCreateActivity,
   registerUpdateActivity,
   registerEditActivity,

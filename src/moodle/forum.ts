@@ -120,3 +120,28 @@ export async function htmlToTexts(context: BrowserContext, fragments: string[]):
   }
 }
 
+
+/** A forum's instance id (what `post.php?forum=` takes), from its page. */
+export async function forumInstanceId(context: BrowserContext, siteUrl: string, forumCmid: number): Promise<number> {
+  const page = await openSitePage(context, siteUrl, `mod/forum/view.php?id=${forumCmid}`);
+  try {
+    if ((await page.locator("body#page-mod-forum-view").count()) === 0) {
+      throw new NotAForumError(`Activity ${forumCmid} isn't a forum you can view. Take its id from get_course_structure (type "forum").`);
+    }
+    // The page's quick "new discussion" form carries it (also on an empty forum); discussion rows too.
+    const id = await page.evaluate(() => {
+      const doc = (globalThis as unknown as {
+        document: { querySelector(s: string): { value: string } | null; querySelectorAll(s: string): ArrayLike<{ getAttribute(n: string): string | null }> };
+      }).document;
+      const fromForm = Number(doc.querySelector('form[action*="post.php"] [name="forum"]')?.value);
+      if (fromForm > 0) return fromForm;
+      return Array.from(doc.querySelectorAll("[data-forumid]"))
+        .map((element) => Number(element.getAttribute("data-forumid")))
+        .find((value) => value > 0);
+    });
+    if (!id) throw new NotAForumError(`Forum ${forumCmid}'s page doesn't say its id; you may not be allowed to post there.`);
+    return id;
+  } finally {
+    await page.close().catch(() => undefined);
+  }
+}

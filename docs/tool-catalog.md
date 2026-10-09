@@ -84,8 +84,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `list_forums` | A course's forums | R | AJAX (`get_state`) | S, T | — |
 | `list_discussions` | A forum's discussions: author role, replies, last post, unanswered | R | Page (`forum/view.php`) | S 95 forum pages; T "check the questions forum" | Done |
 | `get_discussion` | A discussion's posts as text, with attachments | R | AJAX (`mod_forum_get_discussion_posts`) | S, T | Done |
-| `reply_to_post` | Reply in a discussion | W | AJAX (`mod_forum_add_discussion_post`); Form when attaching files | S 12 posts after approval, 7 drafts rejected | — |
-| `create_discussion` | Start a discussion, with attachments | W | Form (`post.php`) | S help request with a screenshot | — |
+| `reply_to_post` | Reply in a discussion | W | AJAX (`mod_forum_add_discussion_post`); Form when attaching files | S 12 posts after approval, 7 drafts rejected | Done |
+| `create_discussion` | Start a discussion, with attachments | W | Form (`post.php`) | S help request with a screenshot | Done |
 | `get_questionnaire` | A survey's questions (mod_questionnaire, mod_feedback) | R | Page | S end-of-course survey in every course, 29 questions | — |
 | `submit_questionnaire` | Answer and submit it, retrying server errors and checking it was recorded | W | Form | S 19–38 selects per run, 502 errors four times | — |
 | `answer_choice` | Answer a choice activity | W | Form | none | — |
@@ -150,8 +150,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
 | `list_discussions` (`unansweredOnly`) | Discussions waiting for the teacher | R | Page + AJAX | T "answer the two unanswered threads"; the forum skill depends on it | Done (replies 0) |
-| `reply_to_post` | Answer a student | W | AJAX | T asked, never done | — |
-| `post_announcement` | Post in the announcements forum | W | Form (`post.php`) | none | — |
+| `reply_to_post` | Answer a student | W | AJAX | T asked, never done | Done |
+| `post_announcement` | Post in the announcements forum | W | Form (`post.php`) | none | Done as `create_discussion` |
 | `set_discussion_state` | Pin, lock | W | AJAX (`mod_forum_set_pin_state`, `set_lock_state`) | none | — |
 | `create_event` | Course calendar event | W | AJAX (`core_calendar_submit_create_update_form`) | none | — |
 
