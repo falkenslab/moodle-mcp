@@ -131,7 +131,7 @@ export const registerLogin: RegisterTool = (server, { config, browser }) => {
       const user = await readOwnProfile(context, siteUrl);
       await browser.saveSession();
       // Back to the configured mode: the next tool reopens the browser without a window.
-      if (config.headless) await browser.close();
+      if (!browser.visible()) await browser.close();
       return result("logged-in", user);
     },
   );

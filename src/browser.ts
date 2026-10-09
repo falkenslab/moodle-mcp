@@ -1,7 +1,8 @@
 import { mkdir } from "node:fs/promises";
-import { chromium, type BrowserContext } from "playwright-core";
+import { chromium, type BrowserContext, type Page } from "playwright-core";
 import { installChromium, type InstallChromium } from "./chromiumInstaller.js";
 import { SYSTEM_CHANNELS, type Channel, type Config } from "./config.js";
+import { followPages } from "./moodle/session.js";
 import { restoreSessionCookies, saveSessionCookies } from "./sessionCookies.js";
 
 type LaunchPersistentContext = typeof chromium.launchPersistentContext;
@@ -22,6 +23,15 @@ export interface BrowserManager {
   openChannel(): Channel | undefined;
   /** Whether Chromium is being downloaded, or the last download failed (ADR-001). */
   chromiumDownload(): "downloading" | "failed" | undefined;
+  /** Whether the browser shows a window now: what the person asked with show_browser, else the configuration. */
+  visible(): boolean;
+  /**
+   * Shows the browser (relaunching it with a window now, session kept) and follows the tools' pages
+   * in it, or hides it (closing the window; the next call runs headless). ADR-011.
+   */
+  setVisible(visible: boolean): Promise<void>;
+  /** While following, brings `url` (a site page) to the front of the window; best effort, never throws. */
+  show(url: string): Promise<void>;
   /** Saves the session cookies of the open context, if any (ADR-007). */
   saveSession(): Promise<void>;
   close(): Promise<void>;
@@ -70,6 +80,9 @@ export function createBrowserManager(
   windowsPossible: () => boolean = canShowWindow,
 ): BrowserManager {
   let open: Open | undefined;
+  // What the person asked for with show_browser, over the configuration; following goes with it.
+  let shown: boolean | undefined;
+  let followTab: Page | undefined;
   // The download runs in the background, outside the queue: it takes minutes, longer than some
   // clients wait for a tool call, so calls meanwhile answer at once that it's downloading.
   let download: Promise<void> | undefined;
@@ -121,11 +134,15 @@ export function createBrowserManager(
         continue;
       }
       context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
+      followPages(context, (url) => manager.show(url));
       await restoreSessionCookies(context, config.profileDir);
       const opened: Open = { context, channel, headed };
-      // The person may close the window: the next call opens it again.
+      // The person may close the window: the next call opens the browser again, headless if they had
+      // asked to see it (closing it says they're done watching).
       context.on("close", () => {
-        if (open === opened) open = undefined;
+        if (open !== opened) return;
+        open = undefined;
+        if (opened.headed && shown) shown = false;
       });
       return opened;
     }
@@ -137,15 +154,16 @@ export function createBrowserManager(
   async function closeOpen(): Promise<void> {
     const current = open;
     open = undefined;
+    followTab = undefined;
     if (!current) return;
     await saveSessionCookies(current.context, config.profileDir).catch(() => undefined);
     await current.context.close().catch(() => undefined);
   }
 
-  return {
+  const manager: BrowserManager = {
     context({ headed = false } = {}) {
       return exclusive(async () => {
-        const wantHeaded = headed || !config.headless;
+        const wantHeaded = headed || (shown ?? !config.headless);
         if (open && (open.headed || !wantHeaded)) return open.context;
         if (wantHeaded && !windowsPossible()) {
           throw new NoDisplayError(
@@ -157,6 +175,33 @@ export function createBrowserManager(
         return open.context;
       });
     },
+    visible: () => shown ?? !config.headless,
+    setVisible: (visible) =>
+      exclusive(async () => {
+        if (visible && !windowsPossible()) {
+          throw new NoDisplayError("There's no screen to show a browser window here (no DISPLAY or WAYLAND_DISPLAY). The browser keeps working headless.");
+        }
+        shown = visible;
+        if (visible && !open?.headed) {
+          await closeOpen();
+          open = await launchFirstAvailable(true);
+        } else if (!visible && open?.headed) {
+          await closeOpen();
+        }
+      }),
+    async show(url) {
+      const current = open;
+      if (!shown || !current?.headed) return;
+      try {
+        // The window's first, empty tab if it's still there, rather than leaving it blank beside ours.
+        if (!followTab || followTab.isClosed()) followTab = current.context.pages().find((p) => p.url() === "about:blank") ?? (await current.context.newPage());
+        const tab = followTab;
+        if (tab.url() !== url) await tab.goto(url, { waitUntil: "domcontentloaded" });
+        await tab.bringToFront();
+      } catch {
+        // Following is a courtesy: a page that doesn't load never changes the tool's result.
+      }
+    },
     openChannel: () => open?.channel,
     chromiumDownload: () => (download ? "downloading" : downloadFailure ? "failed" : undefined),
     saveSession: () =>
@@ -165,4 +210,5 @@ export function createBrowserManager(
       }),
     close: () => exclusive(closeOpen),
   };
+  return manager;
 }

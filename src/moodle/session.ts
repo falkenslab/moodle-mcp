@@ -52,15 +52,26 @@ export async function pageIsLoggedIn(page: Page, siteUrl: string): Promise<boole
   return isLoggedIn(page.url(), siteUrl, await readSessionFacts(page));
 }
 
+// While the person watches (ADR-011), a context's browser manager shows the pages tools worked on.
+const followers = new WeakMap<BrowserContext, (url: string) => Promise<void>>();
+
+/** Has `show` called with the page each tool opened, once the tool is done with it. */
+export function followPages(context: BrowserContext, show: (url: string) => Promise<void>): void {
+  followers.set(context, show);
+}
+
 /**
  * Opens a page of the site (`path` relative to it) in a new tab and checks the session; throws
  * `NotLoggedInError`, closing the tab, when Moodle answers with its login page.
  */
-export async function openSitePage(context: BrowserContext, siteUrl: string, path: string): Promise<Page> {
+export async function openSitePage(context: BrowserContext, siteUrl: string, path: string, { follow = true } = {}): Promise<Page> {
   const page = await context.newPage();
   try {
     await page.goto(new URL(path, siteUrl).href, { waitUntil: "domcontentloaded" });
     if (!(await pageIsLoggedIn(page, siteUrl))) throw new NotLoggedInError();
+    // The page as the tool opened it (a form's URL, not where posting it led), once the tool closes it.
+    const opened = page.url();
+    if (follow) page.once("close", () => void followers.get(context)?.(opened));
     return page;
   } catch (error) {
     await page.close().catch(() => undefined);

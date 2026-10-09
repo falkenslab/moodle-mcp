@@ -18,6 +18,7 @@ import { registerListPending } from "./listPending.js";
 import { registerLogin } from "./login.js";
 import { registerAnswerQuizQuestions, registerFinishQuizAttempt, registerGetAttemptReview, registerGetQuizAttempt, registerGetQuizInfo, registerStartQuizAttempt } from "./quizAttempts.js";
 import { registerServerInfo } from "./serverInfo.js";
+import { registerShowBrowser } from "./showBrowser.js";
 import { registerGetSurvey, registerSubmitSurvey } from "./surveys.js";
 import type { RegisterTool } from "./types.js";
 
@@ -58,5 +59,6 @@ export const TOOLS: RegisterTool[] = [
   registerAddSection,
   registerEditSection,
   registerDeleteSection,
+  registerShowBrowser,
   registerServerInfo,
 ];

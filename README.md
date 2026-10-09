@@ -4,7 +4,7 @@ An [MCP](https://modelcontextprotocol.io) server that works a Moodle site throug
 
 You log in yourself, in a browser window the server opens: it never sees or stores your password. Your session is kept in a browser profile folder outside the server.
 
-Status: early development. Today it has `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `get_activity_content`, `list_assignments`, `get_submissions`, `list_discussions`, `get_discussion`, `get_my_grades`, `list_pending`, the quiz attempt tools (`get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`), `get_assignment`, `save_submission`, `submit_assignment`, `download_file`, `get_survey`, `submit_survey`, `grade_submission`, `reply_to_post`, `create_discussion`, `create_activity`, `update_activity`, the course layout tools (`edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`) and `server_info`; the Moodle tools come one by one.
+Status: early development. Today it has `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `get_activity_content`, `list_assignments`, `get_submissions`, `list_discussions`, `get_discussion`, `get_my_grades`, `list_pending`, the quiz attempt tools (`get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`), `get_assignment`, `save_submission`, `submit_assignment`, `download_file`, `get_survey`, `submit_survey`, `grade_submission`, `reply_to_post`, `create_discussion`, `create_activity`, `update_activity`, the course layout tools (`edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`), `show_browser` and `server_info`; the Moodle tools come one by one.
 
 ## Requirements
 
@@ -32,6 +32,8 @@ Nothing is required at startup. There are two ways to configure the server, and 
 When a tool reports that there is no session, the client calls `login`: a browser window opens at the site's login page and the tool waits (5 minutes by default) until you log in there yourself, SSO included. The session is kept in the profile folder, together with `moodle-mcp-session-cookies.json` (Chromium forgets session cookies on close, so the server saves them), and survives restarts until Moodle ends it.
 
 The profile holds a live Moodle session: treat it like a password and keep it out of shared folders and repositories.
+
+To watch what the agent does, ask it to show the browser (`show_browser`): a window opens, keeping the session, and each tool brings the Moodle page it works on to the front; ask it to hide the browser, or close the window, to go back to working without one.
 
 Where there's no screen (Linux without `DISPLAY` or `WAYLAND_DISPLAY`: a container, a server), the server never opens a window: `login` and a headed configuration fail with a message instead. Log in where there's a screen and give the server that profile, headless.
 

@@ -66,7 +66,8 @@ async function servicePage(context: BrowserContext, siteUrl: string, fresh: bool
   // `configure` may have changed the site since the tab was opened.
   if (current && !current.page.isClosed() && current.siteUrl === siteUrl && !fresh) return current.page;
   await current?.page.close().catch(() => undefined);
-  const page = await openSitePage(context, siteUrl, SERVICE_PAGE);
+  // The kept tab isn't a tool's page: nothing to follow when it's replaced.
+  const page = await openSitePage(context, siteUrl, SERVICE_PAGE, { follow: false });
   servicePages.set(context, { page, siteUrl });
   return page;
 }

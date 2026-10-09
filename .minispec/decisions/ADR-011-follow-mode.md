@@ -1,15 +1,16 @@
-# ADR-011: Follow mode
+# ADR-011: Showing the browser on demand (follow mode)
 
 ## Decision
 
-A `follow` setting (variable, argument and `configure`), off by default and independent of `headless`: with a visible browser and `follow` on, each domain tool also shows, in the visible tab, the Moodle page it's working on (the course page for its structure, the grading table for submissions…).
+A `show_browser` tool (`visible: true | false`) shows or hides the browser when the person asks, during the session. Shown, the browser relaunches with a window (the session kept, ADR-007) and follows the tools: each one brings the Moodle page it works on to the front of one tab (the course page for its structure, the grading table for submissions…). Hidden, the window closes and tools go on headless. `headless` (variable, argument, `configure`) stays the starting mode. Replaces this ADR's first version, a fixed `follow` setting (changed by the owner, 9 October 2026).
 
 ## Motivation
 
-Domain tools work mostly through AJAX from a hidden service tab (ADR-008), so a visible browser shows almost nothing of what the agent does. A person who wants to watch the agent, or check its work, needs the page the tool is about.
+Most tools work through AJAX from a hidden service tab (ADR-008), so even a visible browser shows almost nothing. Whether to watch is the person's call, made while the agent works ("show me what you're doing", "hide it"), not a setting chosen beforehand. Playwright can't add or remove a window from a running browser, so switching relaunches it; the saved session makes that cheap.
 
 ## Consequences
 
-- Each domain tool names the page that shows its work; showing it is best effort and never changes the tool's result.
-- Slower when on (one more page load per call); no cost when off.
-- Without a visible browser, `follow` has no effect, and `server_info` says so.
+- Pages tools open themselves are followed when the tool is done with them (`openSitePage`, the URL it opened, never a POST's result); AJAX tools name their page in `tools/follow.ts`. Showing is best effort and never changes a tool's result.
+- Slower while shown (one more page load per call); no cost while hidden.
+- A window the person closes counts as "hide"; open tabs don't survive a switch, what was saved in Moodle does.
+- Without a screen (Linux without `DISPLAY` or `WAYLAND_DISPLAY`), `show_browser` fails with a clear message and the browser stays headless.

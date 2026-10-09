@@ -26,17 +26,37 @@ function cookie(name: string, expires = -1): Cookie {
   return { name, value: "v", domain: "localhost", path: "/", expires, httpOnly: true, secure: false, sameSite: "Lax" };
 }
 
-/** A context with what the manager uses: `close`, cookies and the navigation timeout. */
-function fakeContext(initialCookies: Cookie[] = []): BrowserContext & { jar: Cookie[] } {
+/** A tab with what following uses: where it went and whether it came to the front. */
+interface FakeTab {
+  visits: string[];
+  fronted: number;
+}
+
+/** A context with what the manager uses: `close`, cookies, the navigation timeout and new tabs. */
+function fakeContext(initialCookies: Cookie[] = []): BrowserContext & { jar: Cookie[]; tabs: FakeTab[] } {
   const emitter = new EventEmitter();
   const jar = [...initialCookies];
+  const tabs: FakeTab[] = [];
+  const newPage = async () => {
+    const tab: FakeTab = { visits: [], fronted: 0 };
+    tabs.push(tab);
+    return {
+      url: () => tab.visits.at(-1) ?? "about:blank",
+      isClosed: () => false,
+      goto: async (url: string) => void tab.visits.push(url),
+      bringToFront: async () => void tab.fronted++,
+    };
+  };
   return Object.assign(emitter, {
     jar,
+    tabs,
+    newPage,
+    pages: () => [],
     close: async () => void emitter.emit("close"),
     cookies: async () => [...jar],
     addCookies: async (cookies: Cookie[]) => void jar.push(...cookies),
     setDefaultNavigationTimeout: () => undefined,
-  }) as unknown as BrowserContext & { jar: Cookie[] };
+  }) as unknown as BrowserContext & { jar: Cookie[]; tabs: FakeTab[] };
 }
 
 interface LaunchCall {
@@ -117,6 +137,51 @@ describe("createBrowserManager", () => {
     await assert.rejects(browser.context({ headed: true }), NoDisplayError);
     await assert.rejects(createBrowserManager(config({ headless: false }), launch, undefined, () => false).context(), /MOODLE_MCP_HEADLESS=true/);
     assert.deepEqual(calls.map((c) => c.headless), [true]);
+  });
+
+  it("shows the browser on demand, keeping it shown until hidden", async () => {
+    const { calls, launch } = fakeLaunch(["msedge"]);
+    const browser = createBrowserManager(config(), launch, undefined, () => true);
+    await browser.context();
+    await browser.setVisible(true);
+    assert.equal(browser.visible(), true);
+    await browser.context();
+    await browser.setVisible(false);
+    assert.equal(browser.visible(), false);
+    await browser.context();
+    assert.deepEqual(calls.map((c) => c.headless), [true, false, true]);
+  });
+
+  it("takes a window the person closed as done watching", async () => {
+    const { calls, launch } = fakeLaunch(["msedge"]);
+    const browser = createBrowserManager(config(), launch, undefined, () => true);
+    await browser.setVisible(true);
+    await (await browser.context()).close();
+    assert.equal(browser.visible(), false);
+    await browser.context();
+    assert.deepEqual(calls.map((c) => c.headless), [false, true]);
+  });
+
+  it("won't show the browser without a screen", async () => {
+    const { calls, launch } = fakeLaunch(["msedge"]);
+    const browser = createBrowserManager(config(), launch, undefined, () => false);
+    await assert.rejects(browser.setVisible(true), NoDisplayError);
+    assert.equal(browser.visible(), false);
+    assert.deepEqual(calls, []);
+  });
+
+  it("follows pages in one tab while shown, and does nothing otherwise", async () => {
+    const { launch } = fakeLaunch(["msedge"]);
+    const browser = createBrowserManager(config(), launch, undefined, () => true);
+    const hidden = (await browser.context()) as BrowserContext & { tabs: FakeTab[] };
+    await browser.show("http://localhost/a");
+    assert.equal(hidden.tabs.length, 0);
+    await browser.setVisible(true);
+    const shown = (await browser.context()) as BrowserContext & { tabs: FakeTab[] };
+    await browser.show("http://localhost/a");
+    await browser.show("http://localhost/a");
+    await browser.show("http://localhost/b");
+    assert.deepEqual(shown.tabs.map((t) => [t.visits, t.fronted]), [[["http://localhost/a", "http://localhost/b"], 3]]);
   });
 
   it("sees a screen on Linux only with an X or Wayland display", () => {

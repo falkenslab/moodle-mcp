@@ -171,7 +171,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 ## Browser fallback and follow mode (ADR-010, ADR-011)
 
 - **Fallback tools.** Always available (ADR-010): `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`, on the same session and profile. Limited to the configured site, never typing into password fields (ADR-002), snapshots limited to the main region and size-capped, annotated as writes except snapshot and screenshot. The instructions say to use them only when no domain tool covers the task, and to name the task, so the gaps show which tool to build next. Covers what domain tools won't: H5P, external escape rooms, SCORM upload until it has a tool.
-- **Follow mode.** A setting (ADR-011): with a visible browser, each domain tool also brings the window to the Moodle page it's working on, so a person can follow the agent. Slower; only when asked.
+- **Follow mode.** Done as `show_browser` (ADR-011): on the person's request, the browser shows a window and each domain tool brings the Moodle page it's working on to the front; hidden again on request.
 
 ## Suggested order
 

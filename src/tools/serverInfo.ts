@@ -18,6 +18,7 @@ export const serverInfoSchema = {
   sources: z
     .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source })
     .describe("Where each setting came from: configure, argument, environment or default"),
+  visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
   browserOpen: z.boolean().describe("Whether the browser is running"),
   openChannel: z.string().optional().describe("The browser actually running, if any"),
   chromiumPath: z.string().optional().describe("Where the downloaded Chromium is, when it's the one running"),
@@ -40,6 +41,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     downloadBrowser: config.downloadBrowser,
     trail: config.trail,
     sources: { ...config.sources },
+    visible: browser.visible(),
     browserOpen: openChannel !== undefined,
     openChannel,
     chromiumPath: openChannel === "chromium" ? chromium.executablePath() : undefined,
