@@ -1,5 +1,6 @@
 import type { BrowserContext, Page } from "playwright-core";
 import { callService } from "./ajax.js";
+import { setFields, type FieldValue } from "./forms.js";
 import { openSitePage } from "./session.js";
 
 /** An assignment's ids beyond its course module id, which only the grader page shows. */
@@ -160,4 +161,50 @@ export async function gradingPanelHtml(context: BrowserContext, siteUrl: string,
     ],
   });
   return fragment.html;
+}
+
+/** Moodle's grader didn't take the grade. */
+export class GradingError extends Error {
+  override name = "GradingError";
+}
+
+/**
+ * Fills the grading panel's form for one participant in `page` (a blank tab), and returns it
+ * serialized as the grader does (`form.serialize()`), ready for `mod_assign_submit_grading_form`.
+ */
+export async function fillGradingForm(page: Page, panelHtml: string, fields: Record<string, FieldValue>): Promise<string> {
+  await page.setContent(panelHtml);
+  await setFields(page, fields);
+  return page.evaluate(() => {
+    const g = globalThis as unknown as {
+      document: { querySelector(s: string): unknown };
+      FormData: new (form: unknown) => Iterable<[string, string]>;
+      URLSearchParams: new (init: Iterable<[string, string]>) => { toString(): string };
+    };
+    return new g.URLSearchParams(new g.FormData(g.document.querySelector("form.gradeform"))).toString();
+  });
+}
+
+/** The grade and feedback currently in a grading panel, if any. */
+export async function panelGrade(page: Page, panelHtml: string): Promise<{ grade?: string; feedback?: string }> {
+  await page.setContent(panelHtml);
+  return page.evaluate(() => {
+    const doc = (globalThis as unknown as { document: { querySelector(s: string): { value: string } | null } }).document;
+    const grade = doc.querySelector('form.gradeform [name="grade"]')?.value;
+    const feedback = doc.querySelector('form.gradeform [name="assignfeedbackcomments_editor[text]"]')?.value;
+    return { grade: grade || undefined, feedback: feedback || undefined };
+  });
+}
+
+/** Submits a serialized grading form; Moodle answers warnings when it refuses it. */
+export async function submitGradingForm(context: BrowserContext, siteUrl: string, instanceId: number, userId: number, serialized: string): Promise<void> {
+  const warnings = await callService<{ message?: string; warningcode?: string }[]>(context, siteUrl, "mod_assign_submit_grading_form", {
+    assignmentid: instanceId,
+    userid: userId,
+    jsonformdata: JSON.stringify(serialized),
+  });
+  if (warnings.length > 0) {
+    // Moodle's form messages don't reach the service's warnings: a grade out of range only says it couldn't save.
+    throw new GradingError(`Moodle didn't save the grade: ${warnings.map((w) => w.message ?? w.warningcode).join("; ")} Check the grade is within the assignment's range or scale, and the fields' names.`);
+  }
 }

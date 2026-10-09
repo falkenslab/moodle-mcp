@@ -7,6 +7,7 @@ import { registerGetDiscussion } from "./getDiscussion.js";
 import { registerGetMe } from "./getMe.js";
 import { registerGetMyGrades } from "./getMyGrades.js";
 import { registerGetSubmissions } from "./getSubmissions.js";
+import { registerGradeSubmission } from "./gradeSubmission.js";
 import { registerListAssignments } from "./listAssignments.js";
 import { registerListCourses } from "./listCourses.js";
 import { registerListDiscussions } from "./listDiscussions.js";
@@ -29,6 +30,7 @@ export const TOOLS: RegisterTool[] = [
   registerGetDiscussion,
   registerGetMyGrades,
   registerListPending,
+  registerGradeSubmission,
   registerCreateActivity,
   registerUpdateActivity,
   registerEditActivity,

@@ -28,6 +28,7 @@ MCP client --stdio--> server.ts -> createServer.ts (McpServer + instructions) ->
 - `tools/listAssignments.ts` — `list_assignments`: a course's assignments by course module id, from the course state.
 - `moodle/assign.ts` — an assignment's instance and context ids from its grader page (cached in memory; no service gives them), participants and their dates through `mod_assign_list_participants` and `mod_assign_get_participant`, and a submission's content from the grader panel fragment (`core_get_fragment`), read by class in a blank tab.
 - `tools/getSubmissions.ts` — `get_submissions`: every participant's status, dates and, by default, content.
+- `tools/gradeSubmission.ts` — `grade_submission`: the grading panel's form filled in a blank tab, serialized as the grader does and sent to `mod_assign_submit_grading_form`; the saved grade and feedback read back.
 - `moodle/user.ts` — a user by id, the site's name, a user's roles in a course (role links on their course profile) and what they can do there, asked of read-only services that need the capability (activity types they can add, the grader report).
 - `tools/getMe.ts` — `get_me`: who the person is and, for a course, their roles and whether they can edit and grade.
 - `moodle/forum.ts` — a forum's discussions from its pages (rows read by data attributes, links and timestamps; the body id tells a forum page), a discussion's posts through `mod_forum_get_discussion_posts`, their HTML as text in a blank tab.

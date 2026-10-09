@@ -22,7 +22,7 @@ Let an agent work in a Moodle course with the person's own session, through tool
 
 ## Status
 
-Version 0.x: the server, its configuration, `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `get_activity_content`, `list_assignments`, `get_submissions`, `list_discussions`, `get_discussion`, `get_my_grades`, `list_pending`, `create_activity`, `update_activity`, the course layout tools (`edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`) and `server_info` exist; the Moodle tools come one by one (see `features/`).
+Version 0.x: the server, its configuration, `configure`, `login`, `get_me`, `list_courses`, `get_course_structure`, `get_activity_content`, `list_assignments`, `get_submissions`, `list_discussions`, `get_discussion`, `get_my_grades`, `list_pending`, `grade_submission`, `create_activity`, `update_activity`, the course layout tools (`edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`) and `server_info` exist; the Moodle tools come one by one (see `features/`).
 
 ## Test site
 

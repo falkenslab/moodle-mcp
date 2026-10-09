@@ -128,7 +128,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_assignment_settings` | Dates, submission types, grading method, max grade | R | Page | T read descriptions and dates | — |
 | `get_rubric` | Grading method, rubric or marking guide criteria and levels | R | Page (`grade/grading/manage.php`) or Fragment | T rubric read as text: 6 criteria, 4 levels | — |
 | `download_submission_files` | Save a participant's submitted files locally | R | Page (`pluginfile.php`) | none | — |
-| `grade_submission` | Grade (points, scale or rubric levels) with feedback text and files, notifying or not | W | AJAX (`mod_assign_submit_grading_form`, form from the `gradingpanel` fragment) | none yet: no submissions existed; a core need | — |
+| `grade_submission` | Grade (points, scale or rubric levels) with feedback text and files, notifying or not | W | AJAX (`mod_assign_submit_grading_form`, form from the `gradingpanel` fragment) | none yet: no submissions existed; a core need | Done |
 | `grant_extension` | Extend the due date for some participants | W | Form (`view.php?action=grantextension`) | none | — |
 
 ## Teacher: quizzes and question banks
