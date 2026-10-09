@@ -10,6 +10,10 @@ export const SYSTEM_CHANNELS = ["msedge", "chrome"] as const;
 export const CHANNELS = [...SYSTEM_CHANNELS, "chromium"] as const;
 export type Channel = (typeof CHANNELS)[number];
 
+/** How student tools view and do things (ADR-012): through the real pages at a human pace, or as fast as possible. */
+export const TRAILS = ["realistic", "fast"] as const;
+export type Trail = (typeof TRAILS)[number];
+
 /** Where a setting's value came from: the `configure` tool wins over arguments, which win over the environment (ADR-009). */
 export type SettingSource = "configure" | "argument" | "environment" | "default";
 
@@ -28,7 +32,9 @@ export interface Config {
   downloadBrowser: boolean;
   /** Whether the browser runs without a window (the login tool always shows one). */
   headless: boolean;
-  sources: { moodleUrl?: SettingSource; profileDir: SettingSource; channel: SettingSource; headless: SettingSource; downloadBrowser: SettingSource };
+  /** How student tools leave their trail (ADR-012). */
+  trail: Trail;
+  sources: { moodleUrl?: SettingSource; profileDir: SettingSource; channel: SettingSource; headless: SettingSource; downloadBrowser: SettingSource; trail: SettingSource };
 }
 
 /** A setting invalid at startup (the server stops with this message) or in `configure`. */
@@ -53,6 +59,7 @@ Options (each overrides its environment variable):
   --channel <name>      Browser: msedge, chrome or chromium  MOODLE_MCP_CHANNEL (default: msedge, then chrome, then chromium)
   --headless / --headed Run the browser without a window     MOODLE_MCP_HEADLESS (default: true)
   --no-download-browser Never download Chromium              MOODLE_MCP_DOWNLOAD_BROWSER (default: true)
+  --trail <mode>        Student tools: realistic or fast     MOODLE_MCP_TRAIL (default: realistic)
   --help                Show this help
   --version             Show the version`;
 
@@ -108,6 +115,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         headless: { type: "boolean" },
         headed: { type: "boolean" },
         "no-download-browser": { type: "boolean" },
+        trail: { type: "string" },
         help: { type: "boolean" },
         version: { type: "boolean" },
       },
@@ -121,6 +129,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const url = pick(values.url, env.MOODLE_URL);
   const profile = pick(values["profile-dir"], env.MOODLE_MCP_PROFILE_DIR);
   const channel = pick(values.channel, env.MOODLE_MCP_CHANNEL);
+  const trail = pick(values.trail, env.MOODLE_MCP_TRAIL);
 
   const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env);
   const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env);
@@ -131,12 +140,14 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     channel: channel ? parseChannel(channel.value) : undefined,
     headless: headless.value,
     downloadBrowser: downloadBrowser.value,
+    trail: trail ? parseTrail(trail.value) : "realistic",
     sources: {
       ...(url ? { moodleUrl: url.source } : {}),
       profileDir: profile?.source ?? "default",
       channel: channel?.source ?? "default",
       headless: headless.source,
       downloadBrowser: downloadBrowser.source,
+      trail: trail?.source ?? "default",
     },
   };
 }
@@ -168,6 +179,12 @@ export function parseProfileDir(value: string, packageRoot: string = PACKAGE_ROO
     throw new ConfigError(`The browser profile can't be inside the server's folder (${packageRoot}): choose another folder.`);
   }
   return dir;
+}
+
+export function parseTrail(value: string): Trail {
+  const trail = value.trim().toLowerCase();
+  if (!(TRAILS as readonly string[]).includes(trail)) throw new ConfigError(`The trail must be one of ${TRAILS.join(", ")}, not "${value}".`);
+  return trail as Trail;
 }
 
 function parseChannel(value: string): Channel {

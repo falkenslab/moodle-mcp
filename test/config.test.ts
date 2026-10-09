@@ -21,6 +21,7 @@ describe("loadConfig", () => {
       MOODLE_MCP_CHANNEL: "Chrome",
       MOODLE_MCP_HEADLESS: "false",
       MOODLE_MCP_DOWNLOAD_BROWSER: "no",
+      MOODLE_MCP_TRAIL: "Fast",
     });
     assert.deepEqual(config, {
       moodleUrl: "https://moodle.example.org/campus/",
@@ -28,7 +29,8 @@ describe("loadConfig", () => {
       channel: "chrome",
       headless: false,
       downloadBrowser: false,
-      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment" },
+      trail: "fast",
+      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment" },
     });
   });
 
@@ -42,7 +44,7 @@ describe("loadConfig", () => {
     assert.equal(config.channel, "chromium");
     assert.equal(config.headless, false);
     assert.equal(config.downloadBrowser, false);
-    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument" });
+    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument", trail: "default" });
   });
 
   it("starts without a site, and treats empty variables as unset", () => {
@@ -58,6 +60,7 @@ describe("loadConfig", () => {
     assert.equal(config.channel, undefined);
     assert.equal(config.headless, true);
     assert.equal(config.downloadBrowser, true);
+    assert.equal(config.trail, "realistic");
   });
 
   it("drops the query and fragment from the site URL", () => {
@@ -77,6 +80,7 @@ describe("loadConfig", () => {
   it("rejects unknown channels, headless values and options", () => {
     assert.throws(() => load(["--url", "http://localhost:8080", "--channel", "firefox"]), ConfigError);
     assert.throws(() => load(["--url", "http://localhost:8080"], { MOODLE_MCP_HEADLESS: "maybe" }), ConfigError);
+    assert.throws(() => load(["--trail", "slow"]), ConfigError);
     assert.throws(() => load(["--password", "x"]), ConfigError);
   });
 

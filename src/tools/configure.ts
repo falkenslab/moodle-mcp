@@ -7,6 +7,7 @@ import type { RegisterTool } from "./types.js";
 const inputSchema = {
   url: z.string().optional().describe("The Moodle site's URL, or any page of it (a course URL works: the site is read from it)"),
   headless: z.boolean().optional().describe("Run the browser without a window (logging in always shows one)"),
+  trail: z.enum(["realistic", "fast"]).optional().describe("How student tools view and do things: realistic (real pages, human pace; Moodle logs views and completion) or fast"),
   profileDir: z.string().optional().describe("Absolute folder for the browser profile that keeps the Moodle session; outside the server's folder"),
 };
 
@@ -20,12 +21,12 @@ export const registerConfigure: RegisterTool = (server, context) => {
     {
       title: "Configure the server",
       description:
-        "Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless) and the browser profile folder (profileDir). Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.",
+        "Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.",
       inputSchema,
       outputSchema: serverInfoSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
-    async ({ url, headless, profileDir }) => {
+    async ({ url, headless, profileDir, trail }) => {
       const { config, browser } = context;
       const moodleUrl = url !== undefined ? await findMoodleSite(url) : undefined;
       const dir = profileDir !== undefined ? parseProfileDir(profileDir) : undefined;
@@ -41,6 +42,10 @@ export const registerConfigure: RegisterTool = (server, context) => {
       if (dir !== undefined) {
         config.profileDir = dir;
         config.sources.profileDir = "configure";
+      }
+      if (trail !== undefined) {
+        config.trail = trail;
+        config.sources.trail = "configure";
       }
       if (headless !== undefined) {
         config.headless = headless;

@@ -10,7 +10,8 @@ export function testConfig(overrides: Partial<Config> = {}): Config {
     channel: undefined,
     headless: true,
     downloadBrowser: true,
-    sources: { moodleUrl: "environment", profileDir: "default", channel: "default", headless: "default", downloadBrowser: "default" },
+    trail: "realistic",
+    sources: { moodleUrl: "environment", profileDir: "default", channel: "default", headless: "default", downloadBrowser: "default", trail: "default" },
     ...overrides,
   };
 }

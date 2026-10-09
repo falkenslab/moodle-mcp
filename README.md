@@ -25,6 +25,7 @@ Nothing is required at startup. There are two ways to configure the server, and 
 | `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome, then Chromium | Browser to use: `msedge`, `chrome` or `chromium` (the one the server downloads) |
 | `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | Run the browser without a window (logging in always shows one) |
 | `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | Download Chromium when no system browser is found |
+| `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | How student tools view and do things: `realistic` (real pages, human pace, so Moodle logs views and completion) or `fast` |
 
 ## Logging in
 
