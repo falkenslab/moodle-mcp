@@ -27,16 +27,30 @@ Nothing is required at startup. There are two ways to configure the server, and 
 | `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | Download Chromium when no system browser is found |
 | `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | How student tools view and do things: `realistic` (real pages, human pace, so Moodle logs views and completion) or `fast` |
 | `MOODLE_MCP_SCOPES` | `--scopes` | `all` | The kinds of tools the agent gets: a profile (`all`, `teacher`, `student`, `content`) or a list of scopes (`content`, `student-data`, `grading`, `communication`, `as-student`, `browser`) |
-| `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `clear` | How other people's data reaches the agent: `block` (no tool that reads it or decides about others) or `clear` (names as Moodle shows them); `pseudonymize` is coming |
+| `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | How other people's data reaches the agent: `block` (no tool that reads it or decides about others), `pseudonymize` (as aliases, see below) or `clear` (names as Moodle shows them, for a model that runs on your machine) |
 
 ### Limiting what the agent can do
 
 Two settings decide which tools exist for the agent, and only you set them, in the client's configuration of the server: `configure` can narrow them for a session, never widen them.
 
 - **Scopes** choose the kinds of tools. `content` gives an agent that builds and manages courses (activities, sections, content, rubrics' definitions) but never reads students' work, grades or writes to students; `teacher` adds those; `student` is for acting as a student; `all` adds the browser fallback tools. A tool's scope comes from the data moodle-driver says it touches, so new tools are classified on their own.
-- **Student data** set to `block` removes every tool that reads others' personal data or decides about others, whatever the scopes, and the browser fallback tools with them.
+- **Student data** set to `block` removes every tool that reads others' personal data or decides about others, whatever the scopes, and the browser fallback tools with them. `pseudonymize`, the default, keeps those tools but gives other people as aliases (next section); `clear` gives their names.
 
 Without students' data, `download_file` refuses submitted files and forum attachments, and deleting an activity that may hold students' work (an assignment, a quiz, a forum…) is refused: do that in Moodle yourself. `server_info` shows the limits in force.
+
+### Students as aliases
+
+With `pseudonymize`, the agent never gets another person's name or Moodle user id: each one is an alias such as `A-7KQ2XM`, the same for that person in every course of the site and after a restart, and you can always find out who it is. [@falkenslab/pseudonym](https://www.npmjs.com/package/@falkenslab/pseudonym) makes the aliases from a secret key on your machine and keeps a directory of the people met (alias, name, Moodle user id), never sent anywhere.
+
+- `get_submissions` and `get_discussion` give people as aliases, your own posts with your name. `grade_submission` takes the alias back (`user`). `list_discussions` and the quiz review only show names, without ids: a name the directory already knows becomes its alias, any other `[participant]`.
+- What others wrote (submissions' text, posts, subjects, file names) goes through pseudonym's redaction: the names of people already met become their aliases, and emails, phone numbers, DNI/NIE and IBANs become placeholders. Street addresses, dates of birth and names of people not met yet stay as written: don't rely on it for free text with sensitive data.
+- Text the agent writes to Moodle (feedback, posts) is refused if it holds an alias, since students would read it as is.
+- What can't be pseudonymized isn't given: the browser fallback tools (any page as it is) and others' files (`download_file` on a submission or an attachment) need `clear`.
+
+To see who an alias is, run `npx @falkenslab/pseudonym whois A-7KQ2XM` in your own terminal (`pseudonym reveal` does it for a whole text, such as notes the agent wrote). The key and the directory live in `%APPDATA%\pseudonym` on Windows and `~/.config/pseudonym` elsewhere (`PSEUDONYM_HOME` changes it):
+
+- **Back up the key** (`pseudonym key export`): if it's lost, every alias changes and your notes no longer match anyone.
+- **Keep the agent away from them**: in your client's permissions, deny reading that folder and running the `pseudonym` command, or the agent could look the aliases up.
 
 ## Logging in
 

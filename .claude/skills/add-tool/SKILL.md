@@ -16,7 +16,7 @@ A tool is a schema, a description, annotations and one call to `@falkenslab/mood
 - Annotations, always: `readOnlyHint: true` for reads; for writes `readOnlyHint: false` plus `destructiveHint` and `idempotentHint`; `openWorldHint: true` when it talks to the site.
 - Description: what it does in Moodle's terms, what it returns, which tool gives its inputs; for writes, "confirm with the person first"; anything an agent must not guess (personal data, statements to accept).
 - Handler: `async (input) => reply(await driverFunction(...(await onSite(config, browser)), …))`. `onSite()` checks the site before opening the browser; `reply()` gives structured content and the JSON text. Settings the driver takes (the trail) come from `config`; progress notifications from `extra._meta.progressToken` through the driver's `onProgress`.
-- Other people's data: when the tool shows students or colleagues, it waits for (or goes through) pseudonymous mode (ADR-013, `pseudonymous-mode` card): never emails, phones or profile fields.
+- Other people's data: when the tool shows students or colleagues, it goes through `src/people.ts` (ADR-013, ADR-016): aliases for people, `text()` for what they wrote, `refuseAliases()` for what the agent writes to Moodle; a test in pseudonymous mode checks no name or id leaks. Never emails, phones or profile fields.
 
 ## 3. Wire it
 

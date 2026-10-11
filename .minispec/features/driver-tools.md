@@ -7,7 +7,7 @@ Each Moodle area moodle-driver gains becomes MCP tools here: a schema, a descrip
 ## Context
 
 - The Moodle work is in moodle-driver's feature cards; this card tracks what to expose once each lands there. A tool's work here is small; take a row when its driver card is done.
-- Tools that show other people wait for `pseudonymous-mode.md` (ADR-013): participants, gradebook, quiz results, completion report, messages.
+- Tools that show other people go through `src/people.ts` (ADR-013, ADR-016): participants, gradebook, quiz results, completion report, messages.
 
 ## Changes
 

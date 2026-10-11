@@ -15,7 +15,7 @@ Create a temporal feature document under `.minispec/features/`.
    is a card in `../moodle-driver`, written from its own session; here go cards for
    what the MCP server adds (tools, settings, instructions, wrappers) and a row in
    `driver-tools` for the tools a driver card will need. Personal data: see
-   `pseudonymous-mode` and ADR-013.
+   ADR-013 and ADR-016 (`src/people.ts`).
 4. Derive a kebab-case slug for the feature (e.g. `github-sync`). The file is
    `.minispec/features/<slug>.md`. If it already exists, update it instead of
    overwriting blindly.

@@ -19,7 +19,7 @@ gh issue list --state all --label fix --limit 100 --json number,title,state,body
 
 A note is linked when it has an `Issue: [#N](<issue URL>)` line right under its title. An issue is linked when its body's last line points to `.minispec/features/<file>.md`.
 
-Cards that track work in sibling repositories (`driver-tools` for moodle-driver, `pseudonymous-mode` waiting on pseudonym) get their issue here like any other; the siblings' own cards get theirs in their repositories, from their sessions.
+Cards that track work in sibling repositories (`driver-tools` for moodle-driver) get their issue here like any other; the siblings' own cards get theirs in their repositories, from their sessions.
 
 ## 2. Fix each mismatch
 

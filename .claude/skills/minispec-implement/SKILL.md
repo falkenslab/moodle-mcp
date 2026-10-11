@@ -21,7 +21,7 @@ skill just loads the right context and implements the feature like any task.
   (read each file's `# title` and `Goal`) and **ask the user which to
   implement**. Do not guess.
 - A card that waits on a sibling repository (`driver-tools` on moodle-driver's
-  cards, `pseudonymous-mode` on pseudonym's) can only go as far as what's there:
+  cards, anything on pseudonym's) can only go as far as what's there:
   check the sibling's code first. Never implement in `../moodle-driver` or
   `../pseudonym` from this session: say what's missing there and stop.
 - If `.minispec/features/` is empty, tell the user there's nothing pending and
