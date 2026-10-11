@@ -33,7 +33,7 @@ A tool is a schema, a description, annotations and one call to `@falkenslab/mood
 
 ## 5. Docs
 
-Run the `update-docs` skill: the README's tool list, `.minispec/core/project.md`'s status, `.minispec/core/architecture.md` if a new piece appeared, the catalog's status (`docs/tool-catalog.md`), and the `driver-tools` card's row (done rows go away; the card goes when it's empty).
+Run the `update-docs` skill: the README's tool table (by area) and tool count, `.minispec/core/project.md`'s status, `.minispec/core/architecture.md` if a new piece appeared, the catalog's status (`docs/tool-catalog.md`), and the `driver-tools` card's row (done rows go away; the card goes when it's empty).
 
 ## 6. Finish
 

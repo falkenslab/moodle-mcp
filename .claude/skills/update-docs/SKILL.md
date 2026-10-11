@@ -1,11 +1,11 @@
 ---
 name: update-docs
-description: Keep moodle-mcp's documentation in step with the code - the README (configuration, tool list, development), the MiniSpec core and decisions, the tool catalog, the driver-tools card and the server's instructions. Use after any change to a tool, a setting, the instructions, the build or the Docker runner, before committing it. A change is not done until its documentation is.
+description: Keep moodle-mcp's documentation in step with the code - the README (for users - settings, privacy, tool table), docs/development.md, the MiniSpec core and decisions, the tool catalog, the driver-tools card and the server's instructions. Use after any change to a tool, a setting, the instructions, the build or the Docker runner, before committing it. A change is not done until its documentation is.
 ---
 
 # Keep moodle-mcp's docs up to date
 
-Documentation here is for two readers: people installing and using the server (README) and future sessions working on it (`.minispec/`, `CLAUDE.md`). Code that changes what a client sees, can configure or must do, and isn't documented, is unfinished work.
+Documentation here is for three readers: people installing and using the server (README, in plain terms: teachers and students, not developers), people developing it (`docs/development.md`), and future sessions working on it (`.minispec/`, `CLAUDE.md`). Code that changes what a client sees, can configure or must do, and isn't documented, is unfinished work.
 
 ## 1. Find what changed
 
@@ -21,12 +21,12 @@ Counts as visible: a tool added, removed or renamed; a tool's inputs, outputs, a
 
 | Change | Where |
 | --- | --- |
-| A tool added or removed | README's status line (the tool list), `.minispec/core/project.md`'s Status, `docs/tool-catalog.md`'s Status column, the `driver-tools` card's row |
+| A tool added or removed | README's tool table ("What it can do", by area, and the count in its status line), `.minispec/core/project.md`'s Status, `docs/tool-catalog.md`'s Status column, the `driver-tools` card's row |
 | A tool's behavior or contract | Its description (that's what agents read) and, if the README explains it, the README |
 | A new piece of the server (a module, a wrapper) | `.minispec/core/architecture.md` |
-| A setting | README's configuration table, `src/config.ts`'s usage text, `configure`'s description, `server_info` |
+| A setting | README's settings table (and its privacy or limits section when it's one of those), `src/config.ts`'s usage text, `configure`'s description, `server_info` |
 | Usage rules for agents | `src/instructions.ts` (and its test) |
-| Build, Docker runner, sibling repositories | README's Development section, `.minispec/core/stack.md` |
+| Build, Docker runner, sibling repositories | `docs/development.md`, README's installing section when users see it, `.minispec/core/stack.md` |
 | A rule that applies to all future work | `.minispec/core/conventions.md` or `principles.md` |
 | A decision that's hard to reverse | A new ADR with the `minispec-adr` skill (or an existing one updated if it changed) |
 | Work done from a card | The card deleted (`minispec-implement`), its permanent lessons promoted first |

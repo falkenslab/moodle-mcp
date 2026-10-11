@@ -5,7 +5,7 @@
 - Relative imports inside `src/` use explicit `.js` extensions (NodeNext).
 - One tool per file in `src/tools/`, registered from `src/tools/index.ts`; a small family of tools sharing schemas and result may share a file (`courseLayout.ts`). Tool names are snake_case Moodle verbs and nouns (`list_courses`), never browser actions (ADR-004).
 - Every tool declares its annotations: `readOnlyHint: true` when it only reads; `destructiveHint` and `idempotentHint` when it writes.
-- Tools return `structuredContent` matching an `outputSchema`, plus the same data as JSON text for clients that ignore it; an image (`browser_screenshot`) is image content only. Schemas avoid nullable types (an optional field instead), which some clients reject; the Inspector's `--cli` with `--method tools/list --strict` checks them (see the README).
+- Tools return `structuredContent` matching an `outputSchema`, plus the same data as JSON text for clients that ignore it; an image (`browser_screenshot`) is image content only. Schemas avoid nullable types (an optional field instead), which some clients reject; the Inspector's `--cli` with `--method tools/list --strict` checks them (see `docs/development.md`).
 - stdout belongs to the MCP protocol: logs and diagnostics go to stderr only.
 - No credentials anywhere in the repo: code, tests, fixtures, docs. Tool results never include passwords, cookies or session tokens.
 - Configuration is read only in `src/config.ts` and changed only by `configure`; the rest of the code reads the shared `Config` when it needs a value, never copying it at startup, and gets the site with `requireSiteUrl()`.
