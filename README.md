@@ -59,7 +59,7 @@ To see who an alias is, run `npx @falkenslab/pseudonym whois A-7KQ2XM` in your o
 
 When a tool reports that there is no session, the client calls `login`: a browser window opens at the site's login page and the tool waits (5 minutes by default) until you log in there yourself, SSO included. The session is kept in the profile folder, together with `moodle-mcp-session-cookies.json` (Chromium forgets session cookies on close, so the server saves them), and survives restarts until Moodle ends it.
 
-The profile holds a live Moodle session: treat it like a password and keep it out of shared folders and repositories. Profiles from before moodle-driver 0.2 need to log in once more: the driver renamed the file where it keeps the session.
+The profile holds a live Moodle session: treat it like a password and keep it out of shared folders and repositories. To share the session with moodle-driver's `moodle` command line, so you log in once for both, point `MOODLE_MCP_PROFILE_DIR` at its profile for the site: `~/.moodle-driver/sites/<host>/profiles/<account>`. A profile is open in one browser at a time, so the command line and the server can't use it at once. Profiles from before moodle-driver 0.2 need to log in once more: the driver renamed the file where it keeps the session.
 
 To watch what the agent does, ask it to show the browser (`show_browser`): a window opens, keeping the session, and each tool brings the Moodle page it works on to the front; ask it to hide the browser, or close the window, to go back to working without one.
 

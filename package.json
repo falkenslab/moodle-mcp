@@ -4,6 +4,14 @@
   "description": "MCP server that works a Moodle site through a real browser (Playwright), with domain tools",
   "author": "Falkenslab",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/falkenslab/moodle-mcp.git"
+  },
+  "homepage": "https://github.com/falkenslab/moodle-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/falkenslab/moodle-mcp/issues"
+  },
   "keywords": [
     "mcp",
     "model-context-protocol",
