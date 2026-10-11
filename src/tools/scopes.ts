@@ -100,9 +100,12 @@ export function requiredScopes(tool: string): Set<Scope> {
   return scopes;
 }
 
-/** The scopes in force: those set, without what the student data level blocks. */
+/**
+ * The scopes in force: those set, without what the student data level blocks. The browser tools read
+ * any page as it is, and only names already met could be redacted in it: they need names in clear.
+ */
 export function activeScopes(config: Pick<Config, "scopes" | "studentData">): Set<Scope> {
-  return new Set(config.scopes.filter((scope) => !(config.studentData === "block" && BLOCKED.includes(scope))));
+  return new Set(config.scopes.filter((scope) => !(config.studentData === "block" && BLOCKED.includes(scope)) && !(scope === "browser" && config.studentData !== "clear")));
 }
 
 /** Whether a tool exists for the agent under this configuration. */
@@ -115,6 +118,11 @@ export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "stude
 /** Whether others' data may be read or acted on under this configuration. */
 export function studentDataAllowed(config: Pick<Config, "scopes" | "studentData">): boolean {
   return activeScopes(config).has("student-data");
+}
+
+/** Whether others' files (submissions, attachments) can reach the agent: their content can't be pseudonymized, so only with names in clear. */
+export function othersFilesAllowed(config: Pick<Config, "scopes" | "studentData">): boolean {
+  return studentDataAllowed(config) && config.studentData === "clear";
 }
 
 /** A tool called outside the scopes in force: refused without touching Moodle. */

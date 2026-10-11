@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { forumDiscussions } from "@falkenslab/moodle-driver";
+import { personByName, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
@@ -12,11 +13,12 @@ const outputSchema = {
     z.object({
       id: z.number().int().describe("The discussion id, which get_discussion takes"),
       subject: z.string(),
-      author: z.string().describe("Who started it"),
+      author: z.string().describe(`Who started it: when the server pseudonymizes, an alias, or "[participant]" for someone it hasn't met yet (get_discussion gives their alias)`),
       started: z.string().optional().describe("ISO 8601"),
       lastPost: z.object({ author: z.string(), time: z.string().optional().describe("ISO 8601"), postId: z.number().int().optional() }),
       replies: z.number().int().describe("0 means nobody has answered yet"),
       locked: z.boolean(),
+      pinned: z.boolean().optional().describe("Kept at the top of the list"),
     }),
   ),
 };
@@ -32,6 +34,19 @@ export const registerListDiscussions: RegisterTool = (server, { config, browser 
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ forumId }) => reply({ discussions: await forumDiscussions(...(await onSite(config, browser)), forumId) }),
+    async ({ forumId }) => {
+      const [context, siteUrl] = await onSite(config, browser);
+      const found = await forumDiscussions(context, siteUrl, forumId);
+      // The page shows names without user ids: only names the directory already knows become aliases.
+      const discussions = await Promise.all(
+        found.map(async (d) => ({
+          ...d,
+          subject: await text(config, siteUrl, d.subject),
+          author: await personByName(config, context, siteUrl, d.author),
+          lastPost: { ...d.lastPost, author: await personByName(config, context, siteUrl, d.lastPost.author) },
+        })),
+      );
+      return reply({ discussions });
+    },
   );
 };

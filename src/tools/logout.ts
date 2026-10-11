@@ -2,6 +2,7 @@ import { z } from "zod";
 import { logOut } from "@falkenslab/moodle-driver";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
+import { forgetSelf } from "../people.js";
 
 export const registerLogout: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
@@ -14,6 +15,7 @@ export const registerLogout: RegisterTool = (server, { config, browser }) => {
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async () => {
+      forgetSelf();
       const ended = await logOut(...(await onSite(config, browser)));
       // The saved session cookies follow (ADR-007): a restart doesn't bring the old session back.
       await browser.saveSession();

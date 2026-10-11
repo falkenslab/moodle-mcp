@@ -38,7 +38,6 @@ export const registerConfigure: RegisterTool = (server, context) => {
       if (studentData !== undefined && !atLeastAsStrict(studentData, config.studentData)) {
         throw new ConfigError(`configure can only tighten student data: it's ${config.studentData} now. Loosening it is the person's, in the client's configuration of the server.`);
       }
-      if (studentData === "pseudonymize") throw new ConfigError(`"pseudonymize" isn't available yet: pseudonymization is still to come. Use block.`);
       const moodleUrl = url !== undefined ? await findMoodleSite(url) : undefined;
       const dir = profileDir !== undefined ? parseProfileDir(profileDir) : undefined;
 

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { redactUrl, requireSiteUrl } from "../config.js";
 import { logIn } from "@falkenslab/moodle-driver";
 import type { RegisterTool } from "./types.js";
+import { forgetSelf } from "../people.js";
 
 const DEFAULT_TIMEOUT_SECONDS = 300;
 const PROGRESS_EVERY_MS = 5000;
@@ -35,6 +36,7 @@ export const registerLogin: RegisterTool = (server, { config, browser }) => {
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ timeoutSeconds = DEFAULT_TIMEOUT_SECONDS }, extra) => {
+      forgetSelf();
       const siteUrl = requireSiteUrl(config);
       // Clients that pass a progress token keep waiting while progress arrives.
       const progressToken = extra._meta?.progressToken;

@@ -1,0 +1,145 @@
+import assert from "node:assert/strict";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { after, describe, it } from "node:test";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import type { BrowserContext } from "playwright-core";
+import { PANEL, SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
+import type { Config } from "../../src/config.js";
+import { createServer } from "../../src/createServer.js";
+import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
+
+// Never the person's real key and directory: a folder of this run's own.
+const home = mkdtempSync(path.join(tmpdir(), "pseudonym-"));
+process.env.PSEUDONYM_HOME = home;
+const browser = await launchTestBrowser();
+after(async () => {
+  await browser?.close();
+  rmSync(home, { recursive: true, force: true });
+});
+
+const ALIAS = /^A-[0-9A-HJKMNP-TV-Z]{6,12}$/;
+
+/** A made-up course: the teacher (user 3), Ada (7) and Alan (8), an assignment and a forum. */
+function moodle(): { state: FakeMoodleState; graded: Record<string, unknown>[] } {
+  const graded: Record<string, unknown>[] = [];
+  const state: FakeMoodleState = {
+    user: { id: 3, fullName: "Teacher Smith" },
+    bodies: {
+      "/mod/assign/view.php": `<div data-assignmentid="410" data-contextid="4100"></div>`,
+      "/mod/forum/view.php": `<table><tr data-region="discussion-list-item" data-discussionid="2" data-forumid="1"><td></td><th scope="row"><a href="${SITE}mod/forum/discuss.php?d=2"> Ada's question </a><span data-region="locked-label" hidden>Locked</span></th>
+<td><div><div>Ada Lovelace</div><div><time data-timestamp="1790000000">2 Oct</time></div></div></td><td><div><div>Grace Hopper</div><div><a href="${SITE}mod/forum/discuss.php?d=2&amp;parent=3"><time data-timestamp="1790000600">3 Oct</time></a></div></div></td><td><span>2</span></td></tr></table>`,
+    },
+    services: {
+      core_user_get_users_by_field: () => [{ id: 3, username: "teacher", fullname: "Teacher Smith" }],
+      tool_mobile_get_public_config: () => ({ sitename: "Test campus" }),
+      mod_assign_list_participants: () => [
+        { id: 7, fullname: "Ada Lovelace", submitted: true, requiregrading: true, grantedextension: false, submissionstatus: "submitted" },
+        { id: 8, fullname: "Alan Turing", submitted: false, requiregrading: false, grantedextension: false, submissionstatus: "" },
+      ],
+      mod_assign_get_participant: () => ({ allowsubmissionsfromdate: 0, duedate: 0, cutoffdate: 0 }),
+      // The grader panel: Ada's submission (naming her) and the grade form.
+      core_get_fragment: () => ({ html: `${PANEL.replace("Short answer.", "Short answer by Ada Lovelace.")}<form class="gradeform mform"><input type="hidden" name="id" value="41"><input type="hidden" name="userid" value="0"><input type="hidden" name="sesskey" value="s1"><input type="text" name="grade" value=""></form>`, javascript: "" }),
+      mod_assign_submit_grading_form: (args) => {
+        graded.push(args);
+        return [];
+      },
+      mod_forum_get_discussion_posts: () => ({
+        forumid: 1,
+        courseid: 5,
+        posts: [
+          { id: 2, subject: "Ada's question", message: "<p>I am Ada Lovelace, write me at ada@example.org</p>", author: { id: 7, fullname: "Ada Lovelace" }, parentid: null, timecreated: 1_790_000_000, timemodified: 1_790_000_000, isprivatereply: false, unread: null, attachments: [{ filename: "ada-lovelace.pdf", url: `${SITE}pluginfile.php/1/mod_forum/attachment/2/ada-lovelace.pdf` }] },
+          { id: 3, subject: "Re: Ada's question", message: "<p>Alan Turing knows, ask him</p>", author: { id: 8, fullname: "Alan Turing" }, parentid: 2, timecreated: 1_790_000_600, timemodified: 1_790_000_600, isprivatereply: false, unread: false, attachments: [] },
+          { id: 4, subject: "Re: Ada's question", message: "<p>Thanks both</p>", author: { id: 3, fullname: "Teacher Smith" }, parentid: 2, timecreated: 1_790_000_900, timemodified: 1_790_000_900, isprivatereply: false, unread: false, attachments: [] },
+        ],
+      }),
+    },
+  };
+  return { state, graded };
+}
+
+async function connect(config: Config, state: FakeMoodleState): Promise<{ client: Client; context: BrowserContext }> {
+  const context = await browser!.newContext();
+  await serveFakeMoodle(context, state);
+  const server = createServer({ config, browser: fakeBrowserManager({ context: async () => context }) });
+  const client = new Client({ name: "test", version: "0.0.0" });
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+  return { client, context };
+}
+
+const pseudonymous = () => testConfig({ moodleUrl: SITE, studentData: "pseudonymize" });
+const text = (result: Record<string, unknown>) => JSON.stringify([result.content, result.structuredContent]);
+
+describe("pseudonymous mode", { skip: !browser && "no system browser" }, () => {
+  it("gives participants as stable aliases, without their names or ids, and grades by alias", async () => {
+    const { state, graded } = moodle();
+    const { client, context } = await connect(pseudonymous(), state);
+    const read = async () => (await client.callTool({ name: "get_submissions", arguments: { assignmentId: 41 } })) as unknown as { structuredContent: { submissions: Record<string, unknown>[] } };
+    const first = await read();
+    const users = first.structuredContent.submissions.map((s) => s.user as string);
+    assert.ok(users.every((u) => ALIAS.test(u)) && users[0] !== users[1], users.join());
+    assert.doesNotMatch(text(first), /Lovelace|Turing|"userId"|"fullName"/);
+    assert.deepEqual((await read()).structuredContent.submissions.map((s) => s.user), users);
+
+    const result = await client.callTool({ name: "grade_submission", arguments: { assignmentId: 41, user: users[0], grade: "8" } });
+    assert.equal(result.isError, undefined, text(result));
+    assert.equal(graded[0]?.userid, 7);
+    assert.doesNotMatch(text(result), /user 7|Lovelace/);
+    assert.match(text(result), new RegExp(users[0]!));
+
+    // An id where an alias is due, or an alias in text students read: refused before Moodle is touched.
+    assert.match(text(await client.callTool({ name: "grade_submission", arguments: { assignmentId: 41, userId: 7, grade: "8" } })), /give the participant as user/);
+    assert.match(text(await client.callTool({ name: "grade_submission", arguments: { assignmentId: 41, user: users[0], feedback: `<p>Well done ${users[0]}</p>` } })), /an alias: Moodle would show it/);
+    assert.match(text(await client.callTool({ name: "reply_to_post", arguments: { postId: 2, message: `Thanks ${users[1]}` } })), /an alias/);
+    assert.equal(graded.length, 1);
+    await context.close();
+  });
+
+  it("names forum authors by alias, keeps the person's own posts, and redacts what others wrote", async () => {
+    const { state } = moodle();
+    const { client, context } = await connect(pseudonymous(), state);
+    const before = await client.callTool({ name: "list_discussions", arguments: { forumId: 4 } });
+    const ada = (await client.callTool({ name: "get_submissions", arguments: { assignmentId: 41, includeContent: false } })) as unknown as { structuredContent: { submissions: { user: string }[] } };
+    const aliasOfAda = ada.structuredContent.submissions[0]!.user;
+
+    const result = await client.callTool({ name: "get_discussion", arguments: { discussionId: 2 } });
+    const { posts } = result.structuredContent as { posts: { author: Record<string, unknown>; text: string; attachments: Record<string, unknown>[] }[] };
+    assert.deepEqual(posts[0]?.author, { alias: aliasOfAda });
+    assert.ok(ALIAS.test(String(posts[1]?.author.alias)));
+    assert.deepEqual(posts[2]?.author, { id: 3, fullName: "Teacher Smith" });
+    assert.doesNotMatch(text(result), /Lovelace|Turing|ada@example\.org|"id":7|"id":8/);
+    assert.match(posts[0]!.text, new RegExp(`I am ${aliasOfAda}`));
+    assert.deepEqual(Object.keys(posts[0]!.attachments[0]!), ["name"]);
+
+    // Ada is known now; Grace never came through with her id.
+    const after = (await client.callTool({ name: "list_discussions", arguments: { forumId: 4 } })).structuredContent as { discussions: { author: string; lastPost: { author: string } }[] };
+    assert.deepEqual([after.discussions[0]?.author, after.discussions[0]?.lastPost.author], [aliasOfAda, "[participant]"]);
+    assert.doesNotMatch(text(before), /Lovelace|Hopper/);
+    await context.close();
+  });
+
+  it("offers no browser tools and no one else's files, since their content can't be pseudonymized", async () => {
+    const { state } = moodle();
+    const { client, context } = await connect(pseudonymous(), state);
+    const tools = (await client.listTools()).tools.map((t) => t.name);
+    assert.ok(!tools.some((t) => t.startsWith("browser_")) && tools.includes("get_submissions"));
+    const refused = await client.callTool({ name: "download_file", arguments: { url: `${SITE}pluginfile.php/1/mod_forum/attachment/2/ada-lovelace.pdf`, destDir: home } });
+    assert.match(text(refused), /pseudonymizes students' data/);
+    await context.close();
+  });
+
+  it("shows names as Moodle does with clear, and configure tightens clear to pseudonymize", async () => {
+    const { state } = moodle();
+    const { client, context } = await connect(testConfig({ moodleUrl: SITE }), state);
+    const clear = await client.callTool({ name: "get_submissions", arguments: { assignmentId: 41, includeContent: false } });
+    assert.match(text(clear), /Ada Lovelace/);
+    assert.equal((await client.callTool({ name: "configure", arguments: { studentData: "pseudonymize" } })).isError, undefined);
+    const tightened = await client.callTool({ name: "get_submissions", arguments: { assignmentId: 41, includeContent: false } });
+    assert.doesNotMatch(text(tightened), /Lovelace/);
+    assert.ok(!(await client.listTools()).tools.some((t) => t.name.startsWith("browser_")));
+    await context.close();
+  });
+});

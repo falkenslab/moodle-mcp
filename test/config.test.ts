@@ -31,8 +31,8 @@ describe("loadConfig", () => {
       downloadBrowser: false,
       trail: "fast",
       scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"],
-      studentData: "clear",
-      limits: { scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"], studentData: "clear" },
+      studentData: "pseudonymize",
+      limits: { scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"], studentData: "pseudonymize" },
       sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment", scopes: "default", studentData: "default" },
     });
   });

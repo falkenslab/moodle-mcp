@@ -1,11 +1,12 @@
 // reply_to_post and create_discussion: the driver posts through Moodle's own post form.
 import { z } from "zod";
 import { replyToPost, startDiscussion } from "@falkenslab/moodle-driver";
+import { refuseAliases } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const common = {
-  message: z.string().min(1).describe("The message (HTML)"),
+  message: z.string().min(1).describe("The message (HTML); no aliases in it, since people read it"),
   files: z.array(z.string()).optional().describe("Absolute local paths to attach"),
   subscribe: z.boolean().optional().describe("Subscribe to the discussion; Moodle's default when missing"),
   fields: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.array(z.string())])).optional().describe('Other post form fields by name, e.g. {"pinned": true} for a teacher'),
@@ -22,7 +23,10 @@ export const registerReplyToPost: RegisterTool = (server, { config, browser }) =
       outputSchema: { changed: z.string(), postId: z.number().int().optional(), discussionId: z.number().int().optional() },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ postId, ...input }) => reply(await replyToPost(...(await onSite(config, browser)), postId, input)),
+    async ({ postId, ...input }) => {
+      refuseAliases(config, input.subject, input.message);
+      return reply(await replyToPost(...(await onSite(config, browser)), postId, input));
+    },
   );
 };
 
@@ -37,6 +41,9 @@ export const registerCreateDiscussion: RegisterTool = (server, { config, browser
       outputSchema: { changed: z.string(), discussionId: z.number().int().optional() },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ forumId, ...input }) => reply(await startDiscussion(...(await onSite(config, browser)), forumId, input)),
+    async ({ forumId, ...input }) => {
+      refuseAliases(config, input.subject, input.message);
+      return reply(await startDiscussion(...(await onSite(config, browser)), forumId, input));
+    },
   );
 };

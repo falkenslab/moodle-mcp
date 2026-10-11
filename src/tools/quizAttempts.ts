@@ -1,6 +1,7 @@
 // The quiz tools: one file for six tools that share the question and detail schemas.
 import { z } from "zod";
 import { answerQuizQuestions, finishQuizAttempt, quizInfo, readAttempt, readReview, startQuizAttempt } from "@falkenslab/moodle-driver";
+import { personByName, text } from "../people.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
@@ -128,11 +129,25 @@ export const registerGetAttemptReview: RegisterTool = (server, { config, browser
     "get_attempt_review",
     {
       title: "Review a finished attempt",
-      description: "Read a finished attempt's review, as far as the quiz shows it: status, marks and grade, and per question whether it was right, the mark, feedback and the right answer.",
+      description:
+        "Read a finished attempt's review, as far as the quiz shows it: status, marks and grade, and per question whether it was right, the mark, feedback and the right answer. Someone else's attempt (a teacher's view) names them by alias, and their written answers are redacted, when the server pseudonymizes.",
       inputSchema: { attemptId },
       outputSchema: { summary: z.array(detail), questions: z.array(question) },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ attemptId }) => reply({ ...(await readReview(...(await onSite(config, browser)), attemptId)) }),
+    async ({ attemptId }) => {
+      const [context, siteUrl] = await onSite(config, browser);
+      const review = await readReview(context, siteUrl, attemptId);
+      // Someone else's attempt starts with their picture and name, a row without a label.
+      const summary = await Promise.all(review.summary.map(async (d) => (d.label === "" ? { ...d, value: await personByName(config, context, siteUrl, d.value) } : d)));
+      const questions = await Promise.all(
+        review.questions.map(async (q) => ({
+          ...q,
+          fields: await Promise.all(q.fields.map(async (f) => (f.value === undefined ? f : { ...f, value: await text(config, siteUrl, f.value) }))),
+          ...(q.feedback !== undefined && { feedback: await text(config, siteUrl, q.feedback) }),
+        })),
+      );
+      return reply({ summary, questions });
+    },
   );
 };

@@ -89,12 +89,13 @@ describe("tool scopes", () => {
     assert.match(JSON.stringify(refused.content), /someone's work/);
   });
 
-  it("reads its limits from the environment and arguments, and refuses what isn't there yet", () => {
+  it("reads its limits from the environment and arguments, pseudonymizing by default", () => {
     const config = loadConfig(["--scopes", "teacher"], { MOODLE_MCP_STUDENT_DATA: "block" }) as Config;
     assert.deepEqual([config.scopes, config.studentData, config.limits.studentData], [["content", "student-data", "grading", "communication"], "block", "block"]);
     assert.deepEqual((loadConfig([], {}) as Config).scopes, [...SCOPES]);
     assert.throws(() => loadConfig(["--scopes", "everything"], {}), ConfigError);
-    assert.throws(() => loadConfig([], { MOODLE_MCP_STUDENT_DATA: "pseudonymize" }), /isn't available yet/);
+    assert.equal((loadConfig([], {}) as Config).studentData, "pseudonymize");
+    assert.throws(() => loadConfig([], { MOODLE_MCP_STUDENT_DATA: "anonymous" }), /must be one of block, pseudonymize, clear/);
   });
 
   it("tells the agent its limits in the instructions", async () => {

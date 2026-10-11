@@ -73,7 +73,8 @@ Options (each overrides its environment variable):
   --scopes <list>       Kinds of tools: a profile (all, teacher, student, content) or scopes
                         (content, student-data, grading, communication, as-student, browser)
                                                              MOODLE_MCP_SCOPES (default: all)
-  --student-data <lvl>  Others' data: block or clear         MOODLE_MCP_STUDENT_DATA (default: clear)
+  --student-data <lvl>  Others' data: block, pseudonymize or MOODLE_MCP_STUDENT_DATA (default: pseudonymize)
+                        clear (names, for a local model)
   --help                Show this help
   --version             Show the version`;
 
@@ -198,10 +199,8 @@ export function parseProfileDir(value: string, packageRoot: string = PACKAGE_ROO
   return dir;
 }
 
-// Pseudonymization isn't in yet (the pseudonymous-mode card): until it is, nothing pretends to protect,
-// so the default stays today's behavior and "pseudonymize" is refused.
-const DEFAULT_STUDENT_DATA: StudentDataLevel = "clear";
-const AVAILABLE_STUDENT_DATA: readonly StudentDataLevel[] = ["block", "clear"];
+// Others reach the agent as aliases unless the person chooses otherwise (ADR-016).
+const DEFAULT_STUDENT_DATA: StudentDataLevel = "pseudonymize";
 
 export function parseScopeSetting(value: string): Scope[] {
   try {
@@ -214,9 +213,6 @@ export function parseScopeSetting(value: string): Scope[] {
 export function parseStudentData(value: string): StudentDataLevel {
   const level = value.trim().toLowerCase();
   if (!(STUDENT_DATA_LEVELS as readonly string[]).includes(level)) throw new ConfigError(`Student data must be one of ${STUDENT_DATA_LEVELS.join(", ")}, not "${value}".`);
-  if (!AVAILABLE_STUDENT_DATA.includes(level as StudentDataLevel)) {
-    throw new ConfigError(`"${level}" isn't available yet: pseudonymization is still to come. Use block (no tools on others' data) or clear (names as Moodle shows them).`);
-  }
   return level as StudentDataLevel;
 }
 
