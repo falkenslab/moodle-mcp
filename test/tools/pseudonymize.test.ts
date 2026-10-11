@@ -33,7 +33,11 @@ function moodle(): { state: FakeMoodleState; graded: Record<string, unknown>[] }
 <td><div><div>Ada Lovelace</div><div><time data-timestamp="1790000000">2 Oct</time></div></div></td><td><div><div>Grace Hopper</div><div><a href="${SITE}mod/forum/discuss.php?d=2&amp;parent=3"><time data-timestamp="1790000600">3 Oct</time></a></div></div></td><td><span>2</span></td></tr></table>`,
     },
     services: {
-      core_user_get_users_by_field: () => [{ id: 3, username: "teacher", fullname: "Teacher Smith" }],
+      // The teacher (the person) by default; anyone by id when asked.
+      core_user_get_users_by_field: ({ values }) => {
+        const names: Record<number, string> = { 3: "Teacher Smith", 7: "Ada Lovelace", 8: "Alan Turing" };
+        return ((values as number[] | undefined) ?? [3]).map((id) => ({ id: Number(id), username: `u${id}`, fullname: names[Number(id)] ?? "Someone" }));
+      },
       tool_mobile_get_public_config: () => ({ sitename: "Test campus" }),
       mod_assign_list_participants: () => [
         { id: 7, fullname: "Ada Lovelace", submitted: true, requiregrading: true, grantedextension: false, submissionstatus: "submitted" },
@@ -214,6 +218,51 @@ ${people.slice(1).map((p) => `<tr class="userrow" data-uid="${p.id}"><th><a clas
     const rows = (report.structuredContent as { rows: { user?: string; grades: unknown[] }[] }).rows;
     assert.deepEqual(rows.map((r) => r.user).sort(), found.filter((p) => p.user).map((p) => p.user).sort());
     assert.doesNotMatch(text(report), /Lovelace|Turing/);
+    await context.close();
+  });
+
+  it("gives senders and conversation members as aliases, and sends by alias", async () => {
+    const { state } = moodle();
+    const sent: Record<string, unknown>[] = [];
+    Object.assign(state.services!, {
+      message_popup_get_popup_notifications: () => ({
+        notifications: [{ id: 16, useridfrom: 7, subject: "Ada Lovelace posted in Loops", fullmessage: "Ada Lovelace (ada@example.org) asks about loops.", smallmessage: "", contexturl: `${SITE}mod/forum/discuss.php?d=4`, timecreated: 1_790_000_100, read: false, component: "mod_forum", eventtype: "posts" }],
+        unreadcount: 1,
+      }),
+      core_message_get_conversation_messages: ({ convid }: Record<string, unknown>) => ({
+        id: convid,
+        members: [{ id: 8, fullname: "Alan Turing" }],
+        messages: [
+          { id: 1, useridfrom: 8, text: "<p>I'm Alan Turing, can I hand in late?</p>", timecreated: 1_790_000_200 },
+          { id: 2, useridfrom: 3, text: "<p>Yes.</p>", timecreated: 1_790_000_300 },
+        ],
+      }),
+      core_message_send_instant_messages: ({ messages }: Record<string, unknown>) => {
+        sent.push(...(messages as Record<string, unknown>[]));
+        return [{ msgid: 3, conversationid: 6, text: "x", timecreated: 1 }];
+      },
+    });
+    const { client, context } = await connect(pseudonymous(), state);
+    const listed = await client.callTool({ name: "list_notifications", arguments: {} });
+    assert.equal(listed.isError, undefined, text(listed));
+    const [note] = (listed.structuredContent as { notifications: { from: { user?: string }; subject: string; text: string }[] }).notifications;
+    assert.ok(ALIAS.test(note!.from.user ?? ""), JSON.stringify(note));
+    assert.match(note!.subject, new RegExp(`^${note!.from.user} posted`));
+    assert.doesNotMatch(text(listed), /Lovelace|ada@example\.org|"userId":7/);
+
+    const read = await client.callTool({ name: "get_conversation", arguments: { conversationId: 6 } });
+    assert.equal(read.isError, undefined, text(read));
+    const conv = read.structuredContent as { members: { user?: string }[]; messages: { from: Record<string, unknown> }[] };
+    const alan = conv.members[0]!.user!;
+    assert.ok(ALIAS.test(alan));
+    assert.deepEqual(conv.messages.map((m) => m.from), [{ user: alan }, { userId: 3, fullName: "Teacher Smith" }]);
+    assert.doesNotMatch(text(read), /Turing/);
+
+    assert.match(text(await client.callTool({ name: "send_message", arguments: { user: alan, text: `Hi ${alan}` } })), /an alias/);
+    const ok = await client.callTool({ name: "send_message", arguments: { user: alan, text: "Yes, until Friday." } });
+    assert.equal(ok.isError, undefined, text(ok));
+    assert.equal(sent[0]?.touserid, 8);
+    assert.doesNotMatch(text(ok), /user 8|Turing/);
     await context.close();
   });
 

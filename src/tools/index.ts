@@ -26,6 +26,7 @@ import { registerListDiscussions } from "./listDiscussions.js";
 import { registerListPending } from "./listPending.js";
 import { registerLogin } from "./login.js";
 import { registerLogout } from "./logout.js";
+import { registerGetConversation, registerListConversations, registerListNotifications, registerMarkNotificationsRead, registerSendMessage } from "./messaging.js";
 import { registerAnswerQuizQuestions, registerFinishQuizAttempt, registerGetAttemptReview, registerGetQuizAttempt, registerGetQuizInfo, registerStartQuizAttempt } from "./quizAttempts.js";
 import { registerCreateQuestion, registerImportQuestions, registerListQuestionBanks, registerListQuestions } from "./questionBank.js";
 import { registerAddQuestionsToQuiz, registerGetQuizStructure } from "./quizStructure.js";
@@ -85,6 +86,11 @@ export const TOOLS: RegisterTool[] = [
   registerReplyToPost,
   registerCreateDiscussion,
   registerSetDiscussionState,
+  registerListNotifications,
+  registerMarkNotificationsRead,
+  registerListConversations,
+  registerGetConversation,
+  registerSendMessage,
   registerCreateActivity,
   registerUpdateActivity,
   registerGetActivitySettings,
