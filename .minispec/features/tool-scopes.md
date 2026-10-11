@@ -13,6 +13,7 @@ The person chooses at start-up which kinds of tools the agent gets (content, stu
 ## Changes
 
 - `config.ts`: `scopes` from `MOODLE_MCP_SCOPES` / `--scopes` (a profile, `all` by default, or a comma list); `configure` takes `scopes` and only accepts a subset of the start-up ones; `server_info` shows them.
+- `MOODLE_MCP_STUDENT_DATA=block` (ADR-016) removes every tool whose driver functions are `others-personal` or `others-write` (per module for activities) and the browser tools, whatever the scopes.
 - `src/tools/scopes.ts`: each tool's scope derived from the driver's categories of the functions it calls (declared next to each tool's registration), strictest wins; `any` → `browser`; session tools always in.
 - `createServer.ts`: tools outside the scopes not registered; narrowing later disables them and sends `list_changed`; a wrapper refuses calls to disabled tools without touching Moodle.
 - Under profiles without `student-data`: `delete_activity` and `delete_section` refuse activities holding others' work (the overview's counts); `download_file` refuses `pluginfile.php` URLs of others' components.

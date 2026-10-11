@@ -9,6 +9,8 @@ The person running the server chooses which kinds of tools exist for the agent, 
 - **Aggregates stay with content.** Counts ("2 of 4 submitted", "2 need grading") in `get_activities_overview` and `get_course_updates` identify no one and help manage the course.
 - **Content without others' work.** Under a profile without `student-data`, `delete_activity` and `delete_section` refuse an activity that holds others' work (submissions, posts, attempts or responses, as the activities overview counts them), and `download_file` refuses files of others' areas (`assignsubmission_*`, `mod_forum`, `user`… by the component in the `pluginfile.php` URL).
 
+- ADR-016's student data policy sets how others' data reaches the agent (`block` removes the `student-data` and `grading` scopes); scopes choose the kinds of actions on top of it.
+
 ## Motivation
 
 A teacher may want an agent that builds content, activities and rubrics but never reads, grades or answers students: data the model doesn't get can't be mishandled, which is stronger than pseudonymizing it (ADR-013). A single "no student data" switch is too coarse (building forums is content, posting in them is communication; defining a rubric is content, grading with it isn't). Scopes the agent could widen with `configure` would protect nothing, so the person sets them where the agent can't reach (the client's server configuration). moodle-driver will keep growing, half of its pending cards into others' data and mixing categories within one area, so classifying by hand would drift: each function declares its data where it's written.

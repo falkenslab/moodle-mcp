@@ -1,5 +1,7 @@
 # ADR-013: Other people's personal data: minimized, and pseudonymous by default
 
+The on/off switch below is replaced by ADR-016's student data policy (`block`, `pseudonymize`, `clear`); the rest stands.
+
 ## Decision
 
 Tools never give other people's contact data (email, phone, address, IP), photos or profile fields, and give activity times only when asked. Beyond that, a pseudonymous mode, on by default (`MOODLE_MCP_PSEUDONYMIZE`, `--pseudonymize` / `--no-pseudonymize`), replaces every other person with a stable alias: the client sees `A-7K3F9Q`, never a name, an email or a Moodle user id, and the person using the server resolves aliases on their own machine. Their own name and data stay visible: they are the one using the agent. Only the person turns it off, at start-up in the client's configuration (with a model that runs locally, say); `configure` can turn it on for the session, never off, or the agent could undo it (the same rule as ADR-015's scopes).
