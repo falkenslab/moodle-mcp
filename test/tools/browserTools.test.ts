@@ -99,6 +99,20 @@ describe("browser tools", { skip: !browser && "no system browser" }, () => {
     await context.close();
   });
 
+  it("reads and acts inside a frame, as a SCORM package runs in the player, and waits for its text", async () => {
+    // Made up: content in an iframe that answers a click a moment later.
+    const inner = `<button onclick="setTimeout(() => document.body.insertAdjacentHTML('beforeend', '<p>Done in the frame</p>'), 300)">Send</button>`;
+    const { client, context } = await connect({ ...logged, bodies: { ...logged.bodies, "/player.php": `<div id="region-main"><iframe srcdoc="${inner.replace(/"/g, "&quot;")}"></iframe></div>` } });
+    await call(client, "browser_navigate", { url: "player.php" });
+    const snapshot = (await call(client, "browser_snapshot")).out.snapshot as string;
+    const send = refOf(snapshot, /button "Send"/);
+    assert.match(send, /^f\d+e\d+$/);
+    assert.equal((await call(client, "browser_click", { ref: send })).error, undefined);
+    assert.equal((await call(client, "browser_wait", { text: "Done in the frame", seconds: 5 })).error, undefined);
+    assert.equal((await call(client, "browser_wait", { textGone: "Done in the frame", seconds: 1 })).error?.includes("didn't go"), true);
+    await context.close();
+  });
+
   it("waits for text, takes screenshots, and names login when the session is gone", async () => {
     const { client, context } = await connect(logged);
     await call(client, "browser_navigate", { url: "form.php" });

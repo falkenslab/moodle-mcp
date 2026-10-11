@@ -298,12 +298,26 @@ export const registerBrowserScreenshot: RegisterTool = (server, context) => {
   );
 };
 
+/**
+ * Until a text shows (or is gone) in any frame of the page: an activity's content often runs in one
+ * (a SCORM package inside the player, an H5P), which the snapshot reads too. Polled, as frames come and go.
+ */
+async function textInFrames(page: Page, text: string, shown: boolean, timeout: number): Promise<boolean> {
+  const until = Date.now() + timeout;
+  for (;;) {
+    const visible = await Promise.all(page.frames().map((frame) => frame.getByText(text).first().isVisible().catch(() => false)));
+    if (visible.some(Boolean) === shown) return true;
+    if (Date.now() >= until) return false;
+    await page.waitForTimeout(250);
+  }
+}
+
 export const registerBrowserWait: RegisterTool = (server, context) => {
   server.registerTool(
     "browser_wait",
     {
       title: "Browser: wait",
-      description: `Wait in the browser tools' tab until a text shows, until it's gone, or for some seconds (at most 30): for pages that load or change on their own. ${FALLBACK}`,
+      description: `Wait in the browser tools' tab until a text shows, until it's gone (in the page or any frame in it, such as a SCORM package's), or for some seconds (at most 30): for pages that load or change on their own. ${FALLBACK}`,
       inputSchema: {
         text: z.string().min(1).optional().describe("Wait until this text shows"),
         textGone: z.string().min(1).optional().describe("Wait until this text is gone"),
@@ -315,13 +329,9 @@ export const registerBrowserWait: RegisterTool = (server, context) => {
     async ({ text, textGone, seconds }) => {
       const page = await siteTab(context);
       const timeout = (seconds ?? 10) * 1000;
-      try {
-        if (text) await page.getByText(text).first().waitFor({ state: "visible", timeout });
-        else if (textGone) await page.getByText(textGone).first().waitFor({ state: "hidden", timeout });
-        else await page.waitForTimeout(timeout);
-      } catch {
-        throw new BrowserToolError(`"${text ?? textGone}" didn't ${text ? "show" : "go"} within ${timeout / 1000} s.`);
-      }
+      const wanted = text ?? textGone;
+      if (wanted === undefined) await page.waitForTimeout(timeout);
+      else if (!(await textInFrames(page, wanted, text !== undefined, timeout))) throw new BrowserToolError(`"${wanted}" didn't ${text ? "show" : "go"} within ${timeout / 1000} s.`);
       return reply(await where(page, context));
     },
   );
