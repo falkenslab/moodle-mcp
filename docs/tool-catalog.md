@@ -129,13 +129,13 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_rubric` | Grading method, rubric or marking guide criteria and levels | R | Page (`grade/grading/manage.php`) or Fragment | T rubric read as text: 6 criteria, 4 levels | Done |
 | `download_submission_files` | Save a participant's submitted files locally | R | Page (`pluginfile.php`) | none | Done via `download_file` |
 | `grade_submission` | Grade (points, scale or rubric levels) with feedback text and files, notifying or not | W | AJAX (`mod_assign_submit_grading_form`, form from the `gradingpanel` fragment) | none yet: no submissions existed; a core need | Done |
-| `grant_extension` | Extend the due date for some participants | W | Form (`view.php?action=grantextension`) | none | — |
+| `grant_extension` | Extend the due date for some participants | W | Form (`view.php?action=grantextension`) | none | Done |
 
 ## Teacher: quizzes and question banks
 
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
-| `get_quiz_results` | Attempts, grades and per-question marks | R | Page (`report.php?mode=overview`) | T quiz overview read | — |
+| `get_quiz_results` | Attempts, grades and per-question marks | R | Page (`report.php?mode=overview`) | T quiz overview read | Done |
 | `get_quiz_structure` | A quiz's slots, pages and questions | R | Page (`mod/quiz/edit.php`) | T 13 quiz editor loads | Done |
 | `list_question_banks` | Banks of a course (per quiz and shared, 5.x) | R | Page (`question/banks.php`) | T bank navigation | Done |
 | `list_questions` | Questions in a bank with type and status | R | Fragment (`core_question` `question_data`) | T | Done |
@@ -143,7 +143,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `create_question` | One question of a given type | W | Form (`question/bank/editquestion/question.php`) | T failed twice | Done |
 | `add_questions_to_quiz` | Add existing or random questions | W | Form (`quiz/edit.php`); AJAX for random (`mod_quiz_add_random_questions`) | T | Done |
 | `update_quiz_settings` | Timing, attempts, review options | W | Form (`modedit.php`) | none | Done via `update_activity` |
-| `set_quiz_override` | Per-user or group overrides | W | AJAX (`mod_quiz_save_overrides`) | none | — |
+| `set_quiz_override` | Per-user or group overrides | W | AJAX (`mod_quiz_save_overrides`) | none | Done (users) |
 
 ## Teacher: forums and communication
 
@@ -152,7 +152,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `list_discussions` (`unansweredOnly`) | Discussions waiting for the teacher | R | Page + AJAX | T "answer the two unanswered threads"; the forum skill depends on it | Done (replies 0) |
 | `reply_to_post` | Answer a student | W | AJAX | T asked, never done | Done |
 | `post_announcement` | Post in the announcements forum | W | Form (`post.php`) | none | Done as `create_discussion` |
-| `set_discussion_state` | Pin, lock | W | AJAX (`mod_forum_set_pin_state`, `set_lock_state`) | none | — |
+| `set_discussion_state` | Pin, lock | W | AJAX (`mod_forum_set_pin_state`, `set_lock_state`) | none | Done |
 | `create_event` | Course calendar event | W | AJAX (`core_calendar_submit_create_update_form`) | none | Done |
 | `list_events` | Upcoming calendar events, in a course or all | R | AJAX (`core_calendar_get_calendar_upcoming_view`) | none | Done |
 | `delete_event` | Delete a course or user event | W | AJAX (`core_calendar_delete_calendar_events`) | none | Done |
@@ -161,15 +161,15 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
-| `list_participants` | Participants with roles, groups and last access | R | Fragment (participants dynamic table) | T 3 sessions, roles told apart by hand | — |
-| `list_inactive_participants` | Who hasn't accessed since a date | R | Same as above | T last access read from the table | — |
-| `list_groups` | Groups and members | R | AJAX (`core_group_get_course_groups`) + Page | none | — |
-| `get_completion_report` | Activity completion per participant | R | Page (`report/progress/index.php`) | T progress monitoring skill | — |
-| `get_grader_report` | Grade items and every participant's grades | R | Page (`grade/report/grader/index.php`) | T 3 sessions | — |
+| `list_participants` | Participants with roles, groups and last access | R | Fragment (participants dynamic table) | T 3 sessions, roles told apart by hand | Done |
+| `list_inactive_participants` | Who hasn't accessed since a date | R | Same as above | T last access read from the table | Done (list_participants inactiveSince) |
+| `list_groups` | Groups and members | R | AJAX (`core_group_get_course_groups`) + Page | none | Done |
+| `get_completion_report` | Activity completion per participant | R | Page (`report/progress/index.php`) | T progress monitoring skill | Done |
+| `get_grader_report` | Grade items and every participant's grades | R | Page (`grade/report/grader/index.php`) | T 3 sessions | Done |
 | `get_gradebook_setup` | Categories, items, weights, aggregation | R | AJAX (`core_grades_get_grade_tree`) | T read by script to plan weights | Done |
 | `update_grade_item` | Category, weight, max grade of an item | W | Form (gradebook setup) | T planned weights, done by hand | Done |
 | `add_grade_category` | New gradebook category | W | AJAX (`core_form_dynamic_form` `add_category`) | none | Done |
-| `override_completion` | Mark an activity complete for a participant | W | AJAX (`core_completion_override_activity_completion_status`) | none | — |
+| `override_completion` | Mark an activity complete for a participant | W | AJAX (`core_completion_override_activity_completion_status`) | none | Done |
 
 ## Browser fallback and follow mode (ADR-010, ADR-011)
 

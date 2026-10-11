@@ -13,13 +13,6 @@ Each Moodle area moodle-driver gains becomes MCP tools here: a schema, a descrip
 
 | moodle-driver card | Tools | Notes |
 | --- | --- | --- |
-| `completion` | `override_completion`, `get_completion_report` | Report pseudonymized; users by alias (`set_completion` is in) |
-| `extensions-and-overrides` | `grant_extension`, `set_quiz_override` | Users by alias |
-| `quiz-results` | `get_quiz_results` | Pseudonymized |
-| `forum-moderation` | `set_discussion_state` | Idempotent; returns authors, so through `people.ts` |
-| `participants-and-groups` | `list_participants` (covers `list_inactive_participants`), `list_groups` | Pseudonymized, no emails |
-| `gradebook` | `get_grader_report` | Pseudonymized (the setup tools are in) |
-| `rubric` | `rubric`, `guide` and `remarks` in `grade_submission` (criterion ids from `get_rubric`) | `get_rubric` is in |
 | `messages-and-notifications` | `list_notifications`, `mark_notifications_read`, `list_conversations`, `get_conversation`, `send_message` | Pseudonymized; confirm before sending |
 
 - Each tool's scope (ADR-015) comes from the driver categories of the functions it calls: list them in `TOOL_FUNCTIONS`.
