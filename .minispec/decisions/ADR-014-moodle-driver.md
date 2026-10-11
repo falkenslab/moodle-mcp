@@ -13,4 +13,4 @@ The existing Moodle MCP servers and npm clients (moodle-client, moodle-webservic
 - moodle-mcp keeps what only an MCP server needs: `configure`, the instructions, tool schemas and descriptions, follow mode's page per tool, the browser fallback tools.
 - The driver takes plain options (site URL, profile folder, channel, headless, trail) instead of moodle-mcp's `Config`; `Config` satisfies its `BrowserOptions`, so `configure` keeps working.
 - Its errors name no tool: `src/tools/errors.ts` explains them in this server's terms (call `login`, `MOODLE_MCP_*`).
-- Its decisions moved there (this repository's ADR-001, 002, 007, 008 and 012 point to them); new Moodle areas are its feature cards, and the tools that expose them are tracked here (`driver-tools`).
+- Its decisions moved there (this repository's ADR-001, 002, 007, 008 and 012 point to them); new Moodle areas are its feature cards, and the tools that expose them are tracked here (a `driver-tools` card while there are areas left to expose).

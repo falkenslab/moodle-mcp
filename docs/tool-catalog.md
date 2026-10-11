@@ -1,5 +1,5 @@
 # Tool catalog
-Candidate domain tools for moodle-mcp, by use case, for teachers and students. It's a roadmap, not a commitment: each tool gets its own MiniSpec feature when its turn comes. Since 9 October 2026 the Moodle work behind each tool (the "How" column) is moodle-driver's, with its own feature cards; this server's `driver-tools` card tracks which tools expose them.
+Candidate domain tools for moodle-mcp, by use case, for teachers and students. It's a roadmap, not a commitment: each tool gets its own MiniSpec feature when its turn comes. Since 9 October 2026 the Moodle work behind each tool (the "How" column) is moodle-driver's, with its own feature cards; this server's `driver-tools` card tracks which tools expose them, while there are areas left (every area of moodle-driver 0.3 is exposed since 11 October 2026).
 
 ## Sources
 
@@ -48,11 +48,11 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_activities_overview` | Per type, the course's activities with due dates, submissions and what needs grading | R | AJAX (`core_courseformat_get_overview_information`, 5.x) | T "are there submissions pending to grade?" | Done |
 | `list_deadlines` | Upcoming due dates in one course or all | R | AJAX (`core_calendar_get_action_events_by_timesort`) | S deadlines read off course pages | Done (action events: what the person has to do) |
 | `get_course_updates` | What changed in a course since a date | R | AJAX (`core_course_get_updates_since`) | none; useful at session start | Done |
-| `list_notifications` | My notifications | R | AJAX (`message_popup_get_popup_notifications`) | S forum reply notifications | — |
-| `mark_notifications_read` | Mark them read | W | AJAX | S | — |
-| `list_conversations` | My message conversations | R | AJAX (`core_message_get_conversations`) | none | — |
-| `get_conversation` | Messages of one conversation | R | AJAX | none | — |
-| `send_message` | Message a user | W | AJAX (`core_message_send_instant_messages`) | none | — |
+| `list_notifications` | My notifications | R | AJAX (`message_popup_get_popup_notifications`) | S forum reply notifications | Done |
+| `mark_notifications_read` | Mark them read | W | AJAX | S | Done |
+| `list_conversations` | My message conversations | R | AJAX (`core_message_get_conversations`) | none | Done |
+| `get_conversation` | Messages of one conversation | R | AJAX | none | Done |
+| `send_message` | Message a user | W | AJAX (`core_message_send_instant_messages`) | none | Done |
 
 ## Student: content and progress
 

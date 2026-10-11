@@ -14,7 +14,7 @@ Create a temporal feature document under `.minispec/features/`.
 3. Decide where it belongs: Moodle work (reading or writing something in Moodle)
    is a card in `../moodle-driver`, written from its own session; here go cards for
    what the MCP server adds (tools, settings, instructions, wrappers) and a row in
-   `driver-tools` for the tools a driver card will need. Personal data: see
+   `driver-tools` for the tools a driver card will need (a new card when it's gone). Personal data: see
    ADR-013 and ADR-016 (`src/people.ts`).
 4. Derive a kebab-case slug for the feature (e.g. `github-sync`). The file is
    `.minispec/features/<slug>.md`. If it already exists, update it instead of

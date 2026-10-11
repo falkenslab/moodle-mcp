@@ -7,7 +7,7 @@ description: Checklist for adding or changing a moodle-mcp tool - what goes in m
 
 ## 1. The Moodle work is the driver's
 
-A tool is a schema, a description, annotations and one call to `@falkenslab/moodle-driver` (ADR-014): the main entry for operations, `/internals` only for primitives (and then the tool is `any`, see ADR-015). If the tool needs Moodle logic the driver doesn't have (a service call, a page read, a form), that's a driver change first, in its own repository and normally in its own session (see moodle-driver's feature cards; this repo's `driver-tools` card maps them to tools). Don't put selectors, service names or `page.evaluate` in a tool. A new driver export reaches this server through a driver release and a version bump here.
+A tool is a schema, a description, annotations and one call to `@falkenslab/moodle-driver` (ADR-014): the main entry for operations, `/internals` only for primitives (and then the tool is `any`, see ADR-015). If the tool needs Moodle logic the driver doesn't have (a service call, a page read, a form), that's a driver change first, in its own repository and normally in its own session (see moodle-driver's feature cards; this repo's `driver-tools` card maps them to tools while there are areas left to expose). Don't put selectors, service names or `page.evaluate` in a tool. A new driver export reaches this server through a driver release and a version bump here.
 
 ## 2. Write the tool
 
