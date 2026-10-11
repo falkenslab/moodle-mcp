@@ -21,6 +21,10 @@ export const FOLLOWED_PAGES: Record<string, (args: Args) => string> = {
   get_submissions: (a) => `mod/assign/view.php?id=${a.assignmentId}&action=grading`,
   // By alias (pseudonymous mode) the user id isn't known here: the grading list instead.
   grade_submission: (a) => (a.userId ? `mod/assign/view.php?id=${a.assignmentId}&action=grader&userid=${a.userId}` : `mod/assign/view.php?id=${a.assignmentId}&action=grading`),
+  get_completion_report: (a) => `report/progress/index.php?course=${a.courseId}`,
+  list_participants: (a) => `user/index.php?id=${a.courseId}`,
+  list_groups: (a) => `group/index.php?id=${a.courseId}`,
+  set_discussion_state: (a) => `mod/forum/view.php?id=${a.forumId}`,
   get_rubric: (a) => `mod/assign/view.php?id=${a.assignmentId}`,
   list_events: (a) => `calendar/view.php?view=upcoming${a.courseId ? `&course=${a.courseId}` : ""}`,
   create_event: (a) => `calendar/view.php?view=upcoming&course=${a.courseId}`,

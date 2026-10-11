@@ -4,6 +4,7 @@
 import type { BrowserContext, Page } from "playwright-core";
 import { redact, remember, resolve } from "@falkenslab/pseudonym";
 import { whoAmI } from "@falkenslab/moodle-driver";
+import { z } from "zod";
 import type { Config } from "./config.js";
 
 // An alias as pseudonym gives it: `A-` and Crockford's base32.
@@ -118,4 +119,34 @@ export async function pageText(config: Config, page: Page, siteUrl: string, valu
   const unique = [...new Map(linked.map((p) => [p.userId, p])).values()];
   if (unique.length > 0) await people(config, page.context(), siteUrl, unique);
   return Promise.all(values.map((value) => text(config, siteUrl, value.replace(PROFILE_ID, "$1[user]").replace(USER_PARAM, "$1[user]"))));
+}
+
+/** A person as tools give them: `user` (the alias) under pseudonymize, else `userId` and `fullName`. */
+export const personFields = {
+  user: z.string().optional().describe("The person's alias, when the server pseudonymizes; tools that act on someone take it"),
+  userId: z.number().int().optional().describe("The person's user id, when the server shows names (or for the person themselves)"),
+  fullName: z.string().optional(),
+};
+
+export function shown(person: Person): { user?: string; userId?: number; fullName?: string } {
+  return person.alias ? { user: person.alias } : { userId: person.userId, fullName: person.fullName };
+}
+
+/** Someone a write tool acts on, as the agent gives them: `user` (an alias) under pseudonymize, else `userId`. */
+export const targetFields = {
+  user: z.string().optional().describe("The participant's alias, as the reading tools give it when the server pseudonymizes"),
+  userId: z.number().int().positive().optional().describe("The participant's user id, when the server shows names"),
+};
+
+/** The Moodle user id behind a write tool's target, checked against the level: an alias under pseudonymize, an id otherwise. */
+export async function targetUserId(config: Config, siteUrl: string, { user, userId }: { user?: string; userId?: number }): Promise<number> {
+  const pseudonymous = pseudonymizing(config);
+  if (pseudonymous ? user === undefined || userId !== undefined : userId === undefined || user !== undefined)
+    throw new Error(pseudonymous ? "This server pseudonymizes: give the participant as user, the alias the reading tools give." : "Give the participant as userId, as the reading tools give it.");
+  return user !== undefined ? userIdOf(siteUrl, user) : userId!;
+}
+
+/** How a result names the target: the alias the agent gave, or the user id. */
+export function targetName({ user, userId }: { user?: string; userId?: number }): string {
+  return user ?? `user ${userId}`;
 }

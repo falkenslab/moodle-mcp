@@ -6,7 +6,7 @@ import { after, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
-import { PANEL, SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
+import { PANEL, SITE, launchTestBrowser, moodlePage, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 import type { Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
@@ -168,6 +168,52 @@ describe("pseudonymous mode", { skip: !browser && "no system browser" }, () => {
     assert.match(text(await call("browser_click", { ref: refOf(/button "Save"/) })), /took effect.*pseudonymizes them/);
     assert.equal(saved, 1);
     assert.match(text(await call("browser_screenshot")), /disabled|outside what this server allows/);
+    await context.close();
+  });
+
+  it("gives participants and grades as aliases, the person themselves by name", async () => {
+    const { state } = moodle();
+    const people = [
+      { id: 3, name: "Teacher Smith", roles: [3], groups: [] as number[] },
+      { id: 7, name: "Ada Lovelace", roles: [5], groups: [1] },
+      { id: 8, name: "Alan Turing", roles: [5], groups: [] as number[] },
+    ];
+    state.bodies!["/grade/report/grader/index.php"] = `<table id="user-grades"><tbody><tr class="heading"><th id="studentheader">Name</th><th class="item catlevel2 i12" data-itemid="12"><a class="gradeitemheader" href="${SITE}mod/quiz/view.php?id=27">Quiz one</a></th></tr>
+${people.slice(1).map((p) => `<tr class="userrow" data-uid="${p.id}"><th><a class="username" href="${SITE}user/view.php?id=${p.id}&amp;course=5">${p.name}</a></th><td class="gradecell" data-itemid="12"><span class="gradevalue">7.00</span></td></tr>`).join("")}</tbody></table>`;
+    Object.assign(state.services!, {
+      core_table_get_dynamic_table_content: (args: Record<string, unknown>) => {
+        const filters = args.filters as { name: string; values: number[] }[];
+        const value = (name: string) => filters.find((f) => f.name === name)?.values[0];
+        const rows = people.filter((p) => (value("roles") === undefined || p.roles.includes(value("roles")!)) && (value("groups") === undefined || p.groups.includes(value("groups")!)));
+        const tr = rows.map((p) => `<tr><td><input id="user${p.id}" type="checkbox" class="usercheckbox"></td><th scope="row"><a href="${SITE}user/view.php?id=${p.id}&amp;course=5">${p.name}</a></th></tr>`).join("");
+        return { html: `<div data-table-total-rows="${rows.length}"><table><tbody>${tr}</tbody></table></div>`, warnings: [] };
+      },
+      core_group_get_groups_for_selector: () => ({ groups: [{ id: 1, name: "Ada's team" }] }),
+      core_group_get_course_groups: () => [{ id: 1, name: "Ada's team" }],
+      core_group_get_group_members: () => [{ groupid: 1, userids: [7] }],
+    });
+    const context = await browser!.newContext();
+    await serveFakeMoodle(context, state);
+    const filters = `<select data-field-name="roles"><option value="3">Teacher</option><option value="5">Student</option></select><select data-field-name="groups"><option value="1">Ada's team</option></select>`;
+    await context.route(`${SITE}user/index.php**`, (route) => route.fulfill({ status: 200, contentType: "text/html", body: moodlePage({ userId: 3, heading: "Participants", bodyId: "page-course-view-participants", body: filters }) }));
+    const server = createServer({ config: pseudonymous(), browser: fakeBrowserManager({ context: async () => context }) });
+    const client = new Client({ name: "test", version: "0.0.0" });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+
+    const listed = await client.callTool({ name: "list_participants", arguments: { courseId: 5 } });
+    assert.equal(listed.isError, undefined, text(listed));
+    const found = (listed.structuredContent as { participants: { user?: string; fullName?: string }[] }).participants;
+    assert.equal(found.length, 3);
+    assert.equal(found.find((p) => p.fullName)?.fullName, "Teacher Smith");
+    assert.equal(found.filter((p) => p.user && ALIAS.test(p.user)).length, 2);
+    assert.doesNotMatch(text(listed), /Lovelace|Turing|Ada's|"userId":[78]/);
+
+    const report = await client.callTool({ name: "get_grader_report", arguments: { courseId: 5 } });
+    assert.equal(report.isError, undefined, text(report));
+    const rows = (report.structuredContent as { rows: { user?: string; grades: unknown[] }[] }).rows;
+    assert.deepEqual(rows.map((r) => r.user).sort(), found.filter((p) => p.user).map((p) => p.user).sort());
+    assert.doesNotMatch(text(report), /Lovelace|Turing/);
     await context.close();
   });
 

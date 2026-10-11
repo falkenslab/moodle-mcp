@@ -1,8 +1,10 @@
+import { registerGrantExtension, registerOverrideCompletion, registerSetDiscussionState, registerSetQuizOverride } from "./actOnParticipants.js";
 import { registerCreateActivity, registerUpdateActivity } from "./activityForms.js";
 import { registerCreateEvent, registerDeleteEvent, registerListEvents } from "./calendar.js";
 import { registerGetAssignment, registerSaveSubmission, registerSubmitAssignment } from "./assignSubmission.js";
 import { BROWSER_TOOLS } from "./browserTools.js";
 import { registerConfigure } from "./configure.js";
+import { registerGetCompletionReport, registerGetGraderReport, registerGetQuizResults, registerListGroups, registerListParticipants } from "./courseParticipants.js";
 import { registerGetActivitiesOverview, registerGetCourseUpdates, registerListDeadlines } from "./courseOverview.js";
 import { registerGetActivitySettings, registerUpdateCourse } from "./courseSettings.js";
 import { registerAddSection, registerDeleteActivity, registerDeleteSection, registerDuplicateActivity, registerEditActivity, registerEditSection } from "./courseLayout.js";
@@ -43,6 +45,11 @@ export const TOOLS: RegisterTool[] = [
   registerListCourses,
   registerGetCourseStructure,
   registerGetActivityContent,
+  registerListParticipants,
+  registerListGroups,
+  registerGetGraderReport,
+  registerGetCompletionReport,
+  registerOverrideCompletion,
   registerListAssignments,
   registerGetSubmissions,
   registerListDiscussions,
@@ -67,13 +74,17 @@ export const TOOLS: RegisterTool[] = [
   registerAnswerQuizQuestions,
   registerFinishQuizAttempt,
   registerGetAttemptReview,
+  registerGetQuizResults,
+  registerSetQuizOverride,
   registerGetAssignment,
   registerSaveSubmission,
   registerSubmitAssignment,
   registerGetRubric,
   registerGradeSubmission,
+  registerGrantExtension,
   registerReplyToPost,
   registerCreateDiscussion,
+  registerSetDiscussionState,
   registerCreateActivity,
   registerUpdateActivity,
   registerGetActivitySettings,
