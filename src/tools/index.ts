@@ -29,6 +29,7 @@ import { registerCreateQuestion, registerImportQuestions, registerListQuestionBa
 import { registerAddQuestionsToQuiz, registerGetQuizStructure } from "./quizStructure.js";
 import { registerServerInfo } from "./serverInfo.js";
 import { registerShowBrowser } from "./showBrowser.js";
+import { registerAnswerChoice, registerAnswerLessonPage, registerGetChoice, registerGetH5PActivity, registerGetLessonPage, registerSetCompletion } from "./studentActivities.js";
 import { registerGetSurvey, registerSubmitSurvey } from "./surveys.js";
 import type { RegisterTool } from "./types.js";
 
@@ -50,6 +51,12 @@ export const TOOLS: RegisterTool[] = [
   registerDownloadFile,
   registerGetSurvey,
   registerSubmitSurvey,
+  registerGetChoice,
+  registerAnswerChoice,
+  registerGetLessonPage,
+  registerAnswerLessonPage,
+  registerGetH5PActivity,
+  registerSetCompletion,
   registerListPending,
   registerGetActivitiesOverview,
   registerListDeadlines,
