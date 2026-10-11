@@ -10,7 +10,7 @@ const inputSchema = {
     .describe('Which courses by their dates: "all" (default), "inprogress", "future" or "past"'),
 };
 
-const course = z.object({
+export const course = z.object({
   id: z.number().int(),
   shortname: z.string(),
   fullname: z.string(),
