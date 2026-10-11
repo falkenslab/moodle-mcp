@@ -52,6 +52,8 @@ To see who an alias is, run `npx @falkenslab/pseudonym whois A-7KQ2XM` in your o
 - **Back up the key** (`pseudonym key export`): if it's lost, every alias changes and your notes no longer match anyone.
 - **Keep the agent away from them**: in your client's permissions, deny reading that folder and running the `pseudonym` command, or the agent could look the aliases up.
 
+**Before choosing `clear`.** What the model sees with names can stay on the client's side: its memory, its history, a knowledge base. Going back to `pseudonymize` doesn't remove it. The server can't see or clear any of that, and aliases alone won't protect students once their names are there: the agent can match them through what isn't hidden (post ids, dates, content). Use `clear` in a client project or configuration with its own memory, never shared with a model that runs elsewhere. If they were mixed already, delete that memory.
+
 ## Logging in
 
 When a tool reports that there is no session, the client calls `login`: a browser window opens at the site's login page and the tool waits (5 minutes by default) until you log in there yourself, SSO included. The session is kept in the profile folder, together with `moodle-mcp-session-cookies.json` (Chromium forgets session cookies on close, so the server saves them), and survives restarts until Moodle ends it.
