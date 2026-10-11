@@ -65,7 +65,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `download_media` | Save a video locally for transcription | R | Page | S 95 transcription runs | Done via `download_file` (same host) or the media's URL |
 | `get_my_grades` | My grades, ranges and feedback in a course | R | Page (`/grade/report/user/index.php`) | S 9 sessions on progress and grades | Done |
 | `list_pending` | What I still have to do: incomplete activities, restrictions, due dates | R | AJAX (`get_state`) + `get_my_grades` | S "what activities do I have left?"; the teacher-only progress report gave 404 | Done |
-| `set_completion` | Mark an activity done or not done (manual completion) | W | AJAX (`core_completion_update_activity_completion_status_manually`) | none | — |
+| `set_completion` | Mark an activity done or not done (manual completion) | W | AJAX (`core_completion_update_activity_completion_status_manually`) | none | Done |
 
 ## Student: doing activities
 
@@ -87,10 +87,11 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `create_discussion` | Start a discussion, with attachments | W | Form (`post.php`) | S help request with a screenshot | Done |
 | `get_questionnaire` | A survey's questions (mod_questionnaire, mod_feedback) | R | Page | S end-of-course survey in every course, 29 questions | Done as `get_survey` |
 | `submit_questionnaire` | Answer and submit it, retrying server errors and checking it was recorded | W | Form | S 19–38 selects per run, 502 errors four times | Done as `submit_survey` (a 5xx isn't retried: it says to check with `get_survey`) |
-| `answer_choice` | Answer a choice activity | W | Form | none | — |
-| `get_lesson_page` | Current page of a lesson | R | Page | S lesson gating an escape room | — |
-| `answer_lesson_page` | Answer it and move on | W | Form | S | — |
-| `get_h5p_activity` | H5P content type, attempts, score | R | Page | S 93 H5P pages; solving stays in the browser | — |
+| `get_choice` | A choice's options, whether it's open, the person's answer | R | Page | none | Done |
+| `answer_choice` | Answer a choice activity | W | Form | none | Done |
+| `get_lesson_page` | Current page of a lesson | R | Page | S lesson gating an escape room | Done |
+| `answer_lesson_page` | Answer it and move on | W | Form | S | Done |
+| `get_h5p_activity` | H5P content type, attempts, score | R | Page | S 93 H5P pages; solving stays in the browser | Done |
 
 ## Teacher: building the course
 
