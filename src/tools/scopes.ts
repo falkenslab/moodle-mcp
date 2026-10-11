@@ -88,6 +88,9 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   get_lesson_page: ["lessonPage"],
   answer_lesson_page: ["answerLessonPage"],
   get_h5p_activity: ["h5pActivity"],
+  get_scorm: ["scorm"],
+  // It leaves the browser tools' tab in the player, for them to do the package: the fallback's scope too.
+  open_scorm: ["openScorm", "BrowserManager.tab"],
   set_completion: ["setCompletion"],
   get_activity_settings: ["activitySettings"],
   update_course: ["updateCourse"],

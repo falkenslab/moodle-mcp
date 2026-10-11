@@ -30,6 +30,7 @@ import { registerGetConversation, registerListConversations, registerListNotific
 import { registerAnswerQuizQuestions, registerFinishQuizAttempt, registerGetAttemptReview, registerGetQuizAttempt, registerGetQuizInfo, registerStartQuizAttempt } from "./quizAttempts.js";
 import { registerCreateQuestion, registerImportQuestions, registerListQuestionBanks, registerListQuestions } from "./questionBank.js";
 import { registerAddQuestionsToQuiz, registerGetQuizStructure } from "./quizStructure.js";
+import { registerGetScorm, registerOpenScorm } from "./scorm.js";
 import { registerServerInfo } from "./serverInfo.js";
 import { registerShowBrowser } from "./showBrowser.js";
 import { registerAnswerChoice, registerAnswerLessonPage, registerGetChoice, registerGetH5PActivity, registerGetLessonPage, registerSetCompletion } from "./studentActivities.js";
@@ -64,6 +65,8 @@ export const TOOLS: RegisterTool[] = [
   registerGetLessonPage,
   registerAnswerLessonPage,
   registerGetH5PActivity,
+  registerGetScorm,
+  registerOpenScorm,
   registerSetCompletion,
   registerListPending,
   registerGetActivitiesOverview,
