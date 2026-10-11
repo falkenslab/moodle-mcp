@@ -229,9 +229,17 @@ ${people.slice(1).map((p) => `<tr class="userrow" data-uid="${p.id}"><th><a clas
         notifications: [{ id: 16, useridfrom: 7, subject: "Ada Lovelace posted in Loops", fullmessage: "Ada Lovelace (ada@example.org) asks about loops.", smallmessage: "", contexturl: `${SITE}mod/forum/discuss.php?d=4`, timecreated: 1_790_000_100, read: false, component: "mod_forum", eventtype: "posts" }],
         unreadcount: 1,
       }),
+      // Every member, the person included; the messages' own members are only their senders.
+      core_message_get_conversation_members: () => [
+        { id: 3, fullname: "Teacher Smith" },
+        { id: 8, fullname: "Alan Turing" },
+      ],
       core_message_get_conversation_messages: ({ convid }: Record<string, unknown>) => ({
         id: convid,
-        members: [{ id: 8, fullname: "Alan Turing" }],
+        members: [
+          { id: 8, fullname: "Alan Turing" },
+          { id: 3, fullname: "Teacher Smith" },
+        ],
         messages: [
           { id: 1, useridfrom: 8, text: "<p>I'm Alan Turing, can I hand in late?</p>", timecreated: 1_790_000_200 },
           { id: 2, useridfrom: 3, text: "<p>Yes.</p>", timecreated: 1_790_000_300 },
