@@ -30,7 +30,10 @@ describe("loadConfig", () => {
       headless: false,
       downloadBrowser: false,
       trail: "fast",
-      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment" },
+      scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"],
+      studentData: "clear",
+      limits: { scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"], studentData: "clear" },
+      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment", scopes: "default", studentData: "default" },
     });
   });
 
@@ -44,7 +47,7 @@ describe("loadConfig", () => {
     assert.equal(config.channel, "chromium");
     assert.equal(config.headless, false);
     assert.equal(config.downloadBrowser, false);
-    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument", trail: "default" });
+    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument", trail: "default", scopes: "default", studentData: "default" });
   });
 
   it("starts without a site, and treats empty variables as unset", () => {

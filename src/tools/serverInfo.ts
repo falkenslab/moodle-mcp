@@ -2,6 +2,7 @@ import { chromium } from "playwright-core";
 import { z } from "zod";
 import { redactUrl } from "../config.js";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "../version.js";
+import { SCOPES, STUDENT_DATA_LEVELS, activeScopes } from "./scopes.js";
 import type { RegisterTool, ToolContext } from "./types.js";
 
 const source = z.enum(["configure", "argument", "environment", "default"]);
@@ -15,8 +16,10 @@ export const serverInfoSchema = {
   headless: z.boolean(),
   downloadBrowser: z.boolean().describe("Whether Chromium may be downloaded when no system browser is found"),
   trail: z.enum(["realistic", "fast"]).describe("How student tools view and do things: through the real pages at a human pace, or as fast as possible"),
+  scopes: z.array(z.enum(SCOPES)).describe("The kinds of tools in force (ADR-015), student data's blocks applied"),
+  studentData: z.enum(STUDENT_DATA_LEVELS).describe("How others' data reaches the agent: block (no tools on it), pseudonymize or clear (ADR-016)"),
   sources: z
-    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source })
+    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source })
     .describe("Where each setting came from: configure, argument, environment or default"),
   visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
   browserOpen: z.boolean().describe("Whether the browser is running"),
@@ -40,6 +43,8 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     headless: config.headless,
     downloadBrowser: config.downloadBrowser,
     trail: config.trail,
+    scopes: [...activeScopes(config)],
+    studentData: config.studentData,
     sources: { ...config.sources },
     visible: browser.visible(),
     browserOpen: openChannel !== undefined,

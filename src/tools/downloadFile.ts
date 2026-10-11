@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { downloadFile } from "@falkenslab/moodle-driver";
 import { onSite } from "./reply.js";
+import { OutOfScopeError, holdsOthersFiles, studentDataAllowed } from "./scopes.js";
 import type { RegisterTool } from "./types.js";
 
 export const registerDownloadFile: RegisterTool = (server, { config, browser }) => {
@@ -18,6 +19,10 @@ export const registerDownloadFile: RegisterTool = (server, { config, browser }) 
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
     async ({ url, destDir }) => {
+      // Without student data, only what teachers made: never a submission, an attachment or someone's draft (ADR-015).
+      if (!studentDataAllowed(config) && holdsOthersFiles(new URL(url))) {
+        throw new OutOfScopeError("That file belongs to someone's work (a submission, a forum attachment, a user's files): this server is configured without students' data.");
+      }
       const output = await downloadFile(...(await onSite(config, browser)), url, destDir);
       return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: { ...output } };
     },

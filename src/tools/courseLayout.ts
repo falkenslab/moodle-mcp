@@ -1,9 +1,27 @@
 // The course layout tools: one file for six small tools that share their schemas and result.
+import type { BrowserContext } from "playwright-core";
 import { z } from "zod";
+import { courseState, type CourseState } from "@falkenslab/moodle-driver/internals";
+import type { Config } from "../config.js";
 import { ACTIVITY_VISIBILITIES, addSection, deleteActivity, deleteSection, duplicateActivity, editActivity, editSection } from "@falkenslab/moodle-driver";
 import { section } from "./getCourseStructure.js";
 import { onSite, reply } from "./reply.js";
+import { OutOfScopeError, holdsOthersWork, studentDataAllowed } from "./scopes.js";
 import type { RegisterTool } from "./types.js";
+
+/**
+ * Without student data, deleting is refused for activities of modules that may hold others' work
+ * (submissions, posts, attempts): it would destroy what the agent isn't allowed to see (ADR-015).
+ */
+async function refuseOthersWork(context: BrowserContext, siteUrl: string, config: Config, courseId: number, which: (cm: CourseState["cm"][number]) => boolean): Promise<void> {
+  if (studentDataAllowed(config)) return;
+  const risky = (await courseState(context, siteUrl, courseId)).cm.filter(which).filter((cm) => holdsOthersWork(cm.module));
+  if (risky.length > 0) {
+    throw new OutOfScopeError(
+      `Not deleted: ${risky.map((cm) => `"${cm.name}" (${cm.module})`).join(", ")} may hold students' work, and this server is configured without students' data. The person can delete it in Moodle.`,
+    );
+  }
+}
 
 const courseId = z.number().int().positive().describe("The course's id, as list_courses gives it");
 const activityId = z.number().int().positive().describe("The activity's id (course module id), as get_course_structure gives it");
@@ -63,7 +81,11 @@ export const registerDeleteActivity: RegisterTool = (server, { config, browser }
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     },
-    async ({ courseId, activityId }) => reply(await deleteActivity(...(await onSite(config, browser)), courseId, activityId)),
+    async ({ courseId, activityId }) => {
+      const [context, siteUrl] = await onSite(config, browser);
+      await refuseOthersWork(context, siteUrl, config, courseId, (cm) => Number(cm.id) === activityId);
+      return reply(await deleteActivity(context, siteUrl, courseId, activityId));
+    },
   );
 };
 
@@ -111,6 +133,10 @@ export const registerDeleteSection: RegisterTool = (server, { config, browser })
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     },
-    async ({ courseId, sectionId }) => reply(await deleteSection(...(await onSite(config, browser)), courseId, sectionId)),
+    async ({ courseId, sectionId }) => {
+      const [context, siteUrl] = await onSite(config, browser);
+      await refuseOthersWork(context, siteUrl, config, courseId, (cm) => Number(cm.sectionid) === sectionId);
+      return reply(await deleteSection(context, siteUrl, courseId, sectionId));
+    },
   );
 };

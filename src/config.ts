@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { CHANNELS, MoodleUrlError, TRAILS, parseSiteUrl, type Channel, type Trail } from "@falkenslab/moodle-driver";
 import { z } from "zod";
+import { PROFILES, STUDENT_DATA_LEVELS, parseScopes, type Scope, type StudentDataLevel } from "./tools/scopes.js";
 
 // Channels and trails are the driver's (its ADR-001 and ADR-005); the server only picks among them.
 export { CHANNELS, SYSTEM_CHANNELS, TRAILS, type Channel, type Trail } from "@falkenslab/moodle-driver";
@@ -28,7 +29,22 @@ export interface Config {
   headless: boolean;
   /** How student tools leave their trail (ADR-012). */
   trail: Trail;
-  sources: { moodleUrl?: SettingSource; profileDir: SettingSource; channel: SettingSource; headless: SettingSource; downloadBrowser: SettingSource; trail: SettingSource };
+  /** The kinds of tools the agent gets (ADR-015). */
+  scopes: Scope[];
+  /** How others' data reaches the agent (ADR-016). */
+  studentData: StudentDataLevel;
+  /** What the person set at start-up: configure can narrow below it, never go past it. */
+  limits: { scopes: Scope[]; studentData: StudentDataLevel };
+  sources: {
+    moodleUrl?: SettingSource;
+    profileDir: SettingSource;
+    channel: SettingSource;
+    headless: SettingSource;
+    downloadBrowser: SettingSource;
+    trail: SettingSource;
+    scopes: SettingSource;
+    studentData: SettingSource;
+  };
 }
 
 /** A setting invalid at startup (the server stops with this message) or in `configure`. */
@@ -54,6 +70,10 @@ Options (each overrides its environment variable):
   --headless / --headed Run the browser without a window     MOODLE_MCP_HEADLESS (default: true)
   --no-download-browser Never download Chromium              MOODLE_MCP_DOWNLOAD_BROWSER (default: true)
   --trail <mode>        Student tools: realistic or fast     MOODLE_MCP_TRAIL (default: realistic)
+  --scopes <list>       Kinds of tools: a profile (all, teacher, student, content) or scopes
+                        (content, student-data, grading, communication, as-student, browser)
+                                                             MOODLE_MCP_SCOPES (default: all)
+  --student-data <lvl>  Others' data: block or clear         MOODLE_MCP_STUDENT_DATA (default: clear)
   --help                Show this help
   --version             Show the version`;
 
@@ -110,6 +130,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         headed: { type: "boolean" },
         "no-download-browser": { type: "boolean" },
         trail: { type: "string" },
+        scopes: { type: "string" },
+        "student-data": { type: "string" },
         help: { type: "boolean" },
         version: { type: "boolean" },
       },
@@ -124,6 +146,10 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const profile = pick(values["profile-dir"], env.MOODLE_MCP_PROFILE_DIR);
   const channel = pick(values.channel, env.MOODLE_MCP_CHANNEL);
   const trail = pick(values.trail, env.MOODLE_MCP_TRAIL);
+  const scopes = pick(values.scopes, env.MOODLE_MCP_SCOPES);
+  const studentData = pick(values["student-data"], env.MOODLE_MCP_STUDENT_DATA);
+  const scopeList = scopes ? parseScopeSetting(scopes.value) : [...PROFILES.all!];
+  const level = studentData ? parseStudentData(studentData.value) : DEFAULT_STUDENT_DATA;
 
   const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env);
   const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env);
@@ -135,6 +161,9 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     headless: headless.value,
     downloadBrowser: downloadBrowser.value,
     trail: trail ? parseTrail(trail.value) : "realistic",
+    scopes: scopeList,
+    studentData: level,
+    limits: { scopes: scopeList, studentData: level },
     sources: {
       ...(url ? { moodleUrl: url.source } : {}),
       profileDir: profile?.source ?? "default",
@@ -142,6 +171,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       headless: headless.source,
       downloadBrowser: downloadBrowser.source,
       trail: trail?.source ?? "default",
+      scopes: scopes?.source ?? "default",
+      studentData: studentData?.source ?? "default",
     },
   };
 }
@@ -165,6 +196,33 @@ export function parseProfileDir(value: string, packageRoot: string = PACKAGE_ROO
     throw new ConfigError(`The browser profile can't be inside the server's folder (${packageRoot}): choose another folder.`);
   }
   return dir;
+}
+
+// Pseudonymization isn't in yet (the pseudonymous-mode card): until it is, nothing pretends to protect,
+// so the default stays today's behavior and "pseudonymize" is refused.
+const DEFAULT_STUDENT_DATA: StudentDataLevel = "clear";
+const AVAILABLE_STUDENT_DATA: readonly StudentDataLevel[] = ["block", "clear"];
+
+export function parseScopeSetting(value: string): Scope[] {
+  try {
+    return parseScopes(value);
+  } catch (error) {
+    throw new ConfigError((error as Error).message);
+  }
+}
+
+export function parseStudentData(value: string): StudentDataLevel {
+  const level = value.trim().toLowerCase();
+  if (!(STUDENT_DATA_LEVELS as readonly string[]).includes(level)) throw new ConfigError(`Student data must be one of ${STUDENT_DATA_LEVELS.join(", ")}, not "${value}".`);
+  if (!AVAILABLE_STUDENT_DATA.includes(level as StudentDataLevel)) {
+    throw new ConfigError(`"${level}" isn't available yet: pseudonymization is still to come. Use block (no tools on others' data) or clear (names as Moodle shows them).`);
+  }
+  return level as StudentDataLevel;
+}
+
+/** Whether a student data level is at least as strict as another (block, then pseudonymize, then clear). */
+export function atLeastAsStrict(level: StudentDataLevel, than: StudentDataLevel): boolean {
+  return STUDENT_DATA_LEVELS.indexOf(level) <= STUDENT_DATA_LEVELS.indexOf(than);
 }
 
 export function parseTrail(value: string): Trail {

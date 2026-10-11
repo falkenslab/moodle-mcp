@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { parseProfileDir } from "../config.js";
+import { ConfigError, atLeastAsStrict, parseProfileDir, parseScopeSetting } from "../config.js";
 import { findMoodleSite } from "@falkenslab/moodle-driver";
+import { STUDENT_DATA_LEVELS, applyScopes } from "./scopes.js";
 import { serverInfo, serverInfoSchema } from "./serverInfo.js";
 import type { RegisterTool } from "./types.js";
 
@@ -9,6 +10,8 @@ const inputSchema = {
   headless: z.boolean().optional().describe("Run the browser without a window (logging in always shows one)"),
   trail: z.enum(["realistic", "fast"]).optional().describe("How student tools view and do things: realistic (real pages, human pace; Moodle logs views and completion) or fast"),
   profileDir: z.string().optional().describe("Absolute folder for the browser profile that keeps the Moodle session; outside the server's folder"),
+  scopes: z.string().optional().describe("Narrow the kinds of tools for this session: a profile (teacher, student, content) or scopes (content, student-data, grading, communication, as-student, browser). Only fewer than now, never more"),
+  studentData: z.enum(STUDENT_DATA_LEVELS).optional().describe("Tighten how others' data reaches you for this session (block is strictest). Only stricter than now, never looser"),
 };
 
 /**
@@ -21,13 +24,21 @@ export const registerConfigure: RegisterTool = (server, context) => {
     {
       title: "Configure the server",
       description:
-        "Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.",
+        "Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.",
       inputSchema,
       outputSchema: serverInfoSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
-    async ({ url, headless, profileDir, trail }) => {
+    async ({ url, headless, profileDir, trail, scopes, studentData }) => {
       const { config, browser } = context;
+      // Narrowing only, and only from where the session is now: the agent can't undo what the person set (ADR-015, ADR-016).
+      const narrowed = scopes !== undefined ? parseScopeSetting(scopes) : undefined;
+      const wider = narrowed?.filter((scope) => !config.scopes.includes(scope)) ?? [];
+      if (wider.length > 0) throw new ConfigError(`configure can only narrow the scopes: ${wider.join(", ")} isn't allowed now (${config.scopes.join(", ")}). Widening is the person's, in the client's configuration of the server.`);
+      if (studentData !== undefined && !atLeastAsStrict(studentData, config.studentData)) {
+        throw new ConfigError(`configure can only tighten student data: it's ${config.studentData} now. Loosening it is the person's, in the client's configuration of the server.`);
+      }
+      if (studentData === "pseudonymize") throw new ConfigError(`"pseudonymize" isn't available yet: pseudonymization is still to come. Use block.`);
       const moodleUrl = url !== undefined ? await findMoodleSite(url) : undefined;
       const dir = profileDir !== undefined ? parseProfileDir(profileDir) : undefined;
 
@@ -51,6 +62,15 @@ export const registerConfigure: RegisterTool = (server, context) => {
         config.headless = headless;
         config.sources.headless = "configure";
       }
+      if (narrowed !== undefined) {
+        config.scopes = narrowed;
+        config.sources.scopes = "configure";
+      }
+      if (studentData !== undefined) {
+        config.studentData = studentData;
+        config.sources.studentData = "configure";
+      }
+      if (narrowed !== undefined || studentData !== undefined) applyScopes(server, config);
 
       const info = serverInfo(context);
       return { content: [{ type: "text", text: JSON.stringify(info, null, 2) }], structuredContent: info };

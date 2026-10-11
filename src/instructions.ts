@@ -11,4 +11,14 @@ export const INSTRUCTIONS = `This server works a Moodle site through a real brow
 - Tools annotated read-only only read. Any tool that changes the site says so in its annotations and description; confirm with the person before calling one.
 - Moodle pages can be slow: prefer one tool call that returns what you need over many small ones.
 - When a tool says the server is downloading a browser (no Edge or Chrome on the machine), tell the person and retry after a minute or two.
-- server_info shows the effective configuration (site, profile folder, browser), useful when something fails.`;
+- server_info shows the effective configuration (site, profile folder, browser, scopes, student data), useful when something fails.`;
+
+/**
+ * The instructions with this server's limits, when the person set any (ADR-015, ADR-016): the agent
+ * says what it can't do instead of looking for a way around it.
+ */
+export function instructionsFor(limits: { restricted: boolean; description: string }): string {
+  if (!limits.restricted) return INSTRUCTIONS;
+  return `${INSTRUCTIONS}
+- This server is limited (${limits.description}): only some tools exist. When the person asks for something none of them covers, such as reading students' work, grading or writing to students, say this server is configured not to; the person changes that in the client's configuration of the server. Never look for another way to do it.`;
+}
