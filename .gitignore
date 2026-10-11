@@ -13,3 +13,6 @@ profiles/
 *.log
 .DS_Store
 Thumbs.db
+
+# Local test session of the server in a Claude Code project (settings with personal paths)
+examples/moodle-mcp-test/
