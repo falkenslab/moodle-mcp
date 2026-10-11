@@ -26,7 +26,7 @@ Everything that works Moodle is moodle-driver's (sibling repository, ADR-014): t
 - `tools/configure.ts` — `configure`: URL (checked with the driver's `findMoodleSite`), headless, trail, profile folder, in memory (ADR-009); closes the browser when the profile or the mode changes.
 - `tools/login.ts`, `tools/logout.ts` — the driver's `logIn` with progress notifications while the person logs in; `logOut`.
 - `tools/showBrowser.ts` — `show_browser` (ADR-011).
-- `tools/browserTools.ts` — the browser fallback tools (ADR-010) on the driver's working tab: a route keeps the tab's page on the site, password fields are refused, snapshots (`ariaSnapshot` in `ai` mode, refs resolved with `getByRef`) cover `#region-main` and are cut at 30,000 characters; actions wait for `M.util.pending_js`.
+- `tools/browserTools.ts` — the browser fallback tools (ADR-010) on the driver's working tab: a route keeps the tab's page on the site, password fields are refused, snapshots (`ariaSnapshot` in `ai` mode, refs resolved with `getByRef`) cover `#region-main` and are cut at 30,000 characters; actions wait for `M.util.pending_js`. Under pseudonymize (ADR-017), people's pages (`showsPeople` in `scopes.ts`) are refused before and after each navigation, and snapshots and titles go through `people.ts`'s `pageText()`: people linked to their profile remembered, then redacted.
 - `tools/serverInfo.ts` — `server_info`: the effective configuration, never secrets.
 - `version.ts` — the package name and version, from `package.json` (inlined by esbuild).
 

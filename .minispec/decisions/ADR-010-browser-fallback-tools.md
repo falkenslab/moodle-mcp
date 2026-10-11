@@ -1,5 +1,7 @@
 # ADR-010: Browser tools as a fallback, always available
 
+When they're available is now the limits' (ADR-015's `browser` scope, ADR-016's levels, ADR-017 under pseudonymize); the rest stands.
+
 ## Decision
 
 Besides the domain tools, the server always exposes a small set of generic browser tools (`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`) on the same session and profile, for what no domain tool covers. Amends ADR-004, which ruled them out.
