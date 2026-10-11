@@ -6,7 +6,8 @@ import path from "node:path";
 import type { Locator, Page } from "playwright-core";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { NotLoggedInError, readSessionFacts } from "@falkenslab/moodle-driver";
+import { NotLoggedInError } from "@falkenslab/moodle-driver";
+import { readSessionFacts } from "@falkenslab/moodle-driver/internals";
 import type { RegisterTool, ToolContext } from "./types.js";
 
 /** Snapshots longer than this are cut: whole Moodle pages overflowed clients' limits in real runs. */

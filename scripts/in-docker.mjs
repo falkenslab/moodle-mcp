@@ -9,7 +9,7 @@
 // MOODLE_MCP_DOCKER_MOUNT="<host dir>:<container dir>" mounts one more folder (checks' profiles).
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 
 const IMAGE = "mcr.microsoft.com/playwright:v1.64.0-noble";
@@ -42,9 +42,6 @@ args.push("-e", "DISPLAY=", "-e", "WAYLAND_DISPLAY=", "-e", "MOODLE_MCP_HEADLESS
 // npm's cache outlives the container: `npx` tools (the Inspector) download once, not on every run.
 args.push("-v", "moodle-mcp-npm-cache:/root/.npm");
 if (sandboxUp) args.push("--network", NETWORK);
-// The driver is a sibling folder (file:../moodle-driver): /work/../moodle-driver must exist in the container too.
-const driver = path.resolve(root, "..", "moodle-driver");
-if (existsSync(path.join(driver, "package.json"))) args.push("-v", `${driver}:/moodle-driver`);
 if (process.env.MOODLE_MCP_DOCKER_MOUNT) args.push("-v", process.env.MOODLE_MCP_DOCKER_MOUNT);
 args.push(IMAGE, "bash", "-c", script);
 

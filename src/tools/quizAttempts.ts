@@ -44,7 +44,7 @@ export const registerGetQuizInfo: RegisterTool = (server, { config, browser }) =
         info: z.array(z.string()).describe("The quiz's rules as its page lists them"),
         dates: z.array(detail),
         feedback: z.string().optional(),
-        attempts: z.array(z.object({ attemptId: z.number().int(), inProgress: z.boolean(), details: z.array(detail) })),
+        attempts: z.array(z.object({ id: z.number().int().describe("The attempt's id, which get_quiz_attempt and get_attempt_review take"), inProgress: z.boolean(), details: z.array(detail) })),
         canStart: z.boolean().describe("Whether an attempt can be started or continued now"),
         messages: z.array(z.string()),
       },

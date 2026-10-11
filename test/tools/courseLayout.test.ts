@@ -4,7 +4,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
-import type { CourseState } from "@falkenslab/moodle-driver";
+import type { CourseState } from "@falkenslab/moodle-driver/internals";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, ServiceFailure, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -115,7 +115,7 @@ describe("course layout tools", { skip: !browser && "no system browser" }, () =>
     return { client, context };
   }
 
-  type Result = { changed: string; newId?: number; sections: { id: number; title: string; visible: boolean; activities: { id: number; name: string; visible: boolean }[] }[] };
+  type Result = { changed: string; activityId?: number; sectionId?: number; sections: { id: number; title: string; visible: boolean; activities: { id: number; name: string; visible: boolean }[] }[] };
   async function call(client: Client, name: string, args: Record<string, unknown>): Promise<Result> {
     const result = await client.callTool({ name, arguments: { courseId: 5, ...args } });
     assert.notEqual(result.isError, true, JSON.stringify(result.content));
@@ -136,7 +136,7 @@ describe("course layout tools", { skip: !browser && "no system browser" }, () =>
   it("duplicates an activity and gives the copy's id", async () => {
     const { client, context } = await connect(fakeCourse().state);
     const result = await call(client, "duplicate_activity", { activityId: 21 });
-    assert.equal(result.newId, 30);
+    assert.equal(result.activityId, 30);
     assert.equal(layout(result), "General:News | Unit 1:Notes,Notes (copy),Task");
     await context.close();
   });
@@ -145,7 +145,7 @@ describe("course layout tools", { skip: !browser && "no system browser" }, () =>
     const { state, renames } = fakeCourse();
     const { client, context } = await connect(state);
     const result = await call(client, "add_section", { name: "Unit 0", afterSectionId: 10 });
-    assert.equal(result.newId, 30);
+    assert.equal(result.sectionId, 30);
     assert.equal(layout(result), "General:News | Unit 0: | Unit 1:Notes,Task");
     assert.deepEqual(renames, [{ component: "format_topics", itemtype: "sectionname", itemid: 30, value: "Unit 0" }]);
     await context.close();

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { COMPLETION_STATES, courseStructure } from "@falkenslab/moodle-driver";
-import { onSite } from "./reply.js";
+import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const inputSchema = {
@@ -52,8 +52,9 @@ export const registerGetCourseStructure: RegisterTool = (server, { config, brows
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ courseId, details = false }) => {
-      const output = await courseStructure(...(await onSite(config, browser)), courseId, { details });
-      return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }], structuredContent: output };
+      const [context, siteUrl] = await onSite(config, browser);
+      const sections = await courseStructure(context, siteUrl, courseId, { details });
+      return reply({ course: { id: courseId, url: new URL(`course/view.php?id=${courseId}`, siteUrl).href }, sections });
     },
   );
 };

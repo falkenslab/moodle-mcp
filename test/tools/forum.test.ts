@@ -71,7 +71,7 @@ describe("forum tools", { skip: !browser && "no system browser" }, () => {
     const { client, context } = await connect({ user: { id: 3, fullName: "T" }, services });
     const result = await client.callTool({ name: "get_discussion", arguments: { discussionId: 2 } });
     const output = JSON.parse(JSON.stringify(result.structuredContent)) as { discussion: unknown; posts: Record<string, unknown>[] };
-    assert.deepEqual(output.discussion, { id: 2, forumId: 1, courseId: 5 });
+    assert.deepEqual(output.discussion, { id: 2, forumInstanceId: 1, courseId: 5 });
     assert.equal(output.posts[0]?.text, "If I set x = 1…\n\ncan I change it?");
     assert.equal(output.posts[0]?.parentId, undefined);
     assert.equal(output.posts[1]?.parentId, 2);

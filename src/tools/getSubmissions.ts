@@ -25,7 +25,7 @@ const submission = z.object({
 });
 
 const outputSchema = {
-  assignment: z.object({ id: z.number().int(), instanceId: z.number().int() }),
+  assignment: z.object({ id: z.number().int() }),
   submissions: z.array(submission),
 };
 
@@ -40,6 +40,7 @@ export const registerGetSubmissions: RegisterTool = (server, { config, browser }
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ assignmentId, includeContent = true }) => reply(await assignmentSubmissions(...(await onSite(config, browser)), assignmentId, { includeContent })),
+    async ({ assignmentId, includeContent = true }) =>
+      reply({ assignment: { id: assignmentId }, submissions: await assignmentSubmissions(...(await onSite(config, browser)), assignmentId, { includeContent }) }),
   );
 };

@@ -12,7 +12,8 @@ const sectionId = z.number().int().positive().describe("A section's id (not its 
 /** Every layout tool answers with the course's structure after the change, to check it. */
 const resultSchema = {
   changed: z.string().describe("What was done"),
-  newId: z.number().int().optional().describe("The id of what was created: the copy, the new section"),
+  activityId: z.number().int().optional().describe("The copy's id, after duplicate_activity"),
+  sectionId: z.number().int().optional().describe("The new section's id, after add_section"),
   sections: z.array(section).describe("The course's structure after the change, as get_course_structure gives it"),
 };
 

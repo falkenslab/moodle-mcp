@@ -31,7 +31,6 @@
     "test:docker": "node scripts/in-docker.mjs npm test"
   },
   "dependencies": {
-    "@falkenslab/moodle-driver": "file:../moodle-driver",
     "playwright-core": "^1.64.0"
   },
   "bundleDependencies": [
@@ -39,6 +38,7 @@
   ],
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@falkenslab/moodle-driver": "^0.3.1",
     "@modelcontextprotocol/sdk": "^1.32.1",
     "@types/node": "^20.19.0",
     "esbuild": "^0.28.2",

@@ -9,6 +9,7 @@ const detail = z.object({ label: z.string(), value: z.string() });
 const link = z.object({ name: z.string(), url: z.string() });
 
 const assignmentSchema = {
+  changed: z.string().optional().describe("What save_submission or submit_assignment did"),
   description: z.string(),
   descriptionFiles: z.array(link).describe("Files attached to the brief (templates…)"),
   dates: z.array(detail),
@@ -48,7 +49,10 @@ export const registerSaveSubmission: RegisterTool = (server, { config, browser }
       outputSchema: assignmentSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ assignmentId, onlineText, files }) => reply({ ...(await saveSubmission(...(await onSite(config, browser)), assignmentId, { onlineText, files })) }),
+    async ({ assignmentId, onlineText, files }) => {
+      const { changed, assignment } = await saveSubmission(...(await onSite(config, browser)), assignmentId, { onlineText, files });
+      return reply({ changed, ...assignment });
+    },
   );
 };
 
@@ -63,6 +67,9 @@ export const registerSubmitAssignment: RegisterTool = (server, { config, browser
       outputSchema: assignmentSchema,
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     },
-    async ({ assignmentId, acceptStatement = false }) => reply({ ...(await submitForGrading(...(await onSite(config, browser)), assignmentId, acceptStatement)) }),
+    async ({ assignmentId, acceptStatement = false }) => {
+      const { changed, assignment } = await submitForGrading(...(await onSite(config, browser)), assignmentId, { acceptStatement });
+      return reply({ changed, ...assignment });
+    },
   );
 };

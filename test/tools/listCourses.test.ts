@@ -4,7 +4,6 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
-import { type MoodleCourse } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -12,6 +11,21 @@ const browser = await launchTestBrowser();
 after(() => browser?.close());
 
 // Shaped like Moodle 5.2's answer; the data is made up.
+/** A course as `core_course_get_enrolled_courses_by_timeline_classification` returns it (Moodle 5.2). */
+interface MoodleCourse {
+  id: number;
+  shortname: string;
+  fullname: string;
+  coursecategory?: string;
+  viewurl: string;
+  visible: boolean;
+  startdate?: number;
+  enddate?: number;
+  progress?: number | null;
+  hasprogress?: boolean;
+  timeaccess?: number | null;
+}
+
 const RAW: MoodleCourse[] = [
   {
     id: 7,

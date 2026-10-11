@@ -8,7 +8,7 @@ const inputSchema = {
 };
 
 const outputSchema = {
-  discussion: z.object({ id: z.number().int(), forumId: z.number().int().describe("The forum's instance id"), courseId: z.number().int() }),
+  discussion: z.object({ id: z.number().int(), forumInstanceId: z.number().int().describe("The forum's instance id (not its course module id)"), courseId: z.number().int() }),
   posts: z.array(
     z.object({
       id: z.number().int(),

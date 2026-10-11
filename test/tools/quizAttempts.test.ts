@@ -103,7 +103,7 @@ describe("quiz attempt tools", { skip: !browser && "no system browser" }, () => 
     const { client, context } = await connect();
     const info = await call(client, "get_quiz_info", { quizId: 26 });
     assert.deepEqual(info.info, ["Attempts allowed: 3", "Grading method: Highest grade"]);
-    assert.deepEqual(info.attempts, [{ attemptId: 8, inProgress: false, details: [{ label: "Status", value: "Finished" }, { label: "Grade", value: "5.00 out of 10.00" }] }]);
+    assert.deepEqual(info.attempts, [{ id: 8, inProgress: false, details: [{ label: "Status", value: "Finished" }, { label: "Grade", value: "5.00 out of 10.00" }] }]);
     assert.equal(info.canStart, true);
     await context.close();
   });

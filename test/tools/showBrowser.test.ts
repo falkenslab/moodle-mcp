@@ -5,7 +5,6 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import type { BrowserManager } from "@falkenslab/moodle-driver";
 import { createServer } from "../../src/createServer.js";
-import { followPages, openSitePage } from "@falkenslab/moodle-driver";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -56,17 +55,4 @@ describe("following the tools' pages", { skip: !browser && "no system browser" }
     await off.context.close();
   });
 
-  it("shows the page a tool opened once it's done with it, but not the kept service tab", async () => {
-    const context = await browser!.newContext();
-    await serveFakeMoodle(context, state);
-    const shown: string[] = [];
-    followPages(context, async (url) => void shown.push(url));
-    const page = await openSitePage(context, SITE, "mod/quiz/view.php?id=5");
-    assert.deepEqual(shown, []);
-    await page.close();
-    assert.deepEqual(shown, [`${SITE}mod/quiz/view.php?id=5`]);
-    await (await openSitePage(context, SITE, "my/", { follow: false })).close();
-    assert.equal(shown.length, 1);
-    await context.close();
-  });
 });

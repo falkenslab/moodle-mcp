@@ -47,7 +47,7 @@ describe("get_submissions", { skip: !browser && "no system browser" }, () => {
     const { client, context } = await connect(state);
     const result = await client.callTool({ name: "get_submissions", arguments: { assignmentId: 21 } });
     const output = result.structuredContent as { assignment: unknown; submissions: Record<string, unknown>[] };
-    assert.deepEqual(output.assignment, { id: 21, instanceId: 210 });
+    assert.deepEqual(output.assignment, { id: 21 });
     assert.equal(output.submissions.length, 2);
     const [ada, alan] = output.submissions;
     assert.equal(ada?.status, "submitted");
