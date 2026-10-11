@@ -13,7 +13,7 @@ In moodle-mcp, other people reach the client as aliases from `@falkenslab/pseudo
 ## Changes
 
 - `package.json`: `@falkenslab/pseudonym` from `file:../pseudonym` until it's published (esbuild bundles it); `scripts/in-docker.mjs` mounts it beside `moodle-driver` so tests see it.
-- `config.ts`: `studentData` (`MOODLE_MCP_STUDENT_DATA`, `--student-data`): `block`, `pseudonymize` (default) or `clear` (ADR-016); `configure` only tightens it; `server_info` shows it. This card is the `pseudonymize` level; `block` is `tool-scopes`'.
+- `config.ts`: `studentData` (`MOODLE_MCP_STUDENT_DATA`, `--student-data`): `block`, `pseudonymize` (default) or `clear` (ADR-016); `configure` only tightens it; `server_info` shows it. This card is the `pseudonymize` level (`block` and `clear` are in): accept it in `parseStudentData` and `configure`, and make it the default (today `clear`, `src/config.ts`).
 - `src/people.ts`: a Moodle person to `remember()` (identifiers: the user's "ID number" field when set, the email, the Moodle user id at the site) and back with `resolve()`: `user: "A-…"` to the user id for write tools.
 - Minimization in every tool: no emails, phones, IPs, photos or profile fields of others, whatever the mode.
 - Existing tools through `people.ts` (the driver gives people as user ids and full names; this server pseudonymizes them): names and user ids out, aliases in; URLs lose user ids.

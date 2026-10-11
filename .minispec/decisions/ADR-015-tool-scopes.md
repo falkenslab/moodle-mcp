@@ -7,7 +7,7 @@ The person running the server chooses which kinds of tools exist for the agent, 
 - **Scopes come from data, not from a hand-made list.** Each tool's scope follows from the data categories of the moodle-driver functions it calls, which the driver declares per public function (its `data-categories` card): course content, own data, aggregates, others' personal data, writing about others, communication, and `any` for the generic primitives. A tool on `any` (the browser tools, a tool built on `callService` or forms) is in no restricted profile.
 - **Out of scope means absent.** Tools outside the scopes are not registered, or are disabled with `notifications/tools/list_changed` when `configure` narrows; a call that still arrives is refused without touching Moodle. The instructions and `server_info` name the active scopes, so the agent says what it can't do instead of improvising (and never through the browser tools, absent then).
 - **Aggregates stay with content.** Counts ("2 of 4 submitted", "2 need grading") in `get_activities_overview` and `get_course_updates` identify no one and help manage the course.
-- **Content without others' work.** Under a profile without `student-data`, `delete_activity` and `delete_section` refuse an activity that holds others' work (submissions, posts, attempts or responses, as the activities overview counts them), and `download_file` refuses files of others' areas (`assignsubmission_*`, `mod_forum`, `user`… by the component in the `pluginfile.php` URL).
+- **Content without others' work.** Under a profile without `student-data`, `delete_activity` and `delete_section` refuse activities of modules that may hold others' work (`moduleCategories()` says so: assignments, quizzes, forums…), whether or not they hold any yet, and `download_file` refuses files of others' areas (`assignsubmission_*`, `mod_forum`, `user`… by the component in the `pluginfile.php` URL).
 - ADR-016's student data policy sets how others' data reaches the agent (`block` removes the `student-data` and `grading` scopes); scopes choose the kinds of actions on top of it.
 
 ## Motivation
@@ -16,7 +16,7 @@ A teacher may want an agent that builds content, activities and rubrics but neve
 
 ## Consequences
 
-- Needs moodle-driver's `data-categories` first; until then the scopes aren't implemented (no interim hand-made classification, unless the owner asks for one).
+- Built on moodle-driver 0.3's `DATA_CATEGORIES` (11 October 2026). Profiles as implemented: `all` (every scope), `teacher` (all but `as-student` and `browser`), `student` (all but `grading` and `browser`: a student's agent reads classmates' forum posts), `content`.
 - Every new tool gets its scope from the driver functions it calls; a tool combining categories takes the strictest.
 - Reading activities is classified by module: teacher-authored ones (page, book, label, resource…) are content; student-authored ones (glossary, wiki, database, workshop entries, forum posts) are `student-data`.
 - Pseudonymous mode (ADR-013) still applies to whatever `student-data` tools are allowed; under `content` it has almost nothing to do.

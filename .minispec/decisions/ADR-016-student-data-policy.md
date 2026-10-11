@@ -19,3 +19,4 @@ The owner wants both: an agent that can't read or act on students' data at all (
 - `server_info` and the instructions name the level, so the agent explains what it can't do instead of improvising.
 - The tools' set depends on the level: tests cover the three, and the `--strict` check runs on `pseudonymize` (the largest set with aliases' schemas).
 - Under `block`, pseudonym isn't needed at run time; under `clear`, the directory isn't written.
+- Until pseudonymization is in (the `pseudonymous-mode` card), the default is `clear` (today's behavior) and `pseudonymize` is refused with a message: nothing pretends to protect what it doesn't. That card makes `pseudonymize` the default.

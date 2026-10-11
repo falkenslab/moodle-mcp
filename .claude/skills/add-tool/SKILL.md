@@ -20,7 +20,7 @@ A tool is a schema, a description, annotations and one call to `@falkenslab/mood
 
 ## 3. Wire it
 
-- Register it in `src/tools/index.ts`, in the order clients should see it.
+- Register it in `src/tools/index.ts`, in the order clients should see it, and list its driver functions in `TOOL_FUNCTIONS` (`src/tools/scopes.ts`): its scope comes from their data categories (a test fails on an unlisted tool).
 - An AJAX-only tool names its Moodle page in `src/tools/follow.ts` (what `show_browser` shows, ADR-011); tools that open a page are followed already.
 - A driver error class that needs this server's words (a tool's name, a `MOODLE_MCP_*` setting) gets a line in `src/tools/errors.ts`.
 - `src/instructions.ts` only when agents need a usage rule the description can't carry.

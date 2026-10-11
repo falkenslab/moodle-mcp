@@ -26,6 +26,17 @@ Nothing is required at startup. There are two ways to configure the server, and 
 | `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | Run the browser without a window (logging in always shows one) |
 | `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | Download Chromium when no system browser is found |
 | `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | How student tools view and do things: `realistic` (real pages, human pace, so Moodle logs views and completion) or `fast` |
+| `MOODLE_MCP_SCOPES` | `--scopes` | `all` | The kinds of tools the agent gets: a profile (`all`, `teacher`, `student`, `content`) or a list of scopes (`content`, `student-data`, `grading`, `communication`, `as-student`, `browser`) |
+| `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `clear` | How other people's data reaches the agent: `block` (no tool that reads it or decides about others) or `clear` (names as Moodle shows them); `pseudonymize` is coming |
+
+### Limiting what the agent can do
+
+Two settings decide which tools exist for the agent, and only you set them, in the client's configuration of the server: `configure` can narrow them for a session, never widen them.
+
+- **Scopes** choose the kinds of tools. `content` gives an agent that builds and manages courses (activities, sections, content, rubrics' definitions) but never reads students' work, grades or writes to students; `teacher` adds those; `student` is for acting as a student; `all` adds the browser fallback tools. A tool's scope comes from the data moodle-driver says it touches, so new tools are classified on their own.
+- **Student data** set to `block` removes every tool that reads others' personal data or decides about others, whatever the scopes, and the browser fallback tools with them.
+
+Without students' data, `download_file` refuses submitted files and forum attachments, and deleting an activity that may hold students' work (an assignment, a quiz, a forum…) is refused: do that in Moodle yourself. `server_info` shows the limits in force.
 
 ## Logging in
 
