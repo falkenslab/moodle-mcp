@@ -5,7 +5,7 @@
 - Node.js ≥ 20, ESM, TypeScript with `NodeNext` resolution.
 - `@modelcontextprotocol/sdk` — the MCP server (`McpServer`) over stdio. Bundled, so a dev dependency, like `zod` (ADR-005).
 - `zod` — tool input and output schemas.
-- `@falkenslab/moodle-driver` — everything Moodle, through the person's browser session (ADR-014); from the sibling folder (`file:../moodle-driver`) until it's published, bundled into the server.
+- `@falkenslab/moodle-driver` — everything Moodle, through the person's browser session (ADR-014); from npm (`^0.3`), bundled into the server, so a dev dependency like the SDK; its primitives come from `@falkenslab/moodle-driver/internals`, its fake Moodle from `/testing`.
 - `playwright-core` — the driver's browser automation (its peer dependency), shipped beside the bundle.
 
 ## Tooling

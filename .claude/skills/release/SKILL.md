@@ -12,7 +12,7 @@ A release is a version commit, a `vX.Y.Z` tag on `main`, a GitHub release and th
 
 Stop and report at the first that fails:
 
-- **No `file:` dependencies.** `@falkenslab/moodle-driver` (and `@falkenslab/pseudonym`, once used) must be published to npm first, from their own repositories and sessions, and `package.json` must name a published version (`^0.x.y`), not `file:../…`. A package with a `file:` dependency can't be installed by anyone else. Switching is a `build(deps)` commit of its own, verified before the release.
+- **No `file:` dependencies.** `@falkenslab/moodle-driver` and `@falkenslab/pseudonym` come from npm (published versions, `^0.x.y`); if a `file:../…` crept back in for a local try, the release waits until it's a published version again.
 - On `main`, working tree clean, up to date with `origin/main` (`git fetch && git status -sb`). No remote yet: stop and ask.
 - The `verify` skill is green, and a `sandbox-check` of login, a read and a write tool passed on this commit.
 - `gh auth status` works; `npm whoami` works (if not, ask the owner to run `npm login` themselves: it's interactive).

@@ -31,7 +31,7 @@ Nothing is required at startup. There are two ways to configure the server, and 
 
 When a tool reports that there is no session, the client calls `login`: a browser window opens at the site's login page and the tool waits (5 minutes by default) until you log in there yourself, SSO included. The session is kept in the profile folder, together with `moodle-mcp-session-cookies.json` (Chromium forgets session cookies on close, so the server saves them), and survives restarts until Moodle ends it.
 
-The profile holds a live Moodle session: treat it like a password and keep it out of shared folders and repositories.
+The profile holds a live Moodle session: treat it like a password and keep it out of shared folders and repositories. Profiles from before moodle-driver 0.2 need to log in once more: the driver renamed the file where it keeps the session.
 
 To watch what the agent does, ask it to show the browser (`show_browser`): a window opens, keeping the session, and each tool brings the Moodle page it works on to the front; ask it to hide the browser, or close the window, to go back to working without one.
 
@@ -66,10 +66,9 @@ Without `env`, the client configures it with `configure` the first time a tool n
 
 ## Development
 
-All the Moodle work is in [moodle-driver](../moodle-driver), a sibling repository this server depends on (`file:../moodle-driver` until it's published): clone it next to this one and build it first. A change to how Moodle is read or written goes there; a tool here is a schema, a description and one driver call.
+All the Moodle work is in [@falkenslab/moodle-driver](https://www.npmjs.com/package/@falkenslab/moodle-driver), from npm and bundled into the server. A change to how Moodle is read or written goes there (its own repository); a tool here is a schema, a description and one driver call.
 
 ```bash
-(cd ../moodle-driver && npm install && npm run build)
 npm install
 npm run build       # bundles src/ into dist/server.mjs
 npm run dev         # rebuilds on every change
@@ -79,7 +78,7 @@ npm test            # opens browsers on your machine
 npm run test:docker # the same, in a container with Playwright's Chromium: nothing opens on your desktop
 ```
 
-`test:docker` runs `scripts/in-docker.mjs`, which wraps any command the same way (`node scripts/in-docker.mjs <command>`): Playwright's image, the repository mounted with Linux `node_modules` of its own, the sibling `moodle-driver` mounted beside it, and, when the Moodle sandbox is up, its network, with `localhost:8080` forwarded to it. After changing the driver, rebuild it (`npm run build` there) before testing here.
+`test:docker` runs `scripts/in-docker.mjs`, which wraps any command the same way (`node scripts/in-docker.mjs <command>`): Playwright's image, the repository mounted with Linux `node_modules` of its own, and, when the Moodle sandbox is up, its network, with `localhost:8080` forwarded to it.
 
 To try the server by hand, the MCP Inspector opens a web UI on the built bundle (set `MOODLE_URL` in your shell first):
 

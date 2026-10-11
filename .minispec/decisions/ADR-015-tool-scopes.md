@@ -8,7 +8,6 @@ The person running the server chooses which kinds of tools exist for the agent, 
 - **Out of scope means absent.** Tools outside the scopes are not registered, or are disabled with `notifications/tools/list_changed` when `configure` narrows; a call that still arrives is refused without touching Moodle. The instructions and `server_info` name the active scopes, so the agent says what it can't do instead of improvising (and never through the browser tools, absent then).
 - **Aggregates stay with content.** Counts ("2 of 4 submitted", "2 need grading") in `get_activities_overview` and `get_course_updates` identify no one and help manage the course.
 - **Content without others' work.** Under a profile without `student-data`, `delete_activity` and `delete_section` refuse an activity that holds others' work (submissions, posts, attempts or responses, as the activities overview counts them), and `download_file` refuses files of others' areas (`assignsubmission_*`, `mod_forum`, `user`… by the component in the `pluginfile.php` URL).
-
 - ADR-016's student data policy sets how others' data reaches the agent (`block` removes the `student-data` and `grading` scopes); scopes choose the kinds of actions on top of it.
 
 ## Motivation

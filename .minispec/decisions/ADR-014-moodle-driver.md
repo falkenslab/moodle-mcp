@@ -2,7 +2,7 @@
 
 ## Decision
 
-Everything that works Moodle with the person's session (the browser and its profile, manual login, session cookies, AJAX services through the page, forms, pages, and each Moodle area's reads and writes) is a library, `@falkenslab/moodle-driver`, with no MCP in it. It lives in the sibling repository `moodle-driver` (extracted on 9 October 2026, sooner than first planned, at the owner's request): moodle-mcp depends on it (`file:../moodle-driver` until it's published) and its tools are a schema, a description and one driver call.
+Everything that works Moodle with the person's session (the browser and its profile, manual login, session cookies, AJAX services through the page, forms, pages, and each Moodle area's reads and writes) is a library, `@falkenslab/moodle-driver`, with no MCP in it. It lives in the sibling repository `moodle-driver` (extracted on 9 October 2026, sooner than first planned, at the owner's request): moodle-mcp depends on it from npm (published since 0.3.1, 11 October 2026; `file:../moodle-driver` before) and its tools are a schema, a description and one driver call.
 
 ## Motivation
 
