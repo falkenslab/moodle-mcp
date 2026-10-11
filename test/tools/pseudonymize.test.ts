@@ -121,13 +121,53 @@ describe("pseudonymous mode", { skip: !browser && "no system browser" }, () => {
     await context.close();
   });
 
-  it("offers no browser tools and no one else's files, since their content can't be pseudonymized", async () => {
+  it("gives no one else's files, since their content can't be pseudonymized", async () => {
     const { state } = moodle();
     const { client, context } = await connect(pseudonymous(), state);
-    const tools = (await client.listTools()).tools.map((t) => t.name);
-    assert.ok(!tools.some((t) => t.startsWith("browser_")) && tools.includes("get_submissions"));
     const refused = await client.callTool({ name: "download_file", arguments: { url: `${SITE}pluginfile.php/1/mod_forum/attachment/2/ada-lovelace.pdf`, destDir: home } });
     assert.match(text(refused), /pseudonymizes students' data/);
+    await context.close();
+  });
+
+  it("keeps the browser tools off people's pages, and gives the people on other pages as aliases", async () => {
+    const { state } = moodle();
+    // A plugin's page that names people the way Moodle does, with links to their profiles.
+    state.bodies!["/mod/glossary/view.php"] = `<div id="region-main"><p>Entry by <a href="${SITE}user/view.php?id=7&amp;course=5">Ada Lovelace</a></p>
+<p>Reviewed by <a href="${SITE}user/view.php?id=3&amp;course=5">Teacher Smith</a></p><a href="${SITE}user/index.php?id=5">Participants</a>
+<form method="post" action="${SITE}save.php"><button type="submit">Save</button></form></div>`;
+    const context = await browser!.newContext();
+    await serveFakeMoodle(context, state);
+    let saved = 0;
+    // Saving goes back to a people's page, as a grading form does (a script here: the fake can't follow an HTTP redirect).
+    await context.route(`${SITE}save.php`, (route) => {
+      saved++;
+      return route.fulfill({ status: 200, contentType: "text/html", body: `<script>location.href = "${SITE}user/index.php?id=5"</script>` });
+    });
+    const page = await context.newPage();
+    const server = createServer({ config: pseudonymous(), browser: fakeBrowserManager({ context: async () => context, tab: async () => page }) });
+    const client = new Client({ name: "test", version: "0.0.0" });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+    const call = (name: string, args: Record<string, unknown> = {}) => client.callTool({ name, arguments: args });
+
+    const tools = (await client.listTools()).tools.map((t) => t.name);
+    assert.ok(tools.includes("browser_snapshot") && !tools.includes("browser_screenshot"));
+    for (const url of ["user/index.php?id=5", "grade/report/grader/index.php?id=5", "mod/forum/discuss.php?d=2", "course/user.php?id=5&user=7", "mod/assign/view.php?id=4&action=grading"]) {
+      assert.match(text(await call("browser_navigate", { url })), /pseudonymizes them/, url);
+    }
+    assert.equal((await call("browser_navigate", { url: "mod/glossary/view.php?id=9" })).isError, undefined);
+    const read = await call("browser_snapshot");
+    const snapshot = (read.structuredContent as { snapshot: string }).snapshot;
+    assert.doesNotMatch(text(read), /Lovelace|id=7/);
+    assert.match(snapshot, /Entry by.*A-[0-9A-Z]{6}/s);
+    assert.match(snapshot, /Teacher Smith/);
+
+    const refOf = (line: RegExp) => /\[ref=(\w+)\]/.exec(snapshot.split("\n").find((l) => line.test(l)) ?? "")?.[1] ?? "";
+    assert.match(text(await call("browser_click", { ref: refOf(/link "Participants"/) })), /pseudonymizes them/);
+    assert.equal(page.url(), `${SITE}mod/glossary/view.php?id=9`);
+    assert.match(text(await call("browser_click", { ref: refOf(/button "Save"/) })), /took effect.*pseudonymizes them/);
+    assert.equal(saved, 1);
+    assert.match(text(await call("browser_screenshot")), /disabled|outside what this server allows/);
     await context.close();
   });
 
@@ -139,7 +179,7 @@ describe("pseudonymous mode", { skip: !browser && "no system browser" }, () => {
     assert.equal((await client.callTool({ name: "configure", arguments: { studentData: "pseudonymize" } })).isError, undefined);
     const tightened = await client.callTool({ name: "get_submissions", arguments: { assignmentId: 41, includeContent: false } });
     assert.doesNotMatch(text(tightened), /Lovelace/);
-    assert.ok(!(await client.listTools()).tools.some((t) => t.name.startsWith("browser_")));
+    assert.ok(!(await client.listTools()).tools.some((t) => t.name === "browser_screenshot"));
     await context.close();
   });
 });

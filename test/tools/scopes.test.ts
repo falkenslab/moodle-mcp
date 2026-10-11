@@ -6,7 +6,7 @@ import { SITE, fakeBrowserManager, launchTestBrowser, serveFakeMoodle } from "@f
 import type { BrowserManager } from "@falkenslab/moodle-driver";
 import { ConfigError, loadConfig, type Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
-import { SCOPES, TOOL_FUNCTIONS, holdsOthersFiles, requiredScopes, toolAllowed } from "../../src/tools/scopes.js";
+import { SCOPES, TOOL_FUNCTIONS, holdsOthersFiles, requiredScopes, showsPeople, toolAllowed } from "../../src/tools/scopes.js";
 import { testConfig } from "../helpers/fixtures.js";
 
 const browser = await launchTestBrowser();
@@ -96,6 +96,14 @@ describe("tool scopes", () => {
     assert.throws(() => loadConfig(["--scopes", "everything"], {}), ConfigError);
     assert.equal((loadConfig([], {}) as Config).studentData, "pseudonymize");
     assert.throws(() => loadConfig([], { MOODLE_MCP_STUDENT_DATA: "anonymous" }), /must be one of block, pseudonymize, clear/);
+  });
+
+  it("knows people's pages from the rest, on a site in a folder too", () => {
+    const site = "https://campus.example.org/moodle/";
+    const people = (path: string) => showsPeople(new URL(path, site), site);
+    for (const path of ["user/index.php?id=5", "user/view.php?id=7", "grade/report/grader/index.php?id=5", "report/log/index.php?id=5", "mod/quiz/report.php?id=8", "mod/attendance/report.php?id=3", "local/x/view.php?userid=7", "mod/assign/view.php?id=4&action=grader", "mod/forum/view.php?id=6", "message/index.php", "pluginfile.php/40/assignsubmission_file/submission_files/7/a.pdf"]) assert.equal(people(path), true, path);
+    for (const path of ["course/view.php?id=5", "course/modedit.php?update=4", "mod/assign/view.php?id=4", "mod/page/view.php?id=2", "question/edit.php?courseid=5", "grade/edit/tree/index.php?id=5", "pluginfile.php/35/mod_resource/content/0/brief.pdf"]) assert.equal(people(path), false, path);
+    assert.equal(showsPeople(new URL("https://campus.example.org/other/user/index.php"), site), false);
   });
 
   it("tells the agent its limits in the instructions", async () => {

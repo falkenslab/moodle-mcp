@@ -100,17 +100,16 @@ export function requiredScopes(tool: string): Set<Scope> {
   return scopes;
 }
 
-/**
- * The scopes in force: those set, without what the student data level blocks. The browser tools read
- * any page as it is, and only names already met could be redacted in it: they need names in clear.
- */
+/** The scopes in force: those set, without what the student data level blocks. */
 export function activeScopes(config: Pick<Config, "scopes" | "studentData">): Set<Scope> {
-  return new Set(config.scopes.filter((scope) => !(config.studentData === "block" && BLOCKED.includes(scope)) && !(scope === "browser" && config.studentData !== "clear")));
+  return new Set(config.scopes.filter((scope) => !(config.studentData === "block" && BLOCKED.includes(scope))));
 }
 
 /** Whether a tool exists for the agent under this configuration. */
 export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData">): boolean {
   if (SESSION_TOOLS.has(tool)) return true;
+  // A picture can't be redacted (ADR-017).
+  if (tool === "browser_screenshot" && config.studentData !== "clear") return false;
   const active = activeScopes(config);
   return [...requiredScopes(tool)].every((scope) => active.has(scope));
 }
@@ -202,6 +201,33 @@ export function holdsOthersFiles(url: URL): boolean {
   const [, component, area] = match as unknown as [string, string, string];
   if (area === "intro" || area === "introattachment") return false;
   return !(CONTENT_COMPONENTS.has(component) || component.startsWith("qtype_"));
+}
+
+// Pages about people (ADR-017), by their path under the site: mostly people, so one name printed without
+// a profile link would be enough. Forums too: their domain tools pseudonymize them.
+const PEOPLE_PATHS = [
+  /^(user|enrol|cohort|group|message|blog|notes|badges\/recipients|admin\/user)(\/|\.php|$)/,
+  /^grade\/(report|export|import)\//,
+  /(^|\/)reports?(\/|\.php)/,
+  /^mod\/assign\/grader\.php$/,
+  /^mod\/quiz\/(review|report|overrides|reviewquestion|comment)\.php$/,
+  /^mod\/forum\//,
+];
+const PEOPLE_QUERY = /^(user|userid|users|uid|participant|selecteduser)$/i;
+const GRADING_ACTIONS = /^(grading|grader|grade|viewpluginassignsubmission|viewpluginassignfeedback)$/i;
+
+/**
+ * Whether a page of the site is about people (ADR-017): known people's pages, any page for a given
+ * user, the assignment's grading views, others' files. Off the site, false: the off-site guard decides.
+ */
+export function showsPeople(url: URL, siteUrl: string): boolean {
+  const site = new URL(siteUrl);
+  if (url.origin !== site.origin || !url.pathname.startsWith(site.pathname.replace(/\/?$/, "/"))) return false;
+  if (holdsOthersFiles(url)) return true;
+  const path = url.pathname.slice(site.pathname.replace(/\/?$/, "/").length);
+  if ([...url.searchParams.keys()].some((key) => PEOPLE_QUERY.test(key))) return true;
+  if (path === "mod/assign/view.php") return GRADING_ACTIONS.test(url.searchParams.get("action") ?? "");
+  return PEOPLE_PATHS.some((pattern) => pattern.test(path));
 }
 
 /** Whether activities of a module may hold others' work (submissions, posts, attempts, responses). */

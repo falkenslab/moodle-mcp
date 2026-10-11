@@ -1,6 +1,6 @@
 // The browser fallback tools (ADR-010): generic actions on one tab of the server's own session, for
 // what no domain tool covers. The guards live here, in code: the site only, no password fields,
-// capped snapshots, no script evaluation.
+// capped snapshots, no script evaluation; under pseudonymize, no people's pages and people as aliases (ADR-017).
 import { access } from "node:fs/promises";
 import path from "node:path";
 import type { Locator, Page } from "playwright-core";
@@ -8,6 +8,8 @@ import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
 import { NotLoggedInError } from "@falkenslab/moodle-driver";
 import { readSessionFacts } from "@falkenslab/moodle-driver/internals";
+import { pageText, pseudonymizing } from "../people.js";
+import { showsPeople } from "./scopes.js";
 import type { RegisterTool, ToolContext } from "./types.js";
 
 /** Snapshots longer than this are cut: whole Moodle pages overflowed clients' limits in real runs. */
@@ -28,14 +30,16 @@ export function onSite(url: string, siteUrl: string): boolean {
   }
 }
 
-// Tabs already guarded (the route is added once per tab), and the last navigation each one blocked.
+// Tabs already guarded (the route is added once per tab), and the last navigation each one blocked, and why.
 const guarded = new WeakSet<Page>();
-const blocked = new WeakMap<Page, string>();
+const blocked = new WeakMap<Page, { url: string; people: boolean }>();
+
+const PEOPLE_PAGE = "shows people's data (participants, profiles, grades, reports, forums, messages…), and this server pseudonymizes them: the browser tools don't open such pages. Use the Moodle tools, which give people as aliases";
 
 /**
  * The working tab, guarded so its page never leaves the site: a navigation of the page itself to
- * another origin (typed, clicked or redirected) is blocked. Frames inside the page (an H5P or a
- * video player) are left alone.
+ * another origin (typed, clicked or redirected) is blocked, and so is one to a people's page while the
+ * server pseudonymizes (ADR-017). Frames inside the page (an H5P or a video player) are left alone.
  */
 async function siteTab({ browser, config }: ToolContext): Promise<Page> {
   requireSiteUrl(config);
@@ -45,8 +49,9 @@ async function siteTab({ browser, config }: ToolContext): Promise<Page> {
     await page.route("**/*", (route) => {
       const request = route.request();
       const site = config.moodleUrl;
-      if (site && request.isNavigationRequest() && request.frame() === page.mainFrame() && !onSite(request.url(), site)) {
-        blocked.set(page, request.url());
+      const people = !!site && pseudonymizing(config) && showsPeople(new URL(request.url()), site);
+      if (site && request.isNavigationRequest() && request.frame() === page.mainFrame() && (!onSite(request.url(), site) || people)) {
+        blocked.set(page, { url: request.url(), people });
         // Cancelled (ERR_ABORTED), the page stays where it was; another error would show the browser's error page.
         return route.abort("aborted");
       }
@@ -56,9 +61,15 @@ async function siteTab({ browser, config }: ToolContext): Promise<Page> {
   return page;
 }
 
-/** Where the tab is now, as every action reports it. */
-async function where(page: Page) {
-  return { url: page.url(), title: await page.title().catch(() => "") };
+/** Where the tab is now, as every action reports it; under pseudonymize, the title redacted. */
+async function where(page: Page, { config }: ToolContext) {
+  const [url = "", title = ""] = await pageText(config, page, requireSiteUrl(config), [page.url(), await page.title().catch(() => "")]);
+  return { url, title };
+}
+
+/** A people's page reached some other way (a script, or before configure tightened the level): never read. */
+function refusePeoplePage(page: Page, { config }: ToolContext): void {
+  if (pseudonymizing(config) && showsPeople(new URL(page.url()), requireSiteUrl(config))) throw new BrowserToolError(`This page ${PEOPLE_PAGE}.`);
 }
 
 /** An element from the latest snapshot, explaining a stale or unknown ref. */
@@ -89,12 +100,17 @@ async function moodleReady(page: Page): Promise<void> {
     .catch(() => undefined);
 }
 
-/** After a click or a submit: the page that comes, if any, is ready to read; a blocked one is said. */
-async function settle(page: Page): Promise<void> {
+/**
+ * After a click or a submit: the page that comes, if any, is ready to read; a blocked one is said. An
+ * HTTP redirect isn't routed (Playwright), so a people's page reached through one is caught here, loaded but never read.
+ */
+async function settle(page: Page, { config }: ToolContext): Promise<void> {
   await moodleReady(page);
   const away = blocked.get(page);
   blocked.delete(page);
-  if (away) throw new BrowserToolError(`That leads to ${away}, outside the site: not followed. Give the link to the person instead.`);
+  const people = away?.people || (pseudonymizing(config) && showsPeople(new URL(page.url()), requireSiteUrl(config)));
+  if (people) throw new BrowserToolError(`What was clicked or sent took effect, if it changes anything; the page it leads to ${PEOPLE_PAGE}.`);
+  if (away) throw new BrowserToolError(`That leads to ${away.url}, outside the site: not followed. Give the link to the person instead.`);
 }
 
 /**
@@ -127,11 +143,16 @@ export const registerBrowserNavigate: RegisterTool = (server, context) => {
       const site = requireSiteUrl(context.config);
       const target = new URL(url, site).href;
       if (!onSite(target, site)) throw new BrowserToolError(`Only pages of ${new URL(site).origin} can be opened; ${new URL(target).origin} isn't the site.`);
+      if (pseudonymizing(context.config) && showsPeople(new URL(target), site)) throw new BrowserToolError(`That page ${PEOPLE_PAGE}.`);
       const page = await siteTab(context);
-      await page.goto(target, { waitUntil: "domcontentloaded" });
-      await moodleReady(page);
+      blocked.delete(page);
+      // A redirect the guards cancel aborts the navigation: settle() says why.
+      await page.goto(target, { waitUntil: "domcontentloaded" }).catch((error: unknown) => {
+        if (!blocked.has(page)) throw error;
+      });
+      await settle(page, context);
       await checkSession(page);
-      return reply(await where(page));
+      return reply(await where(page, context));
     },
   );
 };
@@ -151,13 +172,15 @@ export const registerBrowserSnapshot: RegisterTool = (server, context) => {
     },
     async ({ scope = "main", ref: subtree }) => {
       const page = await siteTab(context);
+      refusePeoplePage(page, context);
       const main = page.locator("#region-main");
       const root = subtree ? byRef(page, subtree) : scope === "main" && (await main.count()) > 0 ? main : page.locator("body");
-      const full = await act(subtree ?? "", () => root.ariaSnapshot({ mode: "ai", timeout: ACTION_TIMEOUT_MS }));
+      const read = await act(subtree ?? "", () => root.ariaSnapshot({ mode: "ai", timeout: ACTION_TIMEOUT_MS }));
+      const [full = ""] = await pageText(context.config, page, requireSiteUrl(context.config), [read]);
       // Cut at a line, so no element is left half described.
       const truncated = full.length > SNAPSHOT_LIMIT;
       const snapshot = truncated ? full.slice(0, full.lastIndexOf("\n", SNAPSHOT_LIMIT)) : full;
-      return reply({ ...(await where(page)), snapshot, truncated });
+      return reply({ ...(await where(page, context)), snapshot, truncated });
     },
   );
 };
@@ -177,9 +200,9 @@ export const registerBrowserClick: RegisterTool = (server, context) => {
       blocked.delete(page);
       const element = byRef(page, target);
       await act(target, () => (doubleClick ? element.dblclick({ timeout: ACTION_TIMEOUT_MS }) : element.click({ timeout: ACTION_TIMEOUT_MS })));
-      await settle(page);
+      await settle(page, context);
       await checkSession(page);
-      return reply(await where(page));
+      return reply(await where(page, context));
     },
   );
 };
@@ -202,9 +225,9 @@ export const registerBrowserType: RegisterTool = (server, context) => {
       await act(target, () => element.fill(text, { timeout: ACTION_TIMEOUT_MS }));
       if (submit) {
         await element.press("Enter");
-        await settle(page);
+        await settle(page, context);
       }
-      return reply(await where(page));
+      return reply(await where(page, context));
     },
   );
 };
@@ -228,7 +251,7 @@ export const registerBrowserSelect: RegisterTool = (server, context) => {
         return wanted.map((w) => all.find((o) => o.value === w)?.value ?? all.find((o) => o.text.trim() === w.trim())?.value ?? w);
       }, options, { timeout: ACTION_TIMEOUT_MS }));
       const selected = await act(target, () => element.selectOption(values, { timeout: ACTION_TIMEOUT_MS }));
-      return reply({ ...(await where(page)), selected });
+      return reply({ ...(await where(page, context)), selected });
     },
   );
 };
@@ -252,7 +275,7 @@ export const registerBrowserUpload: RegisterTool = (server, context) => {
       }
       const page = await siteTab(context);
       await act(target, () => byRef(page, target).setInputFiles(paths, { timeout: ACTION_TIMEOUT_MS }));
-      return reply(await where(page));
+      return reply(await where(page, context));
     },
   );
 };
@@ -299,7 +322,7 @@ export const registerBrowserWait: RegisterTool = (server, context) => {
       } catch {
         throw new BrowserToolError(`"${text ?? textGone}" didn't ${text ? "show" : "go"} within ${timeout / 1000} s.`);
       }
-      return reply(await where(page));
+      return reply(await where(page, context));
     },
   );
 };

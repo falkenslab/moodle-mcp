@@ -1,7 +1,7 @@
 // Other people as the agent sees them (ADR-013, ADR-016): with `pseudonymize`, a stable alias from
 // @falkenslab/pseudonym instead of a name or a Moodle user id, and free text redacted; with `clear`,
 // as Moodle shows them. The person's own data stays visible.
-import type { BrowserContext } from "playwright-core";
+import type { BrowserContext, Page } from "playwright-core";
 import { redact, remember, resolve } from "@falkenslab/pseudonym";
 import { whoAmI } from "@falkenslab/moodle-driver";
 import type { Config } from "./config.js";
@@ -91,4 +91,31 @@ export function refuseAliases(config: Config, ...values: (string | undefined)[])
   if (!pseudonymizing(config)) return;
   const alias = values.map((v) => v?.match(/\bA-[0-9A-HJKMNP-TV-Z]{6,12}\b/)?.[0]).find(Boolean);
   if (alias) throw new Error(`The text names ${alias}, an alias: Moodle would show it as is. Write it without aliases (address the student as "you"), or ask the person to write the names.`);
+}
+
+// A user id in a link: a profile's `id`, or `userid`/`user` anywhere.
+const PROFILE_ID = /(\/user\/(?:view|profile)\.php\?(?:[^\s"'\])]*?&)?id=)\d+/g;
+const USER_PARAM = /([?&](?:userid|user)=)\d+/g;
+
+/**
+ * Text read off a page of the browser tools (ADR-017), under `pseudonymize`: the people the page links to
+ * their profile, as Moodle prints a person, remembered with their id first, so their names become
+ * aliases; then user ids in links removed and the text redacted. Otherwise unchanged.
+ */
+export async function pageText(config: Config, page: Page, siteUrl: string, values: string[]): Promise<string[]> {
+  if (!pseudonymizing(config)) return values;
+  const linked = await page.evaluate(() => {
+    const found: { userId: number; fullName: string }[] = [];
+    const doc = (globalThis as unknown as { document: { querySelectorAll(selector: string): ArrayLike<{ href: string; innerText: string }> } }).document;
+    for (const a of Array.from(doc.querySelectorAll('a[href*="/user/view.php"], a[href*="/user/profile.php"]'))) {
+      const id = Number(new URL(a.href).searchParams.get("id"));
+      // The link's text; a link that is only a picture names the same person as the one beside it, which redact() then finds.
+      const name = a.innerText.replace(/\s+/g, " ").trim();
+      if (id > 0 && name) found.push({ userId: id, fullName: name });
+    }
+    return found;
+  });
+  const unique = [...new Map(linked.map((p) => [p.userId, p])).values()];
+  if (unique.length > 0) await people(config, page.context(), siteUrl, unique);
+  return Promise.all(values.map((value) => text(config, siteUrl, value.replace(PROFILE_ID, "$1[user]").replace(USER_PARAM, "$1[user]"))));
 }
