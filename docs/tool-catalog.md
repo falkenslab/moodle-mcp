@@ -92,6 +92,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_lesson_page` | Current page of a lesson | R | Page | S lesson gating an escape room | Done |
 | `answer_lesson_page` | Answer it and move on | W | Form | S | Done |
 | `get_h5p_activity` | H5P content type, attempts, score | R | Page | S 93 H5P pages; solving stays in the browser | Done |
+| `get_scorm` | A SCORM's attempts, grade, and its SCOs' status and score | R | Page (`view.php`, `prereqs.php`) | Sandbox, 11 Oct 2026 | Done |
+| `open_scorm` | Enter the player (continue or new attempt) for the browser tools to do the package in its frame | W | Page (`player.php`) | Sandbox: a custom SCORM 1.2 done and graded | Done |
 
 ## Teacher: building the course
 
@@ -173,7 +175,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 
 ## Browser fallback and follow mode (ADR-010, ADR-011)
 
-- **Fallback tools.** Done (ADR-010): `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`, on the session's one working tab, limited to the site, never typing passwords, snapshots of the main region cut at 30,000 characters. For what no domain tool covers: H5P, external escape rooms, SCORM upload until it has a tool.
+- **Fallback tools.** Done (ADR-010): `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait`, on the session's one working tab, limited to the site, never typing passwords, snapshots of the main region cut at 30,000 characters. For what no domain tool covers: H5P, external escape rooms, a SCORM package's content once `open_scorm` has opened it.
 - **Follow mode.** Done as `show_browser` (ADR-011): on the person's request, the browser shows a window and each domain tool brings the Moodle page it's working on to the front; hidden again on request.
 
 ## Suggested order

@@ -8,7 +8,7 @@ moodle-mcp is an [MCP](https://modelcontextprotocol.io) server: it gives an AI c
 - **Students stay anonymous to the AI by default.** Other people reach it as aliases such as `A-7KQ2XM`, which only you can turn back into names.
 - **You decide what it may do**: only building content, also grading, acting as a student… Tools that change Moodle say so, and the agent is told to confirm with you first.
 
-Status: early development, not on npm yet. It has 84 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
+Status: early development, not on npm yet. It has 86 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
 
 ## What you can ask
 
@@ -26,6 +26,7 @@ As a student:
 - "What's due this week across my courses?"
 - "Summarize the unit 3 pages for me."
 - "What grade did I get in the last quiz, and which questions did I miss?"
+- "Do the SCORM activity of unit 2, then tell me the grade Moodle recorded."
 
 Before anything that changes Moodle (a grade, a post, an activity), the agent is told to confirm with you, and your client can ask you to approve each call.
 
@@ -136,10 +137,10 @@ Or a list of scopes: `content`, `student-data`, `grading`, `communication`, `as-
 | Participants | `list_participants`, `list_groups` |
 | Forums and messages | `list_discussions`, `get_discussion`, `reply_to_post`, `create_discussion`, `set_discussion_state`, `list_notifications`, `mark_notifications_read`, `list_conversations`, `get_conversation`, `send_message` |
 | Calendar and to-dos | `list_events`, `create_event`, `delete_event`, `list_deadlines`, `list_pending`, `get_activities_overview`, `get_course_updates` |
-| As a student | `get_my_grades`, `get_assignment`, `save_submission`, `submit_assignment`, `get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`, `get_survey`, `submit_survey`, `get_choice`, `answer_choice`, `get_lesson_page`, `answer_lesson_page`, `get_h5p_activity`, `set_completion` |
+| As a student | `get_my_grades`, `get_assignment`, `save_submission`, `submit_assignment`, `get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`, `get_survey`, `submit_survey`, `get_choice`, `answer_choice`, `get_lesson_page`, `answer_lesson_page`, `get_h5p_activity`, `get_scorm`, `open_scorm`, `set_completion` |
 | Browser fallback | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait` |
 
-The browser fallback tools are for what no other tool covers (a plugin, a rare setting, a SCORM package): the agent uses them on your site only, never types passwords, and tells you which task needed them. With `pseudonymize` they never open pages about people (participants, grades, reports, forums, messages), and people on other pages reach the AI as aliases.
+The browser fallback tools are for what no other tool covers (a plugin, a rare setting, the inside of a SCORM package that `open_scorm` opened): the agent uses them on your site only, never types passwords, and tells you which task needed them. With `pseudonymize` they never open pages about people (participants, grades, reports, forums, messages), and people on other pages reach the AI as aliases.
 
 Activities done as a student go at a reader's pace by default, so Moodle records views and completion as for a person; `MOODLE_MCP_TRAIL=fast` skips the pauses.
 
