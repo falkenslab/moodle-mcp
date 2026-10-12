@@ -16,8 +16,9 @@ A Docusaurus site in `docs/`, in English and Spanish, published on GitHub Pages,
 - `docs/` as a Docusaurus site (`content/`, `i18n/es/`, `static/img/` with the logo), `docs.yml` building it on pull requests and publishing it to GitHub Pages from `main`; Pages enabled for the repository.
 - Pages: introduction; getting started per client (Claude Code, Claude Desktop, Codex CLI), the first login, watching the browser; use cases as a teacher and as a student, each with the conversation and Moodle's result; students' privacy; limits (role, read only, scopes, student data); settings; troubleshooting; development.
 - A tools reference generated from the server's own `tools/list`, so it can't drift; a script for it, run on build.
-- Screenshots: a script per use case drives `claude -p` / `codex exec` with the server in Docker (`scripts/in-docker.mjs`), the conversation rendered as a terminal image, and Playwright in Docker captures Moodle; outputs in `docs/static/img/`, sandbox data only, aliases as they come.
-- README: logo, one paragraph, quick install for Claude Code and Codex, a link to the site; `docs/development.md` and `docs/tool-catalog.md` move into the site.
+- Screenshots: the real Claude Code and Codex interfaces, run interactively in Docker in a web terminal (ttyd) with the server and the sandbox, typed and photographed by Playwright, with temporary copies of the owner's client credentials deleted afterwards (decided 12 October 2026); Moodle's pages photographed the same way; outputs in `docs/static/img/`, sandbox data only, aliases as they come. Commands and their output are HTML terminals (`<Terminal>`), selectable and copyable, not images.
+- README: logo, one paragraph, quick install for Claude Code and Codex, a link to the site; `docs/development.md` moves into the site's developers pages, and `docs/tool-catalog.md`, a planning document, to `.minispec/`.
+- Versions: each release snapshots the docs (`docs:version`, in the `release` skill), shown in a version menu, the current docs under `/next`.
 
 ## Acceptance
 

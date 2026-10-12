@@ -37,4 +37,4 @@ Everything that works Moodle is moodle-driver's (sibling repository, ADR-014): t
 - `src/` — the server; `test/` — `node:test` suites mirroring it, against the driver's fake Moodle (`@falkenslab/moodle-driver/testing`).
 - `scripts/` — the esbuild build (the driver bundled, `playwright-core` outside) and the Docker runner for anything that opens a browser.
 - `dist/server.mjs` — the bundle and the package's bin (not committed).
-- `docs/tool-catalog.md` — candidate tools by use case; `.minispec/` — this specification.
+- `.minispec/tool-catalog.md` — candidate tools by use case; `.minispec/` — this specification; `docs/` — the documentation site (Docusaurus, published to GitHub Pages).

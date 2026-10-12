@@ -16,7 +16,7 @@ Stop and report at the first that fails:
 - On `main`, working tree clean, up to date with `origin/main` (`git fetch && git status -sb`). No remote yet: stop and ask.
 - The `verify` skill is green, and a `sandbox-check` of login, a read and a write tool passed on this commit.
 - `gh auth status` works; `npm whoami` works (if not, ask the owner to run `npm login` themselves: it's interactive).
-- The documentation describes every change since the last tag (`update-docs`): README, tool list, catalog.
+- The documentation describes every change since the last tag (`update-docs`): the site in both languages, the tools reference (`npm run tools` in `docs/`), the README's quick start, the catalog.
 
 ## 2. Decide the bump
 
@@ -26,10 +26,12 @@ Stop and report at the first that fails:
 
 `npm version <patch|minor> --no-git-tag-version` (updates `package.json` and the lock; `src/version.ts` reads it at build time). Draft notes in English from the commits: new tools, changed tools (with what a client must change), fixes, internal.
 
+Then the documentation: add the version to `docs/content/releases.md` and its Spanish copy (date and the notes in plain terms for users), rebuild the server and run `npm run tools` in `docs/`, and keep a copy of this version's docs with `npx docusaurus docs:version X.Y.Z` in `docs/`. That snapshots `content/` into `versioned_docs/version-X.Y.Z/` and the sidebar into `versioned_sidebars/`, and lists it in `versions.json`; copy the Spanish pages too: `docs/i18n/es/docusaurus-plugin-content-docs/current/` to `…/version-X.Y.Z/`, and `current.json` to `version-X.Y.Z.json` with its `version.label` set to `X.Y.Z`. The site then serves this version by default and the current docs under `/next`. `npm run build` in `docs/` must pass.
+
 ## 4. Commit, tag, push, publish
 
 ```
-git add package.json package-lock.json
+git add package.json package-lock.json docs
 git commit -F -        # "chore(release): vX.Y.Z" plus the session's attribution trailer
 git tag vX.Y.Z
 git push origin main

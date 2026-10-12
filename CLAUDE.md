@@ -9,7 +9,7 @@ Before writing any code, read `.minispec/README.md` and follow its reading contr
 - `npm run build` (esbuild → `dist/server.mjs`), `npm run typecheck`, `npm run lint`.
 - Tests open browsers: always in Docker, never `npm test` on the host. All: `npm run test:docker`. One file, from Git Bash: `MSYS_NO_PATHCONV=1 node scripts/in-docker.mjs npx tsx --test test/tools/<file>.test.ts`.
 - Schema check (must say no warnings): the Inspector's `tools/list --strict` inside Docker, as the `verify` skill runs it.
-- More in `docs/development.md`.
+- The documentation site is in `docs/` (Docusaurus, English and Spanish; `npm run build` there); developing notes in its `developers/` pages.
 
 ## Rules that are easy to miss
 
