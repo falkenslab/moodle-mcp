@@ -2,9 +2,9 @@
 // and members as aliases under pseudonymize, their texts redacted, aliases refused in what is sent.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { conversation, conversations, markNotificationsRead, notifications, sendMessage, userById } from "@falkenslab/moodle-driver";
+import { conversation, conversations, markNotificationsRead, messageParticipants, notifications, sendMessage, userById } from "@falkenslab/moodle-driver";
 import { requireSiteUrl, type Config } from "../config.js";
-import { people, personFields, pseudonymizing, refuseAliases, self, shown, targetFields, targetName, targetUserId, text } from "../people.js";
+import { people, peopleByIds, personFields, pseudonymizing, refuseAliases, self, shown, targetFields, targetName, targetsFields, targetUserId, targetUserIds, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
@@ -145,6 +145,52 @@ export const registerSendMessage: RegisterTool = (server, { config, browser }) =
       const target = await targetUserId(config, requireSiteUrl(config), { user, userId });
       const sent = await sendMessage(...(await onSite(config, browser)), target, body);
       return reply({ ...sent, changed: `Message sent to ${targetName({ user, userId })}.` });
+    },
+  );
+};
+
+export const registerMessageParticipants: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "message_participants",
+    {
+      title: "Message several participants",
+      description:
+        "Send one private message to several participants of a course, as the participants page's \"Send a message\" does: to users (aliases) or userIds, or to everyone chosen by role, group or inactiveSince (everyone when none is given), the person left out. Returns who got it and who Moodle didn't write to, and why. The text is plain, with no aliases in it. Sent as the person, visibly: confirm the text and the recipients with the person first.",
+      inputSchema: {
+        courseId: z.number().int().positive(),
+        text: z.string().min(1),
+        ...targetsFields,
+        role: z.number().int().positive().optional().describe("Or: everyone with this role"),
+        group: z.number().int().positive().optional().describe("Or: everyone in this group"),
+        inactiveSince: z.string().optional().describe("Or: everyone who hasn't accessed the course since this date (ISO 8601)"),
+      },
+      outputSchema: {
+        changed: z.string(),
+        sentTo: z.array(z.object(personFields)),
+        refused: z.array(z.object({ ...personFields, reason: z.string() })),
+      },
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
+    },
+    async ({ courseId, text: body, users, userIds, role, group, inactiveSince }) => {
+      refuseAliases(config, body);
+      const siteUrl = requireSiteUrl(config);
+      const chosen = users || userIds;
+      if (chosen && (role !== undefined || group !== undefined || inactiveSince !== undefined)) throw new Error("Give the recipients as people, or by role, group or inactiveSince: not both.");
+      let since: Date | undefined;
+      if (inactiveSince !== undefined) {
+        since = new Date(inactiveSince);
+        if (Number.isNaN(since.getTime())) throw new Error(`"${inactiveSince}" isn't an ISO 8601 date.`);
+      }
+      const selection = chosen ? { userIds: await targetUserIds(config, siteUrl, { users, userIds }) } : { role, group, inactiveSince: since };
+      const [context] = await onSite(config, browser);
+      const result = await messageParticipants(context, siteUrl, courseId, body, selection);
+      // Moodle reports recipients by id: as aliases (or names) from the course's participants.
+      const shownIds = await peopleByIds(config, context, siteUrl, courseId, [...result.sentTo, ...result.refused.map((r) => r.userId)]);
+      return reply({
+        changed: `Message sent to ${result.sentTo.length} participant${result.sentTo.length === 1 ? "" : "s"} of course ${courseId}${result.refused.length ? `; ${result.refused.length} refused` : ""}.`,
+        sentTo: result.sentTo.map((id) => shownIds.get(id)!),
+        refused: await Promise.all(result.refused.map(async (r) => ({ ...shownIds.get(r.userId)!, reason: await text(config, siteUrl, r.reason) }))),
+      });
     },
   );
 };

@@ -3,7 +3,7 @@
 // as Moodle shows them. The person's own data stays visible.
 import type { BrowserContext, Page } from "playwright-core";
 import { redact, remember, resolve } from "@falkenslab/pseudonym";
-import { whoAmI } from "@falkenslab/moodle-driver";
+import { participants, whoAmI } from "@falkenslab/moodle-driver";
 import { z } from "zod";
 import type { Config } from "./config.js";
 
@@ -149,4 +149,33 @@ export async function targetUserId(config: Config, siteUrl: string, { user, user
 /** How a result names the target: the alias the agent gave, or the user id. */
 export function targetName({ user, userId }: { user?: string; userId?: number }): string {
   return user ?? `user ${userId}`;
+}
+
+/** Several people a write tool acts on: `users` (aliases) under pseudonymize, else `userIds`. */
+export const targetsFields = {
+  users: z.array(z.string()).min(1).optional().describe("The participants' aliases, as the reading tools give them when the server pseudonymizes"),
+  userIds: z.array(z.number().int().positive()).min(1).optional().describe("The participants' user ids, when the server shows names"),
+};
+
+export async function targetUserIds(config: Config, siteUrl: string, { users, userIds }: { users?: string[]; userIds?: number[] }): Promise<number[]> {
+  const pseudonymous = pseudonymizing(config);
+  if (pseudonymous ? !users || userIds : !userIds || users)
+    throw new Error(pseudonymous ? "This server pseudonymizes: give the participants as users, the aliases the reading tools give." : "Give the participants as userIds, as the reading tools give them.");
+  return users ? Promise.all(users.map((alias) => userIdOf(siteUrl, alias))) : userIds!;
+}
+
+export function targetsName({ users, userIds }: { users?: string[]; userIds?: number[] }): string {
+  return (users ?? (userIds ?? []).map((id) => `user ${id}`)).join(", ");
+}
+
+/**
+ * People the driver gives by user id only (a group's members, who a message reached), as tools give
+ * people: their names come from the course's participants, read once, so each gets an alias or a name.
+ */
+export async function peopleByIds(config: Config, context: BrowserContext, siteUrl: string, courseId: number, ids: number[]): Promise<Map<number, ReturnType<typeof shown>>> {
+  if (ids.length === 0) return new Map();
+  const everyone = await participants(context, siteUrl, courseId);
+  const who = await people(config, context, siteUrl, everyone);
+  const byId = new Map(everyone.map((p, i) => [p.userId, shown(who[i]!)]));
+  return new Map(ids.map((id) => [id, byId.get(id) ?? (pseudonymizing(config) ? { user: "[participant]" } : { userId: id })]));
 }

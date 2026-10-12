@@ -1,12 +1,31 @@
 // The question bank tools: banks, their questions, importing and creating questions.
 import { z } from "zod";
-import { QUESTION_TYPES, createQuestion, importQuestions, questionBanks, questions } from "@falkenslab/moodle-driver";
+import { QUESTION_TYPES, createQuestion, deleteQuestions, importQuestions, questionBanks, questions, setQuestionStatus, updateQuestion } from "@falkenslab/moodle-driver";
 import { formSettings } from "./courseSettings.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
 const bankId = z.number().int().positive().describe("The bank's id (a course module id), as list_question_banks gives it");
 const categoryId = z.number().int().positive().optional().describe("The bank category, as list_questions gives it; the bank's default when missing");
+
+/** What create_question and update_question share, beyond the type, name and text. */
+const questionFields = {
+  answers: z
+    .array(
+      z.object({
+        text: z.string(),
+        fraction: z.number().min(-1).max(1).describe("Its share of the mark: 1 right, 0 wrong, negatives as penalties (the nearest one Moodle offers)"),
+        feedback: z.string().optional(),
+        tolerance: z.number().min(0).optional().describe("Numerical answers: the error accepted"),
+      }),
+    )
+    .optional()
+    .describe("Multichoice, shortanswer and numerical answers"),
+  correct: z.boolean().optional().describe("Truefalse: the right answer"),
+  categoryId,
+  defaultMark: z.number().positive().optional(),
+  fields: formSettings.describe("Any other field of the type's form, by name"),
+};
 
 const question = z.object({
   id: z.number().int().describe("The question's id, which add_questions_to_quiz takes"),
@@ -82,25 +101,60 @@ export const registerCreateQuestion: RegisterTool = (server, { config, browser }
         type: z.enum(QUESTION_TYPES),
         name: z.string().min(1),
         text: z.string().min(1).describe("The question text (HTML)"),
-        answers: z
-          .array(
-            z.object({
-              text: z.string(),
-              fraction: z.number().min(-1).max(1).describe("Its share of the mark: 1 right, 0 wrong, negatives as penalties (the nearest one Moodle offers)"),
-              feedback: z.string().optional(),
-              tolerance: z.number().min(0).optional().describe("Numerical answers: the error accepted"),
-            }),
-          )
-          .optional()
-          .describe("Multichoice, shortanswer and numerical answers"),
-        correct: z.boolean().optional().describe("Truefalse: the right answer"),
-        categoryId,
-        defaultMark: z.number().positive().optional(),
-        fields: formSettings.describe("Any other field of the type's form, by name"),
+        ...questionFields,
       },
       outputSchema: { changed: z.string(), questionId: z.number().int().optional() },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
     async ({ bankId: id, ...input }) => reply(await createQuestion(...(await onSite(config, browser)), id, input)),
+  );
+};
+
+export const registerUpdateQuestion: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "update_question",
+    {
+      title: "Change a question in a bank",
+      description:
+        "Change a question of a bank through its type's form: only what's given changes (answers replaces them all). Saving makes a new version with its own id, the one returned, which quizzes using the latest version get from then on. Changes the bank: confirm with the person first.",
+      inputSchema: {
+        bankId,
+        questionId: z.number().int().positive().describe("As list_questions gives it"),
+        name: z.string().min(1).optional(),
+        text: z.string().min(1).optional().describe("The question text (HTML)"),
+        ...questionFields,
+      },
+      outputSchema: { changed: z.string(), questionId: z.number().int().optional().describe("The new version's id") },
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    },
+    async ({ bankId: id, questionId, ...input }) => reply(await updateQuestion(...(await onSite(config, browser)), id, questionId, input)),
+  );
+};
+
+export const registerDeleteQuestions: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "delete_questions",
+    {
+      title: "Delete questions from a bank",
+      description: "Delete questions from a bank, every version of each, as the bank's delete action does. Moodle doesn't delete a question a quiz uses: it hides it, and hidden lists those. Can't be undone: confirm with the person first.",
+      inputSchema: { bankId, questionIds: z.array(z.number().int().positive()).min(1).describe("As list_questions gives them") },
+      outputSchema: { changed: z.string(), deleted: z.array(z.number().int()), hidden: z.array(z.number().int()).describe("Used by a quiz: hidden instead of deleted") },
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
+    },
+    async ({ bankId: id, questionIds }) => reply(await deleteQuestions(...(await onSite(config, browser)), id, questionIds)),
+  );
+};
+
+export const registerSetQuestionStatus: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "set_question_status",
+    {
+      title: "Set a question ready or draft",
+      description: "Set a bank question ready (quizzes can use it) or draft, as the bank's status menu does.",
+      inputSchema: { questionId: z.number().int().positive().describe("As list_questions gives it"), status: z.enum(["ready", "draft"]) },
+      outputSchema: { changed: z.string(), questionId: z.number().int(), status: z.enum(["ready", "draft"]) },
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    },
+    async ({ questionId, status }) => reply(await setQuestionStatus(...(await onSite(config, browser)), questionId, status)),
   );
 };

@@ -1,6 +1,6 @@
 // The calendar tools: upcoming events, and course events created or deleted through the calendar's own form and service.
 import { z } from "zod";
-import { createEvent, deleteEvent, upcomingEvents } from "@falkenslab/moodle-driver";
+import { calendarEvent, createEvent, deleteEvent, upcomingEvents, updateEvent } from "@falkenslab/moodle-driver";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
@@ -64,5 +64,50 @@ export const registerDeleteEvent: RegisterTool = (server, { config, browser }) =
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     },
     async ({ eventId }) => reply(await deleteEvent(...(await onSite(config, browser)), eventId)),
+  );
+};
+
+export const registerGetEvent: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "get_event",
+    {
+      title: "Read a calendar event",
+      description: "Read one calendar event by its id, as list_events gives them.",
+      inputSchema: { eventId: z.number().int().positive() },
+      outputSchema: event.shape,
+      annotations: { readOnlyHint: true, openWorldHint: true },
+    },
+    async ({ eventId }) => reply(await calendarEvent(...(await onSite(config, browser)), eventId)),
+  );
+};
+
+export const registerUpdateEvent: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "update_event",
+    {
+      title: "Change a calendar event",
+      description: "Change a calendar event through the calendar's own form: only what's given changes; a new start keeps its length unless a new one is given. Activities' dates are changed in the activity instead. Returns the event afterwards. Visible to the course: confirm with the person first.",
+      inputSchema: {
+        eventId: z.number().int().positive(),
+        name: z.string().min(1).optional(),
+        description: z.string().optional().describe("HTML"),
+        start: z.string().optional().describe("ISO 8601"),
+        durationMinutes: z.number().int().positive().optional(),
+        until: z.string().optional().describe("Or the end, ISO 8601"),
+        location: z.string().optional(),
+        wholeSeries: z.boolean().optional().describe("For a repeated event: change every one"),
+      },
+      outputSchema: { changed: z.string(), event },
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    },
+    async ({ eventId, start, until, ...rest }) => {
+      const date = (value: string | undefined, field: string) => {
+        if (value === undefined) return undefined;
+        const parsed = new Date(value);
+        if (Number.isNaN(parsed.getTime())) throw new Error(`${field}: "${value}" isn't an ISO 8601 date and time.`);
+        return parsed;
+      };
+      return reply(await updateEvent(...(await onSite(config, browser)), eventId, { ...rest, start: date(start, "start"), until: date(until, "until") }));
+    },
   );
 };
