@@ -19,7 +19,7 @@ const activity = z.object({
   completion: z
     .object({ state: z.enum(COMPLETION_STATES), complete: z.boolean() })
     .optional()
-    .describe("The person's completion, when the activity tracks it for them"),
+    .describe("The person's completion: only for a student, on an activity with completion tracking"),
   dates: z.array(z.object({ label: z.string(), value: z.string() })).optional().describe("With details: as the course page shows them, in the site's language"),
   restriction: z.string().optional().describe("With details: the restriction as the course page shows it"),
 });
@@ -47,7 +47,7 @@ export const registerGetCourseStructure: RegisterTool = (server, { config, brows
     {
       title: "Get a course's structure",
       description:
-        "Get a Moodle course's sections and activities: ids, names, types, URLs, visibility, whether the person can open each one, restrictions and the person's completion. With details, also each activity's dates and restriction text as the course page shows them. Takes the course id from list_courses.",
+        "Get a Moodle course's sections and activities: ids, names, types, URLs, visibility, whether the person can open each one, restrictions and, where Moodle tracks it, the person's completion: only as a student, on activities with completion tracking (a teacher gets none; students' completion is in get_completion_report). With details, also each activity's dates and restriction text as the course page shows them. Takes the course id from list_courses.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },

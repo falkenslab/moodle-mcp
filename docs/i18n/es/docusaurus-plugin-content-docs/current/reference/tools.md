@@ -144,7 +144,7 @@ Show this server's version and effective configuration: the Moodle site, the bro
 
 **List my courses**
 
-List the Moodle courses the logged-in person is enrolled in (as teacher or student), with their ids, names, category, URL, visibility, dates and the person's progress. Filter by dates with classification.
+List the Moodle courses the logged-in person is enrolled in (as teacher or student), with their ids, names, category, URL, visibility, dates and, where Moodle tracks it, the person's progress: only as a student, in courses with completion tracking (a teacher gets none; students' progress is in get_completion_report). Filter by dates with classification.
 
 <details>
 <summary>Parámetros</summary>
@@ -159,7 +159,7 @@ List the Moodle courses the logged-in person is enrolled in (as teacher or stude
 
 **Get a course's structure**
 
-Get a Moodle course's sections and activities: ids, names, types, URLs, visibility, whether the person can open each one, restrictions and the person's completion. With details, also each activity's dates and restriction text as the course page shows them. Takes the course id from list_courses.
+Get a Moodle course's sections and activities: ids, names, types, URLs, visibility, whether the person can open each one, restrictions and, where Moodle tracks it, the person's completion: only as a student, on activities with completion tracking (a teacher gets none; students' completion is in get_completion_report). With details, also each activity's dates and restriction text as the course page shows them. Takes the course id from list_courses.
 
 <details>
 <summary>Parámetros</summary>

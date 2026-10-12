@@ -19,7 +19,7 @@ export const course = z.object({
   visible: z.boolean().describe("Whether students can see the course"),
   startDate: z.string().optional().describe("ISO 8601"),
   endDate: z.string().optional().describe("ISO 8601"),
-  progress: z.number().optional().describe("The person's completion percentage, when the course tracks it"),
+  progress: z.number().optional().describe("The person's completion percentage: only for a student, in a course with completion tracking"),
   lastAccess: z.string().optional().describe("When the person last opened the course, ISO 8601"),
 });
 
@@ -31,7 +31,7 @@ export const registerListCourses: RegisterTool = (server, { config, browser }) =
     {
       title: "List my courses",
       description:
-        "List the Moodle courses the logged-in person is enrolled in (as teacher or student), with their ids, names, category, URL, visibility, dates and the person's progress. Filter by dates with classification.",
+        "List the Moodle courses the logged-in person is enrolled in (as teacher or student), with their ids, names, category, URL, visibility, dates and, where Moodle tracks it, the person's progress: only as a student, in courses with completion tracking (a teacher gets none; students' progress is in get_completion_report). Filter by dates with classification.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
