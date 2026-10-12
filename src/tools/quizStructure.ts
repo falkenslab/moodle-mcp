@@ -11,6 +11,7 @@ const structure = {
   slots: z.array(
     z.object({
       id: z.number().int().describe("The slot's id"),
+      slot: z.number().int().describe("Its place in the quiz, from 1: what the slot tools take"),
       number: z.number().int().optional().describe("The question's number in the quiz"),
       page: z.number().int(),
       questionId: z.number().int().optional().describe("None for a random question"),
@@ -19,6 +20,7 @@ const structure = {
       mark: z.string().optional(),
     }),
   ),
+  sections: z.array(z.object({ id: z.number().int(), heading: z.string(), firstSlot: z.number().int(), shuffle: z.boolean() })).describe("The quiz's sections, each from its first slot"),
 };
 
 export const registerGetQuizStructure: RegisterTool = (server, { config, browser }) => {

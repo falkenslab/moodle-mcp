@@ -107,7 +107,7 @@ describe("content tools against the fake Moodle", { skip: !browser && "no system
     });
     const client = await connect(context);
     const read = await call(client, "get_quiz_structure", { quizId: 41 });
-    assert.deepEqual(read.out, { quiz: { id: 41 }, slots: [{ id: 20, number: 1, page: 1, questionId: 21, type: "truefalse", name: "Range", mark: "1.00" }] });
+    assert.deepEqual(read.out, { quiz: { id: 41 }, slots: [{ id: 20, slot: 1, number: 1, page: 1, questionId: 21, type: "truefalse", name: "Range", mark: "1.00" }], sections: [] });
     const added = await call(client, "add_questions_to_quiz", { quizId: 41, questionIds: [22] });
     assert.equal(added.error, undefined, added.error);
     assert.deepEqual((added.out.slots as { questionId?: number }[]).map((s) => s.questionId), [21, 22]);

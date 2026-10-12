@@ -29,6 +29,7 @@ const question = z.object({
   fields: z.array(field),
   feedback: z.string().optional(),
   rightAnswer: z.string().optional(),
+  comment: z.string().optional().describe("In a review: the teacher's comment, when graded by hand"),
 });
 
 const reply = <T extends Record<string, unknown>>(output: T) => ({ content: [{ type: "text" as const, text: JSON.stringify(output, null, 2) }], structuredContent: output });

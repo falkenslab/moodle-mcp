@@ -163,7 +163,7 @@ To share the session with [moodle-driver](https://github.com/falkenslab/moodle-d
 
 ## Troubleshooting
 
-- **"No session" or a login window that keeps coming back.** Log in in the window that opens; it waits 5 minutes. Profiles from before moodle-driver 0.2 need one more login.
+- **"No session" or a login window that keeps coming back.** Log in in the window that opens; it waits 5 minutes. After updating moodle-mcp, a profile may need one more login: the browser library sometimes renames the file where it keeps the session (it did in October 2026).
 - **"Downloading a browser".** There's no Edge or Chrome: the server is fetching Chromium once. Try again in a minute or two.
 - **No window can open** (a container, a server without a screen). Log in on a machine with a screen and give the server that profile folder.
 - **The agent says it can't do something.** Your limits may leave that tool out: ask it for `server_info`.

@@ -5,6 +5,7 @@ import { courseState, type CourseState } from "@falkenslab/moodle-driver/interna
 import type { Config } from "../config.js";
 import { ACTIVITY_VISIBILITIES, addSection, deleteActivity, deleteSection, duplicateActivity, editActivity, editSection } from "@falkenslab/moodle-driver";
 import { section } from "./getCourseStructure.js";
+import { restrictionsSchema, toRestrictions } from "./conditions.js";
 import { onSite, reply } from "./reply.js";
 import { OutOfScopeError, holdsOthersWork, studentDataAllowed } from "./scopes.js";
 import type { RegisterTool } from "./types.js";
@@ -94,8 +95,13 @@ export const registerAddSection: RegisterTool = (server, { config, browser }) =>
     "add_section",
     {
       title: "Add a section",
-      description: "Add a section to a course, at the end or after a given section, optionally named. Returns its id and the course structure. Changes the course: confirm with the person first.",
-      inputSchema: { courseId, name: z.string().min(1).optional(), afterSectionId: sectionId.optional().describe("Add it after this section; at the end when missing") },
+      description: "Add a section to a course, at the end or after a given section, optionally named and described. Returns its id and the course structure. Changes the course: confirm with the person first.",
+      inputSchema: {
+        courseId,
+        name: z.string().min(1).optional(),
+        summary: z.string().optional().describe("Its description (HTML)"),
+        afterSectionId: sectionId.optional().describe("Add it after this section; at the end when missing"),
+      },
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
@@ -107,19 +113,23 @@ export const registerEditSection: RegisterTool = (server, { config, browser }) =
   server.registerTool(
     "edit_section",
     {
-      title: "Edit a section's name, visibility or place",
-      description: "Change a section: rename it, show or hide it (with its activities), or move it after another section. Only what is given changes. Returns the course structure. Changes the course: confirm with the person first.",
+      title: "Edit a section",
+      description:
+        "Change a section: rename it, describe it, show or hide it (with its activities), restrict access to it, or move it after another section. Only what is given changes. Returns the course structure. Changes the course: confirm with the person first.",
       inputSchema: {
         courseId,
         sectionId,
         name: z.string().min(1).optional(),
         visible: z.boolean().optional(),
+        summary: z.string().optional().describe("Its description (HTML)"),
+        restrictions: restrictionsSchema.optional().describe("When students can open it ({ conditions: [] } removes them)"),
         afterSectionId: sectionId.optional().describe("Move it after this section"),
       },
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
-    async ({ courseId, sectionId, ...change }) => reply(await editSection(...(await onSite(config, browser)), courseId, sectionId, change)),
+    async ({ courseId, sectionId, restrictions, ...change }) =>
+      reply(await editSection(...(await onSite(config, browser)), courseId, sectionId, { ...change, ...(restrictions && { restrictions: toRestrictions(restrictions) }) })),
   );
 };
 

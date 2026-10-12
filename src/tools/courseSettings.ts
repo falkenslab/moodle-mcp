@@ -1,6 +1,7 @@
 // get_activity_settings and update_course: a form's fields as Moodle holds them, and the course's own form.
 import { z } from "zod";
 import { activitySettings, updateCourse } from "@falkenslab/moodle-driver";
+import { completionSchema, fromCompletion, fromRestrictions, restrictionsSchema } from "./conditions.js";
 import { course } from "./listCourses.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
@@ -27,16 +28,27 @@ export const registerGetActivitySettings: RegisterTool = (server, { config, brow
     {
       title: "Get an activity's settings",
       description:
-        "Read every setting of an activity as its edit form holds them, without changing anything: its module, name, description and each field with its form name, label, value and options. Use it before update_activity, whose settings take these names. Teachers only. Takes the activity id from get_course_structure.",
+        "Read every setting of an activity as its edit form holds them, without changing anything: its module, name, description, each field with its form name, label, value and options, a resource's, folder's or SCORM's files, and its access restrictions and completion in the terms update_activity takes. Use it before update_activity. Teachers only. Takes the activity id from get_course_structure.",
       inputSchema: { activityId: z.number().int().positive().describe("The activity's id (course module id), as get_course_structure gives it") },
-      outputSchema: { id: z.number().int(), module: z.string(), courseId: z.number().int(), name: z.string(), description: z.string().describe("HTML"), fields: z.array(field) },
+      outputSchema: {
+        id: z.number().int(),
+        module: z.string(),
+        courseId: z.number().int(),
+        name: z.string(),
+        description: z.string().describe("HTML"),
+        fields: z.array(field),
+        files: z.array(z.object({ name: z.string().describe("Its path in the activity, as update_activity's files.remove takes it"), size: z.number() })).optional(),
+        restrictions: restrictionsSchema.optional(),
+        completion: completionSchema.optional().describe("None when completion is off"),
+      },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ activityId }) => {
       const settings = await activitySettings(...(await onSite(config, browser)), activityId);
       // A multiple select's value is a list: its own field, since some clients reject a union of types.
       const fields = settings.fields.map(({ value, ...rest }) => ({ ...rest, ...(Array.isArray(value) ? { values: value } : value !== undefined && { value }) }));
-      return reply({ ...settings, fields });
+      const { restrictions, completion, files, ...rest } = settings;
+      return reply({ ...rest, fields, ...(files && { files }), ...(restrictions && { restrictions: fromRestrictions(restrictions) }), ...(completion && { completion: fromCompletion(completion) }) });
     },
   );
 };

@@ -18,6 +18,8 @@ const assignmentSchema = {
   graded: z.boolean(),
   submittedFiles: z.array(link),
   feedback: z.array(detail).describe("Grade and feedback, once released"),
+  feedbackFiles: z.array(link).describe("Files the teacher returned with the feedback"),
+  group: z.object({ id: z.number().int().optional(), name: z.string() }).optional().describe("The student's group, in a group assignment"),
   canEdit: z.boolean().describe("save_submission can change the submission now"),
   canSubmit: z.boolean().describe("submit_assignment can submit the draft now"),
 };

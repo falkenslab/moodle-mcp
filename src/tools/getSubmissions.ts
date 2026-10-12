@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { assignmentSubmissions } from "@falkenslab/moodle-driver";
-import { people, pseudonymizing, text } from "../people.js";
+import { WORKFLOW_STATES, assignmentSubmissions } from "@falkenslab/moodle-driver";
+import { people, personFields, pseudonymizing, shown, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
@@ -20,6 +20,10 @@ const submission = z.object({
   allowSubmissionsFrom: z.string().optional().describe("ISO 8601, for this participant"),
   dueDate: z.string().optional().describe("ISO 8601, for this participant (overrides and extensions included)"),
   cutoffDate: z.string().optional().describe("ISO 8601, for this participant"),
+  group: z.object({ id: z.number().int(), name: z.string() }).optional().describe("The participant's group, in a group assignment"),
+  workflowState: z.enum(WORKFLOW_STATES).optional().describe("The marking workflow state, when the assignment uses it"),
+  markers: z.array(z.object(personFields)).optional().describe("Who marks it (aliases when the server pseudonymizes), when markers are allocated"),
+  feedbackFiles: z.array(z.object({ name: z.string(), url: z.string().optional().describe("None when pseudonymizing") })).optional().describe("Feedback files returned to the participant"),
   content: z
     .array(z.object({ plugin: z.string().describe('"onlinetext", "file"…'), text: z.string(), files: z.array(z.object({ name: z.string(), url: z.string().optional().describe("None when pseudonymizing: the link carries the file's name") })) }))
     .optional()
@@ -46,10 +50,17 @@ export const registerGetSubmissions: RegisterTool = (server, { config, browser }
       const [context, siteUrl] = await onSite(config, browser);
       const found = await assignmentSubmissions(context, siteUrl, assignmentId, { includeContent });
       const who = await people(config, context, siteUrl, found);
+      // Markers are people too: one list for all of them, so each gets one alias.
+      const markerList = [...new Map(found.flatMap((s) => s.markers ?? []).map((m) => [m.id, { userId: m.id, fullName: m.name }])).values()];
+      const markerShown = new Map((await people(config, context, siteUrl, markerList)).map((p, i) => [markerList[i]!.userId, shown(p)]));
       const submissions = await Promise.all(
-        found.map(async ({ status, submitted, needsGrading, extensionGranted, allowSubmissionsFrom, dueDate, cutoffDate, content }, i) => ({
+        found.map(async ({ status, submitted, needsGrading, extensionGranted, allowSubmissionsFrom, dueDate, cutoffDate, content, group, workflowState, markers, feedbackFiles }, i) => ({
           ...(who[i]!.alias ? { user: who[i]!.alias } : { userId: who[i]!.userId, fullName: who[i]!.fullName }),
-          ...{ status, submitted, needsGrading, extensionGranted, allowSubmissionsFrom, dueDate, cutoffDate },
+          ...{ status, submitted, needsGrading, extensionGranted, allowSubmissionsFrom, dueDate, cutoffDate, workflowState },
+          ...(group && { group: { id: group.id, name: await text(config, siteUrl, group.name) } }),
+          ...(markers && { markers: markers.map((m) => markerShown.get(m.id)!) }),
+          // Feedback files are often named after the student, and so are their links.
+          ...(feedbackFiles && { feedbackFiles: await Promise.all(feedbackFiles.map(async (f) => (pseudonymizing(config) ? { name: await text(config, siteUrl, f.name) } : f))) }),
           ...(content && {
             content: await Promise.all(
               content.map(async (c) => ({

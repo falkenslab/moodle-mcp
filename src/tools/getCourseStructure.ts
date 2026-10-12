@@ -31,6 +31,7 @@ export const section = z.object({
   visible: z.boolean(),
   restricted: z.boolean(),
   url: z.string().optional(),
+  summary: z.string().optional().describe("The section's description (HTML)"),
   parentSectionId: z.number().int().optional().describe("For a subsection, the section that holds it"),
   activities: z.array(activity),
 });
