@@ -1,0 +1,69 @@
+/* The same window frame as the Terminal component: dark for the AI apps, light for Moodle's pages. */
+.window {
+  margin: 0 0 var(--ifm-leading);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.dark {
+  --shot-bg: #16181d;
+  --shot-bar: #1d2027;
+  --shot-border: #2c3039;
+  --shot-muted: #8b93a1;
+  border: 1px solid var(--shot-border);
+  background: var(--shot-bg);
+}
+
+.light {
+  --shot-bg: #ffffff;
+  --shot-bar: #eef0f3;
+  --shot-border: #d6d9de;
+  --shot-muted: #5b6270;
+  border: 1px solid var(--shot-border);
+  background: var(--shot-bg);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  background: var(--shot-bar);
+  border-bottom: 1px solid var(--shot-border);
+  color: var(--shot-muted);
+  font-size: 0.8rem;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.dot:nth-child(1) {
+  background: #ff5f57;
+}
+
+.dot:nth-child(2) {
+  background: #febc2e;
+}
+
+.dot:nth-child(3) {
+  background: #28c840;
+}
+
+.title {
+  margin-left: 8px;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.dark .image {
+  padding: 10px 12px;
+}

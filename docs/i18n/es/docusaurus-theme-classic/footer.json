@@ -1,0 +1,58 @@
+{
+  "link.title.Documentation": {
+    "message": "Documentación",
+    "description": "The title of the footer links column with title=Documentation in the footer"
+  },
+  "link.title.Project": {
+    "message": "Proyecto",
+    "description": "The title of the footer links column with title=Project in the footer"
+  },
+  "link.title.Related": {
+    "message": "Relacionado",
+    "description": "The title of the footer links column with title=Related in the footer"
+  },
+  "link.item.label.Getting started": {
+    "message": "Primeros pasos",
+    "description": "The label of footer link with label=Getting started linking to /getting-started/requirements"
+  },
+  "link.item.label.Use cases": {
+    "message": "Casos de uso",
+    "description": "The label of footer link with label=Use cases linking to /use-cases"
+  },
+  "link.item.label.Students' privacy": {
+    "message": "Privacidad del alumnado",
+    "description": "The label of footer link with label=Students' privacy linking to /privacy"
+  },
+  "link.item.label.Releases": {
+    "message": "Versiones",
+    "description": "The label of footer link with label=Releases linking to /releases"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/falkenslab/moodle-mcp"
+  },
+  "link.item.label.Issues": {
+    "message": "Incidencias",
+    "description": "The label of footer link with label=Issues linking to https://github.com/falkenslab/moodle-mcp/issues"
+  },
+  "link.item.label.npm": {
+    "message": "npm",
+    "description": "The label of footer link with label=npm linking to https://www.npmjs.com/package/@falkenslab/moodle-mcp"
+  },
+  "link.item.label.moodle-driver": {
+    "message": "moodle-driver",
+    "description": "The label of footer link with label=moodle-driver linking to https://falkenslab.github.io/moodle-driver/"
+  },
+  "link.item.label.Model Context Protocol": {
+    "message": "Model Context Protocol",
+    "description": "The label of footer link with label=Model Context Protocol linking to https://modelcontextprotocol.io"
+  },
+  "link.item.label.Moodle": {
+    "message": "Moodle",
+    "description": "The label of footer link with label=Moodle linking to https://moodle.org"
+  },
+  "copyright": {
+    "message": "Licencia MIT. Copyright © 2026 Francisco Vargas Ruiz.",
+    "description": "The footer copyright"
+  }
+}

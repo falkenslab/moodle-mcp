@@ -1,0 +1,98 @@
+/* A dark terminal window in both colour modes, like the session screenshots. */
+.window {
+  --term-bg: #16181d;
+  --term-bar: #1d2027;
+  --term-border: #2c3039;
+  --term-fg: #e6e6e6;
+  --term-muted: #8b93a1;
+  margin: 0 0 var(--ifm-leading);
+  border: 1px solid var(--term-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--term-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  background: var(--term-bar);
+  border-bottom: 1px solid var(--term-border);
+  color: var(--term-muted);
+  font-size: 0.8rem;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #3a3f4a;
+}
+
+.dot:nth-child(1) {
+  background: #ff5f57;
+}
+
+.dot:nth-child(2) {
+  background: #febc2e;
+}
+
+.dot:nth-child(3) {
+  background: #28c840;
+}
+
+.title {
+  margin-left: 8px;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.copy {
+  margin-left: auto;
+  padding: 2px 10px;
+  border: 1px solid var(--term-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--term-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.copy:hover {
+  color: var(--term-fg);
+  border-color: var(--term-muted);
+}
+
+.body {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 0;
+  background: var(--term-bg);
+  color: var(--term-fg);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.prompt {
+  color: #f98012;
+  user-select: none;
+}
+
+.command {
+  color: #ffffff;
+}
+
+.output {
+  color: #c9ced8;
+}
+
+.ok {
+  color: #7ec699;
+}
+
+.bad {
+  color: #ff7b72;
+}
