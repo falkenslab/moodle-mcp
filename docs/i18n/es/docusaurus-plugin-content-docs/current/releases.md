@@ -9,7 +9,12 @@ moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/pack
 
 La documentación de cada versión se conserva: elígela en el menú de versiones de la parte de arriba de la página. Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
 
-## 0.1.0 (12 de octubre de 2026)
+## 0.2.0 (12 de octubre de 2026)
+
+- **Listas largas por páginas.** Las notificaciones llegan de 30 en 30 y los registros del curso de 50 en 50, y el agente pide más cuando las necesita, así que una cuenta con mucha actividad ya no inunda a la IA con decenas de miles de caracteres. Además, cada entrada de los registros es más corta: la descripción larga de Moodle solo sale si se pide.
+- **Leer las entregas no cambia nada.** Leer las entregas de una tarea ya no crea entregas vacías en Moodle. Sigue apareciendo en los registros de Moodle como que has visto las páginas de calificación, igual que con el calificador de Moodle.
+- **Más claro para el agente.** Se explican todos los estados de una entrega (como `new`: empezada, todavía sin contenido), y se aclara que el progreso del curso y la finalización de las actividades solo llegan a los alumnos, en los cursos que los siguen.
+- Con moodle-driver 0.7.
 
 La primera versión.
 

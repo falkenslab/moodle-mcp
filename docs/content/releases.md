@@ -9,6 +9,13 @@ moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@
 
 Each release's documentation is kept: pick it in the version menu at the top of the page. The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
 
+## 0.2.0 (12 October 2026)
+
+- **Long lists a page at a time.** Notifications come 30 at a time and course logs 50 at a time, and the agent asks for more when it needs them, so a busy account no longer floods the AI with tens of thousands of characters. Log entries are shorter too: Moodle's long description of each one only when asked.
+- **Reading submissions changes nothing.** Reading an assignment's submissions no longer creates empty ones in Moodle. It still shows in Moodle's logs as you viewing the grading pages, as with Moodle's own grader.
+- **Clearer for the agent.** Every submission status is explained (such as `new`: started, nothing in it yet), and course progress and activity completion are said to come only for students, in courses that track them.
+- With moodle-driver 0.7.
+
 ## 0.1.0 (12 October 2026)
 
 The first release.

@@ -1,6 +1,6 @@
 {
   "name": "@falkenslab/moodle-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server for AI agents to work in Moodle as you, through your own browser session: domain tools, students as aliases, limits only you can loosen",
   "author": "Falkenslab",
   "license": "MIT",
