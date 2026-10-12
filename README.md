@@ -107,6 +107,7 @@ Aliases come from a secret key kept on your machine with a directory of the peop
 
 What to know about `pseudonymize`:
 
+- It applies to every tool, errors included: besides what each tool does, everything a tool returns goes through the same redaction on its way to the AI, and user ids in text are hidden.
 - It's pseudonymization, not anonymity: what people write about themselves can still identify them. Street addresses, dates of birth and the names of people the server hasn't met yet aren't detected in free text.
 - Text the agent writes to Moodle (feedback, posts, messages) is refused if it contains an alias, since students would read it as is: the agent addresses the student as "you" instead.
 - Files other people submitted, a grades export, a course backup with its users (unless Moodle anonymizes them) and screenshots need `clear`: their content can't be pseudonymized. Course logs never include IP addresses.
