@@ -179,9 +179,11 @@ describe("read-only access", () => {
   it("keeps only the tools that change nothing, the session's aside, and combines with the role", async () => {
     const client = await connect(testConfig({ role: "teacher", access: "read" }));
     const { tools } = await client.listTools();
-    for (const tool of tools) assert.ok(tool.annotations?.readOnlyHint === true || SESSION.includes(tool.name), tool.name);
+    // Saving a file on the person's computer changes nothing in Moodle: those tools stay, still not read-only to MCP.
+    const localFiles = ["download_file", "export_grades"];
+    for (const tool of tools) assert.ok(tool.annotations?.readOnlyHint === true || SESSION.includes(tool.name) || localFiles.includes(tool.name), tool.name);
     const listed = tools.map((t) => t.name);
-    for (const present of ["get_submissions", "get_grader_report", "get_course_logs", "get_course_structure", "login", "configure"]) assert.ok(listed.includes(present), present);
+    for (const present of ["get_submissions", "get_grader_report", "get_course_logs", "get_course_structure", "login", "configure", ...localFiles]) assert.ok(listed.includes(present), present);
     for (const absent of ["grade_submission", "create_activity", "send_message", "get_lesson_page", "start_quiz_attempt", "browser_click"]) assert.ok(!listed.includes(absent), absent);
     // A client that kept its old list is refused, before Moodle is touched.
     const refused = await client.callTool({ name: "grade_submission", arguments: { assignmentId: 3, userId: 7, grade: "5" } });

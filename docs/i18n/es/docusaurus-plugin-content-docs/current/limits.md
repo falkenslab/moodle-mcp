@@ -37,11 +37,11 @@ Claude Code carga las herramientas a medida que las necesita, así que ahí el t
 
 | Con el rol | Herramientas que quedan |
 | --- | --- |
-| `all` | 54 |
-| `teacher` | 49 |
-| `student` | 35 |
+| `all` | 56 |
+| `teacher` | 51 |
+| `student` | 36 |
 
-También se quedan fuera las herramientas que parecen de lectura pero empiezan algo en Moodle (una lección, un intento de cuestionario, un intento de SCORM).
+También se quedan fuera las herramientas que parecen de lectura pero empiezan algo en Moodle (una lección, un intento de cuestionario, un intento de SCORM). Descargar los ficheros de un curso o exportar sus calificaciones sí se queda: no cambia nada en Moodle, solo guarda un fichero en tu ordenador, y tu aplicación de IA puede seguir preguntándote antes de cada uno.
 
 Así responde un asistente de solo lectura cuando le pides que califique:
 

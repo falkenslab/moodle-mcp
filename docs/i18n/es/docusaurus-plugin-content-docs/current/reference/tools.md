@@ -9,7 +9,7 @@ sidebar_label: Herramientas
 
 moodle-mcp tiene **138 herramientas**, 137 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
-En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento) o guardan un fichero en tu ordenador (`download_file`, `export_grades`); las de sesión, como iniciar sesión o mostrar el navegador, siempre están.
+En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
 ## Sesión {#session}
 
@@ -129,7 +129,7 @@ Muestra la versión de este servidor y su configuración efectiva: el sitio Mood
 | [`get_course_structure`](#get-course-structure) | Obtener la estructura de un curso | ✓ | ✓ | ✓ |
 | [`get_activity_content`](#get-activity-content) | Leer el contenido de una actividad | ✓ | ✓ | ✓ |
 | [`get_activity_settings`](#get-activity-settings) | Obtener los ajustes de una actividad | ✓ | ✓ |  |
-| [`download_file`](#download-file) | Descargar un archivo de Moodle |  | ✓ | ✓ |
+| [`download_file`](#download-file) | Descargar un archivo de Moodle | ✓ | ✓ | ✓ |
 | [`create_activity`](#create-activity) | Crear una actividad o un recurso |  | ✓ |  |
 | [`update_activity`](#update-activity) | Actualizar los ajustes o el contenido de una actividad |  | ✓ |  |
 | [`edit_activity`](#edit-activity) | Mover, renombrar, mostrar u ocultar una actividad |  | ✓ |  |
@@ -975,7 +975,7 @@ Califica a mano una pregunta de un intento terminado, con un comentario, como ha
 | --- | --- | :-: | :-: | :-: |
 | [`get_grader_report`](#get-grader-report) | Obtener las calificaciones de un curso | ✓ | ✓ |  |
 | [`set_grade`](#set-grade) | Poner una calificación en el libro de calificaciones |  | ✓ |  |
-| [`export_grades`](#export-grades) | Exportar las calificaciones de un curso a un archivo |  | ✓ |  |
+| [`export_grades`](#export-grades) | Exportar las calificaciones de un curso a un archivo | ✓ | ✓ |  |
 | [`get_gradebook_setup`](#get-gradebook-setup) | Obtener la configuración del libro de calificaciones de un curso | ✓ | ✓ |  |
 | [`add_grade_item`](#add-grade-item) | Añadir un elemento de calificación manual |  | ✓ |  |
 | [`update_grade_item`](#update-grade-item) | Actualizar un elemento de calificación |  | ✓ |  |

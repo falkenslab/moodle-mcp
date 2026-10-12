@@ -37,11 +37,11 @@ Claude Code loads tools as it needs them, so the size matters less there. Claude
 
 | With role | Tools left |
 | --- | --- |
-| `all` | 54 |
-| `teacher` | 49 |
-| `student` | 35 |
+| `all` | 56 |
+| `teacher` | 51 |
+| `student` | 36 |
 
-Tools that look like reading but start something in Moodle (a lesson, a quiz attempt, a SCORM attempt) are left out too.
+Tools that look like reading but start something in Moodle (a lesson, a quiz attempt, a SCORM attempt) are left out too. Downloading a course's files or exporting its grades stays: it changes nothing in Moodle, only saves a file on your computer, and your AI app may still ask you before each.
 
 This is how a read-only assistant answers a request to grade:
 

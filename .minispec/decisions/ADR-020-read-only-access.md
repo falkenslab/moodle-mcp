@@ -12,4 +12,5 @@ None of the other limits separates reading from writing: the `content` scope inc
 
 - Measured on 12 October 2026, pseudonymized: `read` leaves 54 tools for `all` (about 9,800 tokens), 49 for `teacher` (8,900), 35 for `student` (6,400). The README gives them.
 - A new tool's `readOnlyHint` now also decides whether it exists under `read`: it must be true only when the tool changes nothing in Moodle, logs aside.
+- Tools that only read Moodle but save a file on the person's computer (`download_file`, `export_grades`) stay under `read` too, though their `readOnlyHint` is false: MCP counts the disk as the environment, so a client may still ask before each (`LOCAL_FILE_TOOLS` in `src/tools/scopes.ts`, decided by the owner on 13 October 2026). That makes 56 tools for `all`, 51 for `teacher` and 36 for `student`.
 - `server_info` and the instructions' limits line say "read-only".

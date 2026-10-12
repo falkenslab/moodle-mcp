@@ -23,6 +23,9 @@ export type AccessLevel = (typeof ACCESS_LEVELS)[number];
 
 // The tools that only read, as each declares itself (`readOnlyHint`) when it's registered.
 const readOnlyTools = new Set<string>();
+// Tools that only read Moodle but save a file on the person's computer: not read-only to MCP, which
+// counts the disk as the environment (so a client may ask before each), yet they change nothing in Moodle.
+const LOCAL_FILE_TOOLS = new Set(["download_file", "export_grades"]);
 
 /** How others' data reaches the agent, strictest first (ADR-016). */
 export const STUDENT_DATA_LEVELS = ["block", "pseudonymize", "clear"] as const;
@@ -208,7 +211,7 @@ export function activeScopes(config: Pick<Config, "scopes" | "studentData">): Se
 export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role" | "access">): boolean {
   if (SESSION_TOOLS.has(tool)) return true;
   if (!roleAllows(tool, config.role)) return false;
-  if (config.access === "read" && !readOnlyTools.has(tool)) return false;
+  if (config.access === "read" && !readOnlyTools.has(tool) && !LOCAL_FILE_TOOLS.has(tool)) return false;
   // A picture can't be redacted (ADR-017).
   if (tool === "browser_screenshot" && config.studentData !== "clear") return false;
   const active = activeScopes(config);

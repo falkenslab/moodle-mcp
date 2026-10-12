@@ -9,7 +9,7 @@ sidebar_label: Tools
 
 moodle-mcp has **138 tools**, 137 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
-In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt) or saves a file on your computer (`download_file`, `export_grades`); session tools, such as logging in or showing the browser, are always there.
+In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
 ## Session {#session}
 
@@ -129,7 +129,7 @@ Show this server's version and effective configuration: the Moodle site, the bro
 | [`get_course_structure`](#get-course-structure) | Get a course's structure | ✓ | ✓ | ✓ |
 | [`get_activity_content`](#get-activity-content) | Read an activity's content | ✓ | ✓ | ✓ |
 | [`get_activity_settings`](#get-activity-settings) | Get an activity's settings | ✓ | ✓ |  |
-| [`download_file`](#download-file) | Download a file from Moodle |  | ✓ | ✓ |
+| [`download_file`](#download-file) | Download a file from Moodle | ✓ | ✓ | ✓ |
 | [`create_activity`](#create-activity) | Create an activity or resource |  | ✓ |  |
 | [`update_activity`](#update-activity) | Update an activity's settings or content |  | ✓ |  |
 | [`edit_activity`](#edit-activity) | Move, rename, show or hide an activity |  | ✓ |  |
@@ -975,7 +975,7 @@ Grade one question of a finished attempt by hand, with a comment, as the review'
 | --- | --- | :-: | :-: | :-: |
 | [`get_grader_report`](#get-grader-report) | Get a course's grades | ✓ | ✓ |  |
 | [`set_grade`](#set-grade) | Set a grade in the gradebook |  | ✓ |  |
-| [`export_grades`](#export-grades) | Export a course's grades to a file |  | ✓ |  |
+| [`export_grades`](#export-grades) | Export a course's grades to a file | ✓ | ✓ |  |
 | [`get_gradebook_setup`](#get-gradebook-setup) | Get a course's gradebook setup | ✓ | ✓ |  |
 | [`add_grade_item`](#add-grade-item) | Add a manual grade item |  | ✓ |  |
 | [`update_grade_item`](#update-grade-item) | Update a grade item |  | ✓ |  |
