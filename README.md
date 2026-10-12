@@ -8,7 +8,7 @@ moodle-mcp is an [MCP](https://modelcontextprotocol.io) server: it gives an AI c
 - **Students stay anonymous to the AI by default.** Other people reach it as aliases such as `A-7KQ2XM`, which only you can turn back into names.
 - **You decide what it may do**: only building content, also grading, acting as a student… Tools that change Moodle say so, and the agent is told to confirm with you first.
 
-Status: early development, not on npm yet. It has 86 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
+Status: early development, not on npm yet. It has 136 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
 
 ## What you can ask
 
@@ -109,7 +109,7 @@ What to know about `pseudonymize`:
 
 - It's pseudonymization, not anonymity: what people write about themselves can still identify them. Street addresses, dates of birth and the names of people the server hasn't met yet aren't detected in free text.
 - Text the agent writes to Moodle (feedback, posts, messages) is refused if it contains an alias, since students would read it as is: the agent addresses the student as "you" instead.
-- Files other people submitted, and screenshots, need `clear`: their content can't be pseudonymized.
+- Files other people submitted, a grades export, a course backup with its users (unless Moodle anonymizes them) and screenshots need `clear`: their content can't be pseudonymized. Course logs never include IP addresses.
 - Going from `clear` back to `pseudonymize` doesn't remove names the AI already saw, which may remain in your client's memory or history. Use `clear` only in a client configuration with its own memory, never shared with a cloud model.
 
 ## Limiting what the agent can do
@@ -121,7 +121,7 @@ What to know about `pseudonymize`:
 | `all` (default) | Everything, including the browser fallback tools |
 | `teacher` | Content, students' work, grading, forums and messages |
 | `student` | Reading courses, doing activities, your own grades, forums and messages |
-| `content` | Building and managing courses only: activities, sections, question banks, rubrics, calendar, gradebook setup. Never reads students' work, grades or writes to students |
+| `content` | Building and managing courses only: activities, sections, question banks, rubrics, calendar, gradebook setup, groups, copies and backups without users. Never reads students' work, grades or writes to students |
 
 Or a list of scopes: `content`, `student-data`, `grading`, `communication`, `as-student`, `browser`, such as `content,communication`. Ask the agent for its `server_info` to see the limits in force.
 
@@ -131,12 +131,14 @@ Or a list of scopes: `content`, `student-data`, `grading`, `communication`, `as-
 | --- | --- |
 | Session | `login`, `logout`, `get_me`, `get_site_info`, `configure`, `show_browser`, `server_info` |
 | Courses and content | `list_courses`, `get_course_structure`, `get_activity_content`, `get_activity_settings`, `download_file`, `create_activity`, `update_activity`, `edit_activity`, `duplicate_activity`, `delete_activity`, `add_section`, `edit_section`, `delete_section`, `update_course` |
-| Assignments and grading | `list_assignments`, `get_submissions`, `get_rubric`, `grade_submission`, `grant_extension` |
-| Quizzes and questions | `list_question_banks`, `list_questions`, `import_questions`, `create_question`, `get_quiz_structure`, `add_questions_to_quiz`, `get_quiz_results`, `set_quiz_override` |
-| Gradebook and progress | `get_grader_report`, `get_gradebook_setup`, `update_grade_item`, `add_grade_category`, `get_completion_report`, `override_completion` |
-| Participants | `list_participants`, `list_groups` |
-| Forums and messages | `list_discussions`, `get_discussion`, `reply_to_post`, `create_discussion`, `set_discussion_state`, `list_notifications`, `mark_notifications_read`, `list_conversations`, `get_conversation`, `send_message` |
-| Calendar and to-dos | `list_events`, `create_event`, `delete_event`, `list_deadlines`, `list_pending`, `get_activities_overview`, `get_course_updates` |
+| Course life cycle | `copy_course`, `backup_course`, `restore_course`, `import_activities`, `reset_course` |
+| Assignments and grading | `list_assignments`, `get_submissions`, `get_rubric`, `grade_submission`, `grant_extension`, `set_workflow_state`, `allocate_marker` |
+| Quizzes and questions | `list_question_banks`, `list_questions`, `import_questions`, `create_question`, `update_question`, `delete_questions`, `set_question_status`, `get_quiz_structure`, `add_questions_to_quiz`, `edit_quiz_slot`, `remove_quiz_slot`, `set_quiz_pages`, `add_quiz_section`, `get_quiz_results`, `set_quiz_override`, `list_questions_to_grade`, `grade_quiz_question` |
+| Gradebook and progress | `get_grader_report`, `set_grade`, `export_grades`, `get_gradebook_setup`, `add_grade_item`, `update_grade_item`, `delete_grade_item`, `add_grade_category`, `update_grade_category`, `delete_grade_category`, `get_completion_report`, `override_completion` |
+| Reports | `get_activity_report`, `get_participation_report`, `get_course_logs` |
+| Participants and groups | `list_participants`, `list_potential_users`, `enrol_users`, `unenrol_user`, `set_user_roles`, `list_enrolment_methods`, `set_enrolment_method`, `list_groups`, `create_group`, `update_group`, `delete_group`, `set_group_members`, `list_groupings`, `create_grouping`, `delete_grouping`, `set_grouping_groups` |
+| Forums, workshops and messages | `list_discussions`, `get_discussion`, `reply_to_post`, `create_discussion`, `edit_post`, `delete_post`, `set_discussion_state`, `get_forum_grades`, `grade_forum_user`, `rate`, `get_workshop`, `set_workshop_phase`, `assess_workshop_submission`, `list_notifications`, `mark_notifications_read`, `list_conversations`, `get_conversation`, `send_message`, `message_participants` |
+| Calendar and to-dos | `list_events`, `get_event`, `create_event`, `update_event`, `delete_event`, `list_deadlines`, `list_pending`, `get_activities_overview`, `get_course_updates` |
 | As a student | `get_my_grades`, `get_assignment`, `save_submission`, `submit_assignment`, `get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`, `get_survey`, `submit_survey`, `get_choice`, `answer_choice`, `get_lesson_page`, `answer_lesson_page`, `get_h5p_activity`, `get_scorm`, `open_scorm`, `set_completion` |
 | Browser fallback | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait` |
 
