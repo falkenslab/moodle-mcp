@@ -115,7 +115,7 @@ What to know about `pseudonymize`:
 
 ## Limiting what the agent can do
 
-Two settings choose the tools the agent gets, and like the student data level only you widen them: the agent can narrow them for a session, never the other way.
+Three settings choose the tools the agent gets, and like the student data level only you widen them: the agent can narrow them for a session, never the other way.
 
 **Your role** (`MOODLE_MCP_ROLE`) keeps only the tools for what you do in Moodle. Fewer tools also means less of every request spent on them, and an agent that picks better:
 
@@ -126,6 +126,8 @@ Two settings choose the tools the agent gets, and like the student data level on
 | `student` | 61: reading courses, doing activities, your grades and to-dos, forums and messages | 12,500 tokens |
 
 Counted as the tools' names, descriptions and inputs with students as aliases; clients that also send the tools' output schemas use about twice as much. Claude Code loads many tools only as it needs them; other clients load them all.
+
+**Read only** (`MOODLE_MCP_ACCESS=read`) keeps only the tools that change nothing in Moodle: an assistant that reads courses, submissions, grades and reports but can't grade, post or edit. With `all` it leaves 54 tools (about 9,800 tokens), with `teacher` 49 (8,900), with `student` 35 (6,400). Tools that look like reads but start something (a lesson, a quiz or SCORM attempt) stay out.
 
 **Scopes** (`MOODLE_MCP_SCOPES`) choose by the data a tool touches. With a role, they narrow it further: `teacher` with `content`, 66 tools (17,000 tokens), builds and manages courses and never sees students' work.
 
@@ -168,6 +170,7 @@ Nothing is required: without a site, the agent asks you for it and sets it with 
 | `MOODLE_URL` | `--url` | none | Your Moodle site, e.g. `https://campus.example.org` |
 | `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | What the AI sees of other people: `block`, `pseudonymize` or `clear` ([above](#students-privacy)) |
 | `MOODLE_MCP_ROLE` | `--role` | `all` | The tools for a role: `teacher`, `student` or `all` ([above](#limiting-what-the-agent-can-do)) |
+| `MOODLE_MCP_ACCESS` | `--access` | `write` | `read`: only the tools that change nothing in Moodle ([above](#limiting-what-the-agent-can-do)) |
 | `MOODLE_MCP_SCOPES` | `--scopes` | `all` | The kinds of tools: a profile or a list of scopes ([above](#limiting-what-the-agent-can-do)) |
 | `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | Browser profile folder that keeps your session |
 | `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome, then Chromium | Browser: `msedge`, `chrome` or `chromium` |
