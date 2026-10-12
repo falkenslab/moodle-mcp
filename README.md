@@ -5,7 +5,7 @@
 # moodle-mcp
 
 **Let an AI agent work in your Moodle courses as you, with your own login.**<br/>
-Students reach the AI as aliases, and you set what it may do.
+Your students stay anonymous to the AI, and you decide what it can do.
 
 [![npm](https://img.shields.io/npm/v/@falkenslab/moodle-mcp?color=cb3837&logo=npm)](https://www.npmjs.com/package/@falkenslab/moodle-mcp)
 ![MCP server](https://img.shields.io/badge/MCP-server-0b0b0b)
