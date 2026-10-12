@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Release moodle-mcp
 
-A release is a version commit, a `vX.Y.Z` tag on `main`, a GitHub release and the same version on npm as `moodle-mcp` (or the scoped name the owner chooses). **Nothing is published or pushed without the owner asking**, and the GitHub repository is created only when they say so.
+A release is a version commit, a `vX.Y.Z` tag on `main`, a GitHub release and the same version on npm as `@falkenslab/moodle-mcp` (`moodle-mcp` on npm is someone else's). **Nothing is published or pushed without the owner asking**, and the GitHub repository is created only when they say so.
 
 ## 1. Preconditions
 

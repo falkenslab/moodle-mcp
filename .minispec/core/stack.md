@@ -18,4 +18,4 @@
 
 ## Distribution (ADR-005)
 
-npm package with a `moodle-mcp` bin; `playwright-core` ships in `node_modules` (`bundleDependencies`), outside the bundle. Not published yet: after use in a real client and a full live check. Source at `github.com/falkenslab/moodle-mcp` (public).
+npm package `@falkenslab/moodle-mcp` (`moodle-mcp` on npm is someone else's) with a `moodle-mcp` bin, run with `npx`; `playwright-core` ships in `node_modules` (`bundleDependencies`), outside the bundle. Published since 0.1.0 (12 October 2026). Source at `github.com/falkenslab/moodle-mcp` (public).

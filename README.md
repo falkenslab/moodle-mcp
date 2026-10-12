@@ -1,6 +1,19 @@
+<div align="center">
+
+<img src="docs/img/logo.svg" alt="moodle-mcp logo: the m of Moodle plugged into a socket" width="112"/>
+
 # moodle-mcp
 
-Let an AI agent work in your Moodle courses as you, with your own login.
+**Let an AI agent work in your Moodle courses as you, with your own login.**<br/>
+Students reach the AI as aliases, and you set what it may do.
+
+[![npm](https://img.shields.io/npm/v/@falkenslab/moodle-mcp?color=cb3837&logo=npm)](https://www.npmjs.com/package/@falkenslab/moodle-mcp)
+![MCP server](https://img.shields.io/badge/MCP-server-0b0b0b)
+![Node.js 20+](https://img.shields.io/badge/node-20%2B-339933?logo=node.js&logoColor=white)
+![Moodle 5.x](https://img.shields.io/badge/Moodle-5.x-f98012?logo=moodle&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/license-MIT-16a34a)](LICENSE)
+
+</div>
 
 moodle-mcp is an [MCP](https://modelcontextprotocol.io) server: it gives an AI client (Claude Code, Claude Desktop, or any agent that speaks MCP) tools for Moodle tasks: list what needs grading, read submissions, build a quiz from a question file, answer a forum, check what's due this week. It works through a real browser on your machine, logged in as you, so it can do whatever your account can, on any Moodle site: no web service tokens, no administrator, no plugin to install.
 
@@ -8,7 +21,7 @@ moodle-mcp is an [MCP](https://modelcontextprotocol.io) server: it gives an AI c
 - **Students stay anonymous to the AI by default.** Other people reach it as aliases such as `A-7KQ2XM`, which only you can turn back into names.
 - **You decide what it may do**: only building content, also grading, acting as a student… Tools that change Moodle say so, and the agent is told to confirm with you first.
 
-Status: early development, not on npm yet. It has 137 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
+Status: early development (0.x). It has 137 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
 
 ## What you can ask
 
@@ -38,21 +51,12 @@ Before anything that changes Moodle (a grade, a post, an activity), the agent is
 
 ## Installing
 
-Until it's on npm, build it from the repository:
-
-```bash
-git clone https://github.com/falkenslab/moodle-mcp.git
-cd moodle-mcp
-npm install
-npm run build
-```
-
-That leaves the server in `dist/server.mjs`. Then add it to your client.
+It's on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp): your client runs it with `npx`, nothing to install by hand.
 
 **Claude Code**:
 
 ```bash
-claude mcp add moodle -e MOODLE_URL=https://campus.example.org -- node /path/to/moodle-mcp/dist/server.mjs
+claude mcp add moodle -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
 ```
 
 **Claude Desktop**: add it to `claude_desktop_config.json` (Settings → Developer → Edit Config), and restart Claude Desktop:
@@ -61,15 +65,15 @@ claude mcp add moodle -e MOODLE_URL=https://campus.example.org -- node /path/to/
 {
   "mcpServers": {
     "moodle": {
-      "command": "node",
-      "args": ["/path/to/moodle-mcp/dist/server.mjs"],
+      "command": "npx",
+      "args": ["-y", "@falkenslab/moodle-mcp"],
       "env": { "MOODLE_URL": "https://campus.example.org" }
     }
   }
 }
 ```
 
-On Windows, write the path with double backslashes (`"C:\\Users\\you\\moodle-mcp\\dist\\server.mjs"`) or forward slashes. Any other client takes the same command and arguments. `MOODLE_URL` can be your site or any page of it; without it, the agent asks you for the site the first time.
+Any other client takes the same command and arguments. To run a build of your own instead (see [Developing moodle-mcp](docs/development.md)), use `node` with the path to its `dist/server.mjs`. `MOODLE_URL` can be your site or any page of it; without it, the agent asks you for the site the first time.
 
 ## First steps
 

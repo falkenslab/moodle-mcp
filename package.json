@@ -1,7 +1,7 @@
 {
-  "name": "moodle-mcp",
+  "name": "@falkenslab/moodle-mcp",
   "version": "0.1.0",
-  "description": "MCP server that works a Moodle site through a real browser (Playwright), with domain tools",
+  "description": "MCP server for AI agents to work in Moodle as you, through your own browser session: domain tools, students as aliases, limits only you can loosen",
   "author": "Falkenslab",
   "license": "MIT",
   "repository": {
@@ -16,8 +16,10 @@
     "mcp",
     "model-context-protocol",
     "moodle",
+    "lms",
     "playwright",
-    "lms"
+    "ai-agent",
+    "pseudonymization"
   ],
   "type": "module",
   "engines": {
@@ -29,6 +31,9 @@
   "files": [
     "dist/server.mjs"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs --watch",

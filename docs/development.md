@@ -6,6 +6,8 @@ The design and its decisions are in [.minispec/](../.minispec/README.md); the ca
 
 ## Commands
 
+From a clone of `https://github.com/falkenslab/moodle-mcp`:
+
 ```bash
 npm install
 npm run build       # bundles src/ into dist/server.mjs

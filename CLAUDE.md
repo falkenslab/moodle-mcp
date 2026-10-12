@@ -20,4 +20,4 @@ Before writing any code, read `.minispec/README.md` and follow its reading contr
 
 ## Skills
 
-Project skills in `.claude/skills/`: `verify` (the quality gate), `commit`, `add-tool` (the checklist for a tool), `update-docs`, `sandbox-check` (the real Moodle, in Docker), `upgrade-deps`, `release` and `sync-issues` (the GitHub remote exists, `falkenslab/moodle-mcp`; still only when the owner asks, and no npm release before real-client use and a full live check), and MiniSpec's `minispec-feature`, `minispec-bugfix`, `minispec-adr`, `minispec-implement`.
+Project skills in `.claude/skills/`: `verify` (the quality gate), `commit`, `add-tool` (the checklist for a tool), `update-docs`, `sandbox-check` (the real Moodle, in Docker), `upgrade-deps`, `release` and `sync-issues` (only when the owner asks; the package is `@falkenslab/moodle-mcp` on npm, the repository `falkenslab/moodle-mcp`), and MiniSpec's `minispec-feature`, `minispec-bugfix`, `minispec-adr`, `minispec-implement`.
