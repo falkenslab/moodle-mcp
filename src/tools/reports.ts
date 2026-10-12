@@ -64,7 +64,7 @@ export const registerGetCourseLogs: RegisterTool = (server, { config, browser })
     {
       title: "Get a course's logs",
       description:
-        "Read a course's logs, newest first, as its logs report lists them: by a user (an alias when the server pseudonymizes), an activity, a kind of action and a time span, up to limit entries (100 by default). Each entry: when, who, who it was about, where, what happened. Never IP addresses.",
+        "Read a course's logs, newest first, as its logs report lists them: by a user (an alias when the server pseudonymizes), an activity, a kind of action and a time span, a page at a time: limit entries (50 by default) after skipping offset; more says whether there are others. Each entry: when, who, who it was about, where, what happened (Moodle's longer description only with includeDescriptions). Never IP addresses.",
       inputSchema: {
         courseId,
         ...targetFields,
@@ -72,7 +72,9 @@ export const registerGetCourseLogs: RegisterTool = (server, { config, browser })
         action: z.enum(LOG_ACTIONS).optional(),
         from: z.string().optional().describe("ISO 8601"),
         until: z.string().optional().describe("ISO 8601"),
-        limit: z.number().int().positive().max(1000).optional(),
+        limit: z.number().int().positive().max(500).optional().describe("How many entries (50 by default)"),
+        offset: z.number().int().min(0).optional().describe("How many entries to skip first, newest first (0 by default)"),
+        includeDescriptions: z.boolean().optional().describe("Also each entry's description, Moodle's sentence about it (longer; default false)"),
       },
       outputSchema: {
         entries: z.array(
@@ -84,18 +86,19 @@ export const registerGetCourseLogs: RegisterTool = (server, { config, browser })
             activityId: z.number().int().optional(),
             component: z.string(),
             event: z.string(),
-            description: z.string(),
+            description: z.string().optional().describe("Only with includeDescriptions"),
             origin: z.string().describe('"web", "ws", "cli"…'),
           }),
         ),
+        more: z.boolean().describe("There are more entries after this page: ask again with offset moved by limit"),
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ courseId: id, user, userId, activityId, action, from, until, limit }) => {
+    async ({ courseId: id, user, userId, activityId, action, from, until, limit = 50, offset, includeDescriptions = false }) => {
       const siteUrl = requireSiteUrl(config);
       const filterUser = user === undefined && userId === undefined ? undefined : await targetUserId(config, siteUrl, { user, userId });
       const [context] = await onSite(config, browser);
-      const found = await courseLogs(context, siteUrl, id, { userId: filterUser, activityId, action, from: date(from, "from"), until: date(until, "until"), limit });
+      const { items: found, more } = await courseLogs(context, siteUrl, id, { userId: filterUser, activityId, action, from: date(from, "from"), until: date(until, "until"), limit, offset });
       // Everyone named, with their id when the log has it, in one list: one alias each.
       const byIdName = new Map<number, { userId: number; fullName: string }>();
       for (const e of found) {
@@ -118,11 +121,11 @@ export const registerGetCourseLogs: RegisterTool = (server, { config, browser })
           component: e.component,
           event: e.event,
           // Moodle's descriptions name users by id ("The user with id '7'…"): redactAll hides them.
-          description: texts[2 * i + 1]!,
+          ...(includeDescriptions && { description: texts[2 * i + 1]! }),
           origin: e.origin,
         })),
       );
-      return reply({ entries });
+      return reply({ entries, more });
     },
   );
 };

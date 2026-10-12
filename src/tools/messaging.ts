@@ -39,23 +39,28 @@ export const registerListNotifications: RegisterTool = (server, { config, browse
     {
       title: "List my notifications",
       description:
-        "List the person's notifications, newest first (only unread ones when asked): subject, text, who it's from (an alias when the server pseudonymizes), when, whether it's read, and where it leads. Names in the texts are redacted when pseudonymizing.",
-      inputSchema: { unreadOnly: z.boolean().optional() },
+        "List the person's notifications, newest first (only unread ones when asked), a page at a time: limit of them (30 by default) after skipping offset; more says whether there are others to ask for with a bigger offset. Each: subject, text, who it's from (an alias when the server pseudonymizes), when, whether it's read, and where it leads. Names in the texts are redacted when pseudonymizing.",
+      inputSchema: {
+        unreadOnly: z.boolean().optional(),
+        limit: z.number().int().positive().max(100).optional().describe("How many (30 by default)"),
+        offset: z.number().int().min(0).optional().describe("How many to skip first, newest first (0 by default); with unreadOnly, it counts unread ones"),
+      },
       outputSchema: {
         notifications: z.array(
           z.object({ id: z.number().int(), subject: z.string(), text: z.string(), from, time: z.string().optional(), read: z.boolean(), url: z.string().optional(), component: z.string().optional(), eventType: z.string().optional() }),
         ),
+        more: z.boolean().describe("There are more after this page: ask again with offset moved by limit"),
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ unreadOnly }) => {
+    async ({ unreadOnly, limit = 30, offset }) => {
       const [context, siteUrl] = await onSite(config, browser);
-      const found = await notifications(context, siteUrl, { unreadOnly });
+      const { items: found, more } = await notifications(context, siteUrl, { unreadOnly, limit, offset });
       const senders = await byUserId(config, context, siteUrl, [], found.map((n) => n.fromUserId));
       const list = await Promise.all(
         found.map(async ({ fromUserId, subject, text: body, ...rest }) => ({ ...rest, subject: await text(config, siteUrl, subject), text: await text(config, siteUrl, body), from: sender(senders, config, fromUserId) })),
       );
-      return reply({ notifications: list });
+      return reply({ notifications: list, more });
     },
   );
 };
