@@ -29,12 +29,12 @@ En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: 
 
 Se asegura de que haya una sesión de Moodle. Si la hay, devuelve al instante el usuario que ha iniciado sesión. Si no, abre una ventana del navegador en la página de inicio de sesión del sitio y espera a que la persona inicie sesión allí por sí misma (el servidor nunca ve su contraseña); después devuelve el usuario. Llámala cuando otra herramienta informe de una sesión ausente o caducada.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `timeoutSeconds` | entero | Cuánto esperar a que la persona inicie sesión, en segundos (300 por defecto) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `timeoutSeconds` |  | entero | Cuánto esperar a que la persona inicie sesión, en segundos (300 por defecto) |
 
 </details>
 
@@ -52,12 +52,12 @@ Termina la sesión de Moodle de la persona en el navegador del servidor, para qu
 
 Indica quién es la persona que ha iniciado sesión: id de usuario, nombre de usuario, nombre completo, correo electrónico, idioma, zona horaria, primer y último acceso, y el sitio. Con courseId, también sus roles en ese curso y si puede editarlo y calificar en él.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` | entero | Un id de curso (de list_courses) para obtener también los roles y capacidades de la persona en él |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` |  | entero | Un id de curso (de list_courses) para obtener también los roles y capacidades de la persona en él |
 
 </details>
 
@@ -67,12 +67,12 @@ Indica quién es la persona que ha iniciado sesión: id de usuario, nombre de us
 
 Lo que el sitio Moodle dice de sí mismo: su nombre, URL, idioma, cómo se inicia sesión (su propio formulario, acceso de invitados, proveedores de inicio de sesión único) y si está en mantenimiento; se puede leer antes de iniciar sesión. Con courseId, también los tipos de actividad y recurso que la persona puede añadir a ese curso (ninguno si no puede editarlo): toma de aquí el tipo para create_activity. Moodle solo muestra su versión a los administradores, así que no se da.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` | entero | Un curso para listar los tipos de actividad que se le pueden añadir |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` |  | entero | Un curso para listar los tipos de actividad que se le pueden añadir |
 
 </details>
 
@@ -82,19 +82,19 @@ Lo que el sitio Moodle dice de sí mismo: su nombre, URL, idioma, cómo se inici
 
 Establece la configuración de este servidor para esta sesión: el sitio Moodle (url), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role) o el acceso a solo lectura (access) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria. Devuelve la configuración efectiva, como server_info.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `url` | texto | La URL del sitio Moodle, o de cualquier página suya (vale la URL de un curso: el sitio se obtiene de ella) |
-| `headless` | sí o no | Ejecutar el navegador sin ventana (iniciar sesión siempre muestra una) |
-| `trail` | `realistic`, `fast` | Cómo ven y hacen las cosas las herramientas de estudiante: realistic (páginas reales, ritmo humano; Moodle registra las visualizaciones y la finalización) o fast |
-| `profileDir` | texto | Carpeta absoluta del perfil del navegador que guarda la sesión de Moodle; fuera de la carpeta del servidor |
-| `scopes` | texto | Restringir los tipos de herramientas para esta sesión: un perfil (teacher, student, content) o ámbitos (content, student-data, grading, communication, as-student, browser). Solo menos que ahora, nunca más |
-| `studentData` | `block`, `pseudonymize`, `clear` | Endurecer cómo te llegan los datos de otras personas para esta sesión (block es el más estricto). Solo más estricto que ahora, nunca más laxo |
-| `role` | `all`, `teacher`, `student` | Conservar solo las herramientas de un rol para esta sesión (teacher o student), a partir de all; nunca de vuelta a all |
-| `access` | `read`, `write` | read: conservar solo las herramientas que no cambian nada en Moodle para esta sesión; nunca de vuelta a write |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `url` |  | texto | La URL del sitio Moodle, o de cualquier página suya (vale la URL de un curso: el sitio se obtiene de ella) |
+| `headless` |  | sí o no | Ejecutar el navegador sin ventana (iniciar sesión siempre muestra una) |
+| `trail` |  | `realistic`, `fast` | Cómo ven y hacen las cosas las herramientas de estudiante: realistic (páginas reales, ritmo humano; Moodle registra las visualizaciones y la finalización) o fast |
+| `profileDir` |  | texto | Carpeta absoluta del perfil del navegador que guarda la sesión de Moodle; fuera de la carpeta del servidor |
+| `scopes` |  | texto | Restringir los tipos de herramientas para esta sesión: un perfil (teacher, student, content) o ámbitos (content, student-data, grading, communication, as-student, browser). Solo menos que ahora, nunca más |
+| `studentData` |  | `block`, `pseudonymize`, `clear` | Endurecer cómo te llegan los datos de otras personas para esta sesión (block es el más estricto). Solo más estricto que ahora, nunca más laxo |
+| `role` |  | `all`, `teacher`, `student` | Conservar solo las herramientas de un rol para esta sesión (teacher o student), a partir de all; nunca de vuelta a all |
+| `access` |  | `read`, `write` | read: conservar solo las herramientas que no cambian nada en Moodle para esta sesión; nunca de vuelta a write |
 
 </details>
 
@@ -104,12 +104,12 @@ Establece la configuración de este servidor para esta sesión: el sitio Moodle 
 
 Muestra el navegador a la persona, para que pueda ver lo que hacen las herramientas: la ventana se abre ahora (la sesión se mantiene) y cada herramienta trae al frente la página de Moodle en la que trabaja. O lo oculta de nuevo: la ventana se cierra y las herramientas siguen sin ella. Solo cuando la persona pide verlo o dejar de verlo. Las pestañas abiertas no sobreviven al cambio; lo que se guardó en Moodle sí. No cambia nada en Moodle.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `visible` (obligatorio) | sí o no | true para mostrar el navegador y seguir en él a las herramientas, false para ocultarlo |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `visible` | ✅ | sí o no | true para mostrar el navegador y seguir en él a las herramientas, false para ocultarlo |
 
 </details>
 
@@ -146,12 +146,12 @@ Muestra la versión de este servidor y su configuración efectiva: el sitio Mood
 
 Lista los cursos de Moodle en los que está matriculada la persona que ha iniciado sesión (como profesor o estudiante), con sus ids, nombres, categoría, URL, visibilidad, fechas y, donde Moodle lo registra, el progreso de la persona: solo como estudiante, en cursos con seguimiento de finalización (un profesor no obtiene ninguno; el progreso de los estudiantes está en get_completion_report). Filtra por fechas con classification.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `classification` | `all`, `inprogress`, `future`, `past` | Qué cursos según sus fechas: "all" (por defecto), "inprogress", "future" o "past" |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `classification` |  | `all`, `inprogress`, `future`, `past` | Qué cursos según sus fechas: "all" (por defecto), "inprogress", "future" o "past" |
 
 </details>
 
@@ -161,13 +161,13 @@ Lista los cursos de Moodle en los que está matriculada la persona que ha inicia
 
 Obtiene las secciones y actividades de un curso de Moodle: ids, nombres, tipos, URL, visibilidad, si la persona puede abrir cada una, restricciones y, donde Moodle lo registra, la finalización de la persona: solo como estudiante, en actividades con seguimiento de finalización (un profesor no obtiene ninguna; la finalización de los estudiantes está en get_completion_report). Con details, también las fechas y el texto de restricción de cada actividad tal como los muestra la página del curso. Toma el id del curso de list_courses.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
-| `details` | sí o no | Leer también la página del curso para obtener las fechas y el texto de restricción de cada actividad (más lento; false por defecto) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
+| `details` |  | sí o no | Leer también la página del curso para obtener las fechas y el texto de restricción de cada actividad (más lento; false por defecto) |
 
 </details>
 
@@ -177,13 +177,13 @@ Obtiene las secciones y actividades de un curso de Moodle: ids, nombres, tipos, 
 
 Lee una actividad de contenido como lo haría una persona, de modo que Moodle registra la visualización: el texto de una página o etiqueta, los capítulos de un libro, el destino de un recurso URL, o los archivos de un recurso archivo o de una carpeta (como enlaces). Toma el id y el tipo de get_course_structure. Con el trail realistic lee página a página al ritmo de un lector e informa del progreso.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
-| `type` (obligatorio) | `page`, `book`, `label`, `url`, `resource`, `folder` | El tipo de la actividad, tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| `type` | ✅ | `page`, `book`, `label`, `url`, `resource`, `folder` | El tipo de la actividad, tal como lo da get_course_structure |
 
 </details>
 
@@ -193,12 +193,12 @@ Lee una actividad de contenido como lo haría una persona, de modo que Moodle re
 
 Lee todos los ajustes de una actividad tal como los contiene su formulario de edición, sin cambiar nada: su módulo, nombre, descripción, cada campo con su nombre en el formulario, etiqueta, valor y opciones, los archivos de un recurso, carpeta o SCORM, y sus restricciones de acceso y finalización en los términos que acepta update_activity. Úsala antes de update_activity. Solo profesores. Toma el id de la actividad de get_course_structure.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -208,13 +208,13 @@ Lee todos los ajustes de una actividad tal como los contiene su formulario de ed
 
 Guarda un archivo del sitio Moodle en una carpeta local, con la sesión de la persona: un archivo de un recurso o de una carpeta (get_activity_content), el archivo del enunciado de una tarea o un archivo entregado (get_assignment, get_submissions), un adjunto de un foro (get_discussion). Solo URL del host del sitio configurado (también sus contenidos multimedia: vídeos que sirve fuera de Moodle); los enlaces externos (YouTube…) son para otras herramientas. Nunca sobrescribe: a un nombre ya existente se le añade un número. Devuelve dónde se ha guardado.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `url` (obligatorio) | texto | La URL del archivo en el sitio, tal como la dan las demás herramientas (…/pluginfile.php/…) |
-| `destDir` (obligatorio) | texto | Carpeta local absoluta en la que guardar; se crea si no existe |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `url` | ✅ | texto | La URL del archivo en el sitio, tal como la dan las demás herramientas (…/pluginfile.php/…) |
+| `destDir` | ✅ | texto | Carpeta local absoluta en la que guardar; se crea si no existe |
 
 </details>
 
@@ -224,24 +224,24 @@ Guarda un archivo del sitio Moodle en una carpeta local, con la sesión de la pe
 
 Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, folder, assign, quiz, forum…) al final de una sección, mediante el propio formulario de Moodle, oculto a los estudiantes por defecto. Los campos comunes tienen sus propias entradas, incluidas las restricciones de acceso y la finalización; cualquier otro ajuste va en settings por el nombre de su campo del formulario. files son rutas locales que se suben a un recurso de archivo o a una carpeta, o el paquete de un SCORM (type scorm, el primer archivo). Devuelve el id de la nueva actividad y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `sectionId` (obligatorio) | entero | El id de la sección, tal como lo da get_course_structure |
-| `type` (obligatorio) | texto | El nombre del módulo en Moodle: page, label, url, resource, folder, assign, quiz, forum, book… |
-| `name` | texto | Obligatorio salvo para las etiquetas |
-| `files` | lista de texto | Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip) |
-| `description` | texto | La descripción (HTML), que se muestra en la página de la actividad |
-| `content` | texto | El contenido de una página, o el texto de una etiqueta (HTML) |
-| `url` | texto | El destino de un recurso URL |
-| `visibility` | `shown`, `hidden`, `stealth` | "stealth": oculto en la página del curso pero disponible por enlace, donde el sitio lo permite |
-| `restrictions` | objeto | Cuándo pueden abrirlo los estudiantes (&#123; conditions: [] &#125; las quita) |
-| `completion` | objeto | Cuándo cuenta como completado |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
-| `settings` | objeto | Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `sectionId` | ✅ | entero | El id de la sección, tal como lo da get_course_structure |
+| `type` | ✅ | texto | El nombre del módulo en Moodle: page, label, url, resource, folder, assign, quiz, forum, book… |
+| `name` |  | texto | Obligatorio salvo para las etiquetas |
+| `files` |  | lista de texto | Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip) |
+| `description` |  | texto | La descripción (HTML), que se muestra en la página de la actividad |
+| `content` |  | texto | El contenido de una página, o el texto de una etiqueta (HTML) |
+| `url` |  | texto | El destino de un recurso URL |
+| `visibility` |  | `shown`, `hidden`, `stealth` | "stealth": oculto en la página del curso pero disponible por enlace, donde el sitio lo permite |
+| `restrictions` |  | objeto | Cuándo pueden abrirlo los estudiantes (&#123; conditions: [] &#125; las quita) |
+| `completion` |  | objeto | Cuándo cuenta como completado |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `settings` |  | objeto | Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
 
 </details>
 
@@ -251,22 +251,22 @@ Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, f
 
 Cambia una actividad existente mediante el propio formulario de Moodle: nombre, descripción, el contenido de una página o de una etiqueta, el destino de una URL, visibilidad, restricciones de acceso, finalización, los archivos de un recurso de archivo o de una carpeta (añadir, quitar por su ruta tal como los lista get_activity_settings, o sustituirlos todos), o cualquier otro ajuste por el nombre de su campo del formulario en settings. Solo cambia lo que se indica. Devuelve la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
-| `name` | texto |  |
-| `description` | texto | La descripción (HTML), que se muestra en la página de la actividad |
-| `content` | texto | El contenido de una página, o el texto de una etiqueta (HTML) |
-| `url` | texto | El destino de un recurso URL |
-| `visibility` | `shown`, `hidden`, `stealth` | "stealth": oculto en la página del curso pero disponible por enlace, donde el sitio lo permite |
-| `restrictions` | objeto | Cuándo pueden abrirlo los estudiantes (&#123; conditions: [] &#125; las quita) |
-| `completion` | objeto | Cuándo cuenta como completado |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
-| `settings` | objeto | Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
-| `files` | objeto | Los archivos de un recurso de archivo o de una carpeta; sin cambios si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| `name` |  | texto |  |
+| `description` |  | texto | La descripción (HTML), que se muestra en la página de la actividad |
+| `content` |  | texto | El contenido de una página, o el texto de una etiqueta (HTML) |
+| `url` |  | texto | El destino de un recurso URL |
+| `visibility` |  | `shown`, `hidden`, `stealth` | "stealth": oculto en la página del curso pero disponible por enlace, donde el sitio lo permite |
+| `restrictions` |  | objeto | Cuándo pueden abrirlo los estudiantes (&#123; conditions: [] &#125; las quita) |
+| `completion` |  | objeto | Cuándo cuenta como completado |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `settings` |  | objeto | Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
+| `files` |  | objeto | Los archivos de un recurso de archivo o de una carpeta; sin cambios si falta |
 
 </details>
 
@@ -276,17 +276,17 @@ Cambia una actividad existente mediante el propio formulario de Moodle: nombre, 
 
 Mueve una actividad a otra sección (al final) o antes de otra actividad, para reordenar un curso; la renombra; o establece su visibilidad ("shown", "hidden" o "stealth": oculta en la página del curso pero disponible por enlace). Solo cambia lo que se indica. Devuelve después la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
-| `name` | texto |  |
-| `visibility` | `shown`, `hidden`, `stealth` |  |
-| `sectionId` | entero | Moverla al final de esta sección |
-| `beforeActivityId` | entero | Moverla antes de esta actividad (en la sección de esa actividad) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| `name` |  | texto |  |
+| `visibility` |  | `shown`, `hidden`, `stealth` |  |
+| `sectionId` |  | entero | Moverla al final de esta sección |
+| `beforeActivityId` |  | entero | Moverla antes de esta actividad (en la sección de esa actividad) |
 
 </details>
 
@@ -296,13 +296,13 @@ Mueve una actividad a otra sección (al final) o antes de otra actividad, para r
 
 Duplica una actividad justo a continuación de sí misma, con su configuración y su contenido (no los datos de los participantes). Devuelve el id de la copia y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -312,13 +312,13 @@ Duplica una actividad justo a continuación de sí misma, con su configuración 
 
 Elimina una actividad de un curso, con los datos de sus participantes (entregas, intentos, mensajes, calificaciones). Destructivo: confírmalo antes con la persona, nombrando la actividad.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -328,16 +328,16 @@ Elimina una actividad de un curso, con los datos de sus participantes (entregas,
 
 Añade una sección a un curso, al final o después de una sección dada, opcionalmente con nombre y descripción. Devuelve su id y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
-| `name` | texto |  |
-| `summary` | texto | Su descripción (HTML) |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
-| `afterSectionId` | entero | Añadirla después de esta sección; al final si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
+| `name` |  | texto |  |
+| `summary` |  | texto | Su descripción (HTML) |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `afterSectionId` |  | entero | Añadirla después de esta sección; al final si falta |
 
 </details>
 
@@ -347,19 +347,19 @@ Añade una sección a un curso, al final o después de una sección dada, opcion
 
 Cambia una sección: renombrarla, describirla, mostrarla u ocultarla (con sus actividades), restringir el acceso a ella o moverla después de otra sección. Solo cambia lo que se indica. Devuelve la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
-| `sectionId` (obligatorio) | entero | El id de una sección (no su número), tal como lo da get_course_structure |
-| `name` | texto |  |
-| `visible` | sí o no |  |
-| `summary` | texto | Su descripción (HTML) |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
-| `restrictions` | objeto | Cuándo pueden abrirla los estudiantes (&#123; conditions: [] &#125; las elimina) |
-| `afterSectionId` | entero | Moverla después de esta sección |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
+| `sectionId` | ✅ | entero | El id de una sección (no su número), tal como lo da get_course_structure |
+| `name` |  | texto |  |
+| `visible` |  | sí o no |  |
+| `summary` |  | texto | Su descripción (HTML) |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `restrictions` |  | objeto | Cuándo pueden abrirla los estudiantes (&#123; conditions: [] &#125; las elimina) |
+| `afterSectionId` |  | entero | Moverla después de esta sección |
 
 </details>
 
@@ -369,13 +369,13 @@ Cambia una sección: renombrarla, describirla, mostrarla u ocultarla (con sus ac
 
 Elimina una sección y todas las actividades que contiene, con los datos de sus participantes. Destructivo: confírmalo antes con la persona, diciendo qué actividades se eliminan con ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
-| `sectionId` (obligatorio) | entero | El id de una sección (no su número), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
+| `sectionId` | ✅ | entero | El id de una sección (no su número), tal como lo da get_course_structure |
 
 </details>
 
@@ -385,17 +385,17 @@ Elimina una sección y todas las actividades que contiene, con los datos de sus 
 
 Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro ajuste de un curso por el nombre de su campo en el formulario de configuración del curso de Moodle (settings), a través de ese formulario. Solo cambia lo que se indica. Devuelve el curso tras el cambio. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `fullName` | texto |  |
-| `shortName` | texto |  |
-| `summary` | texto | HTML |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
-| `settings` | objeto | Otros campos por su nombre en el formulario de configuración del curso, p. ej. &#123;"visible": 0, "startdate[day]": 1&#125; |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `fullName` |  | texto |  |
+| `shortName` |  | texto |  |
+| `summary` |  | texto | HTML |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `settings` |  | objeto | Otros campos por su nombre en el formulario de configuración del curso, p. ej. &#123;"visible": 0, "startdate[day]": 1&#125; |
 
 </details>
 
@@ -415,19 +415,19 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 
 Copia un curso en uno nuevo, como hace "Copiar curso" de Moodle: su contenido (y, con withUsers, las matriculaciones y los datos de sus personas) con un nuevo nombre completo y nombre corto, en una categoría (la del curso si no se indica), con fechas nuevas. Necesita permisos para hacer copias de seguridad, restaurar y crear cursos. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Crea un curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `fullName` (obligatorio) | texto |  |
-| `shortName` (obligatorio) | texto |  |
-| `categoryId` | entero |  |
-| `start` | texto | El inicio del nuevo curso, ISO 8601 |
-| `end` | texto | El fin del nuevo curso, ISO 8601 |
-| `withUsers` | sí o no | También sus participantes y sus datos (por defecto false) |
-| `visible` | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `fullName` | ✅ | texto |  |
+| `shortName` | ✅ | texto |  |
+| `categoryId` |  | entero |  |
+| `start` |  | texto | El inicio del nuevo curso, ISO 8601 |
+| `end` |  | texto | El fin del nuevo curso, ISO 8601 |
+| `withUsers` |  | sí o no | También sus participantes y sus datos (por defecto false) |
+| `visible` |  | sí o no |  |
 
 </details>
 
@@ -437,15 +437,15 @@ Copia un curso en uno nuevo, como hace "Copiar curso" de Moodle: su contenido (y
 
 Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local, mediante el asistente de copia de seguridad de Moodle: su contenido, y con withUsers también los datos de sus personas (anonymize anonimiza sus nombres). Moodle guarda una copia en el área de copias de seguridad del curso. Se restaura con restore_course. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `destDir` (obligatorio) | texto | Una carpeta local absoluta para el archivo |
-| `withUsers` | sí o no | También los datos de sus participantes (por defecto false) |
-| `anonymize` | sí o no | Con usuarios: Moodle anonimiza sus nombres y datos de contacto |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `destDir` | ✅ | texto | Una carpeta local absoluta para el archivo |
+| `withUsers` |  | sí o no | También los datos de sus participantes (por defecto false) |
+| `anonymize` |  | sí o no | Con usuarios: Moodle anonimiza sus nombres y datos de contacto |
 
 </details>
 
@@ -455,18 +455,18 @@ Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local,
 
 Restaura una copia de seguridad .mbz mediante el asistente de restauración de Moodle: en un curso nuevo en una categoría (sin intoCourseId), o en un curso existente, añadiendo a su contenido (modo merge, el predeterminado) o sustituyéndolo (replace elimina antes el contenido del curso). Un curso nuevo toma los nombres de la copia de seguridad salvo que se indiquen fullName y shortName. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia Moodle, y replace no se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `file` (obligatorio) | texto | La ruta local absoluta de la copia de seguridad (.mbz) |
-| `intoCourseId` | entero | Un curso existente en el que restaurar; un curso nuevo si falta |
-| `categoryId` | entero | Para un curso nuevo: su categoría |
-| `mode` | `merge`, `replace` | En un curso existente: añadir a él (por defecto) o sustituir su contenido |
-| `fullName` | texto |  |
-| `shortName` | texto |  |
-| `withUsers` | sí o no | Restaurar los datos de los participantes que tenga la copia de seguridad (por defecto false) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `file` | ✅ | texto | La ruta local absoluta de la copia de seguridad (.mbz) |
+| `intoCourseId` |  | entero | Un curso existente en el que restaurar; un curso nuevo si falta |
+| `categoryId` |  | entero | Para un curso nuevo: su categoría |
+| `mode` |  | `merge`, `replace` | En un curso existente: añadir a él (por defecto) o sustituir su contenido |
+| `fullName` |  | texto |  |
+| `shortName` |  | texto |  |
+| `withUsers` |  | sí o no | Restaurar los datos de los participantes que tenga la copia de seguridad (por defecto false) |
 
 </details>
 
@@ -476,14 +476,14 @@ Restaura una copia de seguridad .mbz mediante el asistente de restauración de M
 
 Importa actividades de otro curso a un curso, como hace "Importar" de Moodle: todas, o solo activityIds, con sus secciones, nunca los datos de las personas. Devuelve los ids de las nuevas actividades. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `fromCourseId` (obligatorio) | entero |  |
-| `toCourseId` (obligatorio) | entero |  |
-| `activityIds` | lista de entero | Solo estas actividades del otro curso (ids de módulos del curso) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `fromCourseId` | ✅ | entero |  |
+| `toCourseId` | ✅ | entero |  |
+| `activityIds` |  | lista de entero | Solo estas actividades del otro curso (ids de módulos del curso) |
 
 </details>
 
@@ -493,16 +493,16 @@ Importa actividades de otro curso a un curso, como hace "Importar" de Moodle: to
 
 Reinicia un curso como hace el formulario de reinicio de Moodle: elimina solo lo indicado en delete (entregas, intentos, mensajes, calificaciones… en cada actividad que los tenga), desmatricula a las personas con unenrolRoles, mueve la fecha de inicio (y con ella las fechas de las actividades) y establece cualquier otro campo del formulario por su nombre. No se elimina nada que no se indique. No se puede deshacer: confirma antes cada elemento con la persona. Devuelve el informe de Moodle.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `delete` | objeto |  |
-| `unenrolRoles` | lista de entero | Ids de los roles cuyas personas se desmatriculan |
-| `start` | texto | La nueva fecha de inicio, ISO 8601 |
-| `fields` | objeto | Cualquier otro campo del formulario de reinicio, por su nombre |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `delete` |  | objeto |  |
+| `unenrolRoles` |  | lista de entero | Ids de los roles cuyas personas se desmatriculan |
+| `start` |  | texto | La nueva fecha de inicio, ISO 8601 |
+| `fields` |  | objeto | Cualquier otro campo del formulario de reinicio, por su nombre |
 
 </details>
 
@@ -524,12 +524,12 @@ Reinicia un curso como hace el formulario de reinicio de Moodle: elimina solo lo
 
 Lista las tareas de un curso de Moodle: sus ids (ids de módulo del curso, para las demás herramientas de tareas), nombres, URL, visibilidad y sección. Toma el id del curso de list_courses.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
 
 </details>
 
@@ -539,13 +539,13 @@ Lista las tareas de un curso de Moodle: sus ids (ids de módulo del curso, para 
 
 Obtiene la entrega de cada participante en una tarea de Moodle: quién (un alias cuando el servidor seudonimiza, si no, id y nombre), estado (submitted; draft; new: una entrega iniciada pero aún sin nada; reopened; none: ninguna entrega), si necesita calificación, prórrogas, las fechas del participante y, por defecto, el contenido (texto en línea y enlaces a archivos; los nombres y datos de contacto que contenga se ocultan al seudonimizar). No cambia nada, pero Moodle lo registra como el profesor viendo las páginas de calificación, igual que con su propio calificador. Toma el id de la tarea de list_assignments.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (su id de módulo del curso), tal como lo da list_assignments |
-| `includeContent` | sí o no | Incluir el contenido de cada entrega: texto en línea y enlaces a archivos (true por defecto) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (su id de módulo del curso), tal como lo da list_assignments |
+| `includeContent` |  | sí o no | Incluir el contenido de cada entrega: texto en línea y enlaces a archivos (true por defecto) |
 
 </details>
 
@@ -555,12 +555,12 @@ Obtiene la entrega de cada participante en una tarea de Moodle: quién (un alias
 
 Lee cómo se califica una tarea: simple (una nota o una escala), una rúbrica (criterios con sus niveles y puntuaciones) o una guía de evaluación (criterios con su puntuación máxima). Los ids de criterio y de nivel son lo que toman los campos de grade_submission. Toma el id de la tarea de list_assignments; necesita al menos un participante.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
 
 </details>
 
@@ -570,24 +570,24 @@ Lee cómo se califica una tarea: simple (una nota o una escala), una rúbrica (c
 
 Califica a un participante en una tarea, como hace el calificador de Moodle: una nota (calificación simple), los niveles de una rúbrica o las puntuaciones de una guía de evaluación por criterio (ids de get_rubric) con observaciones, comentarios de retroalimentación (HTML, cuando la tarea los tiene activados), si notificar al estudiante, y cualquier otro campo de calificación por nombre en fields. Toma al participante tal como lo da get_submissions: user (un alias) cuando el servidor seudonimiza; si no, userId. Funciona con o sin entrega. Devuelve la calificación guardada. Cambia calificaciones que los estudiantes pueden ver: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `grade` | texto | La nota como texto: un número dentro del rango ("7.5"), o un elemento de la escala |
-| `feedback` | texto | Comentarios de retroalimentación (HTML); sin alias, ya que el estudiante los lee |
-| `notify` | sí o no | Notificar al estudiante; lo predeterminado de Moodle si falta |
-| `rubric` | objeto | El nivel de una rúbrica por criterio: id de criterio → id de nivel, tal como los da get_rubric |
-| `guide` | objeto | La puntuación de una guía de evaluación por criterio: id de criterio → puntuación |
-| `remarks` | objeto | Observaciones por criterio de una rúbrica o guía: id de criterio → texto; sin alias |
-| `feedbackFiles` | lista de texto | Rutas locales absolutas de archivos de retroalimentación que devolver al estudiante |
-| `workflowState` | `notmarked`, `inmarking`, `readyforreview`, `inreview`, `readyforrelease`, `released` | Con el flujo de trabajo de calificación activado: el estado en que dejar la entrega ("released" muestra la calificación al estudiante) |
-| `applyToGroup` | sí o no | En una tarea en grupo: dar la misma calificación y los mismos comentarios a todo el grupo |
-| `fields` | objeto | Otros campos del formulario de calificación por nombre, p. ej., los niveles de una rúbrica |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `grade` |  | texto | La nota como texto: un número dentro del rango ("7.5"), o un elemento de la escala |
+| `feedback` |  | texto | Comentarios de retroalimentación (HTML); sin alias, ya que el estudiante los lee |
+| `notify` |  | sí o no | Notificar al estudiante; lo predeterminado de Moodle si falta |
+| `rubric` |  | objeto | El nivel de una rúbrica por criterio: id de criterio → id de nivel, tal como los da get_rubric |
+| `guide` |  | objeto | La puntuación de una guía de evaluación por criterio: id de criterio → puntuación |
+| `remarks` |  | objeto | Observaciones por criterio de una rúbrica o guía: id de criterio → texto; sin alias |
+| `feedbackFiles` |  | lista de texto | Rutas locales absolutas de archivos de retroalimentación que devolver al estudiante |
+| `workflowState` |  | `notmarked`, `inmarking`, `readyforreview`, `inreview`, `readyforrelease`, `released` | Con el flujo de trabajo de calificación activado: el estado en que dejar la entrega ("released" muestra la calificación al estudiante) |
+| `applyToGroup` |  | sí o no | En una tarea en grupo: dar la misma calificación y los mismos comentarios a todo el grupo |
+| `fields` |  | objeto | Otros campos del formulario de calificación por nombre, p. ej., los niveles de una rúbrica |
 
 </details>
 
@@ -597,15 +597,15 @@ Califica a un participante en una tarea, como hace el calificador de Moodle: una
 
 Concede a participantes una prórroga de la fecha de entrega de una tarea hasta una fecha, como hace el formulario de prórroga de la tarea (varios a la vez). Los toma tal como los da get_submissions: users (alias) cuando el servidor seudonimiza; si no, userIds. Moodle rechaza una fecha anterior a la fecha de entrega. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
-| `users` | lista de texto | Los alias de los participantes, cuando el servidor seudonimiza |
-| `userIds` | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
-| `until` (obligatorio) | texto | ISO 8601, p. ej., 2026-11-03T23:59:00+01:00 |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
+| `users` |  | lista de texto | Los alias de los participantes, cuando el servidor seudonimiza |
+| `userIds` |  | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
+| `until` | ✅ | texto | ISO 8601, p. ej., 2026-11-03T23:59:00+01:00 |
 
 </details>
 
@@ -615,16 +615,16 @@ Concede a participantes una prórroga de la fecha de entrega de una tarea hasta 
 
 Establece el estado del flujo de trabajo de calificación de las entregas de participantes, como hace la acción en bloque de la tabla de calificación: "released" les muestra sus calificaciones (notify se lo comunica). Los toma tal como los da get_submissions. Los estudiantes pueden verlo: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
-| `users` | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userIds` | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
-| `state` (obligatorio) | `inmarking`, `readyforreview`, `inreview`, `readyforrelease`, `released` |  |
-| `notify` | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
+| `users` |  | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userIds` |  | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
+| `state` | ✅ | `inmarking`, `readyforreview`, `inreview`, `readyforrelease`, `released` |  |
+| `notify` |  | sí o no |  |
 
 </details>
 
@@ -634,16 +634,16 @@ Establece el estado del flujo de trabajo de calificación de las entregas de par
 
 Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa varios por entrega) a las entregas de participantes, como hace la acción en bloque de la tabla de calificación; Moodle no toca las entregas que ya han pasado la evaluación. Participantes y evaluadores tal como los da get_submissions: alias cuando el servidor seudonimiza. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
-| `users` | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userIds` | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
-| `markers` | lista de texto | Los alias de los evaluadores, cuando el servidor seudonimiza |
-| `markerIds` | lista de entero | Los ids de usuario de los evaluadores, cuando el servidor muestra los nombres |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
+| `users` |  | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userIds` |  | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
+| `markers` |  | lista de texto | Los alias de los evaluadores, cuando el servidor seudonimiza |
+| `markerIds` |  | lista de entero | Los ids de usuario de los evaluadores, cuando el servidor muestra los nombres |
 
 </details>
 
@@ -675,12 +675,12 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 
 Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables por cualquier cuestionario del curso) y los bancos propios de las actividades (el de un cuestionario, utilizable solo en él). Devuelve sus ids, que reciben list_questions, import_questions y create_question.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
 
 </details>
 
@@ -690,12 +690,12 @@ Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables p
 
 Lista las categorías de un banco de preguntas y todas las preguntas que contienen: id, nombre, tipo, estado y categoría. Recibe el id del banco de list_question_banks.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `bankId` (obligatorio) | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
 
 </details>
 
@@ -705,16 +705,16 @@ Lista las categorías de un banco de preguntas y todas las preguntas que contien
 
 Importa preguntas a un banco de preguntas desde GIFT o Moodle XML, dadas como texto o como archivo local, mediante el formulario de importación del banco: la forma de añadir varias a la vez. Moodle comprueba antes todo el archivo: si no puede analizarlo, no se importa nada y se devuelven sus mensajes. Devuelve las preguntas creadas. Cambia el banco: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `bankId` (obligatorio) | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
-| `format` (obligatorio) | `gift`, `xml` |  |
-| `text` | texto | Las preguntas en ese formato |
-| `file` | texto | O una ruta absoluta a un archivo local en ese formato |
-| `categoryId` | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
+| `format` | ✅ | `gift`, `xml` |  |
+| `text` |  | texto | Las preguntas en ese formato |
+| `file` |  | texto | O una ruta absoluta a un archivo local en ese formato |
+| `categoryId` |  | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
 
 </details>
 
@@ -724,20 +724,20 @@ Importa preguntas a un banco de preguntas desde GIFT o Moodle XML, dadas como te
 
 Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: multichoice, truefalse, shortanswer, numerical o essay. Para varias, import_questions es más rápido. Devuelve el id de la nueva pregunta. Cambia el banco: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `bankId` (obligatorio) | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
-| `type` (obligatorio) | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay` |  |
-| `name` (obligatorio) | texto |  |
-| `text` (obligatorio) | texto | El texto de la pregunta (HTML) |
-| `answers` | lista de objeto | Respuestas de multichoice, shortanswer y numerical |
-| `correct` | sí o no | Truefalse: la respuesta correcta |
-| `categoryId` | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
-| `defaultMark` | número |  |
-| `fields` | objeto | Cualquier otro campo del formulario del tipo, por su nombre |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
+| `type` | ✅ | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay` |  |
+| `name` | ✅ | texto |  |
+| `text` | ✅ | texto | El texto de la pregunta (HTML) |
+| `answers` |  | lista de objeto | Respuestas de multichoice, shortanswer y numerical |
+| `correct` |  | sí o no | Truefalse: la respuesta correcta |
+| `categoryId` |  | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
+| `defaultMark` |  | número |  |
+| `fields` |  | objeto | Cualquier otro campo del formulario del tipo, por su nombre |
 
 </details>
 
@@ -747,20 +747,20 @@ Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: mu
 
 Cambia una pregunta de un banco mediante el formulario de su tipo: solo cambia lo que se indica (answers las sustituye todas). Al guardar se crea una nueva versión con su propio id, el que se devuelve, que a partir de entonces reciben los cuestionarios que usan la última versión. Cambia el banco: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `bankId` (obligatorio) | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
-| `questionId` (obligatorio) | entero | Tal como lo da list_questions |
-| `name` | texto |  |
-| `text` | texto | El texto de la pregunta (HTML) |
-| `answers` | lista de objeto | Respuestas de multichoice, shortanswer y numerical |
-| `correct` | sí o no | Truefalse: la respuesta correcta |
-| `categoryId` | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
-| `defaultMark` | número |  |
-| `fields` | objeto | Cualquier otro campo del formulario del tipo, por su nombre |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
+| `questionId` | ✅ | entero | Tal como lo da list_questions |
+| `name` |  | texto |  |
+| `text` |  | texto | El texto de la pregunta (HTML) |
+| `answers` |  | lista de objeto | Respuestas de multichoice, shortanswer y numerical |
+| `correct` |  | sí o no | Truefalse: la respuesta correcta |
+| `categoryId` |  | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
+| `defaultMark` |  | número |  |
+| `fields` |  | objeto | Cualquier otro campo del formulario del tipo, por su nombre |
 
 </details>
 
@@ -770,13 +770,13 @@ Cambia una pregunta de un banco mediante el formulario de su tipo: solo cambia l
 
 Elimina preguntas de un banco, todas las versiones de cada una, como hace la acción de eliminar del banco. Moodle no elimina una pregunta que usa un cuestionario: la oculta, y hidden enumera esas. No se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `bankId` (obligatorio) | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
-| `questionIds` (obligatorio) | lista de entero | Tal como los da list_questions |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
+| `questionIds` | ✅ | lista de entero | Tal como los da list_questions |
 
 </details>
 
@@ -786,13 +786,13 @@ Elimina preguntas de un banco, todas las versiones de cada una, como hace la acc
 
 Marca una pregunta del banco como lista (los cuestionarios pueden usarla) o como borrador, como hace el menú de estado del banco.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `questionId` (obligatorio) | entero | Tal como lo da list_questions |
-| `status` (obligatorio) | `ready`, `draft` |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `questionId` | ✅ | entero | Tal como lo da list_questions |
+| `status` | ✅ | `ready`, `draft` |  |
 
 </details>
 
@@ -802,12 +802,12 @@ Marca una pregunta del banco como lista (los cuestionarios pueden usarla) o como
 
 Lista las preguntas de un cuestionario como lo hace su página de edición, en orden: la página de cada hueco, el id de la pregunta, el tipo (o aleatoria), el nombre y la puntuación. Solo para profesores.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -817,15 +817,15 @@ Lista las preguntas de un cuestionario como lo hace su página de edición, en o
 
 Añade preguntas a un cuestionario: preguntas del banco por id (de list_questions) y/o preguntas aleatorias de una categoría del banco, al final o en una página dada. Un cuestionario que ya tiene intentos no puede cambiar sus preguntas: Moodle lo rechaza. Devuelve la estructura del cuestionario tras el cambio. Cambia el cuestionario: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
-| `questionIds` | lista de entero | Preguntas del banco, tal como las da list_questions |
-| `random` | objeto | Preguntas aleatorias tomadas de una categoría |
-| `page` | entero | La página a la que añadirlas; la última si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| `questionIds` |  | lista de entero | Preguntas del banco, tal como las da list_questions |
+| `random` |  | objeto | Preguntas aleatorias tomadas de una categoría |
+| `page` |  | entero | La página a la que añadirlas; la última si falta |
 
 </details>
 
@@ -835,16 +835,16 @@ Añade preguntas a un cuestionario: preguntas del banco por id (de list_question
 
 Cambia un hueco de un cuestionario: su puntuación máxima y dónde está (después de otro hueco, 0 para el primero, y en una página), como hace la página de edición. Tras los intentos, Moodle permite cambiar la puntuación (los recalifica) pero no el orden. Devuelve la estructura del cuestionario. Cambia el cuestionario: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
-| `slot` (obligatorio) | entero | La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure |
-| `maxMark` | número |  |
-| `moveAfter` | entero | Ponerlo después de este hueco (0: el primero) |
-| `page` | entero | La página en la que ponerlo |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| `slot` | ✅ | entero | La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure |
+| `maxMark` |  | número |  |
+| `moveAfter` |  | entero | Ponerlo después de este hueco (0: el primero) |
+| `page` |  | entero | La página en la que ponerlo |
 
 </details>
 
@@ -854,13 +854,13 @@ Cambia un hueco de un cuestionario: su puntuación máxima y dónde está (despu
 
 Quita un hueco de un cuestionario, como hace el icono de eliminar de la página de edición; la pregunta sigue en su banco. Un cuestionario con intentos no puede cambiar sus preguntas. Devuelve la estructura del cuestionario. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
-| `slot` (obligatorio) | entero | La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| `slot` | ✅ | entero | La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure |
 
 </details>
 
@@ -870,14 +870,14 @@ Quita un hueco de un cuestionario, como hace el icono de eliminar de la página 
 
 Establece cómo se reparten en páginas las preguntas de un cuestionario: perPage preguntas por página (0 para todas en una), como hace "Repaginar", o saltos de página exactamente después de los huecos de breaksAfter. Devuelve la estructura del cuestionario. Cambia el cuestionario: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
-| `perPage` | entero | Preguntas por página; 0 para una sola página |
-| `breaksAfter` | lista de entero | O bien: un salto de página después de cada uno de estos huecos, y en ningún otro sitio |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| `perPage` |  | entero | Preguntas por página; 0 para una sola página |
+| `breaksAfter` |  | lista de entero | O bien: un salto de página después de cada uno de estos huecos, y en ningún otro sitio |
 
 </details>
 
@@ -887,15 +887,15 @@ Establece cómo se reparten en páginas las preguntas de un cuestionario: perPag
 
 Añade un encabezado de sección a un cuestionario, empezando en un hueco (el primero de su página: ver set_quiz_pages), opcionalmente barajando sus preguntas. Devuelve el id de la nueva sección y la estructura del cuestionario. Cambia el cuestionario: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
-| `firstSlot` (obligatorio) | entero | La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure |
-| `heading` (obligatorio) | texto |  |
-| `shuffle` | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| `firstSlot` | ✅ | entero | La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure |
+| `heading` | ✅ | texto |  |
+| `shuffle` |  | sí o no |  |
 
 </details>
 
@@ -905,13 +905,13 @@ Añade un encabezado de sección a un cuestionario, empezando en un hueco (el pr
 
 Lee los intentos de un cuestionario tal como los muestra su informe de calificaciones: por intento, el participante (un alias cuando el servidor seudonimiza), estado, fechas, calificación y la puntuación por pregunta; con responses, también cada respuesta dada (oculta al seudonimizar).
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
-| `responses` | sí o no | También la respuesta por pregunta (por defecto false) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| `responses` |  | sí o no | También la respuesta por pregunta (por defecto false) |
 
 </details>
 
@@ -921,18 +921,18 @@ Lee los intentos de un cuestionario tal como los muestra su informe de calificac
 
 Da a un participante sus propios ajustes del cuestionario, como hacen las excepciones de usuario del cuestionario: fechas de apertura y cierre, límite de tiempo en minutos o número de intentos (0 ilimitados); lo que no se indica sigue siendo lo del cuestionario. Toma al participante tal como lo da list_participants. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso) |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `open` | texto | ISO 8601 |
-| `close` | texto | ISO 8601 |
-| `timeLimitMinutes` | entero |  |
-| `attempts` | entero | 0 para ilimitados |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso) |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `open` |  | texto | ISO 8601 |
+| `close` |  | texto | ISO 8601 |
+| `timeLimitMinutes` |  | entero |  |
+| `attempts` |  | entero | 0 para ilimitados |
 
 </details>
 
@@ -942,12 +942,12 @@ Da a un participante sus propios ajustes del cuestionario, como hacen las excepc
 
 Lista las preguntas de un cuestionario que esperan calificación manual (ensayos…), cada una con cuántas hay por calificar y los intentos terminados cuya respuesta lo necesita (por id de intento, con el participante como alias cuando el servidor seudonimiza). Lee una respuesta con get_attempt_review; califícala con grade_quiz_question.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso) |
 
 </details>
 
@@ -957,15 +957,15 @@ Lista las preguntas de un cuestionario que esperan calificación manual (ensayos
 
 Califica a mano una pregunta de un intento terminado, con un comentario, como hace "Comentar o sobrescribir la puntuación" de la revisión: un ensayo que espera calificación, o cualquier pregunta cuya puntuación se sobrescribe. La puntuación va en los puntos de la pregunta (de 0 a su máximo). Devuelve después la calificación del intento cuando se muestra. Los estudiantes pueden verla: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `attemptId` (obligatorio) | entero | Tal como lo da list_questions_to_grade |
-| `slot` (obligatorio) | entero |  |
-| `mark` (obligatorio) | número |  |
-| `comment` | texto | Sin alias, ya que el estudiante lo lee |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attemptId` | ✅ | entero | Tal como lo da list_questions_to_grade |
+| `slot` | ✅ | entero |  |
+| `mark` | ✅ | número |  |
+| `comment` |  | texto | Sin alias, ya que el estudiante lo lee |
 
 </details>
 
@@ -992,13 +992,13 @@ Califica a mano una pregunta de un intento terminado, con un comentario, como ha
 
 Lee las calificaciones de todos en un curso tal como las muestra el informe del calificador, de un solo grupo si se indica: sus columnas (elementos de calificación, categorías, el total del curso) y una fila por participante (un alias cuando el servidor seudonimiza) con sus calificaciones.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `group` | entero | Solo los miembros de este grupo, por su id de list_groups |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `group` |  | entero | Solo los miembros de este grupo, por su id de list_groups |
 
 </details>
 
@@ -1008,19 +1008,19 @@ Lee las calificaciones de todos en un curso tal como las muestra el informe del 
 
 Pone la calificación de un participante en un elemento de calificación, como hace la vista individual del libro de calificaciones: un elemento manual la recibe; la de una actividad o una categoría se anula (hasta que override false quita la anulación). También comentarios de retroalimentación y excluirla de los totales. La calificación como texto: puntos ("7.5"), un elemento de una escala, o "none" para vaciarla. Los estudiantes pueden verla: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `itemId` (obligatorio) | entero | El elemento de calificación, tal como lo dan get_gradebook_setup o get_grader_report |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `grade` | texto |  |
-| `feedback` | texto | Sin alias, ya que lo lee el estudiante |
-| `override` | sí o no | false: quitar la anulación de una actividad o una categoría |
-| `excluded` | sí o no | Excluirla de los totales |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `itemId` | ✅ | entero | El elemento de calificación, tal como lo dan get_gradebook_setup o get_grader_report |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `grade` |  | texto |  |
+| `feedback` |  | texto | Sin alias, ya que lo lee el estudiante |
+| `override` |  | sí o no | false: quitar la anulación de una actividad o una categoría |
+| `excluded` |  | sí o no | Excluirla de los totales |
 
 </details>
 
@@ -1030,18 +1030,18 @@ Pone la calificación de un participante en un elemento de calificación, como h
 
 Guarda las calificaciones de un curso en una carpeta local tal como Moodle las exporta para un profesor: una hoja de cálculo (xlsx, ods), CSV o XML, con los elementos, el grupo, la visualización y los comentarios de retroalimentación elegidos. El archivo nombra a cada participante: solo con nombres en claro (el nivel de datos de estudiantes del servidor), ya que un archivo no se puede seudonimizar.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `format` (obligatorio) | `xlsx`, `ods`, `csv`, `xml` |  |
-| `destDir` (obligatorio) | texto | Una carpeta local absoluta |
-| `itemIds` | lista de entero | Solo estos elementos de calificación |
-| `groupId` | entero |  |
-| `display` | lista de `real`, `percentage`, `letter` |  |
-| `feedback` | sí o no | Incluir los comentarios de retroalimentación |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `format` | ✅ | `xlsx`, `ods`, `csv`, `xml` |  |
+| `destDir` | ✅ | texto | Una carpeta local absoluta |
+| `itemIds` |  | lista de entero | Solo estos elementos de calificación |
+| `groupId` |  | entero |  |
+| `display` |  | lista de `real`, `percentage`, `letter` |  |
+| `feedback` |  | sí o no | Incluir los comentarios de retroalimentación |
 
 </details>
 
@@ -1051,12 +1051,12 @@ Guarda las calificaciones de un curso en una carpeta local tal como Moodle las e
 
 Lee cómo se calculan las calificaciones de un curso, como lo muestra la página de configuración del libro de calificaciones: sus categorías (agregación, peso, máximo) y sus elementos de calificación (categoría, máximo, peso). No incluye las calificaciones de nadie.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
 
 </details>
 
@@ -1066,17 +1066,17 @@ Lee cómo se calculan las calificaciones de un curso, como lo muestra la página
 
 Añade un elemento de calificación que se califica en el libro de calificaciones (no mediante una actividad): sobre maxGrade (por defecto 100 en Moodle) o con una escala, en el nivel superior o en una categoría, opcionalmente oculto a los estudiantes. Lo devuelve tal como lo muestra la configuración. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `name` (obligatorio) | texto |  |
-| `maxGrade` | número |  |
-| `scaleId` | entero | Una escala en lugar de puntos |
-| `categoryId` | entero | La categoría en la que ponerlo, tal como la da get_gradebook_setup |
-| `hidden` | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `maxGrade` |  | número |  |
+| `scaleId` |  | entero | Una escala en lugar de puntos |
+| `categoryId` |  | entero | La categoría en la que ponerlo, tal como la da get_gradebook_setup |
+| `hidden` |  | sí o no |  |
 
 </details>
 
@@ -1086,16 +1086,16 @@ Añade un elemento de calificación que se califica en el libro de calificacione
 
 Cambia un elemento de calificación de get_gradebook_setup: moverlo a una categoría, establecer su peso (porcentaje, que sustituye al automático) o la calificación máxima de un elemento manual (la de una actividad se establece en la actividad). Devuelve el elemento tras el cambio. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `itemId` (obligatorio) | entero |  |
-| `category` | entero | La categoría a la que moverlo |
-| `weight` | número | Porcentaje |
-| `maxGrade` | número |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `itemId` | ✅ | entero |  |
+| `category` |  | entero | La categoría a la que moverlo |
+| `weight` |  | número | Porcentaje |
+| `maxGrade` |  | número |  |
 
 </details>
 
@@ -1105,13 +1105,13 @@ Cambia un elemento de calificación de get_gradebook_setup: moverlo a una catego
 
 Elimina un elemento de calificación manual y todas sus calificaciones. El elemento de una actividad va con su actividad, así que se rechaza. No se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `itemId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `itemId` | ✅ | entero |  |
 
 </details>
 
@@ -1121,15 +1121,15 @@ Elimina un elemento de calificación manual y todas sus calificaciones. El eleme
 
 Añade una categoría de calificación al libro de calificaciones de un curso, en el nivel superior o dentro de otra, con su agregación. La devuelve tal como la muestra la configuración. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `name` (obligatorio) | texto |  |
-| `aggregation` | `mean`, `median`, `lowest`, `highest`, `mode`, `weighted-mean`, `simple-weighted-mean`, `mean-with-extra-credits`, `natural` |  |
-| `parentId` | entero | La categoría en la que ponerla; el nivel superior del curso si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `aggregation` |  | `mean`, `median`, `lowest`, `highest`, `mode`, `weighted-mean`, `simple-weighted-mean`, `mean-with-extra-credits`, `natural` |  |
+| `parentId` |  | entero | La categoría en la que ponerla; el nivel superior del curso si falta |
 
 </details>
 
@@ -1139,17 +1139,17 @@ Añade una categoría de calificación al libro de calificaciones de un curso, e
 
 Cambia una categoría de calificación de get_gradebook_setup: su nombre, su agregación, su peso en su categoría padre (porcentaje, que sustituye al automático) o moverla a otra categoría. La devuelve tras el cambio. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `categoryId` (obligatorio) | entero |  |
-| `name` | texto |  |
-| `aggregation` | `mean`, `median`, `lowest`, `highest`, `mode`, `weighted-mean`, `simple-weighted-mean`, `mean-with-extra-credits`, `natural` |  |
-| `weight` | número | Porcentaje |
-| `parentId` | entero | La categoría a la que moverla |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `categoryId` | ✅ | entero |  |
+| `name` |  | texto |  |
+| `aggregation` |  | `mean`, `median`, `lowest`, `highest`, `mode`, `weighted-mean`, `simple-weighted-mean`, `mean-with-extra-credits`, `natural` |  |
+| `weight` |  | número | Porcentaje |
+| `parentId` |  | entero | La categoría a la que moverla |
 
 </details>
 
@@ -1159,13 +1159,13 @@ Cambia una categoría de calificación de get_gradebook_setup: su nombre, su agr
 
 Elimina una categoría de calificación: Moodle mueve lo que contenía a su categoría padre y elimina las calificaciones de su total; la categoría propia del curso no se puede eliminar. No se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `categoryId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `categoryId` | ✅ | entero |  |
 
 </details>
 
@@ -1175,13 +1175,13 @@ Elimina una categoría de calificación: Moodle mueve lo que contenía a su cate
 
 Lee el informe de progreso de un curso: la finalización de cada participante (un alias cuando el servidor seudonimiza) en cada actividad que la registra, de un solo grupo si se indica; si es manual o automática, y si un profesor la ha anulado.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `group` | entero | Solo los miembros de este grupo, por su id de list_groups |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `group` |  | entero | Solo los miembros de este grupo, por su id de list_groups |
 
 </details>
 
@@ -1191,15 +1191,15 @@ Lee el informe de progreso de un curso: la finalización de cada participante (u
 
 Establece la finalización de una actividad de un participante como hace un profesor desde el informe de progreso (una anulación, que se muestra como tal). Toma al participante tal como lo da get_completion_report. Devuelve el estado guardado. Cambia el progreso del participante: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso) |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `state` (obligatorio) | `incomplete`, `complete`, `complete-pass`, `complete-fail` |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso) |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `state` | ✅ | `incomplete`, `complete`, `complete-pass`, `complete-fail` |  |
 
 </details>
 
@@ -1217,14 +1217,14 @@ Establece la finalización de una actividad de un participante como hace un prof
 
 Lee el informe de actividad de un curso: por actividad, cuántas veces se ha visto, por cuántas personas y cuándo por última vez, a partir de los registros (entre from y until si se indican). Solo recuentos, sin el nombre de nadie. Las actividades que nadie ha visto aparecen con cero.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `from` | texto | ISO 8601 |
-| `until` | texto | ISO 8601 |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `from` |  | texto | ISO 8601 |
+| `until` |  | texto | ISO 8601 |
 
 </details>
 
@@ -1234,16 +1234,16 @@ Lee el informe de actividad de un curso: por actividad, cuántas veces se ha vis
 
 Lee el informe de participación de una actividad: todas las personas con un rol (todos los roles que ofrece, salvo que se indique roleId) y cuántas acciones han hecho allí (solo visualizaciones o mensajes con action; desde una fecha con since); quienes no han hecho nada aparecen con 0. Las personas como alias cuando el servidor seudonimiza.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `activityId` (obligatorio) | entero |  |
-| `roleId` | entero |  |
-| `since` | texto | ISO 8601 |
-| `action` | `view`, `post` |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `activityId` | ✅ | entero |  |
+| `roleId` |  | entero |  |
+| `since` |  | texto | ISO 8601 |
+| `action` |  | `view`, `post` |  |
 
 </details>
 
@@ -1253,21 +1253,21 @@ Lee el informe de participación de una actividad: todas las personas con un rol
 
 Lee los registros de un curso, los más recientes primero, tal como los lista su informe de registros: por un usuario (un alias cuando el servidor seudonimiza), una actividad, un tipo de acción y un intervalo de tiempo, una página cada vez: limit entradas (50 por defecto) tras saltar offset; more indica si hay más. Cada entrada: cuándo, quién, sobre quién, dónde, qué ocurrió (la descripción más larga de Moodle solo con includeDescriptions). Nunca direcciones IP.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `activityId` | entero |  |
-| `action` | `create`, `view`, `update`, `delete`, `change` |  |
-| `from` | texto | ISO 8601 |
-| `until` | texto | ISO 8601 |
-| `limit` | entero | Cuántas entradas (50 por defecto) |
-| `offset` | entero | Cuántas entradas saltar primero, las más recientes primero (0 por defecto) |
-| `includeDescriptions` | sí o no | Incluir también la descripción de cada entrada, la frase de Moodle sobre ella (más largo; false por defecto) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `activityId` |  | entero |  |
+| `action` |  | `create`, `view`, `update`, `delete`, `change` |  |
+| `from` |  | texto | ISO 8601 |
+| `until` |  | texto | ISO 8601 |
+| `limit` |  | entero | Cuántas entradas (50 por defecto) |
+| `offset` |  | entero | Cuántas entradas saltar primero, las más recientes primero (0 por defecto) |
+| `includeDescriptions` |  | sí o no | Incluir también la descripción de cada entrada, la frase de Moodle sobre ella (más largo; false por defecto) |
 
 </details>
 
@@ -1298,15 +1298,15 @@ Lee los registros de un curso, los más recientes primero, tal como los lista su
 
 Lista los participantes de un curso con sus roles y grupos, como hace la página de participantes: las personas como alias cuando el servidor seudonimiza, nunca correos electrónicos ni campos del perfil. Filtra por rol, grupo, o quienes no han accedido al curso desde una fecha (inactiveSince).
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `role` | entero | Solo los de este rol, por su id (tal como lo dan los roles de los participantes) |
-| `group` | entero | Solo los miembros de este grupo, por su id de list_groups |
-| `inactiveSince` | texto | Solo quienes no han accedido al curso desde esta fecha (ISO 8601) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `role` |  | entero | Solo los de este rol, por su id (tal como lo dan los roles de los participantes) |
+| `group` |  | entero | Solo los miembros de este grupo, por su id de list_groups |
+| `inactiveSince` |  | texto | Solo quienes no han accedido al curso desde esta fecha (ISO 8601) |
 
 </details>
 
@@ -1316,13 +1316,13 @@ Lista los participantes de un curso con sus roles y grupos, como hace la página
 
 Busca usuarios que la persona puede matricular en un curso mediante matriculación manual, como hace el diálogo "Matricular usuarios": los que coinciden con search en su nombre o en los campos de identidad que muestra el sitio (hasta 100 si está vacío). Las personas como alias cuando el servidor seudonimiza, nunca sus correos electrónicos. Matricúlalos con enrol_users.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `search` | texto | Parte de un nombre, un correo electrónico, un número de ID… |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `search` |  | texto | Parte de un nombre, un correo electrónico, un número de ID… |
 
 </details>
 
@@ -1332,17 +1332,17 @@ Busca usuarios que la persona puede matricular en un curso mediante matriculaci�
 
 Matricula usuarios en un curso mediante matriculación manual, como hace el diálogo "Matricular usuarios": con un rol (el predeterminado de la matriculación salvo que se indique roleId), desde start (ahora) hasta end (la duración predeterminada de la matriculación). Los toma tal como los da list_potential_users. Quienes ya están matriculados conservan su matriculación, con las nuevas fechas. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `users` | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userIds` | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
-| `roleId` | entero | El rol que se asigna, tal como lo dan los roles de list_participants |
-| `start` | texto | ISO 8601 |
-| `end` | texto | ISO 8601 |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `users` |  | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userIds` |  | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
+| `roleId` |  | entero | El rol que se asigna, tal como lo dan los roles de list_participants |
+| `start` |  | texto | ISO 8601 |
+| `end` |  | texto | ISO 8601 |
 
 </details>
 
@@ -1352,14 +1352,14 @@ Matricula usuarios en un curso mediante matriculación manual, como hace el diá
 
 Desmatricula a alguien de un curso: elimina todas sus matriculaciones que la persona puede eliminar, junto con sus roles y su pertenencia a grupos en el curso; removed y kept nombran los métodos de matriculación. Su trabajo en el curso se queda en Moodle, pero pierde el acceso. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
 
 </details>
 
@@ -1369,15 +1369,15 @@ Desmatricula a alguien de un curso: elimina todas sus matriculaciones que la per
 
 Establece los roles de un participante en un curso, como hace la columna de roles de la página de participantes: asigna los roles de roleIds que la persona puede asignar y quita los demás que puede asignar; los roles de otros contextos se mantienen. Devuelve los roles resultantes. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `roleIds` (obligatorio) | lista de entero | Ids de rol, tal como los dan los roles de list_participants |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `roleIds` | ✅ | lista de entero | Ids de rol, tal como los dan los roles de list_participants |
 
 </details>
 
@@ -1387,12 +1387,12 @@ Establece los roles de un participante en un curso, como hace la columna de role
 
 Lista cómo puede matricularse la gente en un curso, en el orden en que Moodle los prueba: el tipo de cada método, su nombre, si está activado, cuántas personas ha matriculado, el rol que asigna y, para la automatriculación y el acceso de invitados, si pide una clave (nunca la clave), fechas y límite.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
 
 </details>
 
@@ -1402,22 +1402,22 @@ Lista cómo puede matricularse la gente en un curso, en el orden en que Moodle l
 
 Cambia un método de matriculación con su formulario, por su id o el primero de un tipo en el curso (methodType "self": se añade cuando el curso no tiene ninguno y Moodle lo ofrece): activarlo o desactivarlo, su clave, fechas, rol, límite y mensaje de bienvenida. Solo cambia lo que se indica. Devuelve el método resultante (nunca la clave). Abre o cierra el curso a la gente: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `methodId` | entero | Tal como lo da list_enrolment_methods |
-| `methodType` | texto | O el tipo del método, como "self" o "guest" |
-| `enabled` | sí o no |  |
-| `key` | texto | Clave de automatriculación o de acceso de invitados; vacía para quitarla |
-| `start` | texto | Desde cuándo, ISO 8601; "none" para quitarlo |
-| `end` | texto | Hasta cuándo, ISO 8601; "none" para quitarlo |
-| `roleId` | entero |  |
-| `maxUsers` | entero | 0 para no tener límite |
-| `welcomeMessage` | texto | Automatriculación: enviar este mensaje de bienvenida |
-| `noWelcome` | sí o no | Automatriculación: no enviar mensaje de bienvenida |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `methodId` |  | entero | Tal como lo da list_enrolment_methods |
+| `methodType` |  | texto | O el tipo del método, como "self" o "guest" |
+| `enabled` |  | sí o no |  |
+| `key` |  | texto | Clave de automatriculación o de acceso de invitados; vacía para quitarla |
+| `start` |  | texto | Desde cuándo, ISO 8601; "none" para quitarlo |
+| `end` |  | texto | Hasta cuándo, ISO 8601; "none" para quitarlo |
+| `roleId` |  | entero |  |
+| `maxUsers` |  | entero | 0 para no tener límite |
+| `welcomeMessage` |  | texto | Automatriculación: enviar este mensaje de bienvenida |
+| `noWelcome` |  | sí o no | Automatriculación: no enviar mensaje de bienvenida |
 
 </details>
 
@@ -1427,12 +1427,12 @@ Cambia un método de matriculación con su formulario, por su id o el primero de
 
 Lista los grupos de un curso que la persona puede ver, con sus miembros (como alias cuando el servidor seudonimiza). Sus ids son lo que admite el filtro de grupo de los informes.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
 
 </details>
 
@@ -1442,16 +1442,16 @@ Lista los grupos de un curso que la persona puede ver, con sus miembros (como al
 
 Crea un grupo en un curso con el formulario de grupos de Moodle. Añade sus miembros con set_group_members. Devuelve su id. Cambia el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `name` (obligatorio) | texto |  |
-| `description` | texto | HTML |
-| `idNumber` | texto | Un id para sistemas externos |
-| `enrolmentKey` | texto | Una clave que matricula a los estudiantes directamente en este grupo con la automatriculación |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `description` |  | texto | HTML |
+| `idNumber` |  | texto | Un id para sistemas externos |
+| `enrolmentKey` |  | texto | Una clave que matricula a los estudiantes directamente en este grupo con la automatriculación |
 
 </details>
 
@@ -1461,16 +1461,16 @@ Crea un grupo en un curso con el formulario de grupos de Moodle. Añade sus miem
 
 Cambia el nombre, la descripción, el número de ID o la clave de matriculación de un grupo; lo que no se indica se mantiene. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `groupId` (obligatorio) | entero | El id del grupo, tal como lo da list_groups |
-| `name` | texto |  |
-| `description` | texto | HTML |
-| `idNumber` | texto | Un id para sistemas externos |
-| `enrolmentKey` | texto | Una clave que matricula a los estudiantes directamente en este grupo con la automatriculación |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `groupId` | ✅ | entero | El id del grupo, tal como lo da list_groups |
+| `name` |  | texto |  |
+| `description` |  | texto | HTML |
+| `idNumber` |  | texto | Un id para sistemas externos |
+| `enrolmentKey` |  | texto | Una clave que matricula a los estudiantes directamente en este grupo con la automatriculación |
 
 </details>
 
@@ -1480,12 +1480,12 @@ Cambia el nombre, la descripción, el número de ID o la clave de matriculación
 
 Elimina un grupo; sus miembros siguen en el curso. Las actividades configuradas para trabajar por grupos lo pierden. No se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `groupId` (obligatorio) | entero | El id del grupo, tal como lo da list_groups |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `groupId` | ✅ | entero | El id del grupo, tal como lo da list_groups |
 
 </details>
 
@@ -1495,17 +1495,17 @@ Elimina un grupo; sus miembros siguen en el curso. Las actividades configuradas 
 
 Añade y quita miembros de un grupo, como hace su página de miembros: solo se pueden añadir participantes del curso. Los toma tal como los da list_participants: alias (add, remove) cuando el servidor seudonimiza, si no, ids de usuario (addIds, removeIds). Devuelve los miembros resultantes. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El curso del grupo |
-| `groupId` (obligatorio) | entero | Tal como lo da list_groups |
-| `add` | lista de texto | Alias que añadir, cuando el servidor seudonimiza |
-| `remove` | lista de texto | Alias que quitar, cuando el servidor seudonimiza |
-| `addIds` | lista de entero | Ids de usuario que añadir, cuando el servidor muestra los nombres |
-| `removeIds` | lista de entero | Ids de usuario que quitar, cuando el servidor muestra los nombres |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El curso del grupo |
+| `groupId` | ✅ | entero | Tal como lo da list_groups |
+| `add` |  | lista de texto | Alias que añadir, cuando el servidor seudonimiza |
+| `remove` |  | lista de texto | Alias que quitar, cuando el servidor seudonimiza |
+| `addIds` |  | lista de entero | Ids de usuario que añadir, cuando el servidor muestra los nombres |
+| `removeIds` |  | lista de entero | Ids de usuario que quitar, cuando el servidor muestra los nombres |
 
 </details>
 
@@ -1515,12 +1515,12 @@ Añade y quita miembros de un grupo, como hace su página de miembros: solo se p
 
 Lista los agrupamientos de un curso (conjuntos de grupos a los que se puede limitar una actividad) con los ids de sus grupos. Requiere el permiso para gestionar grupos.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
 
 </details>
 
@@ -1530,15 +1530,15 @@ Lista los agrupamientos de un curso (conjuntos de grupos a los que se puede limi
 
 Crea un agrupamiento en un curso con el formulario de Moodle; asígnale sus grupos con set_grouping_groups. Devuelve su id. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `name` (obligatorio) | texto |  |
-| `description` | texto | HTML |
-| `idNumber` | texto |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `description` |  | texto | HTML |
+| `idNumber` |  | texto |  |
 
 </details>
 
@@ -1548,12 +1548,12 @@ Crea un agrupamiento en un curso con el formulario de Moodle; asígnale sus grup
 
 Elimina un agrupamiento; sus grupos se mantienen. No se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `groupingId` (obligatorio) | entero | El id del agrupamiento, tal como lo da list_groupings |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `groupingId` | ✅ | entero | El id del agrupamiento, tal como lo da list_groupings |
 
 </details>
 
@@ -1563,13 +1563,13 @@ Elimina un agrupamiento; sus grupos se mantienen. No se puede deshacer: confírm
 
 Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y quitando como hace su página; los grupos de otros cursos se dejan fuera y se nombran. Devuelve sus grupos resultantes. Confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `groupingId` (obligatorio) | entero | El id del agrupamiento, tal como lo da list_groupings |
-| `groupIds` (obligatorio) | lista de entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `groupingId` | ✅ | entero | El id del agrupamiento, tal como lo da list_groupings |
+| `groupIds` | ✅ | lista de entero |  |
 
 </details>
 
@@ -1604,12 +1604,12 @@ Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y q
 
 Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el autor y la hora del último mensaje, el número de respuestas (0: sin responder) y si está bloqueado. Toma el id del foro de get_course_structure; lee uno con get_discussion.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `forumId` (obligatorio) | entero | El id del foro (su id de módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `forumId` | ✅ | entero | El id del foro (su id de módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -1619,12 +1619,12 @@ Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el 
 
 Lee todos los mensajes de un debate de un foro de Moodle, los más antiguos primero: autor (un alias cuando el servidor seudonimiza), hora, el mensaje al que responde, el mensaje como texto plano (con nombres y datos de contacto ocultos al seudonimizar) y los adjuntos. Toma el id del debate de list_discussions.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `discussionId` (obligatorio) | entero | El id del debate, tal como lo da list_discussions |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `discussionId` | ✅ | entero | El id del debate, tal como lo da list_discussions |
 
 </details>
 
@@ -1634,18 +1634,18 @@ Lee todos los mensajes de un debate de un foro de Moodle, los más antiguos prim
 
 Responde a un mensaje en un debate de un foro de Moodle, con adjuntos opcionales (archivos locales). El asunto por defecto es el "Re: …" de Moodle. Devuelve el id del nuevo mensaje y su debate. Publica como la persona, de forma visible: confirma antes el texto con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `postId` (obligatorio) | entero | El mensaje al que responder, tal como lo da get_discussion |
-| `subject` | texto |  |
-| `message` (obligatorio) | texto | El mensaje (HTML); sin alias, ya que lo leen otras personas |
-| `files` | lista de texto | Rutas locales absolutas que adjuntar |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
-| `subscribe` | sí o no | Suscribirse al debate; lo predeterminado de Moodle si falta |
-| `fields` | objeto | Otros campos del formulario del mensaje por nombre, p. ej., &#123;"pinned": true&#125; para un profesor |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `postId` | ✅ | entero | El mensaje al que responder, tal como lo da get_discussion |
+| `subject` |  | texto |  |
+| `message` | ✅ | texto | El mensaje (HTML); sin alias, ya que lo leen otras personas |
+| `files` |  | lista de texto | Rutas locales absolutas que adjuntar |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `subscribe` |  | sí o no | Suscribirse al debate; lo predeterminado de Moodle si falta |
+| `fields` |  | objeto | Otros campos del formulario del mensaje por nombre, p. ej., &#123;"pinned": true&#125; para un profesor |
 
 </details>
 
@@ -1655,18 +1655,18 @@ Responde a un mensaje en un debate de un foro de Moodle, con adjuntos opcionales
 
 Inicia un debate en un foro de Moodle, con adjuntos e imágenes incrustadas opcionales (archivos locales); un profesor puede publicar avisos así en el foro de avisos. Devuelve el id del nuevo debate y, leídos de vuelta, si está fijado y si la persona está suscrita. Publica como la persona, de forma visible: confirma antes el texto con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `forumId` (obligatorio) | entero | El id del foro (id del módulo del curso), tal como lo da get_course_structure |
-| `subject` (obligatorio) | texto |  |
-| `message` (obligatorio) | texto | El mensaje (HTML); sin alias, ya que lo leen otras personas |
-| `files` | lista de texto | Rutas locales absolutas que adjuntar |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
-| `subscribe` | sí o no | Suscribirse al debate; lo predeterminado de Moodle si falta |
-| `fields` | objeto | Otros campos del formulario del mensaje por nombre, p. ej., &#123;"pinned": true&#125; para un profesor |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `forumId` | ✅ | entero | El id del foro (id del módulo del curso), tal como lo da get_course_structure |
+| `subject` | ✅ | texto |  |
+| `message` | ✅ | texto | El mensaje (HTML); sin alias, ya que lo leen otras personas |
+| `files` |  | lista de texto | Rutas locales absolutas que adjuntar |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `subscribe` |  | sí o no | Suscribirse al debate; lo predeterminado de Moodle si falta |
+| `fields` |  | objeto | Otros campos del formulario del mensaje por nombre, p. ej., &#123;"pinned": true&#125; para un profesor |
 
 </details>
 
@@ -1676,17 +1676,17 @@ Inicia un debate en un foro de Moodle, con adjuntos e imágenes incrustadas opci
 
 Cambia un mensaje del foro mediante el propio formulario de Moodle, como su autor (dentro del tiempo de edición del sitio) o como moderador: su asunto, su mensaje (HTML) y adjuntos que añadir o quitar. Solo cambia lo que se indica. Devuelve el mensaje después (su autor como alias cuando el servidor seudonimiza). Visible para el foro: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `postId` (obligatorio) | entero | Tal como lo da get_discussion |
-| `subject` | texto |  |
-| `message` | texto | HTML; sin alias, ya que lo leen otras personas |
-| `addFiles` | lista de texto | Rutas locales absolutas que adjuntar |
-| `removeFiles` | lista de texto | Nombres de los adjuntos que quitar |
-| `embed` | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `postId` | ✅ | entero | Tal como lo da get_discussion |
+| `subject` |  | texto |  |
+| `message` |  | texto | HTML; sin alias, ya que lo leen otras personas |
+| `addFiles` |  | lista de texto | Rutas locales absolutas que adjuntar |
+| `removeFiles` |  | lista de texto | Nombres de los adjuntos que quitar |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
 
 </details>
 
@@ -1696,12 +1696,12 @@ Cambia un mensaje del foro mediante el propio formulario de Moodle, como su auto
 
 Elimina un mensaje del foro y sus respuestas mediante la propia confirmación de Moodle; el primer mensaje de un debate se lleva el debate entero. Solo un moderador elimina el mensaje de otra persona o uno con respuestas. No se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `postId` (obligatorio) | entero | Tal como lo da get_discussion |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `postId` | ✅ | entero | Tal como lo da get_discussion |
 
 </details>
 
@@ -1711,15 +1711,15 @@ Elimina un mensaje del foro y sus respuestas mediante la propia confirmación de
 
 Fija o desfija, bloquea o desbloquea un debate de un foro, como hace el menú de la lista de debates; lo que ya está así no se toca. Devuelve el debate tal como lo lista el foro después. Los estudiantes lo ven: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `forumId` (obligatorio) | entero | El id del foro (id del módulo del curso), tal como lo da get_course_structure |
-| `discussionId` (obligatorio) | entero | Tal como lo da list_discussions |
-| `pinned` | sí o no |  |
-| `locked` | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `forumId` | ✅ | entero | El id del foro (id del módulo del curso), tal como lo da get_course_structure |
+| `discussionId` | ✅ | entero | Tal como lo da list_discussions |
+| `pinned` |  | sí o no |  |
+| `locked` |  | sí o no |  |
 
 </details>
 
@@ -1729,14 +1729,14 @@ Fija o desfija, bloquea o desbloquea un debate de un foro, como hace el menú de
 
 Suscribe a la persona a un debate de un foro, o la da de baja, como hace el interruptor de la lista de debates: Moodle le envía entonces por correo electrónico sus nuevos mensajes. Lo que ya está así no se toca. Devuelve el debate tal como lo lista el foro después.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `forumId` (obligatorio) | entero | El id del foro (id del módulo del curso), tal como lo da get_course_structure |
-| `discussionId` (obligatorio) | entero | Tal como lo da list_discussions |
-| `subscribed` (obligatorio) | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `forumId` | ✅ | entero | El id del foro (id del módulo del curso), tal como lo da get_course_structure |
+| `discussionId` | ✅ | entero | Tal como lo da list_discussions |
+| `subscribed` | ✅ | sí o no |  |
 
 </details>
 
@@ -1746,13 +1746,13 @@ Suscribe a la persona a un debate de un foro, o la da de baja, como hace el inte
 
 Lee las calificaciones globales de un foro que se califica en su conjunto, tal como las muestra su calificador: una por cada persona que puede calificar (alias cuando el servidor seudonimiza), con cómo se califica (puntos o escala) y quién calificó.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `forumId` (obligatorio) | entero | El id del foro (id del módulo del curso) |
-| `groupId` | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `forumId` | ✅ | entero | El id del foro (id del módulo del curso) |
+| `groupId` |  | entero |  |
 
 </details>
 
@@ -1762,16 +1762,16 @@ Lee las calificaciones globales de un foro que se califica en su conjunto, tal c
 
 Pone a un participante su calificación global del foro, como hace el calificador del foro: puntos ("7"), un elemento de la escala, o "none" para quitarla; notify le envía la notificación de Moodle. Los estudiantes pueden verla: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `forumId` (obligatorio) | entero | El id del foro (id del módulo del curso) |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `grade` (obligatorio) | texto |  |
-| `notify` | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `forumId` | ✅ | entero | El id del foro (id del módulo del curso) |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `grade` | ✅ | texto |  |
+| `notify` |  | sí o no |  |
 
 </details>
 
@@ -1781,15 +1781,15 @@ Pone a un participante su calificación global del foro, como hace el calificado
 
 Valora un mensaje del foro, una entrada de glosario o un registro de base de datos como la persona, como hace el menú de valoración que tiene debajo: el nombre de un elemento de la escala, o un número (los puntos de una escala de puntos); "none" quita la valoración de la persona. Devuelve después el agregado del elemento. Los estudiantes pueden verlo: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `itemType` (obligatorio) | `forum-post`, `glossary-entry`, `database-record` |  |
-| `itemId` (obligatorio) | entero | El id del mensaje, de la entrada o del registro |
-| `discussionId` | entero | Para un mensaje del foro: su debate |
-| `rating` (obligatorio) | texto |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `itemType` | ✅ | `forum-post`, `glossary-entry`, `database-record` |  |
+| `itemId` | ✅ | entero | El id del mensaje, de la entrada o del registro |
+| `discussionId` |  | entero | Para un mensaje del foro: su debate |
+| `rating` | ✅ | texto |  |
 
 </details>
 
@@ -1799,12 +1799,12 @@ Valora un mensaje del foro, una entrada de glosario o un registro de base de dat
 
 Lee la fase de un taller y su informe tal como lo ve un profesor: cada entrega (autor, título, calificación una vez calculada) y cada evaluación (revisor, el autor de la entrega, la calificación que da, su peso, la calificación por evaluar). Las personas como alias cuando el servidor seudonimiza. Listas vacías antes de la fase de envío, o para alguien que no puede ver todas las entregas.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `workshopId` (obligatorio) | entero | El id del taller (id del módulo del curso) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
 
 </details>
 
@@ -1814,13 +1814,13 @@ Lee la fase de un taller y su informe tal como lo ve un profesor: cada entrega (
 
 Cambia un taller a una fase (setup, submission, assessment, evaluation, closed), hacia delante o hacia atrás, como hacen los enlaces de fase de su página. Moodle no asigna nada ni calcula calificaciones por sí solo al cambiar. Cambia lo que pueden hacer los estudiantes: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `workshopId` (obligatorio) | entero | El id del taller (id del módulo del curso) |
-| `phase` (obligatorio) | `setup`, `submission`, `assessment`, `evaluation`, `closed` |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `phase` | ✅ | `setup`, `submission`, `assessment`, `evaluation`, `closed` |  |
 
 </details>
 
@@ -1830,16 +1830,16 @@ Cambia un taller a una fase (setup, submission, assessment, evaluation, closed),
 
 Evalúa una entrega de un taller como la persona, mediante el formulario de evaluación del taller (el de su estrategia de calificación): una calificación y un comentario por criterio en el orden del formulario, comentarios de retroalimentación generales para el autor (HTML) y cualquier otro campo por nombre. Una evaluación nueva la primera vez, la misma cambiada después. Solo en la fase de evaluación. Devuelve la calificación que da. El autor la lee: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `workshopId` (obligatorio) | entero | El id del taller (id del módulo del curso) |
-| `submissionId` (obligatorio) | entero | Tal como lo da get_workshop |
-| `criteria` | lista de objeto | En el orden del formulario |
-| `feedback` | texto | Comentarios de retroalimentación generales para el autor (HTML); sin alias |
-| `fields` | objeto | Cualquier otro campo del formulario, por nombre |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `submissionId` | ✅ | entero | Tal como lo da get_workshop |
+| `criteria` |  | lista de objeto | En el orden del formulario |
+| `feedback` |  | texto | Comentarios de retroalimentación generales para el autor (HTML); sin alias |
+| `fields` |  | objeto | Cualquier otro campo del formulario, por nombre |
 
 </details>
 
@@ -1849,14 +1849,14 @@ Evalúa una entrega de un taller como la persona, mediante el formulario de eval
 
 Lista las notificaciones de la persona, de la más reciente a la más antigua (solo las no leídas cuando se pide), una página cada vez: limit de ellas (30 por defecto) tras saltar offset; more indica si hay otras que pedir con un offset mayor. Cada una: asunto, texto, de quién es (un alias cuando el servidor seudonimiza), cuándo, si está leída y adónde lleva. Los nombres en los textos se ocultan al seudonimizar.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `unreadOnly` | sí o no |  |
-| `limit` | entero | Cuántas (30 por defecto) |
-| `offset` | entero | Cuántas saltar primero, de la más reciente a la más antigua (0 por defecto); con unreadOnly, cuenta las no leídas |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `unreadOnly` |  | sí o no |  |
+| `limit` |  | entero | Cuántas (30 por defecto) |
+| `offset` |  | entero | Cuántas saltar primero, de la más reciente a la más antigua (0 por defecto); con unreadOnly, cuenta las no leídas |
 
 </details>
 
@@ -1882,12 +1882,12 @@ Lista las conversaciones de mensajes de la persona, de la más reciente a la má
 
 Lee una conversación de mensajes, de la más antigua a la más reciente: sus miembros y, de cada mensaje, el remitente (alias cuando el servidor seudonimiza), el texto y la hora; los nombres y datos de contacto en los textos se ocultan al seudonimizar. Toma el id de list_conversations.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `conversationId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `conversationId` | ✅ | entero |  |
 
 </details>
 
@@ -1897,14 +1897,14 @@ Lee una conversación de mensajes, de la más antigua a la más reciente: sus mi
 
 Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `user` | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userId` | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
-| `text` (obligatorio) | texto |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `text` | ✅ | texto |  |
 
 </details>
 
@@ -1914,18 +1914,18 @@ Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (
 
 Envía un mismo mensaje privado a varios participantes de un curso, como hace "Enviar un mensaje" de la página de participantes: a users (alias) o userIds, o a todos los elegidos por role, group o inactiveSince (todos cuando no se indica nada), excluida la persona. Devuelve quién lo recibió y a quién no escribió Moodle, y por qué. El texto es plano, sin alias. Se envía como la persona, de forma visible: confirma antes el texto y los destinatarios con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `text` (obligatorio) | texto |  |
-| `users` | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
-| `userIds` | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
-| `role` | entero | O bien: todos los que tienen este rol |
-| `group` | entero | O bien: todos los de este grupo |
-| `inactiveSince` | texto | O bien: todos los que no han accedido al curso desde esta fecha (ISO 8601) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `text` | ✅ | texto |  |
+| `users` |  | lista de texto | Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userIds` |  | lista de entero | Los ids de usuario de los participantes, cuando el servidor muestra los nombres |
+| `role` |  | entero | O bien: todos los que tienen este rol |
+| `group` |  | entero | O bien: todos los de este grupo |
+| `inactiveSince` |  | texto | O bien: todos los que no han accedido al curso desde esta fecha (ISO 8601) |
 
 </details>
 
@@ -1949,12 +1949,12 @@ Envía un mismo mensaje privado a varios participantes de un curso, como hace "E
 
 Lista los próximos eventos del calendario de la persona, como hace su vista "Próximos eventos", en un curso o en todos: eventos de curso, fechas de las actividades y los eventos propios de la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` | entero | Solo los de este curso; todos los cursos si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` |  | entero | Solo los de este curso; todos los cursos si falta |
 
 </details>
 
@@ -1964,12 +1964,12 @@ Lista los próximos eventos del calendario de la persona, como hace su vista "Pr
 
 Lee un evento del calendario por su id, tal como los da list_events.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `eventId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `eventId` | ✅ | entero |  |
 
 </details>
 
@@ -1979,16 +1979,16 @@ Lee un evento del calendario por su id, tal como los da list_events.
 
 Crea un evento en el calendario de un curso, que ven sus participantes: un nombre, un inicio (ISO 8601 con su zona horaria) y, opcionalmente, una duración y una descripción (HTML). Devuelve el evento. Visible para el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero |  |
-| `name` (obligatorio) | texto |  |
-| `start` (obligatorio) | texto | ISO 8601, p. ej. 2026-11-03T10:00:00+01:00 |
-| `durationMinutes` | entero |  |
-| `description` | texto | HTML |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `start` | ✅ | texto | ISO 8601, p. ej. 2026-11-03T10:00:00+01:00 |
+| `durationMinutes` |  | entero |  |
+| `description` |  | texto | HTML |
 
 </details>
 
@@ -1998,19 +1998,19 @@ Crea un evento en el calendario de un curso, que ven sus participantes: un nombr
 
 Cambia un evento del calendario mediante el propio formulario del calendario: solo cambia lo que se indica; un nuevo inicio mantiene su duración salvo que se indique una nueva. Las fechas de las actividades se cambian en la actividad. Devuelve el evento tras el cambio. Visible para el curso: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `eventId` (obligatorio) | entero |  |
-| `name` | texto |  |
-| `description` | texto | HTML |
-| `start` | texto | ISO 8601 |
-| `durationMinutes` | entero |  |
-| `until` | texto | O el fin, ISO 8601 |
-| `location` | texto |  |
-| `wholeSeries` | sí o no | Para un evento repetido: cambiar todos |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `eventId` | ✅ | entero |  |
+| `name` |  | texto |  |
+| `description` |  | texto | HTML |
+| `start` |  | texto | ISO 8601 |
+| `durationMinutes` |  | entero |  |
+| `until` |  | texto | O el fin, ISO 8601 |
+| `location` |  | texto |  |
+| `wholeSeries` |  | sí o no | Para un evento repetido: cambiar todos |
 
 </details>
 
@@ -2020,12 +2020,12 @@ Cambia un evento del calendario mediante el propio formulario del calendario: so
 
 Elimina un evento del calendario que la persona puede gestionar (un evento de curso, o uno propio), por su id de list_events o create_event. Las fechas de las actividades se cambian en la actividad. No se puede deshacer: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `eventId` (obligatorio) | entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `eventId` | ✅ | entero |  |
 
 </details>
 
@@ -2035,13 +2035,13 @@ Elimina un evento del calendario que la persona puede gestionar (un evento de cu
 
 Lo que la persona tiene que hacer antes de una fecha, según el calendario de Moodle (entregar una tarea, intentar un cuestionario…), en un curso o en todos: desde hace una semana (las vencidas) hasta unos días por delante. Cada una con el id de su actividad, la fecha, si está vencida y la acción que ofrece Moodle. Los profesores reciben pocos eventos de este tipo: para lo que espera calificación, usa get_activities_overview.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` | entero | Un curso; todos los cursos si falta |
-| `days` | entero | Cuántos días por delante (por defecto 30) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` |  | entero | Un curso; todos los cursos si falta |
+| `days` |  | entero | Cuántos días por delante (por defecto 30) |
 
 </details>
 
@@ -2051,12 +2051,12 @@ Lo que la persona tiene que hacer antes de una fecha, según el calendario de Mo
 
 Lista lo que la persona con la sesión iniciada aún tiene que hacer en un curso: actividades cuya finalización se registra y no están completas o, donde no se registra la finalización, actividades calificables aún sin calificación; con sus fechas, restricciones y si se pueden abrir ya. Toma el id del curso de list_courses.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
 
 </details>
 
@@ -2066,13 +2066,13 @@ Lista lo que la persona con la sesión iniciada aún tiene que hacer en un curso
 
 La vista general de actividades de un curso en Moodle, tal como la ve la persona: por actividad, sus columnas (fecha de entrega, entregas, lo que falta por calificar, intentos, la calificación propia de la persona, suscripciones a foros…), por tipo o para todos los tipos del curso. Para un profesor, la forma más rápida de ver lo que espera calificación (alerta "Requiere calificación"); para un estudiante, lo que vence y sus resultados. Moodle 5 y posteriores.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, de list_courses |
-| `type` | texto | Un tipo de actividad (assign, quiz, forum…; "resource" para todos los tipos de recurso); todos los tipos si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, de list_courses |
+| `type` |  | texto | Un tipo de actividad (assign, quiz, forum…; "resource" para todos los tipos de recurso); todos los tipos si falta |
 
 </details>
 
@@ -2082,13 +2082,13 @@ La vista general de actividades de un curso en Moodle, tal como la ve la persona
 
 Lo que ha cambiado en las actividades de un curso desde una fecha (ajustes, archivos de contenido, mensajes del foro, entregas, intentos, calificaciones…), tal como Moodle lo registra para la persona, con el nombre y el tipo de cada actividad. Útil al empezar una sesión: lo nuevo desde la última vez.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, de list_courses |
-| `since` | texto | Fecha y hora ISO; hace una semana si falta |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, de list_courses |
+| `since` |  | texto | Fecha y hora ISO; hace una semana si falta |
 
 </details>
 
@@ -2123,12 +2123,12 @@ Lo que ha cambiado en las actividades de un curso desde una fecha (ajustes, arch
 
 Obtiene el informe de calificaciones de la persona que ha iniciado sesión en un curso: cada elemento de calificación (con el id de su actividad), categoría y el total del curso, con nota, rango, porcentaje, ponderación, letra, comentarios de retroalimentación y contribución, tal como los muestra Moodle. Toma el id del curso de list_courses.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `courseId` (obligatorio) | entero | El id del curso, tal como lo da list_courses |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | El id del curso, tal como lo da list_courses |
 
 </details>
 
@@ -2138,12 +2138,12 @@ Obtiene el informe de calificaciones de la persona que ha iniciado sesión en un
 
 Lee una tarea tal como la ve el estudiante con la sesión iniciada: el enunciado y sus archivos, las fechas, el estado y el contenido de la entrega, la calificación y los comentarios de retroalimentación, y si se puede editar o enviar ahora.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -2153,14 +2153,14 @@ Lee una tarea tal como la ve el estudiante con la sesión iniciada: el enunciado
 
 Guarda la entrega del estudiante con la sesión iniciada en una tarea: su texto en línea (HTML, que sustituye lo que hubiera) y archivos que añadir (rutas locales absolutas). No la envía para calificar cuando la tarea pide a los estudiantes que pulsen enviar: eso lo hace submit_assignment. Devuelve la tarea tal como la ve el estudiante. Cambia la entrega: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da get_course_structure |
-| `onlineText` | texto |  |
-| `files` | lista de texto |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da get_course_structure |
+| `onlineText` |  | texto |  |
+| `files` |  | lista de texto |  |
 
 </details>
 
@@ -2170,13 +2170,13 @@ Guarda la entrega del estudiante con la sesión iniciada en una tarea: su texto 
 
 Envía la entrega guardada para su calificación: después no se puede cambiar salvo que el profesor la reabra. Cuando el sitio pide aceptar una declaración (es trabajo propio…), la llamada falla citándola hasta que acceptStatement sea true. Definitivo: confírmalo antes con la persona, tras comprobar la entrega con get_assignment.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `assignmentId` (obligatorio) | entero | El id de la tarea (id del módulo del curso), tal como lo da get_course_structure |
-| `acceptStatement` | sí o no | La persona acepta la declaración de entrega del sitio |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da get_course_structure |
+| `acceptStatement` |  | sí o no | La persona acepta la declaración de entrega del sitio |
 
 </details>
 
@@ -2186,12 +2186,12 @@ Envía la entrega guardada para su calificación: después no se puede cambiar s
 
 Lee la página de un cuestionario como la persona: descripción, sus reglas (intentos permitidos, método de calificación, límite de tiempo…), fechas, comentarios de retroalimentación generales, los intentos de la persona (con sus ids, en curso o terminados, y sus calificaciones) y si puede empezar uno ahora.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -2201,12 +2201,12 @@ Lee la página de un cuestionario como la persona: descripción, sus reglas (int
 
 Inicia un intento de un cuestionario, o continúa el que está en curso, como hace el botón de la página del cuestionario; devuelve el id del intento y sus preguntas con sus campos y opciones. Iniciarlo consume uno de los intentos permitidos, y empieza a correr el límite de tiempo: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `quizId` (obligatorio) | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -2216,12 +2216,12 @@ Inicia un intento de un cuestionario, o continúa el que está en curso, como ha
 
 Lee todas las preguntas de un intento en curso, página a página: texto, imágenes, campos con sus opciones y las respuestas guardadas hasta el momento.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `attemptId` (obligatorio) | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attemptId` | ✅ | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
 
 </details>
 
@@ -2231,13 +2231,13 @@ Lee todas las preguntas de un intento en curso, página a página: texto, imáge
 
 Guarda respuestas en un intento en curso, como hacen las páginas del intento; no termina el intento. Cada respuesta indica el hueco de una pregunta y sus campos por nombre con el valor que dar: el valor de una opción para campos de elección y desplegables, "1" o "0" para casillas de verificación, texto para campos de texto. Devuelve las preguntas con sus respuestas guardadas. Con el rastro realistic se detiene a leer cada página antes.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `attemptId` (obligatorio) | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
-| `answers` (obligatorio) | lista de objeto |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attemptId` | ✅ | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
+| `answers` | ✅ | lista de objeto |  |
 
 </details>
 
@@ -2247,12 +2247,12 @@ Guarda respuestas en un intento en curso, como hacen las páginas del intento; n
 
 Envía un intento para su calificación, como hace "Enviar todo y terminar": después no se puede cambiar ninguna respuesta. Devuelve la revisión cuando el cuestionario la muestra. Definitivo: confírmalo antes con la persona, tras comprobar las respuestas con get_quiz_attempt.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `attemptId` (obligatorio) | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attemptId` | ✅ | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
 
 </details>
 
@@ -2262,12 +2262,12 @@ Envía un intento para su calificación, como hace "Enviar todo y terminar": des
 
 Lee la revisión de un intento terminado, hasta donde el cuestionario la muestra: estado, puntos y calificación y, por pregunta, si era correcta, la puntuación, los comentarios de retroalimentación y la respuesta correcta. El intento de otra persona (la vista de un profesor) la nombra por su alias, y sus respuestas escritas se ocultan, cuando el servidor seudonimiza.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `attemptId` (obligatorio) | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attemptId` | ✅ | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
 
 </details>
 
@@ -2277,13 +2277,13 @@ Lee la revisión de un intento terminado, hasta donde el cuestionario la muestra
 
 Lee una encuesta (el plugin questionnaire, o el feedback de Moodle) como la persona: si puede responderla ahora, sus mensajes (completada, cerrada…) y todas las preguntas de todas las páginas, con si son obligatorias y sus campos (nombres, opciones).
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure |
-| `type` (obligatorio) | `questionnaire`, `feedback` | El tipo de la actividad, tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure |
+| `type` | ✅ | `questionnaire`, `feedback` | El tipo de la actividad, tal como lo da get_course_structure |
 
 </details>
 
@@ -2293,14 +2293,14 @@ Lee una encuesta (el plugin questionnaire, o el feedback de Moodle) como la pers
 
 Responde una encuesta y la envía, página a página según avanza su formulario: responses asigna nombres de campo (de get_survey) a valores ("1"/"0" para casillas de verificación, el valor de una opción para opciones y desplegables, texto en los demás casos). Primero se comprueba cada nombre; las quejas de Moodle (una pregunta obligatoria sin responder) se devuelven por página. Normalmente una respuesta por persona: confirma antes las respuestas con la persona, y pídele los datos personales en lugar de suponerlos.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure |
-| `type` (obligatorio) | `questionnaire`, `feedback` | El tipo de la actividad, tal como lo da get_course_structure |
-| `responses` (obligatorio) | objeto |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure |
+| `type` | ✅ | `questionnaire`, `feedback` | El tipo de la actividad, tal como lo da get_course_structure |
+| `responses` | ✅ | objeto |  |
 
 </details>
 
@@ -2310,12 +2310,12 @@ Responde una encuesta y la envía, página a página según avanza su formulario
 
 Lee una actividad consulta (una votación) tal como la ve la persona: su pregunta, las opciones con sus ids, si está abierta, si se pueden elegir varias y si se puede cambiar la respuesta, y la respuesta de la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -2325,13 +2325,13 @@ Lee una actividad consulta (una votación) tal como la ve la persona: su pregunt
 
 Responde una actividad consulta como la persona, con una opción (varias si la consulta lo permite) por id de get_choice, como hace "Guardar mi elección". Devuelve la consulta resultante. Responde como la persona, y algunas consultas no permiten cambiar la respuesta: confírmalo antes con la persona.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
-| `optionIds` (obligatorio) | lista de entero |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| `optionIds` | ✅ | lista de entero |  |
 
 </details>
 
@@ -2341,12 +2341,12 @@ Responde una actividad consulta como la persona, con una opción (varias si la c
 
 Lee la página de una lección en la que está la persona (iniciando la lección la primera vez): una página de contenido con sus botones, una pregunta con sus campos, o el final con la puntuación. Respóndela con answer_lesson_page.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -2356,15 +2356,15 @@ Lee la página de una lección en la que está la persona (iniciando la lección
 
 Avanza en una lección como la persona: pulsa un botón de una página de contenido (por su etiqueta, o por su posición desde 1), o responde los campos de una página de pregunta por nombre (el valor de una opción para opciones y desplegables, texto para texto). Devuelve los comentarios de retroalimentación de Moodle, si los hay, y la página siguiente; llegar al final termina el intento. Las respuestas cuentan para la calificación de la lección y no se pueden deshacer. Con el trail realistic hace una pausa para leer la página antes.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
-| `button` | texto | El botón de una página de contenido, por su etiqueta |
-| `buttonPosition` | entero | O por su posición, desde 1 |
-| `responses` | objeto | Las respuestas de una página de pregunta: nombre de campo → valor, tal como get_lesson_page da los campos |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| `button` |  | texto | El botón de una página de contenido, por su etiqueta |
+| `buttonPosition` |  | entero | O por su posición, desde 1 |
+| `responses` |  | objeto | Las respuestas de una página de pregunta: nombre de campo → valor, tal como get_lesson_page da los campos |
 
 </details>
 
@@ -2374,12 +2374,12 @@ Avanza en una lección como la persona: pulsa un botón de una página de conten
 
 Lee una actividad H5P: su tipo de contenido (la biblioteca H5P), si Moodle registra los intentos, y los intentos de la propia persona con sus puntuaciones. Resolver el contenido en sí (se ejecuta en un reproductor) corresponde a las herramientas de navegador de respaldo.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -2389,12 +2389,12 @@ Lee una actividad H5P: su tipo de contenido (la biblioteca H5P), si Moodle regis
 
 Lee una actividad SCORM tal como la ve la persona: intentos permitidos y realizados, método de calificación, la calificación registrada y la de cada intento, y sus SCO (las partes del paquete) con el estado y la puntuación de la persona en el último intento. Úsala antes de open_scorm, y después de hacer el paquete para ver lo que Moodle ha registrado.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad SCORM (id del módulo del curso), tal como lo da get_course_structure |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad SCORM (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -2404,14 +2404,14 @@ Lee una actividad SCORM tal como la ve la persona: intentos permitidos y realiza
 
 Abre una actividad SCORM en el reproductor de Moodle, como la persona, en la pestaña de las herramientas del navegador: continúa el último intento salvo con newAttempt, en el primer SCO salvo con scoId. Abrirla inicia un intento en Moodle. Después, haz el paquete con las herramientas del navegador: browser_snapshot lo lee (las refs dentro de su marco empiezan por f, como f2e9), browser_click, browser_type y browser_select actúan sobre ellas, y browser_wait espera a sus textos. Al terminar, comprueba el resultado con get_scorm en lugar de suponerlo. Nada marca un SCORM como hecho o calificado salvo hacerlo.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad SCORM (id del módulo del curso), tal como lo da get_course_structure |
-| `scoId` | entero | El SCO que abrir, tal como lo da get_scorm; el primero si falta |
-| `newAttempt` | sí o no | Iniciar un intento nuevo en lugar de continuar el último |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad SCORM (id del módulo del curso), tal como lo da get_course_structure |
+| `scoId` |  | entero | El SCO que abrir, tal como lo da get_scorm; el primero si falta |
+| `newAttempt` |  | sí o no | Iniciar un intento nuevo en lugar de continuar el último |
 
 </details>
 
@@ -2421,13 +2421,13 @@ Abre una actividad SCORM en el reproductor de Moodle, como la persona, en la pes
 
 Marca la finalización propia de la persona en una actividad con finalización manual, hecha o no hecha, como hace su botón "Marcar como hecho". Las actividades que se completan solas (al verlas, por calificación, por entrega) no se pueden marcar: Moodle lo indica. Hacerlo dos veces no cambia nada.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `activityId` (obligatorio) | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
-| `done` (obligatorio) | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| `done` | ✅ | sí o no |  |
 
 </details>
 
@@ -2452,12 +2452,12 @@ Son para lo que no cubre ninguna otra herramienta: un plugin, un ajuste poco com
 
 Abre una página del sitio Moodle configurado en la pestaña de las herramientas del navegador: una URL del sitio, o una ruta relativa a él. Otros sitios se rechazan. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella. Trabaja en una pestaña de la sesión del servidor (la que muestra show_browser; las herramientas de Moodle pueden moverla mientras el navegador se muestra).
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `url` (obligatorio) | texto | Una URL del sitio, o una ruta relativa a él (course/view.php?id=3) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `url` | ✅ | texto | Una URL del sitio, o una ruta relativa a él (course/view.php?id=3) |
 
 </details>
 
@@ -2467,13 +2467,13 @@ Abre una página del sitio Moodle configurado en la pestaña de las herramientas
 
 La página de la pestaña de las herramientas del navegador como árbol de accesibilidad (roles, nombres, valores), con una ref por elemento ([ref=e12]) para las demás herramientas del navegador. Por defecto solo la región principal (#region-main, donde Moodle pone el contenido), o la página entera, o el subárbol de un elemento por su ref. Se corta a los 30000 caracteres: si se corta, haz una instantánea de una parte más reducida. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `scope` | `main`, `page` | "main" (por defecto): la región principal de Moodle; "page": todo, navegación incluida |
-| `ref` | texto | Solo el subárbol de este elemento (de una instantánea anterior) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `scope` |  | `main`, `page` | "main" (por defecto): la región principal de Moodle; "page": todo, navegación incluida |
+| `ref` |  | texto | Solo el subárbol de este elemento (de una instantánea anterior) |
 
 </details>
 
@@ -2483,13 +2483,13 @@ La página de la pestaña de las herramientas del navegador como árbol de acces
 
 Hace clic en un elemento de la pestaña de las herramientas del navegador por su ref de la instantánea (un enlace, botón, casilla, pestaña…) y espera a la página a la que lleva. Los enlaces a otros sitios se bloquean. Un clic puede cambiar el sitio (guardar, eliminar, enviar): confírmalo antes con la persona, como con cualquier cambio en Moodle. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `ref` (obligatorio) | texto | La ref del elemento de la última browser_snapshot, como e12 |
-| `doubleClick` | sí o no |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `ref` | ✅ | texto | La ref del elemento de la última browser_snapshot, como e12 |
+| `doubleClick` |  | sí o no |  |
 
 </details>
 
@@ -2499,14 +2499,14 @@ Hace clic en un elemento de la pestaña de las herramientas del navegador por su
 
 Rellena un campo de texto de la pestaña de las herramientas del navegador por su ref de la instantánea, sustituyendo lo que contiene; opcionalmente pulsa Intro después. Los campos de contraseña se rechazan: la persona inicia sesión por sí misma (login). Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `ref` (obligatorio) | texto | La ref del elemento de la última browser_snapshot, como e12 |
-| `text` (obligatorio) | texto |  |
-| `submit` | sí o no | Pulsar Intro después de escribir |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `ref` | ✅ | texto | La ref del elemento de la última browser_snapshot, como e12 |
+| `text` | ✅ | texto |  |
+| `submit` |  | sí o no | Pulsar Intro después de escribir |
 
 </details>
 
@@ -2516,13 +2516,13 @@ Rellena un campo de texto de la pestaña de las herramientas del navegador por s
 
 Elige opciones en un desplegable de la pestaña de las herramientas del navegador por su ref de la instantánea, por sus valores o sus etiquetas visibles (varias en un desplegable múltiple). Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `ref` (obligatorio) | texto | La ref del elemento de la última browser_snapshot, como e12 |
-| `options` (obligatorio) | lista de texto |  |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `ref` | ✅ | texto | La ref del elemento de la última browser_snapshot, como e12 |
+| `options` | ✅ | lista de texto |  |
 
 </details>
 
@@ -2532,13 +2532,13 @@ Elige opciones en un desplegable de la pestaña de las herramientas del navegado
 
 Pone archivos locales en un campo de archivo de la pestaña de las herramientas del navegador por su ref de la instantánea (en el selector de archivos de Moodle, el campo "Subir un archivo"), como si la persona los hubiera elegido. Rutas absolutas. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `ref` (obligatorio) | texto | La ref del elemento de la última browser_snapshot, como e12 |
-| `paths` (obligatorio) | lista de texto | Rutas absolutas de archivos locales |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `ref` | ✅ | texto | La ref del elemento de la última browser_snapshot, como e12 |
+| `paths` | ✅ | lista de texto | Rutas absolutas de archivos locales |
 
 </details>
 
@@ -2552,12 +2552,12 @@ Solo con `MOODLE_MCP_STUDENT_DATA=clear`: lo que devuelve no se puede seudonimiz
 
 Una imagen de la pestaña de las herramientas del navegador (lo que está a la vista), o de un elemento por su ref de la instantánea. Para lo que el árbol de accesibilidad no puede decir (maquetación, imágenes, un canvas); el texto se lee con browser_snapshot. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `ref` | texto | La ref del elemento de la última browser_snapshot, como e12 |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `ref` |  | texto | La ref del elemento de la última browser_snapshot, como e12 |
 
 </details>
 
@@ -2567,13 +2567,13 @@ Una imagen de la pestaña de las herramientas del navegador (lo que está a la v
 
 Espera en la pestaña de las herramientas del navegador hasta que aparezca un texto, hasta que desaparezca (en la página o en cualquier marco dentro de ella, como el de un paquete SCORM), o unos segundos (como máximo 30): para páginas que cargan o cambian por sí solas. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.
 
-<details>
+<details className="tool-inputs">
 <summary>Parámetros</summary>
 
-| Parámetro | Tipo | Descripción |
-| --- | --- | --- |
-| `text` | texto | Esperar hasta que aparezca este texto |
-| `textGone` | texto | Esperar hasta que desaparezca este texto |
-| `seconds` | número | Esperar este tiempo (con un texto: lo máximo que esperar; por defecto 10) |
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `text` |  | texto | Esperar hasta que aparezca este texto |
+| `textGone` |  | texto | Esperar hasta que desaparezca este texto |
+| `seconds` |  | número | Esperar este tiempo (con un texto: lo máximo que esperar; por defecto 10) |
 
 </details>

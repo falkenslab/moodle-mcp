@@ -45,7 +45,7 @@ const TEXT = {
     teacher: "Teacher",
     student: "Student",
     inputs: "Inputs",
-    params: ["Input", "Type", "Description"],
+    params: ["Input", "Required", "Type", "Description"],
     types: {},
     none: "No inputs.",
     required: "required",
@@ -63,7 +63,7 @@ const TEXT = {
     teacher: "Profesor",
     student: "Alumno",
     inputs: "Parámetros",
-    params: ["Parámetro", "Tipo", "Descripción"],
+    params: ["Parámetro", "Obligatorio", "Tipo", "Descripción"],
     types: { string: "texto", integer: "entero", number: "número", boolean: "sí o no", object: "objeto", array: "lista", item: "elemento", list: "lista de", or: "o" },
     none: "Sin parámetros.",
     required: "obligatorio",
@@ -145,7 +145,7 @@ for (const [lang, t] of Object.entries(TEXT)) {
   for (const area of AREAS) {
     lines.push(`## ${area[lang]} {#${area.id}}`, "");
     if (area.id === "browser") lines.push(t.browser, "");
-    lines.push(`| ${t.area} | ${t.params[2]} | ${t.changes} | ${t.teacher} | ${t.student} |`, "| --- | --- | :-: | :-: | :-: |");
+    lines.push(`| ${t.area} | ${t.params[3]} | ${t.changes} | ${t.teacher} | ${t.student} |`, "| --- | --- | :-: | :-: | :-: |");
     for (const name of area.tools) {
       const tool = tools.find((x) => x.name === name);
       const { title } = texts(tool, lang);
@@ -164,9 +164,9 @@ ${t.clearOnly}
       const props = Object.entries(tool.inputSchema?.properties ?? {});
       if (props.length) {
         const required = new Set(tool.inputSchema.required ?? []);
-        lines.push("<details>", `<summary>${t.inputs}</summary>`, "", `| ${t.params.join(" | ")} |`, "| --- | --- | --- |");
+        lines.push('<details className="tool-inputs">', `<summary>${t.inputs}</summary>`, "", `| ${t.params.join(" | ")} |`, "| --- | :-: | --- | --- |");
         for (const [key, schema] of props) {
-          lines.push(`| \`${key}\`${required.has(key) ? ` (${t.required})` : ""} | ${cell(typeOf(schema, t.types))} | ${cell(said.inputs[key])} |`);
+          lines.push(`| \`${key}\` | ${required.has(key) ? "✅" : ""} | ${cell(typeOf(schema, t.types))} | ${cell(said.inputs[key])} |`);
         }
         lines.push("", "</details>", "");
       } else {

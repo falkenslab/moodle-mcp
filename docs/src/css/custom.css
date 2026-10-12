@@ -21,3 +21,13 @@
   --ifm-color-primary-lightest: #fbac67;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* The tools reference's inputs: a quiet box, not the info alert Docusaurus gives every <details>. */
+.alert.tool-inputs {
+  --ifm-alert-background-color: var(--ifm-color-emphasis-100);
+  --ifm-alert-background-color-highlight: var(--ifm-color-emphasis-200);
+  --ifm-alert-border-color: var(--ifm-color-emphasis-300);
+  --ifm-alert-foreground-color: var(--ifm-font-color-base);
+  --docusaurus-details-decoration-color: var(--ifm-color-emphasis-600);
+  box-shadow: none;
+}
