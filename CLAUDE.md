@@ -14,7 +14,7 @@ Before writing any code, read `.minispec/README.md` and follow its reading contr
 ## Rules that are easy to miss
 
 - Moodle work lives in `../moodle-driver` and pseudonymization in `../pseudonym`, each worked on in its own session; this server uses both from npm (`@falkenslab/moodle-driver`, `@falkenslab/pseudonym`), bundled; a change there is a release there, then a version bump here.
-- Every tool lists its driver functions in `TOOL_FUNCTIONS` (`src/tools/scopes.ts`), or a test fails and the tool is refused; a tool that shows or acts on other people goes through `src/people.ts` (aliases, redaction, aliases refused in text sent to Moodle) and gets a test in `test/tools/pseudonymize.test.ts`.
+- Every tool lists its driver functions in `TOOL_FUNCTIONS` (`src/tools/scopes.ts`) and is in one role list (`src/tools/roles.ts`), or a test fails; a tool that shows or acts on other people goes through `src/people.ts` (aliases, redaction, aliases refused in text sent to Moodle) and gets a test in `test/tools/pseudonymize.test.ts`.
 - Driver outputs must match the tools' output schemas exactly (a field the schema lacks fails the call): check new tools against the real sandbox, not only the fake Moodle.
 - The sandbox (`../moodle-sandbox`, `http://localhost:8080`): change only course 3 (`mcp-content`), never course 2. Its credentials are for logging in a scratch profile only (the `sandbox-check` skill), never in the repo, tests, docs or commits.
 

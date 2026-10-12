@@ -114,7 +114,19 @@ What to know about `pseudonymize`:
 
 ## Limiting what the agent can do
 
-`MOODLE_MCP_SCOPES` chooses the kinds of tools the agent gets; like the student data level, only you widen it.
+Two settings choose the tools the agent gets, and like the student data level only you widen them: the agent can narrow them for a session, never the other way.
+
+**Your role** (`MOODLE_MCP_ROLE`) keeps only the tools for what you do in Moodle. Fewer tools also means less of every request spent on them, and an agent that picks better:
+
+| Role | Tools | About |
+| --- | --- | --- |
+| `all` (default) | 137 | 34,500 tokens |
+| `teacher` | 121: building and managing courses, grading, people, reports, forums and messages | 31,000 tokens |
+| `student` | 61: reading courses, doing activities, your grades and to-dos, forums and messages | 12,500 tokens |
+
+Counted as the tools' names, descriptions and inputs with students as aliases; clients that also send the tools' output schemas use about twice as much. Claude Code loads many tools only as it needs them; other clients load them all.
+
+**Scopes** (`MOODLE_MCP_SCOPES`) choose by the data a tool touches. With a role, they narrow it further: `teacher` with `content`, 66 tools (17,000 tokens), builds and manages courses and never sees students' work.
 
 | Profile | For |
 | --- | --- |
@@ -154,6 +166,7 @@ Nothing is required: without a site, the agent asks you for it and sets it with 
 | --- | --- | --- | --- |
 | `MOODLE_URL` | `--url` | none | Your Moodle site, e.g. `https://campus.example.org` |
 | `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | What the AI sees of other people: `block`, `pseudonymize` or `clear` ([above](#students-privacy)) |
+| `MOODLE_MCP_ROLE` | `--role` | `all` | The tools for a role: `teacher`, `student` or `all` ([above](#limiting-what-the-agent-can-do)) |
 | `MOODLE_MCP_SCOPES` | `--scopes` | `all` | The kinds of tools: a profile or a list of scopes ([above](#limiting-what-the-agent-can-do)) |
 | `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | Browser profile folder that keeps your session |
 | `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome, then Chromium | Browser: `msedge`, `chrome` or `chromium` |
@@ -168,7 +181,7 @@ To share the session with [moodle-driver](https://github.com/falkenslab/moodle-d
 - **"No session" or a login window that keeps coming back.** Log in in the window that opens; it waits 5 minutes. After updating moodle-mcp, a profile may need one more login: the browser library sometimes renames the file where it keeps the session (it did in October 2026).
 - **"Downloading a browser".** There's no Edge or Chrome: the server is fetching Chromium once. Try again in a minute or two.
 - **No window can open** (a container, a server without a screen). Log in on a machine with a screen and give the server that profile folder.
-- **The agent says it can't do something.** Your limits may leave that tool out: ask it for `server_info`.
+- **The agent says it can't do something.** Your role or limits may leave that tool out: ask it for `server_info`.
 - **The profile is in use.** Another program (moodle-driver's command line, another client) has it open: close it, or give each its own profile.
 
 ## More
