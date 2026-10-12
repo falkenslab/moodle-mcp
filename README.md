@@ -8,7 +8,7 @@ moodle-mcp is an [MCP](https://modelcontextprotocol.io) server: it gives an AI c
 - **Students stay anonymous to the AI by default.** Other people reach it as aliases such as `A-7KQ2XM`, which only you can turn back into names.
 - **You decide what it may do**: only building content, also grading, acting as a student… Tools that change Moodle say so, and the agent is told to confirm with you first.
 
-Status: early development, not on npm yet. It has 136 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
+Status: early development, not on npm yet. It has 137 tools ([below](#what-it-can-do)) and is tested against Moodle 5.x.
 
 ## What you can ask
 
@@ -18,7 +18,7 @@ As a teacher:
 - "Read the submissions to Task 3 and suggest a grade for each with the rubric; don't save anything yet."
 - "Import these GIFT questions into the quiz bank and add them to the unit 2 quiz."
 - "Which forum discussions has nobody answered?"
-- "Create a hidden page in section 4 with this summary of the lesson."
+- "Create a hidden page in section 4 with this summary of the lesson and this screenshot." (images and files in a text are uploaded with it)
 - "Who hasn't opened the course since Monday?"
 
 As a student:
@@ -137,7 +137,7 @@ Or a list of scopes: `content`, `student-data`, `grading`, `communication`, `as-
 | Gradebook and progress | `get_grader_report`, `set_grade`, `export_grades`, `get_gradebook_setup`, `add_grade_item`, `update_grade_item`, `delete_grade_item`, `add_grade_category`, `update_grade_category`, `delete_grade_category`, `get_completion_report`, `override_completion` |
 | Reports | `get_activity_report`, `get_participation_report`, `get_course_logs` |
 | Participants and groups | `list_participants`, `list_potential_users`, `enrol_users`, `unenrol_user`, `set_user_roles`, `list_enrolment_methods`, `set_enrolment_method`, `list_groups`, `create_group`, `update_group`, `delete_group`, `set_group_members`, `list_groupings`, `create_grouping`, `delete_grouping`, `set_grouping_groups` |
-| Forums, workshops and messages | `list_discussions`, `get_discussion`, `reply_to_post`, `create_discussion`, `edit_post`, `delete_post`, `set_discussion_state`, `get_forum_grades`, `grade_forum_user`, `rate`, `get_workshop`, `set_workshop_phase`, `assess_workshop_submission`, `list_notifications`, `mark_notifications_read`, `list_conversations`, `get_conversation`, `send_message`, `message_participants` |
+| Forums, workshops and messages | `list_discussions`, `get_discussion`, `reply_to_post`, `create_discussion`, `edit_post`, `delete_post`, `set_discussion_state`, `set_discussion_subscription`, `get_forum_grades`, `grade_forum_user`, `rate`, `get_workshop`, `set_workshop_phase`, `assess_workshop_submission`, `list_notifications`, `mark_notifications_read`, `list_conversations`, `get_conversation`, `send_message`, `message_participants` |
 | Calendar and to-dos | `list_events`, `get_event`, `create_event`, `update_event`, `delete_event`, `list_deadlines`, `list_pending`, `get_activities_overview`, `get_course_updates` |
 | As a student | `get_my_grades`, `get_assignment`, `save_submission`, `submit_assignment`, `get_quiz_info`, `start_quiz_attempt`, `get_quiz_attempt`, `answer_quiz_questions`, `finish_quiz_attempt`, `get_attempt_review`, `get_survey`, `submit_survey`, `get_choice`, `answer_choice`, `get_lesson_page`, `answer_lesson_page`, `get_h5p_activity`, `get_scorm`, `open_scorm`, `set_completion` |
 | Browser fallback | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select`, `browser_upload`, `browser_screenshot`, `browser_wait` |
