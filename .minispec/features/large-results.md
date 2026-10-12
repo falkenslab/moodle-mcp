@@ -16,7 +16,7 @@ Issue: [#12](https://github.com/falkenslab/moodle-mcp/issues/12)
 
 - `list_notifications`: `limit` (a sensible default) and `before` or `offset`, and whether there are more.
 - `get_course_logs`: a leaner entry (`description` only when asked; repeated fields once), and maybe a summary mode (counts by person and event) for "did this student do anything?".
-- What the driver needs for paging notifications, as an issue there.
+- Paging notifications waits on falkenslab/moodle-driver#55; the logs' part is here (`courseLogs` already takes `limit`, `from` and `until`).
 
 ## Acceptance
 

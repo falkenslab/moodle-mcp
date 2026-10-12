@@ -8,11 +8,11 @@ Issue: [#13](https://github.com/falkenslab/moodle-mcp/issues/13)
 
 ## Cause
 
-To find out. The driver asks `message_popup_get_popup_notifications` with `limit: 0` (all); whether Moodle caps that call, or there were exactly 120, is to be checked in the sandbox (more than 120 notifications for one user).
+No cap: the driver asks `message_popup_get_popup_notifications` with `limit: 0`, which in Moodle 5.x returns them all (checked in its code, 12 October 2026), and filters the unread ones afterwards. The 120 were most likely all there were (the sandbox's test suites send many).
 
 ## Solution
 
-If Moodle cuts: the driver pages through them, or says so (an issue in moodle-driver), and the tool reports it (`truncated`, a total) and its description gives the limit. Together with #12's paging.
+Paging, with #12: falkenslab/moodle-driver#55 (limit, offset, whether there are more); then `list_notifications` takes them and says when there are more, and this issue closes with #12.
 
 ## Verification
 

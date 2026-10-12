@@ -8,11 +8,11 @@ As the sandbox's teacher, `list_courses` gave no progress for courses 2 and 3, a
 
 ## Cause
 
-Likely correct: Moodle tracks progress and completion for students, not for a teacher, and only where completion tracking is on. The schema says "when the course tracks it"; the descriptions don't.
+Correct behavior, checked on 12 October 2026: as the student, progress 50 for course 3 (none for course 2, which doesn't track completion) and completion on course 3's two activities that track it; as the teacher, neither, since Moodle tracks students. The schema says "when the course tracks it"; the descriptions don't.
 
 ## Solution
 
-To check as the student (completion is on in course 3: `set_completion` worked on page 5). If the student gets them, the descriptions say they come only for those Moodle tracks (students, with completion on); if not, a bug in the driver (an issue there).
+`list_courses` and `get_course_structure`'s descriptions say progress and completion come only where Moodle tracks them: for students, in courses and activities with completion on.
 
 ## Verification
 

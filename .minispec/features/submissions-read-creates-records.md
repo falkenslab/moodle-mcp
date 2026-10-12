@@ -12,7 +12,7 @@ Likely in moodle-driver: `assignmentSubmissions` reads each participant's conten
 
 ## Solution
 
-An issue in moodle-driver: read submissions without creating records (the submission status from `mod_assign_get_submissions` or the grading table, the panel only for those with a submission), or say it does. Here: if it can't be avoided, `get_submissions`' description and read-only annotation say so (it would leave `MOODLE_MCP_ACCESS=read`).
+Waits on falkenslab/moodle-driver#54: read submissions without creating records (the submission status from `mod_assign_get_submissions` or the grading table, the panel only for those with a submission), or say it does. Here: if it can't be avoided, `get_submissions`' description and read-only annotation say so (it would leave `MOODLE_MCP_ACCESS=read`).
 
 ## Verification
 
