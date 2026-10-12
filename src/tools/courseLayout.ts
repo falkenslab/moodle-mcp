@@ -40,9 +40,9 @@ export const registerEditActivity: RegisterTool = (server, { config, browser }) 
   server.registerTool(
     "edit_activity",
     {
-      title: "Edit an activity's name, visibility or place",
+      title: "Move, rename, show or hide an activity",
       description:
-        'Change an activity on the course page: rename it, set its visibility ("shown", "hidden", or "stealth": hidden from the course page but available by link), or move it to a section (at its end) or before another activity. Only what is given changes. Returns the course structure afterwards. Changes the course: confirm with the person first.',
+        'Move an activity to another section (at its end) or before another activity, to reorder a course; rename it; or set its visibility ("shown", "hidden", or "stealth": hidden from the course page but available by link). Only what is given changes. Returns the course structure afterwards. Changes the course: confirm with the person first.',
       inputSchema: {
         courseId,
         activityId,
