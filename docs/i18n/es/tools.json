@@ -1,0 +1,1419 @@
+{
+  "configure": {
+    "source": "198d62e8f054",
+    "title": "Configurar el servidor",
+    "description": "Establece la configuración de este servidor para esta sesión: el sitio Moodle (url), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role) o el acceso a solo lectura (access) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria. Devuelve la configuración efectiva, como server_info.",
+    "inputs": {
+      "url": "La URL del sitio Moodle, o de cualquier página suya (vale la URL de un curso: el sitio se obtiene de ella)",
+      "headless": "Ejecutar el navegador sin ventana (iniciar sesión siempre muestra una)",
+      "trail": "Cómo ven y hacen las cosas las herramientas de estudiante: realistic (páginas reales, ritmo humano; Moodle registra las visualizaciones y la finalización) o fast",
+      "profileDir": "Carpeta absoluta del perfil del navegador que guarda la sesión de Moodle; fuera de la carpeta del servidor",
+      "scopes": "Restringir los tipos de herramientas para esta sesión: un perfil (teacher, student, content) o ámbitos (content, student-data, grading, communication, as-student, browser). Solo menos que ahora, nunca más",
+      "studentData": "Endurecer cómo te llegan los datos de otras personas para esta sesión (block es el más estricto). Solo más estricto que ahora, nunca más laxo",
+      "role": "Conservar solo las herramientas de un rol para esta sesión (teacher o student), a partir de all; nunca de vuelta a all",
+      "access": "read: conservar solo las herramientas que no cambian nada en Moodle para esta sesión; nunca de vuelta a write"
+    }
+  },
+  "login": {
+    "source": "0a72293da57e",
+    "title": "Iniciar sesión en Moodle",
+    "description": "Se asegura de que haya una sesión de Moodle. Si la hay, devuelve al instante el usuario que ha iniciado sesión. Si no, abre una ventana del navegador en la página de inicio de sesión del sitio y espera a que la persona inicie sesión allí por sí misma (el servidor nunca ve su contraseña); después devuelve el usuario. Llámala cuando otra herramienta informe de una sesión ausente o caducada.",
+    "inputs": {
+      "timeoutSeconds": "Cuánto esperar a que la persona inicie sesión, en segundos (300 por defecto)"
+    }
+  },
+  "logout": {
+    "source": "233e37f6779d",
+    "title": "Cerrar sesión en Moodle",
+    "description": "Termina la sesión de Moodle de la persona en el navegador del servidor, para que otra persona pueda iniciar sesión (otra cuenta: login vuelve a abrir la ventana). Solo termina la sesión de Moodle: un proveedor de inicio de sesión único puede mantener la suya y volver a iniciar sesión con la misma persona. Solo cuando la persona lo pida.",
+    "inputs": {}
+  },
+  "get_me": {
+    "source": "44f6e0e848cb",
+    "title": "Quién soy",
+    "description": "Indica quién es la persona que ha iniciado sesión: id de usuario, nombre de usuario, nombre completo, correo electrónico, idioma, zona horaria, primer y último acceso, y el sitio. Con courseId, también sus roles en ese curso y si puede editarlo y calificar en él.",
+    "inputs": {
+      "courseId": "Un id de curso (de list_courses) para obtener también los roles y capacidades de la persona en él"
+    }
+  },
+  "get_site_info": {
+    "source": "e247db9a9a70",
+    "title": "Obtener la información del sitio Moodle",
+    "description": "Lo que el sitio Moodle dice de sí mismo: su nombre, URL, idioma, cómo se inicia sesión (su propio formulario, acceso de invitados, proveedores de inicio de sesión único) y si está en mantenimiento; se puede leer antes de iniciar sesión. Con courseId, también los tipos de actividad y recurso que la persona puede añadir a ese curso (ninguno si no puede editarlo): toma de aquí el tipo para create_activity. Moodle solo muestra su versión a los administradores, así que no se da.",
+    "inputs": {
+      "courseId": "Un curso para listar los tipos de actividad que se le pueden añadir"
+    }
+  },
+  "list_courses": {
+    "source": "eecedc1f286a",
+    "title": "Listar mis cursos",
+    "description": "Lista los cursos de Moodle en los que está matriculada la persona que ha iniciado sesión (como profesor o estudiante), con sus ids, nombres, categoría, URL, visibilidad, fechas y, donde Moodle lo registra, el progreso de la persona: solo como estudiante, en cursos con seguimiento de finalización (un profesor no obtiene ninguno; el progreso de los estudiantes está en get_completion_report). Filtra por fechas con classification.",
+    "inputs": {
+      "classification": "Qué cursos según sus fechas: \"all\" (por defecto), \"inprogress\", \"future\" o \"past\""
+    }
+  },
+  "get_course_structure": {
+    "source": "231cd108e836",
+    "title": "Obtener la estructura de un curso",
+    "description": "Obtiene las secciones y actividades de un curso de Moodle: ids, nombres, tipos, URL, visibilidad, si la persona puede abrir cada una, restricciones y, donde Moodle lo registra, la finalización de la persona: solo como estudiante, en actividades con seguimiento de finalización (un profesor no obtiene ninguna; la finalización de los estudiantes está en get_completion_report). Con details, también las fechas y el texto de restricción de cada actividad tal como los muestra la página del curso. Toma el id del curso de list_courses.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses",
+      "details": "Leer también la página del curso para obtener las fechas y el texto de restricción de cada actividad (más lento; false por defecto)"
+    }
+  },
+  "get_activity_content": {
+    "source": "03b9c5694444",
+    "title": "Leer el contenido de una actividad",
+    "description": "Lee una actividad de contenido como lo haría una persona, de modo que Moodle registra la visualización: el texto de una página o etiqueta, los capítulos de un libro, el destino de un recurso URL, o los archivos de un recurso archivo o de una carpeta (como enlaces). Toma el id y el tipo de get_course_structure. Con el trail realistic lee página a página al ritmo de un lector e informa del progreso.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
+      "type": "El tipo de la actividad, tal como lo da get_course_structure"
+    }
+  },
+  "list_participants": {
+    "source": "da6475e26690",
+    "title": "Listar los participantes de un curso",
+    "description": "Lista los participantes de un curso con sus roles y grupos, como hace la página de participantes: las personas como alias cuando el servidor seudonimiza, nunca correos electrónicos ni campos del perfil. Filtra por rol, grupo, o quienes no han accedido al curso desde una fecha (inactiveSince).",
+    "inputs": {
+      "courseId": "",
+      "role": "Solo los de este rol, por su id (tal como lo dan los roles de los participantes)",
+      "group": "Solo los miembros de este grupo, por su id de list_groups",
+      "inactiveSince": "Solo quienes no han accedido al curso desde esta fecha (ISO 8601)"
+    }
+  },
+  "list_groups": {
+    "source": "7869d59fbd56",
+    "title": "Listar los grupos de un curso",
+    "description": "Lista los grupos de un curso que la persona puede ver, con sus miembros (como alias cuando el servidor seudonimiza). Sus ids son lo que admite el filtro de grupo de los informes.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "list_potential_users": {
+    "source": "ca9a1620cd29",
+    "title": "Buscar usuarios para matricular",
+    "description": "Busca usuarios que la persona puede matricular en un curso mediante matriculación manual, como hace el diálogo \"Matricular usuarios\": los que coinciden con search en su nombre o en los campos de identidad que muestra el sitio (hasta 100 si está vacío). Las personas como alias cuando el servidor seudonimiza, nunca sus correos electrónicos. Matricúlalos con enrol_users.",
+    "inputs": {
+      "courseId": "",
+      "search": "Parte de un nombre, un correo electrónico, un número de ID…"
+    }
+  },
+  "enrol_users": {
+    "source": "f523b6d384a3",
+    "title": "Matricular usuarios en un curso",
+    "description": "Matricula usuarios en un curso mediante matriculación manual, como hace el diálogo \"Matricular usuarios\": con un rol (el predeterminado de la matriculación salvo que se indique roleId), desde start (ahora) hasta end (la duración predeterminada de la matriculación). Los toma tal como los da list_potential_users. Quienes ya están matriculados conservan su matriculación, con las nuevas fechas. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "users": "Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userIds": "Los ids de usuario de los participantes, cuando el servidor muestra los nombres",
+      "roleId": "El rol que se asigna, tal como lo dan los roles de list_participants",
+      "start": "ISO 8601",
+      "end": "ISO 8601"
+    }
+  },
+  "unenrol_user": {
+    "source": "3698be5616ab",
+    "title": "Desmatricular a un usuario de un curso",
+    "description": "Desmatricula a alguien de un curso: elimina todas sus matriculaciones que la persona puede eliminar, junto con sus roles y su pertenencia a grupos en el curso; removed y kept nombran los métodos de matriculación. Su trabajo en el curso se queda en Moodle, pero pierde el acceso. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres"
+    }
+  },
+  "set_user_roles": {
+    "source": "e290e2b58cc6",
+    "title": "Establecer los roles de alguien en un curso",
+    "description": "Establece los roles de un participante en un curso, como hace la columna de roles de la página de participantes: asigna los roles de roleIds que la persona puede asignar y quita los demás que puede asignar; los roles de otros contextos se mantienen. Devuelve los roles resultantes. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "roleIds": "Ids de rol, tal como los dan los roles de list_participants"
+    }
+  },
+  "set_group_members": {
+    "source": "065e7f97d3d6",
+    "title": "Añadir o quitar miembros de un grupo",
+    "description": "Añade y quita miembros de un grupo, como hace su página de miembros: solo se pueden añadir participantes del curso. Los toma tal como los da list_participants: alias (add, remove) cuando el servidor seudonimiza, si no, ids de usuario (addIds, removeIds). Devuelve los miembros resultantes. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "El curso del grupo",
+      "groupId": "Tal como lo da list_groups",
+      "add": "Alias que añadir, cuando el servidor seudonimiza",
+      "remove": "Alias que quitar, cuando el servidor seudonimiza",
+      "addIds": "Ids de usuario que añadir, cuando el servidor muestra los nombres",
+      "removeIds": "Ids de usuario que quitar, cuando el servidor muestra los nombres"
+    }
+  },
+  "create_group": {
+    "source": "d2398c84c6b7",
+    "title": "Crear un grupo",
+    "description": "Crea un grupo en un curso con el formulario de grupos de Moodle. Añade sus miembros con set_group_members. Devuelve su id. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "description": "HTML",
+      "idNumber": "Un id para sistemas externos",
+      "enrolmentKey": "Una clave que matricula a los estudiantes directamente en este grupo con la automatriculación"
+    }
+  },
+  "update_group": {
+    "source": "71d623d7c433",
+    "title": "Cambiar un grupo",
+    "description": "Cambia el nombre, la descripción, el número de ID o la clave de matriculación de un grupo; lo que no se indica se mantiene. Confírmalo antes con la persona.",
+    "inputs": {
+      "groupId": "El id del grupo, tal como lo da list_groups",
+      "name": "",
+      "description": "HTML",
+      "idNumber": "Un id para sistemas externos",
+      "enrolmentKey": "Una clave que matricula a los estudiantes directamente en este grupo con la automatriculación"
+    }
+  },
+  "delete_group": {
+    "source": "4e22c77f71f1",
+    "title": "Eliminar un grupo",
+    "description": "Elimina un grupo; sus miembros siguen en el curso. Las actividades configuradas para trabajar por grupos lo pierden. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "groupId": "El id del grupo, tal como lo da list_groups"
+    }
+  },
+  "list_groupings": {
+    "source": "aab2ff550d2a",
+    "title": "Listar los agrupamientos de un curso",
+    "description": "Lista los agrupamientos de un curso (conjuntos de grupos a los que se puede limitar una actividad) con los ids de sus grupos. Requiere el permiso para gestionar grupos.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "create_grouping": {
+    "source": "bf3be912e5ce",
+    "title": "Crear un agrupamiento",
+    "description": "Crea un agrupamiento en un curso con el formulario de Moodle; asígnale sus grupos con set_grouping_groups. Devuelve su id. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "description": "HTML",
+      "idNumber": ""
+    }
+  },
+  "delete_grouping": {
+    "source": "2da740f3ebd7",
+    "title": "Eliminar un agrupamiento",
+    "description": "Elimina un agrupamiento; sus grupos se mantienen. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "groupingId": "El id del agrupamiento, tal como lo da list_groupings"
+    }
+  },
+  "set_grouping_groups": {
+    "source": "a3636445143a",
+    "title": "Establecer los grupos de un agrupamiento",
+    "description": "Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y quitando como hace su página; los grupos de otros cursos se dejan fuera y se nombran. Devuelve sus grupos resultantes. Confírmalo antes con la persona.",
+    "inputs": {
+      "groupingId": "El id del agrupamiento, tal como lo da list_groupings",
+      "groupIds": ""
+    }
+  },
+  "list_enrolment_methods": {
+    "source": "400a59bd1480",
+    "title": "Listar los métodos de matriculación de un curso",
+    "description": "Lista cómo puede matricularse la gente en un curso, en el orden en que Moodle los prueba: el tipo de cada método, su nombre, si está activado, cuántas personas ha matriculado, el rol que asigna y, para la automatriculación y el acceso de invitados, si pide una clave (nunca la clave), fechas y límite.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "set_enrolment_method": {
+    "source": "75111fbc52fe",
+    "title": "Configurar un método de matriculación",
+    "description": "Cambia un método de matriculación con su formulario, por su id o el primero de un tipo en el curso (methodType \"self\": se añade cuando el curso no tiene ninguno y Moodle lo ofrece): activarlo o desactivarlo, su clave, fechas, rol, límite y mensaje de bienvenida. Solo cambia lo que se indica. Devuelve el método resultante (nunca la clave). Abre o cierra el curso a la gente: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "methodId": "Tal como lo da list_enrolment_methods",
+      "methodType": "O el tipo del método, como \"self\" o \"guest\"",
+      "enabled": "",
+      "key": "Clave de automatriculación o de acceso de invitados; vacía para quitarla",
+      "start": "Desde cuándo, ISO 8601; \"none\" para quitarlo",
+      "end": "Hasta cuándo, ISO 8601; \"none\" para quitarlo",
+      "roleId": "",
+      "maxUsers": "0 para no tener límite",
+      "welcomeMessage": "Automatriculación: enviar este mensaje de bienvenida",
+      "noWelcome": "Automatriculación: no enviar mensaje de bienvenida"
+    }
+  },
+  "get_grader_report": {
+    "source": "ccc25168d3ad",
+    "title": "Obtener las calificaciones de un curso",
+    "description": "Lee las calificaciones de todos en un curso tal como las muestra el informe del calificador, de un solo grupo si se indica: sus columnas (elementos de calificación, categorías, el total del curso) y una fila por participante (un alias cuando el servidor seudonimiza) con sus calificaciones.",
+    "inputs": {
+      "courseId": "",
+      "group": "Solo los miembros de este grupo, por su id de list_groups"
+    }
+  },
+  "get_completion_report": {
+    "source": "7aeea1f7034b",
+    "title": "Obtener la finalización de actividades de un curso",
+    "description": "Lee el informe de progreso de un curso: la finalización de cada participante (un alias cuando el servidor seudonimiza) en cada actividad que la registra, de un solo grupo si se indica; si es manual o automática, y si un profesor la ha anulado.",
+    "inputs": {
+      "courseId": "",
+      "group": "Solo los miembros de este grupo, por su id de list_groups"
+    }
+  },
+  "get_activity_report": {
+    "source": "3da0b7d5ce59",
+    "title": "Obtener las visualizaciones de actividades de un curso",
+    "description": "Lee el informe de actividad de un curso: por actividad, cuántas veces se ha visto, por cuántas personas y cuándo por última vez, a partir de los registros (entre from y until si se indican). Solo recuentos, sin el nombre de nadie. Las actividades que nadie ha visto aparecen con cero.",
+    "inputs": {
+      "courseId": "",
+      "from": "ISO 8601",
+      "until": "ISO 8601"
+    }
+  },
+  "get_participation_report": {
+    "source": "1e7e7eafd4aa",
+    "title": "Obtener quién ha participado en una actividad",
+    "description": "Lee el informe de participación de una actividad: todas las personas con un rol (todos los roles que ofrece, salvo que se indique roleId) y cuántas acciones han hecho allí (solo visualizaciones o mensajes con action; desde una fecha con since); quienes no han hecho nada aparecen con 0. Las personas como alias cuando el servidor seudonimiza.",
+    "inputs": {
+      "courseId": "",
+      "activityId": "",
+      "roleId": "",
+      "since": "ISO 8601",
+      "action": ""
+    }
+  },
+  "get_course_logs": {
+    "source": "e1c6b7773ecb",
+    "title": "Obtener los registros de un curso",
+    "description": "Lee los registros de un curso, los más recientes primero, tal como los lista su informe de registros: por un usuario (un alias cuando el servidor seudonimiza), una actividad, un tipo de acción y un intervalo de tiempo, una página cada vez: limit entradas (50 por defecto) tras saltar offset; more indica si hay más. Cada entrada: cuándo, quién, sobre quién, dónde, qué ocurrió (la descripción más larga de Moodle solo con includeDescriptions). Nunca direcciones IP.",
+    "inputs": {
+      "courseId": "",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "activityId": "",
+      "action": "",
+      "from": "ISO 8601",
+      "until": "ISO 8601",
+      "limit": "Cuántas entradas (50 por defecto)",
+      "offset": "Cuántas entradas saltar primero, las más recientes primero (0 por defecto)",
+      "includeDescriptions": "Incluir también la descripción de cada entrada, la frase de Moodle sobre ella (más largo; false por defecto)"
+    }
+  },
+  "set_grade": {
+    "source": "598d4ed61528",
+    "title": "Poner una calificación en el libro de calificaciones",
+    "description": "Pone la calificación de un participante en un elemento de calificación, como hace la vista individual del libro de calificaciones: un elemento manual la recibe; la de una actividad o una categoría se anula (hasta que override false quita la anulación). También comentarios de retroalimentación y excluirla de los totales. La calificación como texto: puntos (\"7.5\"), un elemento de una escala, o \"none\" para vaciarla. Los estudiantes pueden verla: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "itemId": "El elemento de calificación, tal como lo dan get_gradebook_setup o get_grader_report",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "grade": "",
+      "feedback": "Sin alias, ya que lo lee el estudiante",
+      "override": "false: quitar la anulación de una actividad o una categoría",
+      "excluded": "Excluirla de los totales"
+    }
+  },
+  "export_grades": {
+    "source": "416341fc0d37",
+    "title": "Exportar las calificaciones de un curso a un archivo",
+    "description": "Guarda las calificaciones de un curso en una carpeta local tal como Moodle las exporta para un profesor: una hoja de cálculo (xlsx, ods), CSV o XML, con los elementos, el grupo, la visualización y los comentarios de retroalimentación elegidos. El archivo nombra a cada participante: solo con nombres en claro (el nivel de datos de estudiantes del servidor), ya que un archivo no se puede seudonimizar.",
+    "inputs": {
+      "courseId": "",
+      "format": "",
+      "destDir": "Una carpeta local absoluta",
+      "itemIds": "Solo estos elementos de calificación",
+      "groupId": "",
+      "display": "",
+      "feedback": "Incluir los comentarios de retroalimentación"
+    }
+  },
+  "override_completion": {
+    "source": "cfa67ad6c6a1",
+    "title": "Establecer la finalización de una actividad de un participante",
+    "description": "Establece la finalización de una actividad de un participante como hace un profesor desde el informe de progreso (una anulación, que se muestra como tal). Toma al participante tal como lo da get_completion_report. Devuelve el estado guardado. Cambia el progreso del participante: confírmalo antes con la persona.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso)",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "state": ""
+    }
+  },
+  "list_assignments": {
+    "source": "5f8bb8a5c6c5",
+    "title": "Listar las tareas de un curso",
+    "description": "Lista las tareas de un curso de Moodle: sus ids (ids de módulo del curso, para las demás herramientas de tareas), nombres, URL, visibilidad y sección. Toma el id del curso de list_courses.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses"
+    }
+  },
+  "get_submissions": {
+    "source": "57736b21d02e",
+    "title": "Obtener las entregas de una tarea",
+    "description": "Obtiene la entrega de cada participante en una tarea de Moodle: quién (un alias cuando el servidor seudonimiza, si no, id y nombre), estado (submitted; draft; new: una entrega iniciada pero aún sin nada; reopened; none: ninguna entrega), si necesita calificación, prórrogas, las fechas del participante y, por defecto, el contenido (texto en línea y enlaces a archivos; los nombres y datos de contacto que contenga se ocultan al seudonimizar). No cambia nada, pero Moodle lo registra como el profesor viendo las páginas de calificación, igual que con su propio calificador. Toma el id de la tarea de list_assignments.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (su id de módulo del curso), tal como lo da list_assignments",
+      "includeContent": "Incluir el contenido de cada entrega: texto en línea y enlaces a archivos (true por defecto)"
+    }
+  },
+  "list_discussions": {
+    "source": "93f30ec3b3d4",
+    "title": "Listar los debates de un foro",
+    "description": "Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el autor y la hora del último mensaje, el número de respuestas (0: sin responder) y si está bloqueado. Toma el id del foro de get_course_structure; lee uno con get_discussion.",
+    "inputs": {
+      "forumId": "El id del foro (su id de módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "get_discussion": {
+    "source": "f16fdf0e87b3",
+    "title": "Leer un debate de un foro",
+    "description": "Lee todos los mensajes de un debate de un foro de Moodle, los más antiguos primero: autor (un alias cuando el servidor seudonimiza), hora, el mensaje al que responde, el mensaje como texto plano (con nombres y datos de contacto ocultos al seudonimizar) y los adjuntos. Toma el id del debate de list_discussions.",
+    "inputs": {
+      "discussionId": "El id del debate, tal como lo da list_discussions"
+    }
+  },
+  "get_my_grades": {
+    "source": "ec33d2815b45",
+    "title": "Obtener mis calificaciones",
+    "description": "Obtiene el informe de calificaciones de la persona que ha iniciado sesión en un curso: cada elemento de calificación (con el id de su actividad), categoría y el total del curso, con nota, rango, porcentaje, ponderación, letra, comentarios de retroalimentación y contribución, tal como los muestra Moodle. Toma el id del curso de list_courses.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses"
+    }
+  },
+  "download_file": {
+    "source": "d31fafab2d86",
+    "title": "Descargar un archivo de Moodle",
+    "description": "Guarda un archivo del sitio Moodle en una carpeta local, con la sesión de la persona: un archivo de un recurso o de una carpeta (get_activity_content), el archivo del enunciado de una tarea o un archivo entregado (get_assignment, get_submissions), un adjunto de un foro (get_discussion). Solo URL del host del sitio configurado (también sus contenidos multimedia: vídeos que sirve fuera de Moodle); los enlaces externos (YouTube…) son para otras herramientas. Nunca sobrescribe: a un nombre ya existente se le añade un número. Devuelve dónde se ha guardado.",
+    "inputs": {
+      "url": "La URL del archivo en el sitio, tal como la dan las demás herramientas (…/pluginfile.php/…)",
+      "destDir": "Carpeta local absoluta en la que guardar; se crea si no existe"
+    }
+  },
+  "get_survey": {
+    "source": "72f83c132bd9",
+    "title": "Obtener las preguntas de una encuesta",
+    "description": "Lee una encuesta (el plugin questionnaire, o el feedback de Moodle) como la persona: si puede responderla ahora, sus mensajes (completada, cerrada…) y todas las preguntas de todas las páginas, con si son obligatorias y sus campos (nombres, opciones).",
+    "inputs": {
+      "activityId": "El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure",
+      "type": "El tipo de la actividad, tal como lo da get_course_structure"
+    }
+  },
+  "submit_survey": {
+    "source": "b097a0f029dc",
+    "title": "Responder y enviar una encuesta",
+    "description": "Responde una encuesta y la envía, página a página según avanza su formulario: responses asigna nombres de campo (de get_survey) a valores (\"1\"/\"0\" para casillas de verificación, el valor de una opción para opciones y desplegables, texto en los demás casos). Primero se comprueba cada nombre; las quejas de Moodle (una pregunta obligatoria sin responder) se devuelven por página. Normalmente una respuesta por persona: confirma antes las respuestas con la persona, y pídele los datos personales en lugar de suponerlos.",
+    "inputs": {
+      "activityId": "El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure",
+      "type": "El tipo de la actividad, tal como lo da get_course_structure",
+      "responses": ""
+    }
+  },
+  "get_choice": {
+    "source": "e2cde31acc75",
+    "title": "Leer una consulta",
+    "description": "Lee una actividad consulta (una votación) tal como la ve la persona: su pregunta, las opciones con sus ids, si está abierta, si se pueden elegir varias y si se puede cambiar la respuesta, y la respuesta de la persona.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "answer_choice": {
+    "source": "952280c85372",
+    "title": "Responder una consulta",
+    "description": "Responde una actividad consulta como la persona, con una opción (varias si la consulta lo permite) por id de get_choice, como hace \"Guardar mi elección\". Devuelve la consulta resultante. Responde como la persona, y algunas consultas no permiten cambiar la respuesta: confírmalo antes con la persona.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
+      "optionIds": ""
+    }
+  },
+  "get_lesson_page": {
+    "source": "8d965e9cf73f",
+    "title": "Leer la página actual de una lección",
+    "description": "Lee la página de una lección en la que está la persona (iniciando la lección la primera vez): una página de contenido con sus botones, una pregunta con sus campos, o el final con la puntuación. Respóndela con answer_lesson_page.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "answer_lesson_page": {
+    "source": "94fbd47ae9c7",
+    "title": "Responder una página de una lección",
+    "description": "Avanza en una lección como la persona: pulsa un botón de una página de contenido (por su etiqueta, o por su posición desde 1), o responde los campos de una página de pregunta por nombre (el valor de una opción para opciones y desplegables, texto para texto). Devuelve los comentarios de retroalimentación de Moodle, si los hay, y la página siguiente; llegar al final termina el intento. Las respuestas cuentan para la calificación de la lección y no se pueden deshacer. Con el trail realistic hace una pausa para leer la página antes.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
+      "button": "El botón de una página de contenido, por su etiqueta",
+      "buttonPosition": "O por su posición, desde 1",
+      "responses": "Las respuestas de una página de pregunta: nombre de campo → valor, tal como get_lesson_page da los campos"
+    }
+  },
+  "get_h5p_activity": {
+    "source": "2d74222394b0",
+    "title": "Leer una actividad H5P",
+    "description": "Lee una actividad H5P: su tipo de contenido (la biblioteca H5P), si Moodle registra los intentos, y los intentos de la propia persona con sus puntuaciones. Resolver el contenido en sí (se ejecuta en un reproductor) corresponde a las herramientas de navegador de respaldo.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "get_scorm": {
+    "source": "a7f307e6ec44",
+    "title": "Leer una actividad SCORM",
+    "description": "Lee una actividad SCORM tal como la ve la persona: intentos permitidos y realizados, método de calificación, la calificación registrada y la de cada intento, y sus SCO (las partes del paquete) con el estado y la puntuación de la persona en el último intento. Úsala antes de open_scorm, y después de hacer el paquete para ver lo que Moodle ha registrado.",
+    "inputs": {
+      "activityId": "El id de la actividad SCORM (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "open_scorm": {
+    "source": "468211eef257",
+    "title": "Abrir un paquete SCORM para hacerlo",
+    "description": "Abre una actividad SCORM en el reproductor de Moodle, como la persona, en la pestaña de las herramientas del navegador: continúa el último intento salvo con newAttempt, en el primer SCO salvo con scoId. Abrirla inicia un intento en Moodle. Después, haz el paquete con las herramientas del navegador: browser_snapshot lo lee (las refs dentro de su marco empiezan por f, como f2e9), browser_click, browser_type y browser_select actúan sobre ellas, y browser_wait espera a sus textos. Al terminar, comprueba el resultado con get_scorm en lugar de suponerlo. Nada marca un SCORM como hecho o calificado salvo hacerlo.",
+    "inputs": {
+      "activityId": "El id de la actividad SCORM (id del módulo del curso), tal como lo da get_course_structure",
+      "scoId": "El SCO que abrir, tal como lo da get_scorm; el primero si falta",
+      "newAttempt": "Iniciar un intento nuevo en lugar de continuar el último"
+    }
+  },
+  "set_completion": {
+    "source": "1519b7c95e29",
+    "title": "Marcar una actividad como hecha",
+    "description": "Marca la finalización propia de la persona en una actividad con finalización manual, hecha o no hecha, como hace su botón \"Marcar como hecho\". Las actividades que se completan solas (al verlas, por calificación, por entrega) no se pueden marcar: Moodle lo indica. Hacerlo dos veces no cambia nada.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
+      "done": ""
+    }
+  },
+  "list_pending": {
+    "source": "c3026c08f783",
+    "title": "Listar lo que me queda",
+    "description": "Lista lo que la persona con la sesión iniciada aún tiene que hacer en un curso: actividades cuya finalización se registra y no están completas o, donde no se registra la finalización, actividades calificables aún sin calificación; con sus fechas, restricciones y si se pueden abrir ya. Toma el id del curso de list_courses.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses"
+    }
+  },
+  "get_activities_overview": {
+    "source": "0289aed4a82f",
+    "title": "Obtener la vista general de actividades de un curso",
+    "description": "La vista general de actividades de un curso en Moodle, tal como la ve la persona: por actividad, sus columnas (fecha de entrega, entregas, lo que falta por calificar, intentos, la calificación propia de la persona, suscripciones a foros…), por tipo o para todos los tipos del curso. Para un profesor, la forma más rápida de ver lo que espera calificación (alerta \"Requiere calificación\"); para un estudiante, lo que vence y sus resultados. Moodle 5 y posteriores.",
+    "inputs": {
+      "courseId": "El id del curso, de list_courses",
+      "type": "Un tipo de actividad (assign, quiz, forum…; \"resource\" para todos los tipos de recurso); todos los tipos si falta"
+    }
+  },
+  "list_deadlines": {
+    "source": "0a879db8a611",
+    "title": "Listar las próximas fechas límite",
+    "description": "Lo que la persona tiene que hacer antes de una fecha, según el calendario de Moodle (entregar una tarea, intentar un cuestionario…), en un curso o en todos: desde hace una semana (las vencidas) hasta unos días por delante. Cada una con el id de su actividad, la fecha, si está vencida y la acción que ofrece Moodle. Los profesores reciben pocos eventos de este tipo: para lo que espera calificación, usa get_activities_overview.",
+    "inputs": {
+      "courseId": "Un curso; todos los cursos si falta",
+      "days": "Cuántos días por delante (por defecto 30)"
+    }
+  },
+  "get_course_updates": {
+    "source": "829b3a4dd1eb",
+    "title": "Obtener lo que ha cambiado en un curso",
+    "description": "Lo que ha cambiado en las actividades de un curso desde una fecha (ajustes, archivos de contenido, mensajes del foro, entregas, intentos, calificaciones…), tal como Moodle lo registra para la persona, con el nombre y el tipo de cada actividad. Útil al empezar una sesión: lo nuevo desde la última vez.",
+    "inputs": {
+      "courseId": "El id del curso, de list_courses",
+      "since": "Fecha y hora ISO; hace una semana si falta"
+    }
+  },
+  "get_quiz_info": {
+    "source": "faa2a556e9a7",
+    "title": "Obtener la información de un cuestionario y mis intentos",
+    "description": "Lee la página de un cuestionario como la persona: descripción, sus reglas (intentos permitidos, método de calificación, límite de tiempo…), fechas, comentarios de retroalimentación generales, los intentos de la persona (con sus ids, en curso o terminados, y sus calificaciones) y si puede empezar uno ahora.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "start_quiz_attempt": {
+    "source": "5e4a80f17d98",
+    "title": "Iniciar o continuar un intento de cuestionario",
+    "description": "Inicia un intento de un cuestionario, o continúa el que está en curso, como hace el botón de la página del cuestionario; devuelve el id del intento y sus preguntas con sus campos y opciones. Iniciarlo consume uno de los intentos permitidos, y empieza a correr el límite de tiempo: confírmalo antes con la persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "get_quiz_attempt": {
+    "source": "4555a148ec87",
+    "title": "Leer las preguntas de un intento",
+    "description": "Lee todas las preguntas de un intento en curso, página a página: texto, imágenes, campos con sus opciones y las respuestas guardadas hasta el momento.",
+    "inputs": {
+      "attemptId": "El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info"
+    }
+  },
+  "answer_quiz_questions": {
+    "source": "083649643302",
+    "title": "Responder preguntas de un cuestionario",
+    "description": "Guarda respuestas en un intento en curso, como hacen las páginas del intento; no termina el intento. Cada respuesta indica el hueco de una pregunta y sus campos por nombre con el valor que dar: el valor de una opción para campos de elección y desplegables, \"1\" o \"0\" para casillas de verificación, texto para campos de texto. Devuelve las preguntas con sus respuestas guardadas. Con el rastro realistic se detiene a leer cada página antes.",
+    "inputs": {
+      "attemptId": "El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info",
+      "answers": ""
+    }
+  },
+  "finish_quiz_attempt": {
+    "source": "84ff20d0f902",
+    "title": "Enviar un intento de cuestionario",
+    "description": "Envía un intento para su calificación, como hace \"Enviar todo y terminar\": después no se puede cambiar ninguna respuesta. Devuelve la revisión cuando el cuestionario la muestra. Definitivo: confírmalo antes con la persona, tras comprobar las respuestas con get_quiz_attempt.",
+    "inputs": {
+      "attemptId": "El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info"
+    }
+  },
+  "get_attempt_review": {
+    "source": "a3021ca142c0",
+    "title": "Revisar un intento terminado",
+    "description": "Lee la revisión de un intento terminado, hasta donde el cuestionario la muestra: estado, puntos y calificación y, por pregunta, si era correcta, la puntuación, los comentarios de retroalimentación y la respuesta correcta. El intento de otra persona (la vista de un profesor) la nombra por su alias, y sus respuestas escritas se ocultan, cuando el servidor seudonimiza.",
+    "inputs": {
+      "attemptId": "El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info"
+    }
+  },
+  "get_quiz_results": {
+    "source": "b2ff11bc6e7c",
+    "title": "Obtener los resultados de un cuestionario",
+    "description": "Lee los intentos de un cuestionario tal como los muestra su informe de calificaciones: por intento, el participante (un alias cuando el servidor seudonimiza), estado, fechas, calificación y la puntuación por pregunta; con responses, también cada respuesta dada (oculta al seudonimizar).",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
+      "responses": "También la respuesta por pregunta (por defecto false)"
+    }
+  },
+  "set_quiz_override": {
+    "source": "07b06d827d88",
+    "title": "Establecer una excepción de cuestionario para un participante",
+    "description": "Da a un participante sus propios ajustes del cuestionario, como hacen las excepciones de usuario del cuestionario: fechas de apertura y cierre, límite de tiempo en minutos o número de intentos (0 ilimitados); lo que no se indica sigue siendo lo del cuestionario. Toma al participante tal como lo da list_participants. Confírmalo antes con la persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso)",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "open": "ISO 8601",
+      "close": "ISO 8601",
+      "timeLimitMinutes": "",
+      "attempts": "0 para ilimitados"
+    }
+  },
+  "list_questions_to_grade": {
+    "source": "41e55d440ab8",
+    "title": "Listar las preguntas de un cuestionario por calificar a mano",
+    "description": "Lista las preguntas de un cuestionario que esperan calificación manual (ensayos…), cada una con cuántas hay por calificar y los intentos terminados cuya respuesta lo necesita (por id de intento, con el participante como alias cuando el servidor seudonimiza). Lee una respuesta con get_attempt_review; califícala con grade_quiz_question.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso)"
+    }
+  },
+  "grade_quiz_question": {
+    "source": "b6793c7fc8d1",
+    "title": "Calificar a mano una pregunta de cuestionario",
+    "description": "Califica a mano una pregunta de un intento terminado, con un comentario, como hace \"Comentar o sobrescribir la puntuación\" de la revisión: un ensayo que espera calificación, o cualquier pregunta cuya puntuación se sobrescribe. La puntuación va en los puntos de la pregunta (de 0 a su máximo). Devuelve después la calificación del intento cuando se muestra. Los estudiantes pueden verla: confírmalo antes con la persona.",
+    "inputs": {
+      "attemptId": "Tal como lo da list_questions_to_grade",
+      "slot": "",
+      "mark": "",
+      "comment": "Sin alias, ya que el estudiante lo lee"
+    }
+  },
+  "get_assignment": {
+    "source": "15a9a0d48d6c",
+    "title": "Obtener una tarea como estudiante",
+    "description": "Lee una tarea tal como la ve el estudiante con la sesión iniciada: el enunciado y sus archivos, las fechas, el estado y el contenido de la entrega, la calificación y los comentarios de retroalimentación, y si se puede editar o enviar ahora.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "save_submission": {
+    "source": "bd6aea28d06d",
+    "title": "Guardar mi entrega",
+    "description": "Guarda la entrega del estudiante con la sesión iniciada en una tarea: su texto en línea (HTML, que sustituye lo que hubiera) y archivos que añadir (rutas locales absolutas). No la envía para calificar cuando la tarea pide a los estudiantes que pulsen enviar: eso lo hace submit_assignment. Devuelve la tarea tal como la ve el estudiante. Cambia la entrega: confírmalo antes con la persona.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da get_course_structure",
+      "onlineText": "",
+      "files": ""
+    }
+  },
+  "submit_assignment": {
+    "source": "60ed6d8ba033",
+    "title": "Enviar mi tarea para calificar",
+    "description": "Envía la entrega guardada para su calificación: después no se puede cambiar salvo que el profesor la reabra. Cuando el sitio pide aceptar una declaración (es trabajo propio…), la llamada falla citándola hasta que acceptStatement sea true. Definitivo: confírmalo antes con la persona, tras comprobar la entrega con get_assignment.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da get_course_structure",
+      "acceptStatement": "La persona acepta la declaración de entrega del sitio"
+    }
+  },
+  "get_rubric": {
+    "source": "1a67f64b1e4c",
+    "title": "Obtener los criterios de calificación de una tarea",
+    "description": "Lee cómo se califica una tarea: simple (una nota o una escala), una rúbrica (criterios con sus niveles y puntuaciones) o una guía de evaluación (criterios con su puntuación máxima). Los ids de criterio y de nivel son lo que toman los campos de grade_submission. Toma el id de la tarea de list_assignments; necesita al menos un participante.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da list_assignments"
+    }
+  },
+  "grade_submission": {
+    "source": "3057abe8483f",
+    "title": "Calificar una entrega",
+    "description": "Califica a un participante en una tarea, como hace el calificador de Moodle: una nota (calificación simple), los niveles de una rúbrica o las puntuaciones de una guía de evaluación por criterio (ids de get_rubric) con observaciones, comentarios de retroalimentación (HTML, cuando la tarea los tiene activados), si notificar al estudiante, y cualquier otro campo de calificación por nombre en fields. Toma al participante tal como lo da get_submissions: user (un alias) cuando el servidor seudonimiza; si no, userId. Funciona con o sin entrega. Devuelve la calificación guardada. Cambia calificaciones que los estudiantes pueden ver: confírmalo antes con la persona.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da list_assignments",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "grade": "La nota como texto: un número dentro del rango (\"7.5\"), o un elemento de la escala",
+      "feedback": "Comentarios de retroalimentación (HTML); sin alias, ya que el estudiante los lee",
+      "notify": "Notificar al estudiante; lo predeterminado de Moodle si falta",
+      "rubric": "El nivel de una rúbrica por criterio: id de criterio → id de nivel, tal como los da get_rubric",
+      "guide": "La puntuación de una guía de evaluación por criterio: id de criterio → puntuación",
+      "remarks": "Observaciones por criterio de una rúbrica o guía: id de criterio → texto; sin alias",
+      "feedbackFiles": "Rutas locales absolutas de archivos de retroalimentación que devolver al estudiante",
+      "workflowState": "Con el flujo de trabajo de calificación activado: el estado en que dejar la entrega (\"released\" muestra la calificación al estudiante)",
+      "applyToGroup": "En una tarea en grupo: dar la misma calificación y los mismos comentarios a todo el grupo",
+      "fields": "Otros campos del formulario de calificación por nombre, p. ej., los niveles de una rúbrica"
+    }
+  },
+  "grant_extension": {
+    "source": "3488cff8eefc",
+    "title": "Conceder una prórroga en una tarea",
+    "description": "Concede a participantes una prórroga de la fecha de entrega de una tarea hasta una fecha, como hace el formulario de prórroga de la tarea (varios a la vez). Los toma tal como los da get_submissions: users (alias) cuando el servidor seudonimiza; si no, userIds. Moodle rechaza una fecha anterior a la fecha de entrega. Confírmalo antes con la persona.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da list_assignments",
+      "users": "Los alias de los participantes, cuando el servidor seudonimiza",
+      "userIds": "Los ids de usuario de los participantes, cuando el servidor muestra los nombres",
+      "until": "ISO 8601, p. ej., 2026-11-03T23:59:00+01:00"
+    }
+  },
+  "set_workflow_state": {
+    "source": "d3169c787753",
+    "title": "Establecer el estado del flujo de trabajo de calificación",
+    "description": "Establece el estado del flujo de trabajo de calificación de las entregas de participantes, como hace la acción en bloque de la tabla de calificación: \"released\" les muestra sus calificaciones (notify se lo comunica). Los toma tal como los da get_submissions. Los estudiantes pueden verlo: confírmalo antes con la persona.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da list_assignments",
+      "users": "Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userIds": "Los ids de usuario de los participantes, cuando el servidor muestra los nombres",
+      "state": "",
+      "notify": ""
+    }
+  },
+  "allocate_marker": {
+    "source": "dece54a635cc",
+    "title": "Asignar un evaluador a entregas",
+    "description": "Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa varios por entrega) a las entregas de participantes, como hace la acción en bloque de la tabla de calificación; Moodle no toca las entregas que ya han pasado la evaluación. Participantes y evaluadores tal como los da get_submissions: alias cuando el servidor seudonimiza. Confírmalo antes con la persona.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da list_assignments",
+      "users": "Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userIds": "Los ids de usuario de los participantes, cuando el servidor muestra los nombres",
+      "markers": "Los alias de los evaluadores, cuando el servidor seudonimiza",
+      "markerIds": "Los ids de usuario de los evaluadores, cuando el servidor muestra los nombres"
+    }
+  },
+  "reply_to_post": {
+    "source": "67e64f64da4c",
+    "title": "Responder a un mensaje del foro",
+    "description": "Responde a un mensaje en un debate de un foro de Moodle, con adjuntos opcionales (archivos locales). El asunto por defecto es el \"Re: …\" de Moodle. Devuelve el id del nuevo mensaje y su debate. Publica como la persona, de forma visible: confirma antes el texto con la persona.",
+    "inputs": {
+      "postId": "El mensaje al que responder, tal como lo da get_discussion",
+      "subject": "",
+      "message": "El mensaje (HTML); sin alias, ya que lo leen otras personas",
+      "files": "Rutas locales absolutas que adjuntar",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "subscribe": "Suscribirse al debate; lo predeterminado de Moodle si falta",
+      "fields": "Otros campos del formulario del mensaje por nombre, p. ej., {\"pinned\": true} para un profesor"
+    }
+  },
+  "create_discussion": {
+    "source": "7c19be4619b3",
+    "title": "Iniciar un debate en un foro",
+    "description": "Inicia un debate en un foro de Moodle, con adjuntos e imágenes incrustadas opcionales (archivos locales); un profesor puede publicar avisos así en el foro de avisos. Devuelve el id del nuevo debate y, leídos de vuelta, si está fijado y si la persona está suscrita. Publica como la persona, de forma visible: confirma antes el texto con la persona.",
+    "inputs": {
+      "forumId": "El id del foro (id del módulo del curso), tal como lo da get_course_structure",
+      "subject": "",
+      "message": "El mensaje (HTML); sin alias, ya que lo leen otras personas",
+      "files": "Rutas locales absolutas que adjuntar",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "subscribe": "Suscribirse al debate; lo predeterminado de Moodle si falta",
+      "fields": "Otros campos del formulario del mensaje por nombre, p. ej., {\"pinned\": true} para un profesor"
+    }
+  },
+  "set_discussion_state": {
+    "source": "9d186ea833fb",
+    "title": "Fijar o bloquear un debate",
+    "description": "Fija o desfija, bloquea o desbloquea un debate de un foro, como hace el menú de la lista de debates; lo que ya está así no se toca. Devuelve el debate tal como lo lista el foro después. Los estudiantes lo ven: confírmalo antes con la persona.",
+    "inputs": {
+      "forumId": "El id del foro (id del módulo del curso), tal como lo da get_course_structure",
+      "discussionId": "Tal como lo da list_discussions",
+      "pinned": "",
+      "locked": ""
+    }
+  },
+  "set_discussion_subscription": {
+    "source": "ec942fa81e62",
+    "title": "Suscribirse a un debate de un foro",
+    "description": "Suscribe a la persona a un debate de un foro, o la da de baja, como hace el interruptor de la lista de debates: Moodle le envía entonces por correo electrónico sus nuevos mensajes. Lo que ya está así no se toca. Devuelve el debate tal como lo lista el foro después.",
+    "inputs": {
+      "forumId": "El id del foro (id del módulo del curso), tal como lo da get_course_structure",
+      "discussionId": "Tal como lo da list_discussions",
+      "subscribed": ""
+    }
+  },
+  "edit_post": {
+    "source": "e5186f616947",
+    "title": "Editar un mensaje del foro",
+    "description": "Cambia un mensaje del foro mediante el propio formulario de Moodle, como su autor (dentro del tiempo de edición del sitio) o como moderador: su asunto, su mensaje (HTML) y adjuntos que añadir o quitar. Solo cambia lo que se indica. Devuelve el mensaje después (su autor como alias cuando el servidor seudonimiza). Visible para el foro: confírmalo antes con la persona.",
+    "inputs": {
+      "postId": "Tal como lo da get_discussion",
+      "subject": "",
+      "message": "HTML; sin alias, ya que lo leen otras personas",
+      "addFiles": "Rutas locales absolutas que adjuntar",
+      "removeFiles": "Nombres de los adjuntos que quitar",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "delete_post": {
+    "source": "381fe7342dd5",
+    "title": "Eliminar un mensaje del foro",
+    "description": "Elimina un mensaje del foro y sus respuestas mediante la propia confirmación de Moodle; el primer mensaje de un debate se lleva el debate entero. Solo un moderador elimina el mensaje de otra persona o uno con respuestas. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "postId": "Tal como lo da get_discussion"
+    }
+  },
+  "get_forum_grades": {
+    "source": "4e01a0ea61de",
+    "title": "Obtener las calificaciones globales de un foro",
+    "description": "Lee las calificaciones globales de un foro que se califica en su conjunto, tal como las muestra su calificador: una por cada persona que puede calificar (alias cuando el servidor seudonimiza), con cómo se califica (puntos o escala) y quién calificó.",
+    "inputs": {
+      "forumId": "El id del foro (id del módulo del curso)",
+      "groupId": ""
+    }
+  },
+  "grade_forum_user": {
+    "source": "320a492339d4",
+    "title": "Poner una calificación global del foro",
+    "description": "Pone a un participante su calificación global del foro, como hace el calificador del foro: puntos (\"7\"), un elemento de la escala, o \"none\" para quitarla; notify le envía la notificación de Moodle. Los estudiantes pueden verla: confírmalo antes con la persona.",
+    "inputs": {
+      "forumId": "El id del foro (id del módulo del curso)",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "grade": "",
+      "notify": ""
+    }
+  },
+  "rate": {
+    "source": "747214725dde",
+    "title": "Valorar un mensaje, entrada o registro",
+    "description": "Valora un mensaje del foro, una entrada de glosario o un registro de base de datos como la persona, como hace el menú de valoración que tiene debajo: el nombre de un elemento de la escala, o un número (los puntos de una escala de puntos); \"none\" quita la valoración de la persona. Devuelve después el agregado del elemento. Los estudiantes pueden verlo: confírmalo antes con la persona.",
+    "inputs": {
+      "itemType": "",
+      "itemId": "El id del mensaje, de la entrada o del registro",
+      "discussionId": "Para un mensaje del foro: su debate",
+      "rating": ""
+    }
+  },
+  "get_workshop": {
+    "source": "eb99167eb774",
+    "title": "Leer un taller",
+    "description": "Lee la fase de un taller y su informe tal como lo ve un profesor: cada entrega (autor, título, calificación una vez calculada) y cada evaluación (revisor, el autor de la entrega, la calificación que da, su peso, la calificación por evaluar). Las personas como alias cuando el servidor seudonimiza. Listas vacías antes de la fase de envío, o para alguien que no puede ver todas las entregas.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)"
+    }
+  },
+  "set_workshop_phase": {
+    "source": "4344824ea704",
+    "title": "Cambiar la fase de un taller",
+    "description": "Cambia un taller a una fase (setup, submission, assessment, evaluation, closed), hacia delante o hacia atrás, como hacen los enlaces de fase de su página. Moodle no asigna nada ni calcula calificaciones por sí solo al cambiar. Cambia lo que pueden hacer los estudiantes: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "phase": ""
+    }
+  },
+  "assess_workshop_submission": {
+    "source": "29ecdd6a8646",
+    "title": "Evaluar una entrega de un taller",
+    "description": "Evalúa una entrega de un taller como la persona, mediante el formulario de evaluación del taller (el de su estrategia de calificación): una calificación y un comentario por criterio en el orden del formulario, comentarios de retroalimentación generales para el autor (HTML) y cualquier otro campo por nombre. Una evaluación nueva la primera vez, la misma cambiada después. Solo en la fase de evaluación. Devuelve la calificación que da. El autor la lee: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "submissionId": "Tal como lo da get_workshop",
+      "criteria": "En el orden del formulario",
+      "feedback": "Comentarios de retroalimentación generales para el autor (HTML); sin alias",
+      "fields": "Cualquier otro campo del formulario, por nombre"
+    }
+  },
+  "list_notifications": {
+    "source": "c489c5e6df09",
+    "title": "Listar mis notificaciones",
+    "description": "Lista las notificaciones de la persona, de la más reciente a la más antigua (solo las no leídas cuando se pide), una página cada vez: limit de ellas (30 por defecto) tras saltar offset; more indica si hay otras que pedir con un offset mayor. Cada una: asunto, texto, de quién es (un alias cuando el servidor seudonimiza), cuándo, si está leída y adónde lleva. Los nombres en los textos se ocultan al seudonimizar.",
+    "inputs": {
+      "unreadOnly": "",
+      "limit": "Cuántas (30 por defecto)",
+      "offset": "Cuántas saltar primero, de la más reciente a la más antigua (0 por defecto); con unreadOnly, cuenta las no leídas"
+    }
+  },
+  "mark_notifications_read": {
+    "source": "1c06a488a75b",
+    "title": "Marcar mis notificaciones como leídas",
+    "description": "Marca como leídas todas las notificaciones de la persona, como hace \"Marcar todas como leídas\" en la ventana emergente de notificaciones. Hacerlo dos veces no cambia nada.",
+    "inputs": {}
+  },
+  "list_conversations": {
+    "source": "066f0242f796",
+    "title": "Listar mis conversaciones",
+    "description": "Lista las conversaciones de mensajes de la persona, de la más reciente a la más antigua: privadas, de grupo o consigo misma, sus miembros (alias cuando el servidor seudonimiza), el número de no leídos y el último mensaje como texto. Lee una con get_conversation.",
+    "inputs": {}
+  },
+  "get_conversation": {
+    "source": "563cbd834c84",
+    "title": "Leer una conversación",
+    "description": "Lee una conversación de mensajes, de la más antigua a la más reciente: sus miembros y, de cada mensaje, el remitente (alias cuando el servidor seudonimiza), el texto y la hora; los nombres y datos de contacto en los textos se ocultan al seudonimizar. Toma el id de list_conversations.",
+    "inputs": {
+      "conversationId": ""
+    }
+  },
+  "send_message": {
+    "source": "2e75b781caf0",
+    "title": "Enviar un mensaje privado",
+    "description": "Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.",
+    "inputs": {
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "text": ""
+    }
+  },
+  "message_participants": {
+    "source": "da91e0f9b2b0",
+    "title": "Enviar un mensaje a varios participantes",
+    "description": "Envía un mismo mensaje privado a varios participantes de un curso, como hace \"Enviar un mensaje\" de la página de participantes: a users (alias) o userIds, o a todos los elegidos por role, group o inactiveSince (todos cuando no se indica nada), excluida la persona. Devuelve quién lo recibió y a quién no escribió Moodle, y por qué. El texto es plano, sin alias. Se envía como la persona, de forma visible: confirma antes el texto y los destinatarios con la persona.",
+    "inputs": {
+      "courseId": "",
+      "text": "",
+      "users": "Los alias de los participantes, tal como los dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userIds": "Los ids de usuario de los participantes, cuando el servidor muestra los nombres",
+      "role": "O bien: todos los que tienen este rol",
+      "group": "O bien: todos los de este grupo",
+      "inactiveSince": "O bien: todos los que no han accedido al curso desde esta fecha (ISO 8601)"
+    }
+  },
+  "create_activity": {
+    "source": "5eabe7d0f335",
+    "title": "Crear una actividad o un recurso",
+    "description": "Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, folder, assign, quiz, forum…) al final de una sección, mediante el propio formulario de Moodle, oculto a los estudiantes por defecto. Los campos comunes tienen sus propias entradas, incluidas las restricciones de acceso y la finalización; cualquier otro ajuste va en settings por el nombre de su campo del formulario. files son rutas locales que se suben a un recurso de archivo o a una carpeta, o el paquete de un SCORM (type scorm, el primer archivo). Devuelve el id de la nueva actividad y la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "sectionId": "El id de la sección, tal como lo da get_course_structure",
+      "type": "El nombre del módulo en Moodle: page, label, url, resource, folder, assign, quiz, forum, book…",
+      "name": "Obligatorio salvo para las etiquetas",
+      "files": "Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip)",
+      "description": "La descripción (HTML), que se muestra en la página de la actividad",
+      "content": "El contenido de una página, o el texto de una etiqueta (HTML)",
+      "url": "El destino de un recurso URL",
+      "visibility": "\"stealth\": oculto en la página del curso pero disponible por enlace, donde el sitio lo permite",
+      "restrictions": "Cuándo pueden abrirlo los estudiantes ({ conditions: [] } las quita)",
+      "completion": "Cuándo cuenta como completado",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "settings": "Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., {\"duedate[enabled]\": true, \"duedate[day]\": 12, \"grade[modgrade_point]\": 10}"
+    }
+  },
+  "update_activity": {
+    "source": "31412ad29742",
+    "title": "Actualizar los ajustes o el contenido de una actividad",
+    "description": "Cambia una actividad existente mediante el propio formulario de Moodle: nombre, descripción, el contenido de una página o de una etiqueta, el destino de una URL, visibilidad, restricciones de acceso, finalización, los archivos de un recurso de archivo o de una carpeta (añadir, quitar por su ruta tal como los lista get_activity_settings, o sustituirlos todos), o cualquier otro ajuste por el nombre de su campo del formulario en settings. Solo cambia lo que se indica. Devuelve la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
+      "name": "",
+      "description": "La descripción (HTML), que se muestra en la página de la actividad",
+      "content": "El contenido de una página, o el texto de una etiqueta (HTML)",
+      "url": "El destino de un recurso URL",
+      "visibility": "\"stealth\": oculto en la página del curso pero disponible por enlace, donde el sitio lo permite",
+      "restrictions": "Cuándo pueden abrirlo los estudiantes ({ conditions: [] } las quita)",
+      "completion": "Cuándo cuenta como completado",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "settings": "Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., {\"duedate[enabled]\": true, \"duedate[day]\": 12, \"grade[modgrade_point]\": 10}",
+      "files": "Los archivos de un recurso de archivo o de una carpeta; sin cambios si falta"
+    }
+  },
+  "get_activity_settings": {
+    "source": "616670067b82",
+    "title": "Obtener los ajustes de una actividad",
+    "description": "Lee todos los ajustes de una actividad tal como los contiene su formulario de edición, sin cambiar nada: su módulo, nombre, descripción, cada campo con su nombre en el formulario, etiqueta, valor y opciones, los archivos de un recurso, carpeta o SCORM, y sus restricciones de acceso y finalización en los términos que acepta update_activity. Úsala antes de update_activity. Solo profesores. Toma el id de la actividad de get_course_structure.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "edit_activity": {
+    "source": "c4ba5e04915b",
+    "title": "Mover, renombrar, mostrar u ocultar una actividad",
+    "description": "Mueve una actividad a otra sección (al final) o antes de otra actividad, para reordenar un curso; la renombra; o establece su visibilidad (\"shown\", \"hidden\" o \"stealth\": oculta en la página del curso pero disponible por enlace). Solo cambia lo que se indica. Devuelve después la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses",
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
+      "name": "",
+      "visibility": "",
+      "sectionId": "Moverla al final de esta sección",
+      "beforeActivityId": "Moverla antes de esta actividad (en la sección de esa actividad)"
+    }
+  },
+  "duplicate_activity": {
+    "source": "a11a55564055",
+    "title": "Duplicar una actividad",
+    "description": "Duplica una actividad justo a continuación de sí misma, con su configuración y su contenido (no los datos de los participantes). Devuelve el id de la copia y la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses",
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "delete_activity": {
+    "source": "6cf477468069",
+    "title": "Eliminar una actividad",
+    "description": "Elimina una actividad de un curso, con los datos de sus participantes (entregas, intentos, mensajes, calificaciones). Destructivo: confírmalo antes con la persona, nombrando la actividad.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses",
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_section": {
+    "source": "7099770609a6",
+    "title": "Añadir una sección",
+    "description": "Añade una sección a un curso, al final o después de una sección dada, opcionalmente con nombre y descripción. Devuelve su id y la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses",
+      "name": "",
+      "summary": "Su descripción (HTML)",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "afterSectionId": "Añadirla después de esta sección; al final si falta"
+    }
+  },
+  "edit_section": {
+    "source": "e0c3ff1bdd05",
+    "title": "Editar una sección",
+    "description": "Cambia una sección: renombrarla, describirla, mostrarla u ocultarla (con sus actividades), restringir el acceso a ella o moverla después de otra sección. Solo cambia lo que se indica. Devuelve la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses",
+      "sectionId": "El id de una sección (no su número), tal como lo da get_course_structure",
+      "name": "",
+      "visible": "",
+      "summary": "Su descripción (HTML)",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "restrictions": "Cuándo pueden abrirla los estudiantes ({ conditions: [] } las elimina)",
+      "afterSectionId": "Moverla después de esta sección"
+    }
+  },
+  "delete_section": {
+    "source": "e58422c723b9",
+    "title": "Eliminar una sección",
+    "description": "Elimina una sección y todas las actividades que contiene, con los datos de sus participantes. Destructivo: confírmalo antes con la persona, diciendo qué actividades se eliminan con ella.",
+    "inputs": {
+      "courseId": "El id del curso, tal como lo da list_courses",
+      "sectionId": "El id de una sección (no su número), tal como lo da get_course_structure"
+    }
+  },
+  "update_course": {
+    "source": "40ecef6abfc1",
+    "title": "Actualizar la configuración de un curso",
+    "description": "Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro ajuste de un curso por el nombre de su campo en el formulario de configuración del curso de Moodle (settings), a través de ese formulario. Solo cambia lo que se indica. Devuelve el curso tras el cambio. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "fullName": "",
+      "shortName": "",
+      "summary": "HTML",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "settings": "Otros campos por su nombre en el formulario de configuración del curso, p. ej. {\"visible\": 0, \"startdate[day]\": 1}"
+    }
+  },
+  "copy_course": {
+    "source": "374ec0f54a49",
+    "title": "Copiar un curso",
+    "description": "Copia un curso en uno nuevo, como hace \"Copiar curso\" de Moodle: su contenido (y, con withUsers, las matriculaciones y los datos de sus personas) con un nuevo nombre completo y nombre corto, en una categoría (la del curso si no se indica), con fechas nuevas. Necesita permisos para hacer copias de seguridad, restaurar y crear cursos. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Crea un curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "fullName": "",
+      "shortName": "",
+      "categoryId": "",
+      "start": "El inicio del nuevo curso, ISO 8601",
+      "end": "El fin del nuevo curso, ISO 8601",
+      "withUsers": "También sus participantes y sus datos (por defecto false)",
+      "visible": ""
+    }
+  },
+  "backup_course": {
+    "source": "ca5ac50dee04",
+    "title": "Hacer una copia de seguridad de un curso",
+    "description": "Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local, mediante el asistente de copia de seguridad de Moodle: su contenido, y con withUsers también los datos de sus personas (anonymize anonimiza sus nombres). Moodle guarda una copia en el área de copias de seguridad del curso. Se restaura con restore_course. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez.",
+    "inputs": {
+      "courseId": "",
+      "destDir": "Una carpeta local absoluta para el archivo",
+      "withUsers": "También los datos de sus participantes (por defecto false)",
+      "anonymize": "Con usuarios: Moodle anonimiza sus nombres y datos de contacto"
+    }
+  },
+  "restore_course": {
+    "source": "03b3dd045b4d",
+    "title": "Restaurar una copia de seguridad de un curso",
+    "description": "Restaura una copia de seguridad .mbz mediante el asistente de restauración de Moodle: en un curso nuevo en una categoría (sin intoCourseId), o en un curso existente, añadiendo a su contenido (modo merge, el predeterminado) o sustituyéndolo (replace elimina antes el contenido del curso). Un curso nuevo toma los nombres de la copia de seguridad salvo que se indiquen fullName y shortName. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia Moodle, y replace no se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "file": "La ruta local absoluta de la copia de seguridad (.mbz)",
+      "intoCourseId": "Un curso existente en el que restaurar; un curso nuevo si falta",
+      "categoryId": "Para un curso nuevo: su categoría",
+      "mode": "En un curso existente: añadir a él (por defecto) o sustituir su contenido",
+      "fullName": "",
+      "shortName": "",
+      "withUsers": "Restaurar los datos de los participantes que tenga la copia de seguridad (por defecto false)"
+    }
+  },
+  "import_activities": {
+    "source": "980d493ebe86",
+    "title": "Importar actividades de otro curso",
+    "description": "Importa actividades de otro curso a un curso, como hace \"Importar\" de Moodle: todas, o solo activityIds, con sus secciones, nunca los datos de las personas. Devuelve los ids de las nuevas actividades. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "fromCourseId": "",
+      "toCourseId": "",
+      "activityIds": "Solo estas actividades del otro curso (ids de módulos del curso)"
+    }
+  },
+  "reset_course": {
+    "source": "ac1483d8dedb",
+    "title": "Reiniciar un curso para un nuevo año",
+    "description": "Reinicia un curso como hace el formulario de reinicio de Moodle: elimina solo lo indicado en delete (entregas, intentos, mensajes, calificaciones… en cada actividad que los tenga), desmatricula a las personas con unenrolRoles, mueve la fecha de inicio (y con ella las fechas de las actividades) y establece cualquier otro campo del formulario por su nombre. No se elimina nada que no se indique. No se puede deshacer: confirma antes cada elemento con la persona. Devuelve el informe de Moodle.",
+    "inputs": {
+      "courseId": "",
+      "delete": "",
+      "unenrolRoles": "Ids de los roles cuyas personas se desmatriculan",
+      "start": "La nueva fecha de inicio, ISO 8601",
+      "fields": "Cualquier otro campo del formulario de reinicio, por su nombre"
+    }
+  },
+  "list_question_banks": {
+    "source": "4640eb6c8bfc",
+    "title": "Listar los bancos de preguntas de un curso",
+    "description": "Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables por cualquier cuestionario del curso) y los bancos propios de las actividades (el de un cuestionario, utilizable solo en él). Devuelve sus ids, que reciben list_questions, import_questions y create_question.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "list_questions": {
+    "source": "cd4b1e8696df",
+    "title": "Listar las preguntas de un banco",
+    "description": "Lista las categorías de un banco de preguntas y todas las preguntas que contienen: id, nombre, tipo, estado y categoría. Recibe el id del banco de list_question_banks.",
+    "inputs": {
+      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks"
+    }
+  },
+  "import_questions": {
+    "source": "e6735af2cb54",
+    "title": "Importar preguntas a un banco",
+    "description": "Importa preguntas a un banco de preguntas desde GIFT o Moodle XML, dadas como texto o como archivo local, mediante el formulario de importación del banco: la forma de añadir varias a la vez. Moodle comprueba antes todo el archivo: si no puede analizarlo, no se importa nada y se devuelven sus mensajes. Devuelve las preguntas creadas. Cambia el banco: confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks",
+      "format": "",
+      "text": "Las preguntas en ese formato",
+      "file": "O una ruta absoluta a un archivo local en ese formato",
+      "categoryId": "La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta"
+    }
+  },
+  "create_question": {
+    "source": "2740fd3ba3c0",
+    "title": "Crear una pregunta en un banco",
+    "description": "Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: multichoice, truefalse, shortanswer, numerical o essay. Para varias, import_questions es más rápido. Devuelve el id de la nueva pregunta. Cambia el banco: confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks",
+      "type": "",
+      "name": "",
+      "text": "El texto de la pregunta (HTML)",
+      "answers": "Respuestas de multichoice, shortanswer y numerical",
+      "correct": "Truefalse: la respuesta correcta",
+      "categoryId": "La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta",
+      "defaultMark": "",
+      "fields": "Cualquier otro campo del formulario del tipo, por su nombre"
+    }
+  },
+  "update_question": {
+    "source": "32b1e96a65a9",
+    "title": "Cambiar una pregunta de un banco",
+    "description": "Cambia una pregunta de un banco mediante el formulario de su tipo: solo cambia lo que se indica (answers las sustituye todas). Al guardar se crea una nueva versión con su propio id, el que se devuelve, que a partir de entonces reciben los cuestionarios que usan la última versión. Cambia el banco: confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks",
+      "questionId": "Tal como lo da list_questions",
+      "name": "",
+      "text": "El texto de la pregunta (HTML)",
+      "answers": "Respuestas de multichoice, shortanswer y numerical",
+      "correct": "Truefalse: la respuesta correcta",
+      "categoryId": "La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta",
+      "defaultMark": "",
+      "fields": "Cualquier otro campo del formulario del tipo, por su nombre"
+    }
+  },
+  "delete_questions": {
+    "source": "732543a83d28",
+    "title": "Eliminar preguntas de un banco",
+    "description": "Elimina preguntas de un banco, todas las versiones de cada una, como hace la acción de eliminar del banco. Moodle no elimina una pregunta que usa un cuestionario: la oculta, y hidden enumera esas. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks",
+      "questionIds": "Tal como los da list_questions"
+    }
+  },
+  "set_question_status": {
+    "source": "f4ad74efca61",
+    "title": "Marcar una pregunta como lista o borrador",
+    "description": "Marca una pregunta del banco como lista (los cuestionarios pueden usarla) o como borrador, como hace el menú de estado del banco.",
+    "inputs": {
+      "questionId": "Tal como lo da list_questions",
+      "status": ""
+    }
+  },
+  "get_quiz_structure": {
+    "source": "7c0403c78d4d",
+    "title": "Obtener las preguntas de un cuestionario",
+    "description": "Lista las preguntas de un cuestionario como lo hace su página de edición, en orden: la página de cada hueco, el id de la pregunta, el tipo (o aleatoria), el nombre y la puntuación. Solo para profesores.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_questions_to_quiz": {
+    "source": "91b6d24d8c9d",
+    "title": "Añadir preguntas a un cuestionario",
+    "description": "Añade preguntas a un cuestionario: preguntas del banco por id (de list_questions) y/o preguntas aleatorias de una categoría del banco, al final o en una página dada. Un cuestionario que ya tiene intentos no puede cambiar sus preguntas: Moodle lo rechaza. Devuelve la estructura del cuestionario tras el cambio. Cambia el cuestionario: confírmalo antes con la persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
+      "questionIds": "Preguntas del banco, tal como las da list_questions",
+      "random": "Preguntas aleatorias tomadas de una categoría",
+      "page": "La página a la que añadirlas; la última si falta"
+    }
+  },
+  "edit_quiz_slot": {
+    "source": "d3acbd9d2aed",
+    "title": "Cambiar la puntuación o la posición de una pregunta de un cuestionario",
+    "description": "Cambia un hueco de un cuestionario: su puntuación máxima y dónde está (después de otro hueco, 0 para el primero, y en una página), como hace la página de edición. Tras los intentos, Moodle permite cambiar la puntuación (los recalifica) pero no el orden. Devuelve la estructura del cuestionario. Cambia el cuestionario: confírmalo antes con la persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
+      "slot": "La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure",
+      "maxMark": "",
+      "moveAfter": "Ponerlo después de este hueco (0: el primero)",
+      "page": "La página en la que ponerlo"
+    }
+  },
+  "remove_quiz_slot": {
+    "source": "d79e5b3e93fc",
+    "title": "Quitar una pregunta de un cuestionario",
+    "description": "Quita un hueco de un cuestionario, como hace el icono de eliminar de la página de edición; la pregunta sigue en su banco. Un cuestionario con intentos no puede cambiar sus preguntas. Devuelve la estructura del cuestionario. Confírmalo antes con la persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
+      "slot": "La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure"
+    }
+  },
+  "set_quiz_pages": {
+    "source": "40460dcd7ead",
+    "title": "Establecer las páginas de un cuestionario",
+    "description": "Establece cómo se reparten en páginas las preguntas de un cuestionario: perPage preguntas por página (0 para todas en una), como hace \"Repaginar\", o saltos de página exactamente después de los huecos de breaksAfter. Devuelve la estructura del cuestionario. Cambia el cuestionario: confírmalo antes con la persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
+      "perPage": "Preguntas por página; 0 para una sola página",
+      "breaksAfter": "O bien: un salto de página después de cada uno de estos huecos, y en ningún otro sitio"
+    }
+  },
+  "add_quiz_section": {
+    "source": "34a87445de26",
+    "title": "Añadir una sección a un cuestionario",
+    "description": "Añade un encabezado de sección a un cuestionario, empezando en un hueco (el primero de su página: ver set_quiz_pages), opcionalmente barajando sus preguntas. Devuelve el id de la nueva sección y la estructura del cuestionario. Cambia el cuestionario: confírmalo antes con la persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
+      "firstSlot": "La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure",
+      "heading": "",
+      "shuffle": ""
+    }
+  },
+  "get_gradebook_setup": {
+    "source": "06d6a53d8794",
+    "title": "Obtener la configuración del libro de calificaciones de un curso",
+    "description": "Lee cómo se calculan las calificaciones de un curso, como lo muestra la página de configuración del libro de calificaciones: sus categorías (agregación, peso, máximo) y sus elementos de calificación (categoría, máximo, peso). No incluye las calificaciones de nadie.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "update_grade_item": {
+    "source": "7a701e9d828d",
+    "title": "Actualizar un elemento de calificación",
+    "description": "Cambia un elemento de calificación de get_gradebook_setup: moverlo a una categoría, establecer su peso (porcentaje, que sustituye al automático) o la calificación máxima de un elemento manual (la de una actividad se establece en la actividad). Devuelve el elemento tras el cambio. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "itemId": "",
+      "category": "La categoría a la que moverlo",
+      "weight": "Porcentaje",
+      "maxGrade": ""
+    }
+  },
+  "add_grade_category": {
+    "source": "7ab8ba7e78e3",
+    "title": "Añadir una categoría de calificación",
+    "description": "Añade una categoría de calificación al libro de calificaciones de un curso, en el nivel superior o dentro de otra, con su agregación. La devuelve tal como la muestra la configuración. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "aggregation": "",
+      "parentId": "La categoría en la que ponerla; el nivel superior del curso si falta"
+    }
+  },
+  "add_grade_item": {
+    "source": "2bc821172b97",
+    "title": "Añadir un elemento de calificación manual",
+    "description": "Añade un elemento de calificación que se califica en el libro de calificaciones (no mediante una actividad): sobre maxGrade (por defecto 100 en Moodle) o con una escala, en el nivel superior o en una categoría, opcionalmente oculto a los estudiantes. Lo devuelve tal como lo muestra la configuración. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "maxGrade": "",
+      "scaleId": "Una escala en lugar de puntos",
+      "categoryId": "La categoría en la que ponerlo, tal como la da get_gradebook_setup",
+      "hidden": ""
+    }
+  },
+  "update_grade_category": {
+    "source": "8e6b149532f4",
+    "title": "Actualizar una categoría de calificación",
+    "description": "Cambia una categoría de calificación de get_gradebook_setup: su nombre, su agregación, su peso en su categoría padre (porcentaje, que sustituye al automático) o moverla a otra categoría. La devuelve tras el cambio. Cambia cómo se calculan las calificaciones: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "categoryId": "",
+      "name": "",
+      "aggregation": "",
+      "weight": "Porcentaje",
+      "parentId": "La categoría a la que moverla"
+    }
+  },
+  "delete_grade_category": {
+    "source": "32369c385bf1",
+    "title": "Eliminar una categoría de calificación",
+    "description": "Elimina una categoría de calificación: Moodle mueve lo que contenía a su categoría padre y elimina las calificaciones de su total; la categoría propia del curso no se puede eliminar. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "categoryId": ""
+    }
+  },
+  "delete_grade_item": {
+    "source": "0ae2242bb458",
+    "title": "Eliminar un elemento de calificación manual",
+    "description": "Elimina un elemento de calificación manual y todas sus calificaciones. El elemento de una actividad va con su actividad, así que se rechaza. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "itemId": ""
+    }
+  },
+  "list_events": {
+    "source": "cfea514d0765",
+    "title": "Listar los próximos eventos del calendario",
+    "description": "Lista los próximos eventos del calendario de la persona, como hace su vista \"Próximos eventos\", en un curso o en todos: eventos de curso, fechas de las actividades y los eventos propios de la persona.",
+    "inputs": {
+      "courseId": "Solo los de este curso; todos los cursos si falta"
+    }
+  },
+  "create_event": {
+    "source": "354700dab0f8",
+    "title": "Crear un evento de curso",
+    "description": "Crea un evento en el calendario de un curso, que ven sus participantes: un nombre, un inicio (ISO 8601 con su zona horaria) y, opcionalmente, una duración y una descripción (HTML). Devuelve el evento. Visible para el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "start": "ISO 8601, p. ej. 2026-11-03T10:00:00+01:00",
+      "durationMinutes": "",
+      "description": "HTML"
+    }
+  },
+  "delete_event": {
+    "source": "cc51959db138",
+    "title": "Eliminar un evento del calendario",
+    "description": "Elimina un evento del calendario que la persona puede gestionar (un evento de curso, o uno propio), por su id de list_events o create_event. Las fechas de las actividades se cambian en la actividad. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "eventId": ""
+    }
+  },
+  "get_event": {
+    "source": "180066706257",
+    "title": "Leer un evento del calendario",
+    "description": "Lee un evento del calendario por su id, tal como los da list_events.",
+    "inputs": {
+      "eventId": ""
+    }
+  },
+  "update_event": {
+    "source": "a663d0d255ce",
+    "title": "Cambiar un evento del calendario",
+    "description": "Cambia un evento del calendario mediante el propio formulario del calendario: solo cambia lo que se indica; un nuevo inicio mantiene su duración salvo que se indique una nueva. Las fechas de las actividades se cambian en la actividad. Devuelve el evento tras el cambio. Visible para el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "eventId": "",
+      "name": "",
+      "description": "HTML",
+      "start": "ISO 8601",
+      "durationMinutes": "",
+      "until": "O el fin, ISO 8601",
+      "location": "",
+      "wholeSeries": "Para un evento repetido: cambiar todos"
+    }
+  },
+  "show_browser": {
+    "source": "f8a782f612e4",
+    "title": "Mostrar u ocultar el navegador",
+    "description": "Muestra el navegador a la persona, para que pueda ver lo que hacen las herramientas: la ventana se abre ahora (la sesión se mantiene) y cada herramienta trae al frente la página de Moodle en la que trabaja. O lo oculta de nuevo: la ventana se cierra y las herramientas siguen sin ella. Solo cuando la persona pide verlo o dejar de verlo. Las pestañas abiertas no sobreviven al cambio; lo que se guardó en Moodle sí. No cambia nada en Moodle.",
+    "inputs": {
+      "visible": "true para mostrar el navegador y seguir en él a las herramientas, false para ocultarlo"
+    }
+  },
+  "browser_navigate": {
+    "source": "ad28d60a3bff",
+    "title": "Navegador: abrir una página",
+    "description": "Abre una página del sitio Moodle configurado en la pestaña de las herramientas del navegador: una URL del sitio, o una ruta relativa a él. Otros sitios se rechazan. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella. Trabaja en una pestaña de la sesión del servidor (la que muestra show_browser; las herramientas de Moodle pueden moverla mientras el navegador se muestra).",
+    "inputs": {
+      "url": "Una URL del sitio, o una ruta relativa a él (course/view.php?id=3)"
+    }
+  },
+  "browser_snapshot": {
+    "source": "5cd6f3ac3ccd",
+    "title": "Navegador: leer la página",
+    "description": "La página de la pestaña de las herramientas del navegador como árbol de accesibilidad (roles, nombres, valores), con una ref por elemento ([ref=e12]) para las demás herramientas del navegador. Por defecto solo la región principal (#region-main, donde Moodle pone el contenido), o la página entera, o el subárbol de un elemento por su ref. Se corta a los 30000 caracteres: si se corta, haz una instantánea de una parte más reducida. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.",
+    "inputs": {
+      "scope": "\"main\" (por defecto): la región principal de Moodle; \"page\": todo, navegación incluida",
+      "ref": "Solo el subárbol de este elemento (de una instantánea anterior)"
+    }
+  },
+  "browser_click": {
+    "source": "488c72733349",
+    "title": "Navegador: hacer clic",
+    "description": "Hace clic en un elemento de la pestaña de las herramientas del navegador por su ref de la instantánea (un enlace, botón, casilla, pestaña…) y espera a la página a la que lleva. Los enlaces a otros sitios se bloquean. Un clic puede cambiar el sitio (guardar, eliminar, enviar): confírmalo antes con la persona, como con cualquier cambio en Moodle. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.",
+    "inputs": {
+      "ref": "La ref del elemento de la última browser_snapshot, como e12",
+      "doubleClick": ""
+    }
+  },
+  "browser_type": {
+    "source": "1edd48d1cfd3",
+    "title": "Navegador: escribir",
+    "description": "Rellena un campo de texto de la pestaña de las herramientas del navegador por su ref de la instantánea, sustituyendo lo que contiene; opcionalmente pulsa Intro después. Los campos de contraseña se rechazan: la persona inicia sesión por sí misma (login). Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.",
+    "inputs": {
+      "ref": "La ref del elemento de la última browser_snapshot, como e12",
+      "text": "",
+      "submit": "Pulsar Intro después de escribir"
+    }
+  },
+  "browser_select": {
+    "source": "f56a68d5a2ea",
+    "title": "Navegador: elegir opciones",
+    "description": "Elige opciones en un desplegable de la pestaña de las herramientas del navegador por su ref de la instantánea, por sus valores o sus etiquetas visibles (varias en un desplegable múltiple). Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.",
+    "inputs": {
+      "ref": "La ref del elemento de la última browser_snapshot, como e12",
+      "options": ""
+    }
+  },
+  "browser_upload": {
+    "source": "560b69aff30f",
+    "title": "Navegador: elegir archivos",
+    "description": "Pone archivos locales en un campo de archivo de la pestaña de las herramientas del navegador por su ref de la instantánea (en el selector de archivos de Moodle, el campo \"Subir un archivo\"), como si la persona los hubiera elegido. Rutas absolutas. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.",
+    "inputs": {
+      "ref": "La ref del elemento de la última browser_snapshot, como e12",
+      "paths": "Rutas absolutas de archivos locales"
+    }
+  },
+  "browser_screenshot": {
+    "source": "caf9284cedab",
+    "title": "Navegador: captura de pantalla",
+    "description": "Una imagen de la pestaña de las herramientas del navegador (lo que está a la vista), o de un elemento por su ref de la instantánea. Para lo que el árbol de accesibilidad no puede decir (maquetación, imágenes, un canvas); el texto se lee con browser_snapshot. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.",
+    "inputs": {
+      "ref": "La ref del elemento de la última browser_snapshot, como e12"
+    }
+  },
+  "browser_wait": {
+    "source": "a7feac337d44",
+    "title": "Navegador: esperar",
+    "description": "Espera en la pestaña de las herramientas del navegador hasta que aparezca un texto, hasta que desaparezca (en la página o en cualquier marco dentro de ella, como el de un paquete SCORM), o unos segundos (como máximo 30): para páginas que cargan o cambian por sí solas. Un último recurso: úsala solo cuando ninguna herramienta de Moodle cubra la tarea, y di cuál es la tarea, para que se pueda crear una herramienta para ella.",
+    "inputs": {
+      "text": "Esperar hasta que aparezca este texto",
+      "textGone": "Esperar hasta que desaparezca este texto",
+      "seconds": "Esperar este tiempo (con un texto: lo máximo que esperar; por defecto 10)"
+    }
+  },
+  "server_info": {
+    "source": "07666436d31d",
+    "title": "Información del servidor",
+    "description": "Muestra la versión de este servidor y su configuración efectiva: el sitio Moodle, la carpeta del perfil del navegador, el navegador y de dónde viene cada ajuste. No contiene secretos. No abre el navegador.",
+    "inputs": {}
+  }
+}

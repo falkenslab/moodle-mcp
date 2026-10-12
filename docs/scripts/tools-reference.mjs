@@ -3,13 +3,18 @@
 //   node scripts/tools-reference.mjs
 // Every tool belongs to one area below; a tool missing from them fails the script, so a new tool
 // can't go unlisted.
-import { mkdirSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Client } from "../../node_modules/@modelcontextprotocol/sdk/dist/esm/client/index.js";
 import { StdioClientTransport } from "../../node_modules/@modelcontextprotocol/sdk/dist/esm/client/stdio.js";
 
 const SERVER = fileURLToPath(new URL("../../dist/server.mjs", import.meta.url));
+// The Spanish titles, descriptions and inputs, each with a hash of the English it translates: when the
+// English changes, the tool shows in English until its translation is brought up to date.
+//   node scripts/tools-reference.mjs --english <file>   writes the English to translate, with the hashes
+const TRANSLATIONS = fileURLToPath(new URL("../i18n/es/tools.json", import.meta.url));
 const OUT = {
   en: fileURLToPath(new URL("../content/reference/tools.md", import.meta.url)),
   es: fileURLToPath(new URL("../i18n/es/docusaurus-plugin-content-docs/current/reference/tools.md", import.meta.url)),
@@ -40,6 +45,8 @@ const TEXT = {
     teacher: "Teacher",
     student: "Student",
     inputs: "Inputs",
+    params: ["Input", "Type", "Description"],
+    types: {},
     none: "No inputs.",
     required: "required",
     yes: "yes",
@@ -50,12 +57,14 @@ const TEXT = {
   es: {
     title: "Herramientas",
     intro: (n, d) =>
-      `moodle-mcp tiene **${n} herramientas**, ${d} con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente (en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.\n\nEn las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento) o guardan un fichero en tu ordenador (\`download_file\`, \`export_grades\`); las de sesión, como iniciar sesión o mostrar el navegador, siempre están.`,
+      `moodle-mcp tiene **${n} herramientas**, ${d} con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.\n\nEn las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento) o guardan un fichero en tu ordenador (\`download_file\`, \`export_grades\`); las de sesión, como iniciar sesión o mostrar el navegador, siempre están.`,
     area: "Herramienta",
     changes: "Solo lectura",
     teacher: "Profesor",
     student: "Alumno",
     inputs: "Parámetros",
+    params: ["Parámetro", "Tipo", "Descripción"],
+    types: { string: "texto", integer: "entero", number: "número", boolean: "sí o no", object: "objeto", array: "lista", item: "elemento", list: "lista de", or: "o" },
     none: "Sin parámetros.",
     required: "obligatorio",
     yes: "sí",
@@ -89,13 +98,34 @@ if (unlisted.length || gone.length) {
   process.exit(1);
 }
 
+// What a tool says in English: the part a translation stands for, and its hash.
+const english = (tool) => ({ title: tool.title ?? "", description: tool.description ?? "", inputs: Object.fromEntries(Object.entries(tool.inputSchema?.properties ?? {}).map(([k, v]) => [k, v.description ?? ""])) });
+const hash = (tool) => createHash("sha256").update(JSON.stringify(english(tool))).digest("hex").slice(0, 12);
+if (process.argv[2] === "--english") {
+  writeFileSync(process.argv[3], JSON.stringify(Object.fromEntries(tools.map((tool) => [tool.name, { source: hash(tool), ...english(tool) }])), null, 2) + "\n");
+  console.log(`${process.argv[3]}: ${tools.length} tools`);
+  process.exit(0);
+}
+const translations = existsSync(TRANSLATIONS) ? JSON.parse(readFileSync(TRANSLATIONS, "utf8")) : {};
+const untranslated = [];
+// A tool's texts in a language: Spanish from the translations when they're for this English.
+function texts(tool, lang) {
+  const en = english(tool);
+  if (lang === "en") return en;
+  const tr = translations[tool.name];
+  if (tr?.source === hash(tool)) return { title: tr.title, description: tr.description, inputs: { ...en.inputs, ...tr.inputs } };
+  untranslated.push(tool.name);
+  return en;
+}
+
 const cell = (text) => String(text ?? "").replace(/\|/g, "\\|").replace(/\n+/g, " ").replace(/[{}<>]/g, (c) => `&#${c.charCodeAt(0)};`);
-const typeOf = (schema) => {
+const typeOf = (schema, words) => {
+  const w = (word) => words[word] ?? word;
   if (!schema) return "";
   if (schema.enum) return schema.enum.map((v) => `\`${v}\``).join(", ");
-  if (schema.type === "array") return `${typeOf(schema.items) || "item"} list`;
-  if (schema.anyOf) return schema.anyOf.map(typeOf).filter(Boolean).join(" or ");
-  return Array.isArray(schema.type) ? schema.type.join(" or ") : (schema.type ?? "");
+  if (schema.type === "array") return words.list ? `${w("list")} ${typeOf(schema.items, words) || w("item")}` : `${typeOf(schema.items, words) || "item"} list`;
+  if (schema.anyOf) return schema.anyOf.map((s) => typeOf(s, words)).filter(Boolean).join(` ${w("or")} `);
+  return Array.isArray(schema.type) ? schema.type.map(w).join(` ${w("or")} `) : w(schema.type ?? "");
 };
 
 for (const [lang, t] of Object.entries(TEXT)) {
@@ -118,23 +148,25 @@ for (const [lang, t] of Object.entries(TEXT)) {
     lines.push(`| ${t.area} | ${t.changes} | ${t.teacher} | ${t.student} |`, "| --- | :-: | :-: | :-: |");
     for (const name of area.tools) {
       const tool = tools.find((x) => x.name === name);
-      lines.push(`| [\`${name}\`](#${name.replace(/_/g, "-")}) ${cell(tool.title ? `· ${tool.title}` : "")} | ${readOnly.has(name) ? "✓" : ""} | ${teacher.has(name) ? "✓" : ""} | ${student.has(name) ? "✓" : ""} |`);
+      const { title } = texts(tool, lang);
+      lines.push(`| [\`${name}\`](#${name.replace(/_/g, "-")}) ${cell(title ? `· ${title}` : "")} | ${readOnly.has(name) ? "✓" : ""} | ${teacher.has(name) ? "✓" : ""} | ${student.has(name) ? "✓" : ""} |`);
     }
     lines.push("");
     for (const name of area.tools) {
       const tool = tools.find((x) => x.name === name);
+      const said = texts(tool, lang);
       lines.push(`### \`${name}\` {#${name.replace(/_/g, "-")}}`, "");
-      if (tool.title) lines.push(`**${cell(tool.title)}**`, "");
+      if (said.title) lines.push(`**${cell(said.title)}**`, "");
       if (!pseudonymized.has(name)) lines.push(`:::note
 ${t.clearOnly}
 :::`, "");
-      lines.push(cell(tool.description), "");
+      lines.push(cell(said.description), "");
       const props = Object.entries(tool.inputSchema?.properties ?? {});
       if (props.length) {
         const required = new Set(tool.inputSchema.required ?? []);
-        lines.push("<details>", `<summary>${t.inputs}</summary>`, "", `| | | |`, "| --- | --- | --- |");
+        lines.push("<details>", `<summary>${t.inputs}</summary>`, "", `| ${t.params.join(" | ")} |`, "| --- | --- | --- |");
         for (const [key, schema] of props) {
-          lines.push(`| \`${key}\`${required.has(key) ? ` (${t.required})` : ""} | ${cell(typeOf(schema))} | ${cell(schema.description)} |`);
+          lines.push(`| \`${key}\`${required.has(key) ? ` (${t.required})` : ""} | ${cell(typeOf(schema, t.types))} | ${cell(said.inputs[key])} |`);
         }
         lines.push("", "</details>", "");
       } else {
@@ -146,3 +178,6 @@ ${t.clearOnly}
   writeFileSync(OUT[lang], lines.join("\n"));
   console.log(`${OUT[lang]}: ${tools.length} tools`);
 }
+// Twice the same tool when its title and its section are both in English: once is enough to say.
+const stale = [...new Set(untranslated)];
+if (stale.length) console.warn(`Shown in English in the Spanish reference, no translation for their current text in ${TRANSLATIONS}: ${stale.join(", ")}.`);

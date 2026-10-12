@@ -21,8 +21,8 @@ Counts as visible: a tool added, removed or renamed; a tool's inputs, outputs, a
 
 | Change | Where |
 | --- | --- |
-| A tool added or removed | Its area in `docs/scripts/tools-reference.mjs` (the script fails on an unplaced tool), then `npm run tools` in `docs/` regenerates the reference in both languages; tool counts in the site's pages (`grep -rn "137\|tools instead" docs/content docs/i18n`); `.minispec/core/project.md`'s Status, `.minispec/tool-catalog.md`'s Status column, the `driver-tools` card's row |
-| A tool's behavior or contract | Its description (that's what agents read; the reference regenerates from it) and any site page that explains it, use cases included |
+| A tool added or removed | Its area in `docs/scripts/tools-reference.mjs` (the script fails on an unplaced tool) and its Spanish translation in `docs/i18n/es/tools.json`, then `npm run tools` in `docs/` regenerates the reference in both languages; tool counts in the site's pages (`grep -rn "137\|tools instead" docs/content docs/i18n`); `.minispec/core/project.md`'s Status, `.minispec/tool-catalog.md`'s Status column, the `driver-tools` card's row |
+| A tool's behavior or contract | Its description (that's what agents read; the reference regenerates from it), its Spanish translation in `docs/i18n/es/tools.json` (`node scripts/tools-reference.mjs --english <file>` in `docs/` gives the new English and its `source` hash; a tool whose hash doesn't match shows in English, and `npm run tools` names it), and any site page that explains it, use cases included |
 | A new piece of the server (a module, a wrapper) | `.minispec/core/architecture.md` |
 | A setting | The site's `settings` page (and `privacy` or `limits` when it's one of those), `src/config.ts`'s usage text, `configure`'s description, `server_info` |
 | Usage rules for agents | `src/instructions.ts` (and its test) |
