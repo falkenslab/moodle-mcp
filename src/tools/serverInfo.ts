@@ -3,7 +3,7 @@ import { z } from "zod";
 import { redactUrl } from "../config.js";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "../version.js";
 import { ROLES } from "./roles.js";
-import { SCOPES, STUDENT_DATA_LEVELS, activeScopes } from "./scopes.js";
+import { ACCESS_LEVELS, SCOPES, STUDENT_DATA_LEVELS, activeScopes } from "./scopes.js";
 import type { RegisterTool, ToolContext } from "./types.js";
 
 const source = z.enum(["configure", "argument", "environment", "default"]);
@@ -20,8 +20,9 @@ export const serverInfoSchema = {
   scopes: z.array(z.enum(SCOPES)).describe("The kinds of tools in force (ADR-015), student data's blocks applied"),
   studentData: z.enum(STUDENT_DATA_LEVELS).describe("How others' data reaches the agent: block (no tools on it), pseudonymize or clear (ADR-016)"),
   role: z.enum(ROLES).describe("The role whose tools the agent gets: teacher, student or all (ADR-018)"),
+  access: z.enum(ACCESS_LEVELS).describe("read: only the tools that change nothing in Moodle; write: all (ADR-020)"),
   sources: z
-    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source })
+    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source })
     .describe("Where each setting came from: configure, argument, environment or default"),
   visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
   browserOpen: z.boolean().describe("Whether the browser is running"),
@@ -48,6 +49,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     scopes: [...activeScopes(config)],
     studentData: config.studentData,
     role: config.role,
+    access: config.access,
     sources: { ...config.sources },
     visible: browser.visible(),
     browserOpen: openChannel !== undefined,

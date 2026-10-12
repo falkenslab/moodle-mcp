@@ -11,7 +11,7 @@ import { PACKAGE_NAME, PACKAGE_VERSION } from "./version.js";
 /** The MCP server with its instructions and tools, not yet connected to a transport. */
 export function createServer(context: ToolContext): McpServer {
   const { config } = context;
-  const restricted = config.scopes.length < SCOPES.length || config.studentData === "block" || config.role !== "all";
+  const restricted = config.scopes.length < SCOPES.length || config.studentData === "block" || config.role !== "all" || config.access === "read";
   const server = new McpServer({ name: PACKAGE_NAME, version: PACKAGE_VERSION }, { instructions: instructionsFor({ restricted, description: describeLimits(config) }) });
   // The pseudonymization net first, so it wraps the others: it sees what the agent will (ADR-019).
   pseudonymizeTools(server, context);

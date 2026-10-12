@@ -2,7 +2,7 @@ import { z } from "zod";
 import { ConfigError, atLeastAsStrict, parseProfileDir, parseScopeSetting } from "../config.js";
 import { findMoodleSite } from "@falkenslab/moodle-driver";
 import { ROLES, roleWithin } from "./roles.js";
-import { STUDENT_DATA_LEVELS, applyScopes } from "./scopes.js";
+import { ACCESS_LEVELS, STUDENT_DATA_LEVELS, applyScopes } from "./scopes.js";
 import { serverInfo, serverInfoSchema } from "./serverInfo.js";
 import type { RegisterTool } from "./types.js";
 
@@ -14,6 +14,7 @@ const inputSchema = {
   scopes: z.string().optional().describe("Narrow the kinds of tools for this session: a profile (teacher, student, content) or scopes (content, student-data, grading, communication, as-student, browser). Only fewer than now, never more"),
   studentData: z.enum(STUDENT_DATA_LEVELS).optional().describe("Tighten how others' data reaches you for this session (block is strictest). Only stricter than now, never looser"),
   role: z.enum(ROLES).optional().describe("Keep only one role's tools for this session (teacher or student), from all; never back to all"),
+  access: z.enum(ACCESS_LEVELS).optional().describe("read: keep only the tools that change nothing in Moodle for this session; never back to write"),
 };
 
 /**
@@ -26,12 +27,12 @@ export const registerConfigure: RegisterTool = (server, context) => {
     {
       title: "Configure the server",
       description:
-        "Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes) or the role (role) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.",
+        "Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes), the role (role) or access to read only (access) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.",
       inputSchema,
       outputSchema: serverInfoSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
-    async ({ url, headless, profileDir, trail, scopes, studentData, role }) => {
+    async ({ url, headless, profileDir, trail, scopes, studentData, role, access }) => {
       const { config, browser } = context;
       // Narrowing only, and only from where the session is now: the agent can't undo what the person set (ADR-015, ADR-016).
       const narrowed = scopes !== undefined ? parseScopeSetting(scopes) : undefined;
@@ -39,6 +40,9 @@ export const registerConfigure: RegisterTool = (server, context) => {
       if (wider.length > 0) throw new ConfigError(`configure can only narrow the scopes: ${wider.join(", ")} isn't allowed now (${config.scopes.join(", ")}). Widening is the person's, in the client's configuration of the server.`);
       if (studentData !== undefined && !atLeastAsStrict(studentData, config.studentData)) {
         throw new ConfigError(`configure can only tighten student data: it's ${config.studentData} now. Loosening it is the person's, in the client's configuration of the server.`);
+      }
+      if (access === "write" && config.access === "read") {
+        throw new ConfigError("configure can only narrow access to read: it's read now. Allowing changes is the person's, in the client's configuration of the server.");
       }
       if (role !== undefined && !roleWithin(role, config.role)) {
         throw new ConfigError(`configure can only narrow the role: it's ${config.role} now. Changing it otherwise is the person's, in the client's configuration of the server.`);
@@ -78,7 +82,11 @@ export const registerConfigure: RegisterTool = (server, context) => {
         config.role = role;
         config.sources.role = "configure";
       }
-      if (narrowed !== undefined || studentData !== undefined || role !== undefined) applyScopes(server, config);
+      if (access !== undefined) {
+        config.access = access;
+        config.sources.access = "configure";
+      }
+      if (narrowed !== undefined || studentData !== undefined || role !== undefined || access !== undefined) applyScopes(server, config);
 
       const info = serverInfo(context);
       return { content: [{ type: "text", text: JSON.stringify(info, null, 2) }], structuredContent: info };

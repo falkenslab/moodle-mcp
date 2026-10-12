@@ -5,7 +5,7 @@ import { parseArgs } from "node:util";
 import { CHANNELS, MoodleUrlError, TRAILS, parseSiteUrl, type Channel, type Trail } from "@falkenslab/moodle-driver";
 import { z } from "zod";
 import { ROLES, type Role } from "./tools/roles.js";
-import { PROFILES, STUDENT_DATA_LEVELS, parseScopes, type Scope, type StudentDataLevel } from "./tools/scopes.js";
+import { ACCESS_LEVELS, PROFILES, STUDENT_DATA_LEVELS, parseScopes, type AccessLevel, type Scope, type StudentDataLevel } from "./tools/scopes.js";
 
 // Channels and trails are the driver's (its ADR-001 and ADR-005); the server only picks among them.
 export { CHANNELS, SYSTEM_CHANNELS, TRAILS, type Channel, type Trail } from "@falkenslab/moodle-driver";
@@ -36,8 +36,10 @@ export interface Config {
   studentData: StudentDataLevel;
   /** The role whose tools the agent gets (ADR-018). */
   role: Role;
+  /** Whether the agent may change Moodle, or only read it (ADR-020). */
+  access: AccessLevel;
   /** What the person set at start-up: configure can narrow below it, never go past it. */
-  limits: { scopes: Scope[]; studentData: StudentDataLevel; role: Role };
+  limits: { scopes: Scope[]; studentData: StudentDataLevel; role: Role; access: AccessLevel };
   sources: {
     moodleUrl?: SettingSource;
     profileDir: SettingSource;
@@ -48,6 +50,7 @@ export interface Config {
     scopes: SettingSource;
     studentData: SettingSource;
     role: SettingSource;
+    access: SettingSource;
   };
 }
 
@@ -81,6 +84,8 @@ Options (each overrides its environment variable):
                         clear (names, for a local model)
   --role <role>         Tools for a role: teacher, student or   MOODLE_MCP_ROLE (default: all)
                         all (every tool)
+  --access <level>      read (only tools that change nothing)   MOODLE_MCP_ACCESS (default: write)
+                        or write
   --help                Show this help
   --version             Show the version`;
 
@@ -140,6 +145,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         scopes: { type: "string" },
         "student-data": { type: "string" },
         role: { type: "string" },
+        access: { type: "string" },
         help: { type: "boolean" },
         version: { type: "boolean" },
       },
@@ -160,6 +166,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const level = studentData ? parseStudentData(studentData.value) : DEFAULT_STUDENT_DATA;
   const roleSetting = pick(values.role, env.MOODLE_MCP_ROLE);
   const role = roleSetting ? parseRole(roleSetting.value) : "all";
+  const accessSetting = pick(values.access, env.MOODLE_MCP_ACCESS);
+  const access = accessSetting ? parseAccess(accessSetting.value) : "write";
 
   const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env);
   const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env);
@@ -174,7 +182,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     scopes: scopeList,
     studentData: level,
     role,
-    limits: { scopes: scopeList, studentData: level, role },
+    access,
+    limits: { scopes: scopeList, studentData: level, role, access },
     sources: {
       ...(url ? { moodleUrl: url.source } : {}),
       profileDir: profile?.source ?? "default",
@@ -185,6 +194,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       scopes: scopes?.source ?? "default",
       studentData: studentData?.source ?? "default",
       role: roleSetting?.source ?? "default",
+      access: accessSetting?.source ?? "default",
     },
   };
 }
@@ -212,6 +222,12 @@ export function parseProfileDir(value: string, packageRoot: string = PACKAGE_ROO
 
 // Others reach the agent as aliases unless the person chooses otherwise (ADR-016).
 const DEFAULT_STUDENT_DATA: StudentDataLevel = "pseudonymize";
+
+export function parseAccess(value: string): AccessLevel {
+  const access = value.trim().toLowerCase();
+  if (!(ACCESS_LEVELS as readonly string[]).includes(access)) throw new ConfigError(`Access must be one of ${ACCESS_LEVELS.join(", ")}, not "${value}".`);
+  return access as AccessLevel;
+}
 
 export function parseRole(value: string): Role {
   const role = value.trim().toLowerCase();

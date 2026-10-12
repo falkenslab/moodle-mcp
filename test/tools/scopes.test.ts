@@ -174,3 +174,29 @@ describe("tools for a role", () => {
     assert.match((await connect(testConfig({ role: "student" }))).getInstructions() ?? "", /This server is limited \(role student;/);
   });
 });
+
+describe("read-only access", () => {
+  it("keeps only the tools that change nothing, the session's aside, and combines with the role", async () => {
+    const client = await connect(testConfig({ role: "teacher", access: "read" }));
+    const { tools } = await client.listTools();
+    for (const tool of tools) assert.ok(tool.annotations?.readOnlyHint === true || SESSION.includes(tool.name), tool.name);
+    const listed = tools.map((t) => t.name);
+    for (const present of ["get_submissions", "get_grader_report", "get_course_logs", "get_course_structure", "login", "configure"]) assert.ok(listed.includes(present), present);
+    for (const absent of ["grade_submission", "create_activity", "send_message", "get_lesson_page", "start_quiz_attempt", "browser_click"]) assert.ok(!listed.includes(absent), absent);
+    // A client that kept its old list is refused, before Moodle is touched.
+    const refused = await client.callTool({ name: "grade_submission", arguments: { assignmentId: 3, userId: 7, grade: "5" } });
+    assert.equal(refused.isError, true);
+    assert.match(client.getInstructions() ?? "", /This server is limited \(read-only; role teacher;/);
+  });
+
+  it("lets configure narrow to read, never back, and reads it at start-up", async () => {
+    const client = await connect(testConfig());
+    const configure = (access: string) => client.callTool({ name: "configure", arguments: { access } });
+    assert.equal((await configure("read")).isError, undefined);
+    assert.ok(!(await names(client)).includes("create_activity"));
+    assert.match(JSON.stringify((await configure("write")).content), /only narrow access to read/);
+    assert.equal((loadConfig(["--access", "READ"], {}) as Config).access, "read");
+    assert.equal((loadConfig([], { MOODLE_MCP_ACCESS: "read" }) as Config).access, "read");
+    assert.throws(() => loadConfig(["--access", "none"], {}), /must be one of read, write/);
+  });
+});

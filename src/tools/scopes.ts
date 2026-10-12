@@ -17,6 +17,13 @@ export const PROFILES: Record<string, readonly Scope[]> = {
   content: ["content"],
 };
 
+/** Whether the agent may change Moodle (ADR-020): `read` keeps only the tools that change nothing. */
+export const ACCESS_LEVELS = ["read", "write"] as const;
+export type AccessLevel = (typeof ACCESS_LEVELS)[number];
+
+// The tools that only read, as each declares itself (`readOnlyHint`) when it's registered.
+const readOnlyTools = new Set<string>();
+
 /** How others' data reaches the agent, strictest first (ADR-016). */
 export const STUDENT_DATA_LEVELS = ["block", "pseudonymize", "clear"] as const;
 export type StudentDataLevel = (typeof STUDENT_DATA_LEVELS)[number];
@@ -198,9 +205,10 @@ export function activeScopes(config: Pick<Config, "scopes" | "studentData">): Se
 }
 
 /** Whether a tool exists for the agent under this configuration. */
-export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role">): boolean {
+export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role" | "access">): boolean {
   if (SESSION_TOOLS.has(tool)) return true;
   if (!roleAllows(tool, config.role)) return false;
+  if (config.access === "read" && !readOnlyTools.has(tool)) return false;
   // A picture can't be redacted (ADR-017).
   if (tool === "browser_screenshot" && config.studentData !== "clear") return false;
   const active = activeScopes(config);
@@ -236,6 +244,7 @@ export function scopeTools(server: McpServer, config: Config): void {
   registered.set(server, tools);
   const register = server.registerTool.bind(server) as (name: string, settings: unknown, handler: Handler) => RegisteredTool;
   (server as unknown as { registerTool: typeof register }).registerTool = (name, settings, handler) => {
+    if ((settings as { annotations?: { readOnlyHint?: boolean } }).annotations?.readOnlyHint === true) readOnlyTools.add(name);
     const tool = register(name, settings, async (args, extra) => {
       // A client that missed the list change can still call a hidden tool: the server says no.
       if (!toolAllowed(name, config)) throw new OutOfScopeError(`${name} is outside what this server allows (${describeLimits(config)}). The person sets that in the client's configuration of the server; it can't be widened from here.`);
@@ -256,8 +265,8 @@ export function applyScopes(server: McpServer, config: Config): void {
 }
 
 /** The limits in words, for messages and the instructions. */
-export function describeLimits(config: Pick<Config, "scopes" | "studentData" | "role">): string {
-  return `${config.role === "all" ? "" : `role ${config.role}; `}scopes ${[...activeScopes(config)].join(", ") || "none"}; student data ${config.studentData}`;
+export function describeLimits(config: Pick<Config, "scopes" | "studentData" | "role" | "access">): string {
+  return `${config.access === "read" ? "read-only; " : ""}${config.role === "all" ? "" : `role ${config.role}; `}scopes ${[...activeScopes(config)].join(", ") || "none"}; student data ${config.studentData}`;
 }
 
 /** A scope list or profile name, as the person writes it: `content`, `teacher`, `content,communication`… */
