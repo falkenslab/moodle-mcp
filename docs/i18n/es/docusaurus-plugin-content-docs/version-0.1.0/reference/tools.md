@@ -13,15 +13,15 @@ En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: 
 
 ## Sesión {#session}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`login`](#login) · Log in to Moodle | ✓ | ✓ | ✓ |
-| [`logout`](#logout) · Log out of Moodle | ✓ | ✓ | ✓ |
-| [`get_me`](#get-me) · Who am I | ✓ | ✓ | ✓ |
-| [`get_site_info`](#get-site-info) · Get the Moodle site's info | ✓ | ✓ | ✓ |
-| [`configure`](#configure) · Configure the server | ✓ | ✓ | ✓ |
-| [`show_browser`](#show-browser) · Show or hide the browser | ✓ | ✓ | ✓ |
-| [`server_info`](#server-info) · Server info | ✓ | ✓ | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`login`](#login) | Log in to Moodle | ✓ | ✓ | ✓ |
+| [`logout`](#logout) | Log out of Moodle | ✓ | ✓ | ✓ |
+| [`get_me`](#get-me) | Who am I | ✓ | ✓ | ✓ |
+| [`get_site_info`](#get-site-info) | Get the Moodle site's info | ✓ | ✓ | ✓ |
+| [`configure`](#configure) | Configure the server | ✓ | ✓ | ✓ |
+| [`show_browser`](#show-browser) | Show or hide the browser | ✓ | ✓ | ✓ |
+| [`server_info`](#server-info) | Server info | ✓ | ✓ | ✓ |
 
 ### `login` {#login}
 
@@ -123,22 +123,22 @@ Show this server's version and effective configuration: the Moodle site, the bro
 
 ## Cursos y contenido {#content}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_courses`](#list-courses) · List my courses | ✓ | ✓ | ✓ |
-| [`get_course_structure`](#get-course-structure) · Get a course's structure | ✓ | ✓ | ✓ |
-| [`get_activity_content`](#get-activity-content) · Read an activity's content | ✓ | ✓ | ✓ |
-| [`get_activity_settings`](#get-activity-settings) · Get an activity's settings | ✓ | ✓ |  |
-| [`download_file`](#download-file) · Download a file from Moodle |  | ✓ | ✓ |
-| [`create_activity`](#create-activity) · Create an activity or resource |  | ✓ |  |
-| [`update_activity`](#update-activity) · Update an activity's settings or content |  | ✓ |  |
-| [`edit_activity`](#edit-activity) · Move, rename, show or hide an activity |  | ✓ |  |
-| [`duplicate_activity`](#duplicate-activity) · Duplicate an activity |  | ✓ |  |
-| [`delete_activity`](#delete-activity) · Delete an activity |  | ✓ |  |
-| [`add_section`](#add-section) · Add a section |  | ✓ |  |
-| [`edit_section`](#edit-section) · Edit a section |  | ✓ |  |
-| [`delete_section`](#delete-section) · Delete a section |  | ✓ |  |
-| [`update_course`](#update-course) · Update a course's settings |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_courses`](#list-courses) | List my courses | ✓ | ✓ | ✓ |
+| [`get_course_structure`](#get-course-structure) | Get a course's structure | ✓ | ✓ | ✓ |
+| [`get_activity_content`](#get-activity-content) | Read an activity's content | ✓ | ✓ | ✓ |
+| [`get_activity_settings`](#get-activity-settings) | Get an activity's settings | ✓ | ✓ |  |
+| [`download_file`](#download-file) | Download a file from Moodle |  | ✓ | ✓ |
+| [`create_activity`](#create-activity) | Create an activity or resource |  | ✓ |  |
+| [`update_activity`](#update-activity) | Update an activity's settings or content |  | ✓ |  |
+| [`edit_activity`](#edit-activity) | Move, rename, show or hide an activity |  | ✓ |  |
+| [`duplicate_activity`](#duplicate-activity) | Duplicate an activity |  | ✓ |  |
+| [`delete_activity`](#delete-activity) | Delete an activity |  | ✓ |  |
+| [`add_section`](#add-section) | Add a section |  | ✓ |  |
+| [`edit_section`](#edit-section) | Edit a section |  | ✓ |  |
+| [`delete_section`](#delete-section) | Delete a section |  | ✓ |  |
+| [`update_course`](#update-course) | Update a course's settings |  | ✓ |  |
 
 ### `list_courses` {#list-courses}
 
@@ -401,13 +401,13 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 
 ## Ciclo de vida del curso {#lifecycle}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`copy_course`](#copy-course) · Copy a course |  | ✓ |  |
-| [`backup_course`](#backup-course) · Back up a course |  | ✓ |  |
-| [`restore_course`](#restore-course) · Restore a course backup |  | ✓ |  |
-| [`import_activities`](#import-activities) · Import activities from another course |  | ✓ |  |
-| [`reset_course`](#reset-course) · Reset a course for a new year |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`copy_course`](#copy-course) | Copy a course |  | ✓ |  |
+| [`backup_course`](#backup-course) | Back up a course |  | ✓ |  |
+| [`restore_course`](#restore-course) | Restore a course backup |  | ✓ |  |
+| [`import_activities`](#import-activities) | Import activities from another course |  | ✓ |  |
+| [`reset_course`](#reset-course) | Reset a course for a new year |  | ✓ |  |
 
 ### `copy_course` {#copy-course}
 
@@ -508,15 +508,15 @@ Reset a course as Moodle's reset form does: delete only what's named in delete (
 
 ## Tareas y calificación {#grading}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_assignments`](#list-assignments) · List a course's assignments | ✓ | ✓ | ✓ |
-| [`get_submissions`](#get-submissions) · Get an assignment's submissions | ✓ | ✓ |  |
-| [`get_rubric`](#get-rubric) · Get an assignment's grading criteria | ✓ | ✓ |  |
-| [`grade_submission`](#grade-submission) · Grade a submission |  | ✓ |  |
-| [`grant_extension`](#grant-extension) · Grant an assignment extension |  | ✓ |  |
-| [`set_workflow_state`](#set-workflow-state) · Set the marking workflow state |  | ✓ |  |
-| [`allocate_marker`](#allocate-marker) · Allocate a marker to submissions |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_assignments`](#list-assignments) | List a course's assignments | ✓ | ✓ | ✓ |
+| [`get_submissions`](#get-submissions) | Get an assignment's submissions | ✓ | ✓ |  |
+| [`get_rubric`](#get-rubric) | Get an assignment's grading criteria | ✓ | ✓ |  |
+| [`grade_submission`](#grade-submission) | Grade a submission |  | ✓ |  |
+| [`grant_extension`](#grant-extension) | Grant an assignment extension |  | ✓ |  |
+| [`set_workflow_state`](#set-workflow-state) | Set the marking workflow state |  | ✓ |  |
+| [`allocate_marker`](#allocate-marker) | Allocate a marker to submissions |  | ✓ |  |
 
 ### `list_assignments` {#list-assignments}
 
@@ -649,25 +649,25 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 
 ## Cuestionarios y preguntas {#quizzes}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_question_banks`](#list-question-banks) · List a course's question banks | ✓ | ✓ |  |
-| [`list_questions`](#list-questions) · List a bank's questions | ✓ | ✓ |  |
-| [`import_questions`](#import-questions) · Import questions into a bank |  | ✓ |  |
-| [`create_question`](#create-question) · Create a question in a bank |  | ✓ |  |
-| [`update_question`](#update-question) · Change a question in a bank |  | ✓ |  |
-| [`delete_questions`](#delete-questions) · Delete questions from a bank |  | ✓ |  |
-| [`set_question_status`](#set-question-status) · Set a question ready or draft |  | ✓ |  |
-| [`get_quiz_structure`](#get-quiz-structure) · Get a quiz's questions | ✓ | ✓ |  |
-| [`add_questions_to_quiz`](#add-questions-to-quiz) · Add questions to a quiz |  | ✓ |  |
-| [`edit_quiz_slot`](#edit-quiz-slot) · Change a quiz question's mark or place |  | ✓ |  |
-| [`remove_quiz_slot`](#remove-quiz-slot) · Remove a question from a quiz |  | ✓ |  |
-| [`set_quiz_pages`](#set-quiz-pages) · Set a quiz's pages |  | ✓ |  |
-| [`add_quiz_section`](#add-quiz-section) · Add a section to a quiz |  | ✓ |  |
-| [`get_quiz_results`](#get-quiz-results) · Get a quiz's results | ✓ | ✓ |  |
-| [`set_quiz_override`](#set-quiz-override) · Set a quiz override for a participant |  | ✓ |  |
-| [`list_questions_to_grade`](#list-questions-to-grade) · List a quiz's questions to grade by hand | ✓ | ✓ |  |
-| [`grade_quiz_question`](#grade-quiz-question) · Grade a quiz question by hand |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_question_banks`](#list-question-banks) | List a course's question banks | ✓ | ✓ |  |
+| [`list_questions`](#list-questions) | List a bank's questions | ✓ | ✓ |  |
+| [`import_questions`](#import-questions) | Import questions into a bank |  | ✓ |  |
+| [`create_question`](#create-question) | Create a question in a bank |  | ✓ |  |
+| [`update_question`](#update-question) | Change a question in a bank |  | ✓ |  |
+| [`delete_questions`](#delete-questions) | Delete questions from a bank |  | ✓ |  |
+| [`set_question_status`](#set-question-status) | Set a question ready or draft |  | ✓ |  |
+| [`get_quiz_structure`](#get-quiz-structure) | Get a quiz's questions | ✓ | ✓ |  |
+| [`add_questions_to_quiz`](#add-questions-to-quiz) | Add questions to a quiz |  | ✓ |  |
+| [`edit_quiz_slot`](#edit-quiz-slot) | Change a quiz question's mark or place |  | ✓ |  |
+| [`remove_quiz_slot`](#remove-quiz-slot) | Remove a question from a quiz |  | ✓ |  |
+| [`set_quiz_pages`](#set-quiz-pages) | Set a quiz's pages |  | ✓ |  |
+| [`add_quiz_section`](#add-quiz-section) | Add a section to a quiz |  | ✓ |  |
+| [`get_quiz_results`](#get-quiz-results) | Get a quiz's results | ✓ | ✓ |  |
+| [`set_quiz_override`](#set-quiz-override) | Set a quiz override for a participant |  | ✓ |  |
+| [`list_questions_to_grade`](#list-questions-to-grade) | List a quiz's questions to grade by hand | ✓ | ✓ |  |
+| [`grade_quiz_question`](#grade-quiz-question) | Grade a quiz question by hand |  | ✓ |  |
 
 ### `list_question_banks` {#list-question-banks}
 
@@ -971,20 +971,20 @@ Grade one question of a finished attempt by hand, with a comment, as the review'
 
 ## Calificador y progreso {#gradebook}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`get_grader_report`](#get-grader-report) · Get a course's grades | ✓ | ✓ |  |
-| [`set_grade`](#set-grade) · Set a grade in the gradebook |  | ✓ |  |
-| [`export_grades`](#export-grades) · Export a course's grades to a file |  | ✓ |  |
-| [`get_gradebook_setup`](#get-gradebook-setup) · Get a course's gradebook setup | ✓ | ✓ |  |
-| [`add_grade_item`](#add-grade-item) · Add a manual grade item |  | ✓ |  |
-| [`update_grade_item`](#update-grade-item) · Update a grade item |  | ✓ |  |
-| [`delete_grade_item`](#delete-grade-item) · Delete a manual grade item |  | ✓ |  |
-| [`add_grade_category`](#add-grade-category) · Add a grade category |  | ✓ |  |
-| [`update_grade_category`](#update-grade-category) · Update a grade category |  | ✓ |  |
-| [`delete_grade_category`](#delete-grade-category) · Delete a grade category |  | ✓ |  |
-| [`get_completion_report`](#get-completion-report) · Get a course's activity completion | ✓ | ✓ |  |
-| [`override_completion`](#override-completion) · Set a participant's activity completion |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`get_grader_report`](#get-grader-report) | Get a course's grades | ✓ | ✓ |  |
+| [`set_grade`](#set-grade) | Set a grade in the gradebook |  | ✓ |  |
+| [`export_grades`](#export-grades) | Export a course's grades to a file |  | ✓ |  |
+| [`get_gradebook_setup`](#get-gradebook-setup) | Get a course's gradebook setup | ✓ | ✓ |  |
+| [`add_grade_item`](#add-grade-item) | Add a manual grade item |  | ✓ |  |
+| [`update_grade_item`](#update-grade-item) | Update a grade item |  | ✓ |  |
+| [`delete_grade_item`](#delete-grade-item) | Delete a manual grade item |  | ✓ |  |
+| [`add_grade_category`](#add-grade-category) | Add a grade category |  | ✓ |  |
+| [`update_grade_category`](#update-grade-category) | Update a grade category |  | ✓ |  |
+| [`delete_grade_category`](#delete-grade-category) | Delete a grade category |  | ✓ |  |
+| [`get_completion_report`](#get-completion-report) | Get a course's activity completion | ✓ | ✓ |  |
+| [`override_completion`](#override-completion) | Set a participant's activity completion |  | ✓ |  |
 
 ### `get_grader_report` {#get-grader-report}
 
@@ -1205,11 +1205,11 @@ Set a participant's completion of an activity as a teacher does from the progres
 
 ## Informes {#reports}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`get_activity_report`](#get-activity-report) · Get a course's activity views | ✓ | ✓ |  |
-| [`get_participation_report`](#get-participation-report) · Get who took part in an activity | ✓ | ✓ |  |
-| [`get_course_logs`](#get-course-logs) · Get a course's logs | ✓ | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`get_activity_report`](#get-activity-report) | Get a course's activity views | ✓ | ✓ |  |
+| [`get_participation_report`](#get-participation-report) | Get who took part in an activity | ✓ | ✓ |  |
+| [`get_course_logs`](#get-course-logs) | Get a course's logs | ✓ | ✓ |  |
 
 ### `get_activity_report` {#get-activity-report}
 
@@ -1271,24 +1271,24 @@ Read a course's logs, newest first, as its logs report lists them: by a user (an
 
 ## Participantes y grupos {#participants}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_participants`](#list-participants) · List a course's participants | ✓ | ✓ | ✓ |
-| [`list_potential_users`](#list-potential-users) · Find users to enrol | ✓ | ✓ |  |
-| [`enrol_users`](#enrol-users) · Enrol users in a course |  | ✓ |  |
-| [`unenrol_user`](#unenrol-user) · Unenrol a user from a course |  | ✓ |  |
-| [`set_user_roles`](#set-user-roles) · Set someone's roles in a course |  | ✓ |  |
-| [`list_enrolment_methods`](#list-enrolment-methods) · List a course's enrolment methods | ✓ | ✓ |  |
-| [`set_enrolment_method`](#set-enrolment-method) · Set an enrolment method |  | ✓ |  |
-| [`list_groups`](#list-groups) · List a course's groups | ✓ | ✓ | ✓ |
-| [`create_group`](#create-group) · Create a group |  | ✓ |  |
-| [`update_group`](#update-group) · Change a group |  | ✓ |  |
-| [`delete_group`](#delete-group) · Delete a group |  | ✓ |  |
-| [`set_group_members`](#set-group-members) · Add or remove a group's members |  | ✓ |  |
-| [`list_groupings`](#list-groupings) · List a course's groupings | ✓ | ✓ |  |
-| [`create_grouping`](#create-grouping) · Create a grouping |  | ✓ |  |
-| [`delete_grouping`](#delete-grouping) · Delete a grouping |  | ✓ |  |
-| [`set_grouping_groups`](#set-grouping-groups) · Set a grouping's groups |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_participants`](#list-participants) | List a course's participants | ✓ | ✓ | ✓ |
+| [`list_potential_users`](#list-potential-users) | Find users to enrol | ✓ | ✓ |  |
+| [`enrol_users`](#enrol-users) | Enrol users in a course |  | ✓ |  |
+| [`unenrol_user`](#unenrol-user) | Unenrol a user from a course |  | ✓ |  |
+| [`set_user_roles`](#set-user-roles) | Set someone's roles in a course |  | ✓ |  |
+| [`list_enrolment_methods`](#list-enrolment-methods) | List a course's enrolment methods | ✓ | ✓ |  |
+| [`set_enrolment_method`](#set-enrolment-method) | Set an enrolment method |  | ✓ |  |
+| [`list_groups`](#list-groups) | List a course's groups | ✓ | ✓ | ✓ |
+| [`create_group`](#create-group) | Create a group |  | ✓ |  |
+| [`update_group`](#update-group) | Change a group |  | ✓ |  |
+| [`delete_group`](#delete-group) | Delete a group |  | ✓ |  |
+| [`set_group_members`](#set-group-members) | Add or remove a group's members |  | ✓ |  |
+| [`list_groupings`](#list-groupings) | List a course's groupings | ✓ | ✓ |  |
+| [`create_grouping`](#create-grouping) | Create a grouping |  | ✓ |  |
+| [`delete_grouping`](#delete-grouping) | Delete a grouping |  | ✓ |  |
+| [`set_grouping_groups`](#set-grouping-groups) | Set a grouping's groups |  | ✓ |  |
 
 ### `list_participants` {#list-participants}
 
@@ -1573,28 +1573,28 @@ Make a grouping's groups exactly groupIds, adding and removing as its page does;
 
 ## Foros, talleres y mensajes {#communication}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_discussions`](#list-discussions) · List a forum's discussions | ✓ | ✓ | ✓ |
-| [`get_discussion`](#get-discussion) · Read a forum discussion | ✓ | ✓ | ✓ |
-| [`reply_to_post`](#reply-to-post) · Reply to a forum post |  | ✓ | ✓ |
-| [`create_discussion`](#create-discussion) · Start a forum discussion |  | ✓ | ✓ |
-| [`edit_post`](#edit-post) · Edit a forum post |  | ✓ | ✓ |
-| [`delete_post`](#delete-post) · Delete a forum post |  | ✓ | ✓ |
-| [`set_discussion_state`](#set-discussion-state) · Pin or lock a discussion |  | ✓ |  |
-| [`set_discussion_subscription`](#set-discussion-subscription) · Subscribe to a forum discussion |  | ✓ | ✓ |
-| [`get_forum_grades`](#get-forum-grades) · Get a forum's whole-forum grades | ✓ | ✓ |  |
-| [`grade_forum_user`](#grade-forum-user) · Give a whole-forum grade |  | ✓ |  |
-| [`rate`](#rate) · Rate a post, entry or record |  | ✓ | ✓ |
-| [`get_workshop`](#get-workshop) · Read a workshop | ✓ | ✓ |  |
-| [`set_workshop_phase`](#set-workshop-phase) · Switch a workshop's phase |  | ✓ |  |
-| [`assess_workshop_submission`](#assess-workshop-submission) · Assess a workshop submission |  | ✓ | ✓ |
-| [`list_notifications`](#list-notifications) · List my notifications | ✓ | ✓ | ✓ |
-| [`mark_notifications_read`](#mark-notifications-read) · Mark my notifications read |  | ✓ | ✓ |
-| [`list_conversations`](#list-conversations) · List my conversations | ✓ | ✓ | ✓ |
-| [`get_conversation`](#get-conversation) · Read a conversation | ✓ | ✓ | ✓ |
-| [`send_message`](#send-message) · Send a private message |  | ✓ | ✓ |
-| [`message_participants`](#message-participants) · Message several participants |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_discussions`](#list-discussions) | List a forum's discussions | ✓ | ✓ | ✓ |
+| [`get_discussion`](#get-discussion) | Read a forum discussion | ✓ | ✓ | ✓ |
+| [`reply_to_post`](#reply-to-post) | Reply to a forum post |  | ✓ | ✓ |
+| [`create_discussion`](#create-discussion) | Start a forum discussion |  | ✓ | ✓ |
+| [`edit_post`](#edit-post) | Edit a forum post |  | ✓ | ✓ |
+| [`delete_post`](#delete-post) | Delete a forum post |  | ✓ | ✓ |
+| [`set_discussion_state`](#set-discussion-state) | Pin or lock a discussion |  | ✓ |  |
+| [`set_discussion_subscription`](#set-discussion-subscription) | Subscribe to a forum discussion |  | ✓ | ✓ |
+| [`get_forum_grades`](#get-forum-grades) | Get a forum's whole-forum grades | ✓ | ✓ |  |
+| [`grade_forum_user`](#grade-forum-user) | Give a whole-forum grade |  | ✓ |  |
+| [`rate`](#rate) | Rate a post, entry or record |  | ✓ | ✓ |
+| [`get_workshop`](#get-workshop) | Read a workshop | ✓ | ✓ |  |
+| [`set_workshop_phase`](#set-workshop-phase) | Switch a workshop's phase |  | ✓ |  |
+| [`assess_workshop_submission`](#assess-workshop-submission) | Assess a workshop submission |  | ✓ | ✓ |
+| [`list_notifications`](#list-notifications) | List my notifications | ✓ | ✓ | ✓ |
+| [`mark_notifications_read`](#mark-notifications-read) | Mark my notifications read |  | ✓ | ✓ |
+| [`list_conversations`](#list-conversations) | List my conversations | ✓ | ✓ | ✓ |
+| [`get_conversation`](#get-conversation) | Read a conversation | ✓ | ✓ | ✓ |
+| [`send_message`](#send-message) | Send a private message |  | ✓ | ✓ |
+| [`message_participants`](#message-participants) | Message several participants |  | ✓ |  |
 
 ### `list_discussions` {#list-discussions}
 
@@ -1927,17 +1927,17 @@ Send one private message to several participants of a course, as the participant
 
 ## Calendario y pendientes {#calendar}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_events`](#list-events) · List upcoming calendar events | ✓ | ✓ | ✓ |
-| [`get_event`](#get-event) · Read a calendar event | ✓ | ✓ | ✓ |
-| [`create_event`](#create-event) · Create a course event |  | ✓ |  |
-| [`update_event`](#update-event) · Change a calendar event |  | ✓ |  |
-| [`delete_event`](#delete-event) · Delete a calendar event |  | ✓ |  |
-| [`list_deadlines`](#list-deadlines) · List upcoming deadlines | ✓ | ✓ | ✓ |
-| [`list_pending`](#list-pending) · List what I have left | ✓ |  | ✓ |
-| [`get_activities_overview`](#get-activities-overview) · Get a course's activities overview | ✓ | ✓ | ✓ |
-| [`get_course_updates`](#get-course-updates) · Get what changed in a course | ✓ | ✓ | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_events`](#list-events) | List upcoming calendar events | ✓ | ✓ | ✓ |
+| [`get_event`](#get-event) | Read a calendar event | ✓ | ✓ | ✓ |
+| [`create_event`](#create-event) | Create a course event |  | ✓ |  |
+| [`update_event`](#update-event) | Change a calendar event |  | ✓ |  |
+| [`delete_event`](#delete-event) | Delete a calendar event |  | ✓ |  |
+| [`list_deadlines`](#list-deadlines) | List upcoming deadlines | ✓ | ✓ | ✓ |
+| [`list_pending`](#list-pending) | List what I have left | ✓ |  | ✓ |
+| [`get_activities_overview`](#get-activities-overview) | Get a course's activities overview | ✓ | ✓ | ✓ |
+| [`get_course_updates`](#get-course-updates) | Get what changed in a course | ✓ | ✓ | ✓ |
 
 ### `list_events` {#list-events}
 
@@ -2090,28 +2090,28 @@ What changed in a course's activities since a date (settings, content files, for
 
 ## Como alumno {#student}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`get_my_grades`](#get-my-grades) · Get my grades | ✓ |  | ✓ |
-| [`get_assignment`](#get-assignment) · Get an assignment as a student | ✓ |  | ✓ |
-| [`save_submission`](#save-submission) · Save my submission |  |  | ✓ |
-| [`submit_assignment`](#submit-assignment) · Submit my assignment for grading |  |  | ✓ |
-| [`get_quiz_info`](#get-quiz-info) · Get a quiz's information and my attempts | ✓ | ✓ | ✓ |
-| [`start_quiz_attempt`](#start-quiz-attempt) · Start or continue a quiz attempt |  |  | ✓ |
-| [`get_quiz_attempt`](#get-quiz-attempt) · Read an attempt's questions | ✓ |  | ✓ |
-| [`answer_quiz_questions`](#answer-quiz-questions) · Answer quiz questions |  |  | ✓ |
-| [`finish_quiz_attempt`](#finish-quiz-attempt) · Submit a quiz attempt |  |  | ✓ |
-| [`get_attempt_review`](#get-attempt-review) · Review a finished attempt | ✓ | ✓ | ✓ |
-| [`get_survey`](#get-survey) · Get a survey's questions | ✓ |  | ✓ |
-| [`submit_survey`](#submit-survey) · Answer and submit a survey |  |  | ✓ |
-| [`get_choice`](#get-choice) · Read a choice | ✓ | ✓ | ✓ |
-| [`answer_choice`](#answer-choice) · Answer a choice |  |  | ✓ |
-| [`get_lesson_page`](#get-lesson-page) · Read the current lesson page |  |  | ✓ |
-| [`answer_lesson_page`](#answer-lesson-page) · Answer a lesson page |  |  | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`get_my_grades`](#get-my-grades) | Get my grades | ✓ |  | ✓ |
+| [`get_assignment`](#get-assignment) | Get an assignment as a student | ✓ |  | ✓ |
+| [`save_submission`](#save-submission) | Save my submission |  |  | ✓ |
+| [`submit_assignment`](#submit-assignment) | Submit my assignment for grading |  |  | ✓ |
+| [`get_quiz_info`](#get-quiz-info) | Get a quiz's information and my attempts | ✓ | ✓ | ✓ |
+| [`start_quiz_attempt`](#start-quiz-attempt) | Start or continue a quiz attempt |  |  | ✓ |
+| [`get_quiz_attempt`](#get-quiz-attempt) | Read an attempt's questions | ✓ |  | ✓ |
+| [`answer_quiz_questions`](#answer-quiz-questions) | Answer quiz questions |  |  | ✓ |
+| [`finish_quiz_attempt`](#finish-quiz-attempt) | Submit a quiz attempt |  |  | ✓ |
+| [`get_attempt_review`](#get-attempt-review) | Review a finished attempt | ✓ | ✓ | ✓ |
+| [`get_survey`](#get-survey) | Get a survey's questions | ✓ |  | ✓ |
+| [`submit_survey`](#submit-survey) | Answer and submit a survey |  |  | ✓ |
+| [`get_choice`](#get-choice) | Read a choice | ✓ | ✓ | ✓ |
+| [`answer_choice`](#answer-choice) | Answer a choice |  |  | ✓ |
+| [`get_lesson_page`](#get-lesson-page) | Read the current lesson page |  |  | ✓ |
+| [`answer_lesson_page`](#answer-lesson-page) | Answer a lesson page |  |  | ✓ |
 | [`get_h5p_activity`](#get-h5p-activity) · Read an H5P activity |  | ✓ | ✓ |
-| [`get_scorm`](#get-scorm) · Read a SCORM activity | ✓ | ✓ | ✓ |
-| [`open_scorm`](#open-scorm) · Open a SCORM package to do it |  |  | ✓ |
-| [`set_completion`](#set-completion) · Mark an activity as done |  |  | ✓ |
+| [`get_scorm`](#get-scorm) | Read a SCORM activity | ✓ | ✓ | ✓ |
+| [`open_scorm`](#open-scorm) | Open a SCORM package to do it |  |  | ✓ |
+| [`set_completion`](#set-completion) | Mark an activity as done |  |  | ✓ |
 
 ### `get_my_grades` {#get-my-grades}
 
@@ -2431,16 +2431,16 @@ Mark the person's own completion of an activity with manual completion, done or 
 
 Son para lo que no cubre ninguna otra herramienta: un plugin, un ajuste poco común, el interior de un paquete SCORM. El agente las usa solo en tu sitio, nunca escribe contraseñas y dice qué tarea las necesitó. Con `pseudonymize`, nunca abren páginas sobre personas (participantes, calificaciones, informes, foros, mensajes).
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`browser_navigate`](#browser-navigate) · Browser: open a page |  | ✓ | ✓ |
-| [`browser_snapshot`](#browser-snapshot) · Browser: read the page | ✓ | ✓ | ✓ |
-| [`browser_click`](#browser-click) · Browser: click |  | ✓ | ✓ |
-| [`browser_type`](#browser-type) · Browser: type |  | ✓ | ✓ |
-| [`browser_select`](#browser-select) · Browser: choose options |  | ✓ | ✓ |
-| [`browser_upload`](#browser-upload) · Browser: choose files |  | ✓ | ✓ |
-| [`browser_screenshot`](#browser-screenshot) · Browser: screenshot | ✓ | ✓ | ✓ |
-| [`browser_wait`](#browser-wait) · Browser: wait | ✓ | ✓ | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`browser_navigate`](#browser-navigate) | Browser: open a page |  | ✓ | ✓ |
+| [`browser_snapshot`](#browser-snapshot) | Browser: read the page | ✓ | ✓ | ✓ |
+| [`browser_click`](#browser-click) | Browser: click |  | ✓ | ✓ |
+| [`browser_type`](#browser-type) | Browser: type |  | ✓ | ✓ |
+| [`browser_select`](#browser-select) | Browser: choose options |  | ✓ | ✓ |
+| [`browser_upload`](#browser-upload) | Browser: choose files |  | ✓ | ✓ |
+| [`browser_screenshot`](#browser-screenshot) | Browser: screenshot | ✓ | ✓ | ✓ |
+| [`browser_wait`](#browser-wait) | Browser: wait | ✓ | ✓ | ✓ |
 
 ### `browser_navigate` {#browser-navigate}
 

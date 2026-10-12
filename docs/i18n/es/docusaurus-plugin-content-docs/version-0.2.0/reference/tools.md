@@ -13,15 +13,15 @@ En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: 
 
 ## Sesión {#session}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`login`](#login) · Iniciar sesión en Moodle | ✓ | ✓ | ✓ |
-| [`logout`](#logout) · Cerrar sesión en Moodle | ✓ | ✓ | ✓ |
-| [`get_me`](#get-me) · Quién soy | ✓ | ✓ | ✓ |
-| [`get_site_info`](#get-site-info) · Obtener la información del sitio Moodle | ✓ | ✓ | ✓ |
-| [`configure`](#configure) · Configurar el servidor | ✓ | ✓ | ✓ |
-| [`show_browser`](#show-browser) · Mostrar u ocultar el navegador | ✓ | ✓ | ✓ |
-| [`server_info`](#server-info) · Información del servidor | ✓ | ✓ | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`login`](#login) | Iniciar sesión en Moodle | ✓ | ✓ | ✓ |
+| [`logout`](#logout) | Cerrar sesión en Moodle | ✓ | ✓ | ✓ |
+| [`get_me`](#get-me) | Quién soy | ✓ | ✓ | ✓ |
+| [`get_site_info`](#get-site-info) | Obtener la información del sitio Moodle | ✓ | ✓ | ✓ |
+| [`configure`](#configure) | Configurar el servidor | ✓ | ✓ | ✓ |
+| [`show_browser`](#show-browser) | Mostrar u ocultar el navegador | ✓ | ✓ | ✓ |
+| [`server_info`](#server-info) | Información del servidor | ✓ | ✓ | ✓ |
 
 ### `login` {#login}
 
@@ -123,22 +123,22 @@ Muestra la versión de este servidor y su configuración efectiva: el sitio Mood
 
 ## Cursos y contenido {#content}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_courses`](#list-courses) · Listar mis cursos | ✓ | ✓ | ✓ |
-| [`get_course_structure`](#get-course-structure) · Obtener la estructura de un curso | ✓ | ✓ | ✓ |
-| [`get_activity_content`](#get-activity-content) · Leer el contenido de una actividad | ✓ | ✓ | ✓ |
-| [`get_activity_settings`](#get-activity-settings) · Obtener los ajustes de una actividad | ✓ | ✓ |  |
-| [`download_file`](#download-file) · Descargar un archivo de Moodle |  | ✓ | ✓ |
-| [`create_activity`](#create-activity) · Crear una actividad o un recurso |  | ✓ |  |
-| [`update_activity`](#update-activity) · Actualizar los ajustes o el contenido de una actividad |  | ✓ |  |
-| [`edit_activity`](#edit-activity) · Mover, renombrar, mostrar u ocultar una actividad |  | ✓ |  |
-| [`duplicate_activity`](#duplicate-activity) · Duplicar una actividad |  | ✓ |  |
-| [`delete_activity`](#delete-activity) · Eliminar una actividad |  | ✓ |  |
-| [`add_section`](#add-section) · Añadir una sección |  | ✓ |  |
-| [`edit_section`](#edit-section) · Editar una sección |  | ✓ |  |
-| [`delete_section`](#delete-section) · Eliminar una sección |  | ✓ |  |
-| [`update_course`](#update-course) · Actualizar la configuración de un curso |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_courses`](#list-courses) | Listar mis cursos | ✓ | ✓ | ✓ |
+| [`get_course_structure`](#get-course-structure) | Obtener la estructura de un curso | ✓ | ✓ | ✓ |
+| [`get_activity_content`](#get-activity-content) | Leer el contenido de una actividad | ✓ | ✓ | ✓ |
+| [`get_activity_settings`](#get-activity-settings) | Obtener los ajustes de una actividad | ✓ | ✓ |  |
+| [`download_file`](#download-file) | Descargar un archivo de Moodle |  | ✓ | ✓ |
+| [`create_activity`](#create-activity) | Crear una actividad o un recurso |  | ✓ |  |
+| [`update_activity`](#update-activity) | Actualizar los ajustes o el contenido de una actividad |  | ✓ |  |
+| [`edit_activity`](#edit-activity) | Mover, renombrar, mostrar u ocultar una actividad |  | ✓ |  |
+| [`duplicate_activity`](#duplicate-activity) | Duplicar una actividad |  | ✓ |  |
+| [`delete_activity`](#delete-activity) | Eliminar una actividad |  | ✓ |  |
+| [`add_section`](#add-section) | Añadir una sección |  | ✓ |  |
+| [`edit_section`](#edit-section) | Editar una sección |  | ✓ |  |
+| [`delete_section`](#delete-section) | Eliminar una sección |  | ✓ |  |
+| [`update_course`](#update-course) | Actualizar la configuración de un curso |  | ✓ |  |
 
 ### `list_courses` {#list-courses}
 
@@ -401,13 +401,13 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 
 ## Ciclo de vida del curso {#lifecycle}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`copy_course`](#copy-course) · Copiar un curso |  | ✓ |  |
-| [`backup_course`](#backup-course) · Hacer una copia de seguridad de un curso |  | ✓ |  |
-| [`restore_course`](#restore-course) · Restaurar una copia de seguridad de un curso |  | ✓ |  |
-| [`import_activities`](#import-activities) · Importar actividades de otro curso |  | ✓ |  |
-| [`reset_course`](#reset-course) · Reiniciar un curso para un nuevo año |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`copy_course`](#copy-course) | Copiar un curso |  | ✓ |  |
+| [`backup_course`](#backup-course) | Hacer una copia de seguridad de un curso |  | ✓ |  |
+| [`restore_course`](#restore-course) | Restaurar una copia de seguridad de un curso |  | ✓ |  |
+| [`import_activities`](#import-activities) | Importar actividades de otro curso |  | ✓ |  |
+| [`reset_course`](#reset-course) | Reiniciar un curso para un nuevo año |  | ✓ |  |
 
 ### `copy_course` {#copy-course}
 
@@ -508,15 +508,15 @@ Reinicia un curso como hace el formulario de reinicio de Moodle: elimina solo lo
 
 ## Tareas y calificación {#grading}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_assignments`](#list-assignments) · Listar las tareas de un curso | ✓ | ✓ | ✓ |
-| [`get_submissions`](#get-submissions) · Obtener las entregas de una tarea | ✓ | ✓ |  |
-| [`get_rubric`](#get-rubric) · Obtener los criterios de calificación de una tarea | ✓ | ✓ |  |
-| [`grade_submission`](#grade-submission) · Calificar una entrega |  | ✓ |  |
-| [`grant_extension`](#grant-extension) · Conceder una prórroga en una tarea |  | ✓ |  |
-| [`set_workflow_state`](#set-workflow-state) · Establecer el estado del flujo de trabajo de calificación |  | ✓ |  |
-| [`allocate_marker`](#allocate-marker) · Asignar un evaluador a entregas |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_assignments`](#list-assignments) | Listar las tareas de un curso | ✓ | ✓ | ✓ |
+| [`get_submissions`](#get-submissions) | Obtener las entregas de una tarea | ✓ | ✓ |  |
+| [`get_rubric`](#get-rubric) | Obtener los criterios de calificación de una tarea | ✓ | ✓ |  |
+| [`grade_submission`](#grade-submission) | Calificar una entrega |  | ✓ |  |
+| [`grant_extension`](#grant-extension) | Conceder una prórroga en una tarea |  | ✓ |  |
+| [`set_workflow_state`](#set-workflow-state) | Establecer el estado del flujo de trabajo de calificación |  | ✓ |  |
+| [`allocate_marker`](#allocate-marker) | Asignar un evaluador a entregas |  | ✓ |  |
 
 ### `list_assignments` {#list-assignments}
 
@@ -649,25 +649,25 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 
 ## Cuestionarios y preguntas {#quizzes}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_question_banks`](#list-question-banks) · Listar los bancos de preguntas de un curso | ✓ | ✓ |  |
-| [`list_questions`](#list-questions) · Listar las preguntas de un banco | ✓ | ✓ |  |
-| [`import_questions`](#import-questions) · Importar preguntas a un banco |  | ✓ |  |
-| [`create_question`](#create-question) · Crear una pregunta en un banco |  | ✓ |  |
-| [`update_question`](#update-question) · Cambiar una pregunta de un banco |  | ✓ |  |
-| [`delete_questions`](#delete-questions) · Eliminar preguntas de un banco |  | ✓ |  |
-| [`set_question_status`](#set-question-status) · Marcar una pregunta como lista o borrador |  | ✓ |  |
-| [`get_quiz_structure`](#get-quiz-structure) · Obtener las preguntas de un cuestionario | ✓ | ✓ |  |
-| [`add_questions_to_quiz`](#add-questions-to-quiz) · Añadir preguntas a un cuestionario |  | ✓ |  |
-| [`edit_quiz_slot`](#edit-quiz-slot) · Cambiar la puntuación o la posición de una pregunta de un cuestionario |  | ✓ |  |
-| [`remove_quiz_slot`](#remove-quiz-slot) · Quitar una pregunta de un cuestionario |  | ✓ |  |
-| [`set_quiz_pages`](#set-quiz-pages) · Establecer las páginas de un cuestionario |  | ✓ |  |
-| [`add_quiz_section`](#add-quiz-section) · Añadir una sección a un cuestionario |  | ✓ |  |
-| [`get_quiz_results`](#get-quiz-results) · Obtener los resultados de un cuestionario | ✓ | ✓ |  |
-| [`set_quiz_override`](#set-quiz-override) · Establecer una excepción de cuestionario para un participante |  | ✓ |  |
-| [`list_questions_to_grade`](#list-questions-to-grade) · Listar las preguntas de un cuestionario por calificar a mano | ✓ | ✓ |  |
-| [`grade_quiz_question`](#grade-quiz-question) · Calificar a mano una pregunta de cuestionario |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_question_banks`](#list-question-banks) | Listar los bancos de preguntas de un curso | ✓ | ✓ |  |
+| [`list_questions`](#list-questions) | Listar las preguntas de un banco | ✓ | ✓ |  |
+| [`import_questions`](#import-questions) | Importar preguntas a un banco |  | ✓ |  |
+| [`create_question`](#create-question) | Crear una pregunta en un banco |  | ✓ |  |
+| [`update_question`](#update-question) | Cambiar una pregunta de un banco |  | ✓ |  |
+| [`delete_questions`](#delete-questions) | Eliminar preguntas de un banco |  | ✓ |  |
+| [`set_question_status`](#set-question-status) | Marcar una pregunta como lista o borrador |  | ✓ |  |
+| [`get_quiz_structure`](#get-quiz-structure) | Obtener las preguntas de un cuestionario | ✓ | ✓ |  |
+| [`add_questions_to_quiz`](#add-questions-to-quiz) | Añadir preguntas a un cuestionario |  | ✓ |  |
+| [`edit_quiz_slot`](#edit-quiz-slot) | Cambiar la puntuación o la posición de una pregunta de un cuestionario |  | ✓ |  |
+| [`remove_quiz_slot`](#remove-quiz-slot) | Quitar una pregunta de un cuestionario |  | ✓ |  |
+| [`set_quiz_pages`](#set-quiz-pages) | Establecer las páginas de un cuestionario |  | ✓ |  |
+| [`add_quiz_section`](#add-quiz-section) | Añadir una sección a un cuestionario |  | ✓ |  |
+| [`get_quiz_results`](#get-quiz-results) | Obtener los resultados de un cuestionario | ✓ | ✓ |  |
+| [`set_quiz_override`](#set-quiz-override) | Establecer una excepción de cuestionario para un participante |  | ✓ |  |
+| [`list_questions_to_grade`](#list-questions-to-grade) | Listar las preguntas de un cuestionario por calificar a mano | ✓ | ✓ |  |
+| [`grade_quiz_question`](#grade-quiz-question) | Calificar a mano una pregunta de cuestionario |  | ✓ |  |
 
 ### `list_question_banks` {#list-question-banks}
 
@@ -971,20 +971,20 @@ Califica a mano una pregunta de un intento terminado, con un comentario, como ha
 
 ## Calificador y progreso {#gradebook}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`get_grader_report`](#get-grader-report) · Obtener las calificaciones de un curso | ✓ | ✓ |  |
-| [`set_grade`](#set-grade) · Poner una calificación en el libro de calificaciones |  | ✓ |  |
-| [`export_grades`](#export-grades) · Exportar las calificaciones de un curso a un archivo |  | ✓ |  |
-| [`get_gradebook_setup`](#get-gradebook-setup) · Obtener la configuración del libro de calificaciones de un curso | ✓ | ✓ |  |
-| [`add_grade_item`](#add-grade-item) · Añadir un elemento de calificación manual |  | ✓ |  |
-| [`update_grade_item`](#update-grade-item) · Actualizar un elemento de calificación |  | ✓ |  |
-| [`delete_grade_item`](#delete-grade-item) · Eliminar un elemento de calificación manual |  | ✓ |  |
-| [`add_grade_category`](#add-grade-category) · Añadir una categoría de calificación |  | ✓ |  |
-| [`update_grade_category`](#update-grade-category) · Actualizar una categoría de calificación |  | ✓ |  |
-| [`delete_grade_category`](#delete-grade-category) · Eliminar una categoría de calificación |  | ✓ |  |
-| [`get_completion_report`](#get-completion-report) · Obtener la finalización de actividades de un curso | ✓ | ✓ |  |
-| [`override_completion`](#override-completion) · Establecer la finalización de una actividad de un participante |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`get_grader_report`](#get-grader-report) | Obtener las calificaciones de un curso | ✓ | ✓ |  |
+| [`set_grade`](#set-grade) | Poner una calificación en el libro de calificaciones |  | ✓ |  |
+| [`export_grades`](#export-grades) | Exportar las calificaciones de un curso a un archivo |  | ✓ |  |
+| [`get_gradebook_setup`](#get-gradebook-setup) | Obtener la configuración del libro de calificaciones de un curso | ✓ | ✓ |  |
+| [`add_grade_item`](#add-grade-item) | Añadir un elemento de calificación manual |  | ✓ |  |
+| [`update_grade_item`](#update-grade-item) | Actualizar un elemento de calificación |  | ✓ |  |
+| [`delete_grade_item`](#delete-grade-item) | Eliminar un elemento de calificación manual |  | ✓ |  |
+| [`add_grade_category`](#add-grade-category) | Añadir una categoría de calificación |  | ✓ |  |
+| [`update_grade_category`](#update-grade-category) | Actualizar una categoría de calificación |  | ✓ |  |
+| [`delete_grade_category`](#delete-grade-category) | Eliminar una categoría de calificación |  | ✓ |  |
+| [`get_completion_report`](#get-completion-report) | Obtener la finalización de actividades de un curso | ✓ | ✓ |  |
+| [`override_completion`](#override-completion) | Establecer la finalización de una actividad de un participante |  | ✓ |  |
 
 ### `get_grader_report` {#get-grader-report}
 
@@ -1205,11 +1205,11 @@ Establece la finalización de una actividad de un participante como hace un prof
 
 ## Informes {#reports}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`get_activity_report`](#get-activity-report) · Obtener las visualizaciones de actividades de un curso | ✓ | ✓ |  |
-| [`get_participation_report`](#get-participation-report) · Obtener quién ha participado en una actividad | ✓ | ✓ |  |
-| [`get_course_logs`](#get-course-logs) · Obtener los registros de un curso | ✓ | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`get_activity_report`](#get-activity-report) | Obtener las visualizaciones de actividades de un curso | ✓ | ✓ |  |
+| [`get_participation_report`](#get-participation-report) | Obtener quién ha participado en una actividad | ✓ | ✓ |  |
+| [`get_course_logs`](#get-course-logs) | Obtener los registros de un curso | ✓ | ✓ |  |
 
 ### `get_activity_report` {#get-activity-report}
 
@@ -1273,24 +1273,24 @@ Lee los registros de un curso, los más recientes primero, tal como los lista su
 
 ## Participantes y grupos {#participants}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_participants`](#list-participants) · Listar los participantes de un curso | ✓ | ✓ | ✓ |
-| [`list_potential_users`](#list-potential-users) · Buscar usuarios para matricular | ✓ | ✓ |  |
-| [`enrol_users`](#enrol-users) · Matricular usuarios en un curso |  | ✓ |  |
-| [`unenrol_user`](#unenrol-user) · Desmatricular a un usuario de un curso |  | ✓ |  |
-| [`set_user_roles`](#set-user-roles) · Establecer los roles de alguien en un curso |  | ✓ |  |
-| [`list_enrolment_methods`](#list-enrolment-methods) · Listar los métodos de matriculación de un curso | ✓ | ✓ |  |
-| [`set_enrolment_method`](#set-enrolment-method) · Configurar un método de matriculación |  | ✓ |  |
-| [`list_groups`](#list-groups) · Listar los grupos de un curso | ✓ | ✓ | ✓ |
-| [`create_group`](#create-group) · Crear un grupo |  | ✓ |  |
-| [`update_group`](#update-group) · Cambiar un grupo |  | ✓ |  |
-| [`delete_group`](#delete-group) · Eliminar un grupo |  | ✓ |  |
-| [`set_group_members`](#set-group-members) · Añadir o quitar miembros de un grupo |  | ✓ |  |
-| [`list_groupings`](#list-groupings) · Listar los agrupamientos de un curso | ✓ | ✓ |  |
-| [`create_grouping`](#create-grouping) · Crear un agrupamiento |  | ✓ |  |
-| [`delete_grouping`](#delete-grouping) · Eliminar un agrupamiento |  | ✓ |  |
-| [`set_grouping_groups`](#set-grouping-groups) · Establecer los grupos de un agrupamiento |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_participants`](#list-participants) | Listar los participantes de un curso | ✓ | ✓ | ✓ |
+| [`list_potential_users`](#list-potential-users) | Buscar usuarios para matricular | ✓ | ✓ |  |
+| [`enrol_users`](#enrol-users) | Matricular usuarios en un curso |  | ✓ |  |
+| [`unenrol_user`](#unenrol-user) | Desmatricular a un usuario de un curso |  | ✓ |  |
+| [`set_user_roles`](#set-user-roles) | Establecer los roles de alguien en un curso |  | ✓ |  |
+| [`list_enrolment_methods`](#list-enrolment-methods) | Listar los métodos de matriculación de un curso | ✓ | ✓ |  |
+| [`set_enrolment_method`](#set-enrolment-method) | Configurar un método de matriculación |  | ✓ |  |
+| [`list_groups`](#list-groups) | Listar los grupos de un curso | ✓ | ✓ | ✓ |
+| [`create_group`](#create-group) | Crear un grupo |  | ✓ |  |
+| [`update_group`](#update-group) | Cambiar un grupo |  | ✓ |  |
+| [`delete_group`](#delete-group) | Eliminar un grupo |  | ✓ |  |
+| [`set_group_members`](#set-group-members) | Añadir o quitar miembros de un grupo |  | ✓ |  |
+| [`list_groupings`](#list-groupings) | Listar los agrupamientos de un curso | ✓ | ✓ |  |
+| [`create_grouping`](#create-grouping) | Crear un agrupamiento |  | ✓ |  |
+| [`delete_grouping`](#delete-grouping) | Eliminar un agrupamiento |  | ✓ |  |
+| [`set_grouping_groups`](#set-grouping-groups) | Establecer los grupos de un agrupamiento |  | ✓ |  |
 
 ### `list_participants` {#list-participants}
 
@@ -1575,28 +1575,28 @@ Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y q
 
 ## Foros, talleres y mensajes {#communication}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_discussions`](#list-discussions) · Listar los debates de un foro | ✓ | ✓ | ✓ |
-| [`get_discussion`](#get-discussion) · Leer un debate de un foro | ✓ | ✓ | ✓ |
-| [`reply_to_post`](#reply-to-post) · Responder a un mensaje del foro |  | ✓ | ✓ |
-| [`create_discussion`](#create-discussion) · Iniciar un debate en un foro |  | ✓ | ✓ |
-| [`edit_post`](#edit-post) · Editar un mensaje del foro |  | ✓ | ✓ |
-| [`delete_post`](#delete-post) · Eliminar un mensaje del foro |  | ✓ | ✓ |
-| [`set_discussion_state`](#set-discussion-state) · Fijar o bloquear un debate |  | ✓ |  |
-| [`set_discussion_subscription`](#set-discussion-subscription) · Suscribirse a un debate de un foro |  | ✓ | ✓ |
-| [`get_forum_grades`](#get-forum-grades) · Obtener las calificaciones globales de un foro | ✓ | ✓ |  |
-| [`grade_forum_user`](#grade-forum-user) · Poner una calificación global del foro |  | ✓ |  |
-| [`rate`](#rate) · Valorar un mensaje, entrada o registro |  | ✓ | ✓ |
-| [`get_workshop`](#get-workshop) · Leer un taller | ✓ | ✓ |  |
-| [`set_workshop_phase`](#set-workshop-phase) · Cambiar la fase de un taller |  | ✓ |  |
-| [`assess_workshop_submission`](#assess-workshop-submission) · Evaluar una entrega de un taller |  | ✓ | ✓ |
-| [`list_notifications`](#list-notifications) · Listar mis notificaciones | ✓ | ✓ | ✓ |
-| [`mark_notifications_read`](#mark-notifications-read) · Marcar mis notificaciones como leídas |  | ✓ | ✓ |
-| [`list_conversations`](#list-conversations) · Listar mis conversaciones | ✓ | ✓ | ✓ |
-| [`get_conversation`](#get-conversation) · Leer una conversación | ✓ | ✓ | ✓ |
-| [`send_message`](#send-message) · Enviar un mensaje privado |  | ✓ | ✓ |
-| [`message_participants`](#message-participants) · Enviar un mensaje a varios participantes |  | ✓ |  |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_discussions`](#list-discussions) | Listar los debates de un foro | ✓ | ✓ | ✓ |
+| [`get_discussion`](#get-discussion) | Leer un debate de un foro | ✓ | ✓ | ✓ |
+| [`reply_to_post`](#reply-to-post) | Responder a un mensaje del foro |  | ✓ | ✓ |
+| [`create_discussion`](#create-discussion) | Iniciar un debate en un foro |  | ✓ | ✓ |
+| [`edit_post`](#edit-post) | Editar un mensaje del foro |  | ✓ | ✓ |
+| [`delete_post`](#delete-post) | Eliminar un mensaje del foro |  | ✓ | ✓ |
+| [`set_discussion_state`](#set-discussion-state) | Fijar o bloquear un debate |  | ✓ |  |
+| [`set_discussion_subscription`](#set-discussion-subscription) | Suscribirse a un debate de un foro |  | ✓ | ✓ |
+| [`get_forum_grades`](#get-forum-grades) | Obtener las calificaciones globales de un foro | ✓ | ✓ |  |
+| [`grade_forum_user`](#grade-forum-user) | Poner una calificación global del foro |  | ✓ |  |
+| [`rate`](#rate) | Valorar un mensaje, entrada o registro |  | ✓ | ✓ |
+| [`get_workshop`](#get-workshop) | Leer un taller | ✓ | ✓ |  |
+| [`set_workshop_phase`](#set-workshop-phase) | Cambiar la fase de un taller |  | ✓ |  |
+| [`assess_workshop_submission`](#assess-workshop-submission) | Evaluar una entrega de un taller |  | ✓ | ✓ |
+| [`list_notifications`](#list-notifications) | Listar mis notificaciones | ✓ | ✓ | ✓ |
+| [`mark_notifications_read`](#mark-notifications-read) | Marcar mis notificaciones como leídas |  | ✓ | ✓ |
+| [`list_conversations`](#list-conversations) | Listar mis conversaciones | ✓ | ✓ | ✓ |
+| [`get_conversation`](#get-conversation) | Leer una conversación | ✓ | ✓ | ✓ |
+| [`send_message`](#send-message) | Enviar un mensaje privado |  | ✓ | ✓ |
+| [`message_participants`](#message-participants) | Enviar un mensaje a varios participantes |  | ✓ |  |
 
 ### `list_discussions` {#list-discussions}
 
@@ -1931,17 +1931,17 @@ Envía un mismo mensaje privado a varios participantes de un curso, como hace "E
 
 ## Calendario y pendientes {#calendar}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`list_events`](#list-events) · Listar los próximos eventos del calendario | ✓ | ✓ | ✓ |
-| [`get_event`](#get-event) · Leer un evento del calendario | ✓ | ✓ | ✓ |
-| [`create_event`](#create-event) · Crear un evento de curso |  | ✓ |  |
-| [`update_event`](#update-event) · Cambiar un evento del calendario |  | ✓ |  |
-| [`delete_event`](#delete-event) · Eliminar un evento del calendario |  | ✓ |  |
-| [`list_deadlines`](#list-deadlines) · Listar las próximas fechas límite | ✓ | ✓ | ✓ |
-| [`list_pending`](#list-pending) · Listar lo que me queda | ✓ |  | ✓ |
-| [`get_activities_overview`](#get-activities-overview) · Obtener la vista general de actividades de un curso | ✓ | ✓ | ✓ |
-| [`get_course_updates`](#get-course-updates) · Obtener lo que ha cambiado en un curso | ✓ | ✓ | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_events`](#list-events) | Listar los próximos eventos del calendario | ✓ | ✓ | ✓ |
+| [`get_event`](#get-event) | Leer un evento del calendario | ✓ | ✓ | ✓ |
+| [`create_event`](#create-event) | Crear un evento de curso |  | ✓ |  |
+| [`update_event`](#update-event) | Cambiar un evento del calendario |  | ✓ |  |
+| [`delete_event`](#delete-event) | Eliminar un evento del calendario |  | ✓ |  |
+| [`list_deadlines`](#list-deadlines) | Listar las próximas fechas límite | ✓ | ✓ | ✓ |
+| [`list_pending`](#list-pending) | Listar lo que me queda | ✓ |  | ✓ |
+| [`get_activities_overview`](#get-activities-overview) | Obtener la vista general de actividades de un curso | ✓ | ✓ | ✓ |
+| [`get_course_updates`](#get-course-updates) | Obtener lo que ha cambiado en un curso | ✓ | ✓ | ✓ |
 
 ### `list_events` {#list-events}
 
@@ -2094,28 +2094,28 @@ Lo que ha cambiado en las actividades de un curso desde una fecha (ajustes, arch
 
 ## Como alumno {#student}
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`get_my_grades`](#get-my-grades) · Obtener mis calificaciones | ✓ |  | ✓ |
-| [`get_assignment`](#get-assignment) · Obtener una tarea como estudiante | ✓ |  | ✓ |
-| [`save_submission`](#save-submission) · Guardar mi entrega |  |  | ✓ |
-| [`submit_assignment`](#submit-assignment) · Enviar mi tarea para calificar |  |  | ✓ |
-| [`get_quiz_info`](#get-quiz-info) · Obtener la información de un cuestionario y mis intentos | ✓ | ✓ | ✓ |
-| [`start_quiz_attempt`](#start-quiz-attempt) · Iniciar o continuar un intento de cuestionario |  |  | ✓ |
-| [`get_quiz_attempt`](#get-quiz-attempt) · Leer las preguntas de un intento | ✓ |  | ✓ |
-| [`answer_quiz_questions`](#answer-quiz-questions) · Responder preguntas de un cuestionario |  |  | ✓ |
-| [`finish_quiz_attempt`](#finish-quiz-attempt) · Enviar un intento de cuestionario |  |  | ✓ |
-| [`get_attempt_review`](#get-attempt-review) · Revisar un intento terminado | ✓ | ✓ | ✓ |
-| [`get_survey`](#get-survey) · Obtener las preguntas de una encuesta | ✓ |  | ✓ |
-| [`submit_survey`](#submit-survey) · Responder y enviar una encuesta |  |  | ✓ |
-| [`get_choice`](#get-choice) · Leer una consulta | ✓ | ✓ | ✓ |
-| [`answer_choice`](#answer-choice) · Responder una consulta |  |  | ✓ |
-| [`get_lesson_page`](#get-lesson-page) · Leer la página actual de una lección |  |  | ✓ |
-| [`answer_lesson_page`](#answer-lesson-page) · Responder una página de una lección |  |  | ✓ |
-| [`get_h5p_activity`](#get-h5p-activity) · Leer una actividad H5P | ✓ | ✓ | ✓ |
-| [`get_scorm`](#get-scorm) · Leer una actividad SCORM | ✓ | ✓ | ✓ |
-| [`open_scorm`](#open-scorm) · Abrir un paquete SCORM para hacerlo |  |  | ✓ |
-| [`set_completion`](#set-completion) · Marcar una actividad como hecha |  |  | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`get_my_grades`](#get-my-grades) | Obtener mis calificaciones | ✓ |  | ✓ |
+| [`get_assignment`](#get-assignment) | Obtener una tarea como estudiante | ✓ |  | ✓ |
+| [`save_submission`](#save-submission) | Guardar mi entrega |  |  | ✓ |
+| [`submit_assignment`](#submit-assignment) | Enviar mi tarea para calificar |  |  | ✓ |
+| [`get_quiz_info`](#get-quiz-info) | Obtener la información de un cuestionario y mis intentos | ✓ | ✓ | ✓ |
+| [`start_quiz_attempt`](#start-quiz-attempt) | Iniciar o continuar un intento de cuestionario |  |  | ✓ |
+| [`get_quiz_attempt`](#get-quiz-attempt) | Leer las preguntas de un intento | ✓ |  | ✓ |
+| [`answer_quiz_questions`](#answer-quiz-questions) | Responder preguntas de un cuestionario |  |  | ✓ |
+| [`finish_quiz_attempt`](#finish-quiz-attempt) | Enviar un intento de cuestionario |  |  | ✓ |
+| [`get_attempt_review`](#get-attempt-review) | Revisar un intento terminado | ✓ | ✓ | ✓ |
+| [`get_survey`](#get-survey) | Obtener las preguntas de una encuesta | ✓ |  | ✓ |
+| [`submit_survey`](#submit-survey) | Responder y enviar una encuesta |  |  | ✓ |
+| [`get_choice`](#get-choice) | Leer una consulta | ✓ | ✓ | ✓ |
+| [`answer_choice`](#answer-choice) | Responder una consulta |  |  | ✓ |
+| [`get_lesson_page`](#get-lesson-page) | Leer la página actual de una lección |  |  | ✓ |
+| [`answer_lesson_page`](#answer-lesson-page) | Responder una página de una lección |  |  | ✓ |
+| [`get_h5p_activity`](#get-h5p-activity) | Leer una actividad H5P | ✓ | ✓ | ✓ |
+| [`get_scorm`](#get-scorm) | Leer una actividad SCORM | ✓ | ✓ | ✓ |
+| [`open_scorm`](#open-scorm) | Abrir un paquete SCORM para hacerlo |  |  | ✓ |
+| [`set_completion`](#set-completion) | Marcar una actividad como hecha |  |  | ✓ |
 
 ### `get_my_grades` {#get-my-grades}
 
@@ -2435,16 +2435,16 @@ Marca la finalización propia de la persona en una actividad con finalización m
 
 Son para lo que no cubre ninguna otra herramienta: un plugin, un ajuste poco común, el interior de un paquete SCORM. El agente las usa solo en tu sitio, nunca escribe contraseñas y dice qué tarea las necesitó. Con `pseudonymize`, nunca abren páginas sobre personas (participantes, calificaciones, informes, foros, mensajes).
 
-| Herramienta | Solo lectura | Profesor | Alumno |
-| --- | :-: | :-: | :-: |
-| [`browser_navigate`](#browser-navigate) · Navegador: abrir una página |  | ✓ | ✓ |
-| [`browser_snapshot`](#browser-snapshot) · Navegador: leer la página | ✓ | ✓ | ✓ |
-| [`browser_click`](#browser-click) · Navegador: hacer clic |  | ✓ | ✓ |
-| [`browser_type`](#browser-type) · Navegador: escribir |  | ✓ | ✓ |
-| [`browser_select`](#browser-select) · Navegador: elegir opciones |  | ✓ | ✓ |
-| [`browser_upload`](#browser-upload) · Navegador: elegir archivos |  | ✓ | ✓ |
-| [`browser_screenshot`](#browser-screenshot) · Navegador: captura de pantalla | ✓ | ✓ | ✓ |
-| [`browser_wait`](#browser-wait) · Navegador: esperar | ✓ | ✓ | ✓ |
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`browser_navigate`](#browser-navigate) | Navegador: abrir una página |  | ✓ | ✓ |
+| [`browser_snapshot`](#browser-snapshot) | Navegador: leer la página | ✓ | ✓ | ✓ |
+| [`browser_click`](#browser-click) | Navegador: hacer clic |  | ✓ | ✓ |
+| [`browser_type`](#browser-type) | Navegador: escribir |  | ✓ | ✓ |
+| [`browser_select`](#browser-select) | Navegador: elegir opciones |  | ✓ | ✓ |
+| [`browser_upload`](#browser-upload) | Navegador: elegir archivos |  | ✓ | ✓ |
+| [`browser_screenshot`](#browser-screenshot) | Navegador: captura de pantalla | ✓ | ✓ | ✓ |
+| [`browser_wait`](#browser-wait) | Navegador: esperar | ✓ | ✓ | ✓ |
 
 ### `browser_navigate` {#browser-navigate}
 

@@ -13,15 +13,15 @@ In the tables, ✓ marks the tools you still get with each limit: **Read only** 
 
 ## Session {#session}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`login`](#login) · Log in to Moodle | ✓ | ✓ | ✓ |
-| [`logout`](#logout) · Log out of Moodle | ✓ | ✓ | ✓ |
-| [`get_me`](#get-me) · Who am I | ✓ | ✓ | ✓ |
-| [`get_site_info`](#get-site-info) · Get the Moodle site's info | ✓ | ✓ | ✓ |
-| [`configure`](#configure) · Configure the server | ✓ | ✓ | ✓ |
-| [`show_browser`](#show-browser) · Show or hide the browser | ✓ | ✓ | ✓ |
-| [`server_info`](#server-info) · Server info | ✓ | ✓ | ✓ |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`login`](#login) | Log in to Moodle | ✓ | ✓ | ✓ |
+| [`logout`](#logout) | Log out of Moodle | ✓ | ✓ | ✓ |
+| [`get_me`](#get-me) | Who am I | ✓ | ✓ | ✓ |
+| [`get_site_info`](#get-site-info) | Get the Moodle site's info | ✓ | ✓ | ✓ |
+| [`configure`](#configure) | Configure the server | ✓ | ✓ | ✓ |
+| [`show_browser`](#show-browser) | Show or hide the browser | ✓ | ✓ | ✓ |
+| [`server_info`](#server-info) | Server info | ✓ | ✓ | ✓ |
 
 ### `login` {#login}
 
@@ -32,7 +32,7 @@ Make sure there is a Moodle session. If there is one, returns the logged-in user
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `timeoutSeconds` | integer | How long to wait for the person to log in, in seconds (default 300) |
 
@@ -55,7 +55,7 @@ Tell who the logged-in person is: user id, username, full name, email, language,
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` | integer | A course id (from list_courses) to also get the person's roles and abilities there |
 
@@ -70,7 +70,7 @@ What the Moodle site says about itself: its name, URL, language, how people log 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` | integer | A course to list the activity types that can be added to it |
 
@@ -85,7 +85,7 @@ Set this server's configuration for this session: the Moodle site (url), whether
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `url` | string | The Moodle site's URL, or any page of it (a course URL works: the site is read from it) |
 | `headless` | boolean | Run the browser without a window (logging in always shows one) |
@@ -107,7 +107,7 @@ Show the browser to the person, so they can watch what the tools do: the window 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `visible` (required) | boolean | true to show the browser and follow the tools in it, false to hide it |
 
@@ -123,22 +123,22 @@ Show this server's version and effective configuration: the Moodle site, the bro
 
 ## Courses and content {#content}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`list_courses`](#list-courses) · List my courses | ✓ | ✓ | ✓ |
-| [`get_course_structure`](#get-course-structure) · Get a course's structure | ✓ | ✓ | ✓ |
-| [`get_activity_content`](#get-activity-content) · Read an activity's content | ✓ | ✓ | ✓ |
-| [`get_activity_settings`](#get-activity-settings) · Get an activity's settings | ✓ | ✓ |  |
-| [`download_file`](#download-file) · Download a file from Moodle |  | ✓ | ✓ |
-| [`create_activity`](#create-activity) · Create an activity or resource |  | ✓ |  |
-| [`update_activity`](#update-activity) · Update an activity's settings or content |  | ✓ |  |
-| [`edit_activity`](#edit-activity) · Move, rename, show or hide an activity |  | ✓ |  |
-| [`duplicate_activity`](#duplicate-activity) · Duplicate an activity |  | ✓ |  |
-| [`delete_activity`](#delete-activity) · Delete an activity |  | ✓ |  |
-| [`add_section`](#add-section) · Add a section |  | ✓ |  |
-| [`edit_section`](#edit-section) · Edit a section |  | ✓ |  |
-| [`delete_section`](#delete-section) · Delete a section |  | ✓ |  |
-| [`update_course`](#update-course) · Update a course's settings |  | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_courses`](#list-courses) | List my courses | ✓ | ✓ | ✓ |
+| [`get_course_structure`](#get-course-structure) | Get a course's structure | ✓ | ✓ | ✓ |
+| [`get_activity_content`](#get-activity-content) | Read an activity's content | ✓ | ✓ | ✓ |
+| [`get_activity_settings`](#get-activity-settings) | Get an activity's settings | ✓ | ✓ |  |
+| [`download_file`](#download-file) | Download a file from Moodle |  | ✓ | ✓ |
+| [`create_activity`](#create-activity) | Create an activity or resource |  | ✓ |  |
+| [`update_activity`](#update-activity) | Update an activity's settings or content |  | ✓ |  |
+| [`edit_activity`](#edit-activity) | Move, rename, show or hide an activity |  | ✓ |  |
+| [`duplicate_activity`](#duplicate-activity) | Duplicate an activity |  | ✓ |  |
+| [`delete_activity`](#delete-activity) | Delete an activity |  | ✓ |  |
+| [`add_section`](#add-section) | Add a section |  | ✓ |  |
+| [`edit_section`](#edit-section) | Edit a section |  | ✓ |  |
+| [`delete_section`](#delete-section) | Delete a section |  | ✓ |  |
+| [`update_course`](#update-course) | Update a course's settings |  | ✓ |  |
 
 ### `list_courses` {#list-courses}
 
@@ -149,7 +149,7 @@ List the Moodle courses the logged-in person is enrolled in (as teacher or stude
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `classification` | `all`, `inprogress`, `future`, `past` | Which courses by their dates: "all" (default), "inprogress", "future" or "past" |
 
@@ -164,7 +164,7 @@ Get a Moodle course's sections and activities: ids, names, types, URLs, visibili
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 | `details` | boolean | Also read the course page for each activity's dates and restriction text (slower; default false) |
@@ -180,7 +180,7 @@ Read a content activity as a person would, so Moodle logs the view: a page's or 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 | `type` (required) | `page`, `book`, `label`, `url`, `resource`, `folder` | The activity's type, as get_course_structure gives it |
@@ -196,7 +196,7 @@ Read every setting of an activity as its edit form holds them, without changing 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 
@@ -211,7 +211,7 @@ Save a file of the Moodle site to a local folder, with the person's session: a r
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `url` (required) | string | The file's URL on the site, as the other tools give it (…/pluginfile.php/…) |
 | `destDir` (required) | string | Absolute local folder to save into; created if missing |
@@ -227,7 +227,7 @@ Create an activity or resource of any type (page, label, url, resource, folder, 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `sectionId` (required) | integer | The section's id, as get_course_structure gives it |
@@ -254,7 +254,7 @@ Change an existing activity through Moodle's own form: name, description, a page
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 | `name` | string |  |
@@ -279,7 +279,7 @@ Move an activity to another section (at its end) or before another activity, to 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
@@ -299,7 +299,7 @@ Duplicate an activity right after itself, with its settings and content (not par
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
@@ -315,7 +315,7 @@ Delete an activity from a course, with its participants' data (submissions, atte
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
@@ -331,7 +331,7 @@ Add a section to a course, at the end or after a given section, optionally named
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 | `name` | string |  |
@@ -350,7 +350,7 @@ Change a section: rename it, describe it, show or hide it (with its activities),
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 | `sectionId` (required) | integer | A section's id (not its number), as get_course_structure gives it |
@@ -372,7 +372,7 @@ Delete a section and every activity in it, with their participants' data. Destru
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 | `sectionId` (required) | integer | A section's id (not its number), as get_course_structure gives it |
@@ -388,7 +388,7 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `fullName` | string |  |
@@ -401,13 +401,13 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 
 ## Course life cycle {#lifecycle}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`copy_course`](#copy-course) · Copy a course |  | ✓ |  |
-| [`backup_course`](#backup-course) · Back up a course |  | ✓ |  |
-| [`restore_course`](#restore-course) · Restore a course backup |  | ✓ |  |
-| [`import_activities`](#import-activities) · Import activities from another course |  | ✓ |  |
-| [`reset_course`](#reset-course) · Reset a course for a new year |  | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`copy_course`](#copy-course) | Copy a course |  | ✓ |  |
+| [`backup_course`](#backup-course) | Back up a course |  | ✓ |  |
+| [`restore_course`](#restore-course) | Restore a course backup |  | ✓ |  |
+| [`import_activities`](#import-activities) | Import activities from another course |  | ✓ |  |
+| [`reset_course`](#reset-course) | Reset a course for a new year |  | ✓ |  |
 
 ### `copy_course` {#copy-course}
 
@@ -418,7 +418,7 @@ Copy a course into a new one, as Moodle's "Copy course" does: its content (and, 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `fullName` (required) | string |  |
@@ -440,7 +440,7 @@ Back a course up to a .mbz file in a local folder, through Moodle's backup wizar
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `destDir` (required) | string | An absolute local folder for the file |
@@ -458,7 +458,7 @@ Restore a .mbz backup through Moodle's restore wizard: into a new course in a ca
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `file` (required) | string | The backup's absolute local path (.mbz) |
 | `intoCourseId` | integer | An existing course to restore into; a new course when missing |
@@ -479,7 +479,7 @@ Import activities from another course into a course, as Moodle's "Import" does: 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `fromCourseId` (required) | integer |  |
 | `toCourseId` (required) | integer |  |
@@ -496,7 +496,7 @@ Reset a course as Moodle's reset form does: delete only what's named in delete (
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `delete` | object |  |
@@ -508,15 +508,15 @@ Reset a course as Moodle's reset form does: delete only what's named in delete (
 
 ## Assignments and grading {#grading}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`list_assignments`](#list-assignments) · List a course's assignments | ✓ | ✓ | ✓ |
-| [`get_submissions`](#get-submissions) · Get an assignment's submissions | ✓ | ✓ |  |
-| [`get_rubric`](#get-rubric) · Get an assignment's grading criteria | ✓ | ✓ |  |
-| [`grade_submission`](#grade-submission) · Grade a submission |  | ✓ |  |
-| [`grant_extension`](#grant-extension) · Grant an assignment extension |  | ✓ |  |
-| [`set_workflow_state`](#set-workflow-state) · Set the marking workflow state |  | ✓ |  |
-| [`allocate_marker`](#allocate-marker) · Allocate a marker to submissions |  | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_assignments`](#list-assignments) | List a course's assignments | ✓ | ✓ | ✓ |
+| [`get_submissions`](#get-submissions) | Get an assignment's submissions | ✓ | ✓ |  |
+| [`get_rubric`](#get-rubric) | Get an assignment's grading criteria | ✓ | ✓ |  |
+| [`grade_submission`](#grade-submission) | Grade a submission |  | ✓ |  |
+| [`grant_extension`](#grant-extension) | Grant an assignment extension |  | ✓ |  |
+| [`set_workflow_state`](#set-workflow-state) | Set the marking workflow state |  | ✓ |  |
+| [`allocate_marker`](#allocate-marker) | Allocate a marker to submissions |  | ✓ |  |
 
 ### `list_assignments` {#list-assignments}
 
@@ -527,7 +527,7 @@ List the assignments of a Moodle course: their ids (course module ids, for the o
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 
@@ -542,7 +542,7 @@ Get every participant's submission to a Moodle assignment: who (an alias when th
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (its course module id), as list_assignments gives it |
 | `includeContent` | boolean | Include each submission's content: online text and file links (default true) |
@@ -558,7 +558,7 @@ Read how an assignment is graded: simple (a grade or a scale), a rubric (criteri
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as list_assignments gives it |
 
@@ -573,7 +573,7 @@ Grade a participant in an assignment, as Moodle's grader does: a grade (simple g
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as list_assignments gives it |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
@@ -600,7 +600,7 @@ Grant participants an extension of an assignment's due date until a date, as the
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as list_assignments gives it |
 | `users` | string list | The participants' aliases, when the server pseudonymizes |
@@ -618,7 +618,7 @@ Set the marking workflow state of participants' submissions, as the grading tabl
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as list_assignments gives it |
 | `users` | string list | The participants' aliases, as the reading tools give them when the server pseudonymizes |
@@ -637,7 +637,7 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as list_assignments gives it |
 | `users` | string list | The participants' aliases, as the reading tools give them when the server pseudonymizes |
@@ -649,25 +649,25 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 
 ## Quizzes and questions {#quizzes}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`list_question_banks`](#list-question-banks) · List a course's question banks | ✓ | ✓ |  |
-| [`list_questions`](#list-questions) · List a bank's questions | ✓ | ✓ |  |
-| [`import_questions`](#import-questions) · Import questions into a bank |  | ✓ |  |
-| [`create_question`](#create-question) · Create a question in a bank |  | ✓ |  |
-| [`update_question`](#update-question) · Change a question in a bank |  | ✓ |  |
-| [`delete_questions`](#delete-questions) · Delete questions from a bank |  | ✓ |  |
-| [`set_question_status`](#set-question-status) · Set a question ready or draft |  | ✓ |  |
-| [`get_quiz_structure`](#get-quiz-structure) · Get a quiz's questions | ✓ | ✓ |  |
-| [`add_questions_to_quiz`](#add-questions-to-quiz) · Add questions to a quiz |  | ✓ |  |
-| [`edit_quiz_slot`](#edit-quiz-slot) · Change a quiz question's mark or place |  | ✓ |  |
-| [`remove_quiz_slot`](#remove-quiz-slot) · Remove a question from a quiz |  | ✓ |  |
-| [`set_quiz_pages`](#set-quiz-pages) · Set a quiz's pages |  | ✓ |  |
-| [`add_quiz_section`](#add-quiz-section) · Add a section to a quiz |  | ✓ |  |
-| [`get_quiz_results`](#get-quiz-results) · Get a quiz's results | ✓ | ✓ |  |
-| [`set_quiz_override`](#set-quiz-override) · Set a quiz override for a participant |  | ✓ |  |
-| [`list_questions_to_grade`](#list-questions-to-grade) · List a quiz's questions to grade by hand | ✓ | ✓ |  |
-| [`grade_quiz_question`](#grade-quiz-question) · Grade a quiz question by hand |  | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_question_banks`](#list-question-banks) | List a course's question banks | ✓ | ✓ |  |
+| [`list_questions`](#list-questions) | List a bank's questions | ✓ | ✓ |  |
+| [`import_questions`](#import-questions) | Import questions into a bank |  | ✓ |  |
+| [`create_question`](#create-question) | Create a question in a bank |  | ✓ |  |
+| [`update_question`](#update-question) | Change a question in a bank |  | ✓ |  |
+| [`delete_questions`](#delete-questions) | Delete questions from a bank |  | ✓ |  |
+| [`set_question_status`](#set-question-status) | Set a question ready or draft |  | ✓ |  |
+| [`get_quiz_structure`](#get-quiz-structure) | Get a quiz's questions | ✓ | ✓ |  |
+| [`add_questions_to_quiz`](#add-questions-to-quiz) | Add questions to a quiz |  | ✓ |  |
+| [`edit_quiz_slot`](#edit-quiz-slot) | Change a quiz question's mark or place |  | ✓ |  |
+| [`remove_quiz_slot`](#remove-quiz-slot) | Remove a question from a quiz |  | ✓ |  |
+| [`set_quiz_pages`](#set-quiz-pages) | Set a quiz's pages |  | ✓ |  |
+| [`add_quiz_section`](#add-quiz-section) | Add a section to a quiz |  | ✓ |  |
+| [`get_quiz_results`](#get-quiz-results) | Get a quiz's results | ✓ | ✓ |  |
+| [`set_quiz_override`](#set-quiz-override) | Set a quiz override for a participant |  | ✓ |  |
+| [`list_questions_to_grade`](#list-questions-to-grade) | List a quiz's questions to grade by hand | ✓ | ✓ |  |
+| [`grade_quiz_question`](#grade-quiz-question) | Grade a quiz question by hand |  | ✓ |  |
 
 ### `list_question_banks` {#list-question-banks}
 
@@ -678,7 +678,7 @@ List the question banks of a course: its shared banks (usable by any quiz in the
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 
@@ -693,7 +693,7 @@ List a question bank's categories and every question in them: id, name, type, st
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `bankId` (required) | integer | The bank's id (a course module id), as list_question_banks gives it |
 
@@ -708,7 +708,7 @@ Import questions into a question bank from GIFT or Moodle XML, given as text or 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `bankId` (required) | integer | The bank's id (a course module id), as list_question_banks gives it |
 | `format` (required) | `gift`, `xml` |  |
@@ -727,7 +727,7 @@ Create one question in a question bank through its type's form: multichoice, tru
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `bankId` (required) | integer | The bank's id (a course module id), as list_question_banks gives it |
 | `type` (required) | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay` |  |
@@ -750,7 +750,7 @@ Change a question of a bank through its type's form: only what's given changes (
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `bankId` (required) | integer | The bank's id (a course module id), as list_question_banks gives it |
 | `questionId` (required) | integer | As list_questions gives it |
@@ -773,7 +773,7 @@ Delete questions from a bank, every version of each, as the bank's delete action
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `bankId` (required) | integer | The bank's id (a course module id), as list_question_banks gives it |
 | `questionIds` (required) | integer list | As list_questions gives them |
@@ -789,7 +789,7 @@ Set a bank question ready (quizzes can use it) or draft, as the bank's status me
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `questionId` (required) | integer | As list_questions gives it |
 | `status` (required) | `ready`, `draft` |  |
@@ -805,7 +805,7 @@ List a quiz's questions as its edit page does, in order: each slot's page, quest
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 
@@ -820,7 +820,7 @@ Add questions to a quiz: bank questions by id (from list_questions) and/or rando
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 | `questionIds` | integer list | Bank questions, as list_questions gives them |
@@ -838,7 +838,7 @@ Change one slot of a quiz: its maximum mark, and where it is (after another slot
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 | `slot` (required) | integer | The slot's place in the quiz, from 1, as get_quiz_structure gives it |
@@ -857,7 +857,7 @@ Remove a slot from a quiz, as the edit page's delete icon does; the question sta
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 | `slot` (required) | integer | The slot's place in the quiz, from 1, as get_quiz_structure gives it |
@@ -873,7 +873,7 @@ Set how a quiz's questions are split into pages: perPage questions a page (0 for
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 | `perPage` | integer | Questions per page; 0 for one page |
@@ -890,7 +890,7 @@ Add a section heading to a quiz, starting at a slot (the first of its page: see 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 | `firstSlot` (required) | integer | The slot's place in the quiz, from 1, as get_quiz_structure gives it |
@@ -908,7 +908,7 @@ Read a quiz's attempts as its grades report shows them: per attempt the particip
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 | `responses` | boolean | Also the answer per question (default false) |
@@ -924,7 +924,7 @@ Give a participant their own quiz settings, as the quiz's user overrides do: ope
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id) |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
@@ -945,7 +945,7 @@ List a quiz's questions that wait for grading by hand (essays…), each with how
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id) |
 
@@ -960,7 +960,7 @@ Grade one question of a finished attempt by hand, with a comment, as the review'
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `attemptId` (required) | integer | As list_questions_to_grade gives it |
 | `slot` (required) | integer |  |
@@ -971,20 +971,20 @@ Grade one question of a finished attempt by hand, with a comment, as the review'
 
 ## Gradebook and progress {#gradebook}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`get_grader_report`](#get-grader-report) · Get a course's grades | ✓ | ✓ |  |
-| [`set_grade`](#set-grade) · Set a grade in the gradebook |  | ✓ |  |
-| [`export_grades`](#export-grades) · Export a course's grades to a file |  | ✓ |  |
-| [`get_gradebook_setup`](#get-gradebook-setup) · Get a course's gradebook setup | ✓ | ✓ |  |
-| [`add_grade_item`](#add-grade-item) · Add a manual grade item |  | ✓ |  |
-| [`update_grade_item`](#update-grade-item) · Update a grade item |  | ✓ |  |
-| [`delete_grade_item`](#delete-grade-item) · Delete a manual grade item |  | ✓ |  |
-| [`add_grade_category`](#add-grade-category) · Add a grade category |  | ✓ |  |
-| [`update_grade_category`](#update-grade-category) · Update a grade category |  | ✓ |  |
-| [`delete_grade_category`](#delete-grade-category) · Delete a grade category |  | ✓ |  |
-| [`get_completion_report`](#get-completion-report) · Get a course's activity completion | ✓ | ✓ |  |
-| [`override_completion`](#override-completion) · Set a participant's activity completion |  | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`get_grader_report`](#get-grader-report) | Get a course's grades | ✓ | ✓ |  |
+| [`set_grade`](#set-grade) | Set a grade in the gradebook |  | ✓ |  |
+| [`export_grades`](#export-grades) | Export a course's grades to a file |  | ✓ |  |
+| [`get_gradebook_setup`](#get-gradebook-setup) | Get a course's gradebook setup | ✓ | ✓ |  |
+| [`add_grade_item`](#add-grade-item) | Add a manual grade item |  | ✓ |  |
+| [`update_grade_item`](#update-grade-item) | Update a grade item |  | ✓ |  |
+| [`delete_grade_item`](#delete-grade-item) | Delete a manual grade item |  | ✓ |  |
+| [`add_grade_category`](#add-grade-category) | Add a grade category |  | ✓ |  |
+| [`update_grade_category`](#update-grade-category) | Update a grade category |  | ✓ |  |
+| [`delete_grade_category`](#delete-grade-category) | Delete a grade category |  | ✓ |  |
+| [`get_completion_report`](#get-completion-report) | Get a course's activity completion | ✓ | ✓ |  |
+| [`override_completion`](#override-completion) | Set a participant's activity completion |  | ✓ |  |
 
 ### `get_grader_report` {#get-grader-report}
 
@@ -995,7 +995,7 @@ Read everyone's grades in a course as the grader report shows them, in one group
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `group` | integer | Only this group's members, by its id from list_groups |
@@ -1011,7 +1011,7 @@ Set a participant's grade in a grade item, as the gradebook's single view does: 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `itemId` (required) | integer | The grade item, as get_gradebook_setup or get_grader_report gives it |
@@ -1033,7 +1033,7 @@ Save a course's grades into a local folder as Moodle exports them for a teacher:
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `format` (required) | `xlsx`, `ods`, `csv`, `xml` |  |
@@ -1054,7 +1054,7 @@ Read how a course's grades are computed, as the gradebook setup page shows it: i
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 
@@ -1069,7 +1069,7 @@ Add a grade item graded in the gradebook (not by an activity): out of maxGrade (
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `name` (required) | string |  |
@@ -1089,7 +1089,7 @@ Change a grade item from get_gradebook_setup: move it into a category, set its w
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `itemId` (required) | integer |  |
@@ -1108,7 +1108,7 @@ Delete a manual grade item and every grade in it. An activity's item goes with i
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `itemId` (required) | integer |  |
@@ -1124,7 +1124,7 @@ Add a grade category to a course's gradebook, at the top level or inside another
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `name` (required) | string |  |
@@ -1142,7 +1142,7 @@ Change a grade category from get_gradebook_setup: its name, aggregation, weight 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `categoryId` (required) | integer |  |
@@ -1162,7 +1162,7 @@ Delete a grade category: Moodle moves what it held into its parent and deletes i
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `categoryId` (required) | integer |  |
@@ -1178,7 +1178,7 @@ Read a course's progress report: every participant's completion (an alias when t
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `group` | integer | Only this group's members, by its id from list_groups |
@@ -1194,7 +1194,7 @@ Set a participant's completion of an activity as a teacher does from the progres
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id) |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
@@ -1205,11 +1205,11 @@ Set a participant's completion of an activity as a teacher does from the progres
 
 ## Reports {#reports}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`get_activity_report`](#get-activity-report) · Get a course's activity views | ✓ | ✓ |  |
-| [`get_participation_report`](#get-participation-report) · Get who took part in an activity | ✓ | ✓ |  |
-| [`get_course_logs`](#get-course-logs) · Get a course's logs | ✓ | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`get_activity_report`](#get-activity-report) | Get a course's activity views | ✓ | ✓ |  |
+| [`get_participation_report`](#get-participation-report) | Get who took part in an activity | ✓ | ✓ |  |
+| [`get_course_logs`](#get-course-logs) | Get a course's logs | ✓ | ✓ |  |
 
 ### `get_activity_report` {#get-activity-report}
 
@@ -1220,7 +1220,7 @@ Read a course's activity report: per activity, how many times it was viewed, by 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `from` | string | ISO 8601 |
@@ -1237,7 +1237,7 @@ Read an activity's participation report: everyone with a role (all the roles it 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `activityId` (required) | integer |  |
@@ -1256,7 +1256,7 @@ Read a course's logs, newest first, as its logs report lists them: by a user (an
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
@@ -1273,24 +1273,24 @@ Read a course's logs, newest first, as its logs report lists them: by a user (an
 
 ## Participants and groups {#participants}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`list_participants`](#list-participants) · List a course's participants | ✓ | ✓ | ✓ |
-| [`list_potential_users`](#list-potential-users) · Find users to enrol | ✓ | ✓ |  |
-| [`enrol_users`](#enrol-users) · Enrol users in a course |  | ✓ |  |
-| [`unenrol_user`](#unenrol-user) · Unenrol a user from a course |  | ✓ |  |
-| [`set_user_roles`](#set-user-roles) · Set someone's roles in a course |  | ✓ |  |
-| [`list_enrolment_methods`](#list-enrolment-methods) · List a course's enrolment methods | ✓ | ✓ |  |
-| [`set_enrolment_method`](#set-enrolment-method) · Set an enrolment method |  | ✓ |  |
-| [`list_groups`](#list-groups) · List a course's groups | ✓ | ✓ | ✓ |
-| [`create_group`](#create-group) · Create a group |  | ✓ |  |
-| [`update_group`](#update-group) · Change a group |  | ✓ |  |
-| [`delete_group`](#delete-group) · Delete a group |  | ✓ |  |
-| [`set_group_members`](#set-group-members) · Add or remove a group's members |  | ✓ |  |
-| [`list_groupings`](#list-groupings) · List a course's groupings | ✓ | ✓ |  |
-| [`create_grouping`](#create-grouping) · Create a grouping |  | ✓ |  |
-| [`delete_grouping`](#delete-grouping) · Delete a grouping |  | ✓ |  |
-| [`set_grouping_groups`](#set-grouping-groups) · Set a grouping's groups |  | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_participants`](#list-participants) | List a course's participants | ✓ | ✓ | ✓ |
+| [`list_potential_users`](#list-potential-users) | Find users to enrol | ✓ | ✓ |  |
+| [`enrol_users`](#enrol-users) | Enrol users in a course |  | ✓ |  |
+| [`unenrol_user`](#unenrol-user) | Unenrol a user from a course |  | ✓ |  |
+| [`set_user_roles`](#set-user-roles) | Set someone's roles in a course |  | ✓ |  |
+| [`list_enrolment_methods`](#list-enrolment-methods) | List a course's enrolment methods | ✓ | ✓ |  |
+| [`set_enrolment_method`](#set-enrolment-method) | Set an enrolment method |  | ✓ |  |
+| [`list_groups`](#list-groups) | List a course's groups | ✓ | ✓ | ✓ |
+| [`create_group`](#create-group) | Create a group |  | ✓ |  |
+| [`update_group`](#update-group) | Change a group |  | ✓ |  |
+| [`delete_group`](#delete-group) | Delete a group |  | ✓ |  |
+| [`set_group_members`](#set-group-members) | Add or remove a group's members |  | ✓ |  |
+| [`list_groupings`](#list-groupings) | List a course's groupings | ✓ | ✓ |  |
+| [`create_grouping`](#create-grouping) | Create a grouping |  | ✓ |  |
+| [`delete_grouping`](#delete-grouping) | Delete a grouping |  | ✓ |  |
+| [`set_grouping_groups`](#set-grouping-groups) | Set a grouping's groups |  | ✓ |  |
 
 ### `list_participants` {#list-participants}
 
@@ -1301,7 +1301,7 @@ List a course's participants with their roles and groups, as the participants pa
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `role` | integer | Only this role's, by its id (as the participants' roles give it) |
@@ -1319,7 +1319,7 @@ Find users the person may enrol in a course by manual enrolment, as the "Enrol u
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `search` | string | Part of a name, an email, an ID number… |
@@ -1335,7 +1335,7 @@ Enrol users in a course by manual enrolment, as the "Enrol users" dialog does: w
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `users` | string list | The participants' aliases, as the reading tools give them when the server pseudonymizes |
@@ -1355,7 +1355,7 @@ Unenrol someone from a course: removes every enrolment of theirs the person may 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
@@ -1372,7 +1372,7 @@ Set a participant's roles in a course, as the participants page's roles column d
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
@@ -1390,7 +1390,7 @@ List how people can enrol in a course, in the order Moodle tries them: each meth
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 
@@ -1405,7 +1405,7 @@ Change an enrolment method with its form, by its id or the course's first of a t
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `methodId` | integer | As list_enrolment_methods gives it |
@@ -1430,7 +1430,7 @@ List the groups of a course the person can see, with their members (as aliases w
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 
@@ -1445,7 +1445,7 @@ Create a group in a course with Moodle's group form. Add its members with set_gr
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `name` (required) | string |  |
@@ -1464,7 +1464,7 @@ Change a group's name, description, ID number or enrolment key; what isn't given
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `groupId` (required) | integer | The group's id, as list_groups gives it |
 | `name` | string |  |
@@ -1483,7 +1483,7 @@ Delete a group; its members stay in the course. Activities set to work by groups
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `groupId` (required) | integer | The group's id, as list_groups gives it |
 
@@ -1498,7 +1498,7 @@ Add and remove members of a group, as its members page does: only the course's p
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The group's course |
 | `groupId` (required) | integer | As list_groups gives it |
@@ -1518,7 +1518,7 @@ List a course's groupings (sets of groups an activity can be limited to) with th
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 
@@ -1533,7 +1533,7 @@ Create a grouping in a course with Moodle's form; give it its groups with set_gr
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `name` (required) | string |  |
@@ -1551,7 +1551,7 @@ Delete a grouping; its groups stay. Can't be undone: confirm with the person fir
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `groupingId` (required) | integer | The grouping's id, as list_groupings gives it |
 
@@ -1566,7 +1566,7 @@ Make a grouping's groups exactly groupIds, adding and removing as its page does;
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `groupingId` (required) | integer | The grouping's id, as list_groupings gives it |
 | `groupIds` (required) | integer list |  |
@@ -1575,28 +1575,28 @@ Make a grouping's groups exactly groupIds, adding and removing as its page does;
 
 ## Forums, workshops and messages {#communication}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`list_discussions`](#list-discussions) · List a forum's discussions | ✓ | ✓ | ✓ |
-| [`get_discussion`](#get-discussion) · Read a forum discussion | ✓ | ✓ | ✓ |
-| [`reply_to_post`](#reply-to-post) · Reply to a forum post |  | ✓ | ✓ |
-| [`create_discussion`](#create-discussion) · Start a forum discussion |  | ✓ | ✓ |
-| [`edit_post`](#edit-post) · Edit a forum post |  | ✓ | ✓ |
-| [`delete_post`](#delete-post) · Delete a forum post |  | ✓ | ✓ |
-| [`set_discussion_state`](#set-discussion-state) · Pin or lock a discussion |  | ✓ |  |
-| [`set_discussion_subscription`](#set-discussion-subscription) · Subscribe to a forum discussion |  | ✓ | ✓ |
-| [`get_forum_grades`](#get-forum-grades) · Get a forum's whole-forum grades | ✓ | ✓ |  |
-| [`grade_forum_user`](#grade-forum-user) · Give a whole-forum grade |  | ✓ |  |
-| [`rate`](#rate) · Rate a post, entry or record |  | ✓ | ✓ |
-| [`get_workshop`](#get-workshop) · Read a workshop | ✓ | ✓ |  |
-| [`set_workshop_phase`](#set-workshop-phase) · Switch a workshop's phase |  | ✓ |  |
-| [`assess_workshop_submission`](#assess-workshop-submission) · Assess a workshop submission |  | ✓ | ✓ |
-| [`list_notifications`](#list-notifications) · List my notifications | ✓ | ✓ | ✓ |
-| [`mark_notifications_read`](#mark-notifications-read) · Mark my notifications read |  | ✓ | ✓ |
-| [`list_conversations`](#list-conversations) · List my conversations | ✓ | ✓ | ✓ |
-| [`get_conversation`](#get-conversation) · Read a conversation | ✓ | ✓ | ✓ |
-| [`send_message`](#send-message) · Send a private message |  | ✓ | ✓ |
-| [`message_participants`](#message-participants) · Message several participants |  | ✓ |  |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_discussions`](#list-discussions) | List a forum's discussions | ✓ | ✓ | ✓ |
+| [`get_discussion`](#get-discussion) | Read a forum discussion | ✓ | ✓ | ✓ |
+| [`reply_to_post`](#reply-to-post) | Reply to a forum post |  | ✓ | ✓ |
+| [`create_discussion`](#create-discussion) | Start a forum discussion |  | ✓ | ✓ |
+| [`edit_post`](#edit-post) | Edit a forum post |  | ✓ | ✓ |
+| [`delete_post`](#delete-post) | Delete a forum post |  | ✓ | ✓ |
+| [`set_discussion_state`](#set-discussion-state) | Pin or lock a discussion |  | ✓ |  |
+| [`set_discussion_subscription`](#set-discussion-subscription) | Subscribe to a forum discussion |  | ✓ | ✓ |
+| [`get_forum_grades`](#get-forum-grades) | Get a forum's whole-forum grades | ✓ | ✓ |  |
+| [`grade_forum_user`](#grade-forum-user) | Give a whole-forum grade |  | ✓ |  |
+| [`rate`](#rate) | Rate a post, entry or record |  | ✓ | ✓ |
+| [`get_workshop`](#get-workshop) | Read a workshop | ✓ | ✓ |  |
+| [`set_workshop_phase`](#set-workshop-phase) | Switch a workshop's phase |  | ✓ |  |
+| [`assess_workshop_submission`](#assess-workshop-submission) | Assess a workshop submission |  | ✓ | ✓ |
+| [`list_notifications`](#list-notifications) | List my notifications | ✓ | ✓ | ✓ |
+| [`mark_notifications_read`](#mark-notifications-read) | Mark my notifications read |  | ✓ | ✓ |
+| [`list_conversations`](#list-conversations) | List my conversations | ✓ | ✓ | ✓ |
+| [`get_conversation`](#get-conversation) | Read a conversation | ✓ | ✓ | ✓ |
+| [`send_message`](#send-message) | Send a private message |  | ✓ | ✓ |
+| [`message_participants`](#message-participants) | Message several participants |  | ✓ |  |
 
 ### `list_discussions` {#list-discussions}
 
@@ -1607,7 +1607,7 @@ List the discussions of a Moodle forum: subject, who started it and when, the la
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `forumId` (required) | integer | The forum's id (its course module id), as get_course_structure gives it |
 
@@ -1622,7 +1622,7 @@ Read every post of a Moodle forum discussion, oldest first: author (an alias whe
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `discussionId` (required) | integer | The discussion id, as list_discussions gives it |
 
@@ -1637,7 +1637,7 @@ Reply to a post in a Moodle forum discussion, with optional attachments (local f
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `postId` (required) | integer | The post to reply to, as get_discussion gives it |
 | `subject` | string |  |
@@ -1658,7 +1658,7 @@ Start a discussion in a Moodle forum, with optional attachments and embedded ima
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `forumId` (required) | integer | The forum's id (course module id), as get_course_structure gives it |
 | `subject` (required) | string |  |
@@ -1679,7 +1679,7 @@ Change a forum post through Moodle's own form, as its author (within the site's 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `postId` (required) | integer | As get_discussion gives it |
 | `subject` | string |  |
@@ -1699,7 +1699,7 @@ Delete a forum post and its replies through Moodle's own confirmation; a discuss
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `postId` (required) | integer | As get_discussion gives it |
 
@@ -1714,7 +1714,7 @@ Pin or unpin, lock or unlock a forum discussion, as the discussion list's menu d
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `forumId` (required) | integer | The forum's id (course module id), as get_course_structure gives it |
 | `discussionId` (required) | integer | As list_discussions gives it |
@@ -1732,7 +1732,7 @@ Subscribe the person to a forum discussion, or unsubscribe them, as the discussi
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `forumId` (required) | integer | The forum's id (course module id), as get_course_structure gives it |
 | `discussionId` (required) | integer | As list_discussions gives it |
@@ -1749,7 +1749,7 @@ Read the whole-forum grades of a forum graded as a whole, as its grader shows th
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `forumId` (required) | integer | The forum's id (course module id) |
 | `groupId` | integer |  |
@@ -1765,7 +1765,7 @@ Give a participant their whole-forum grade, as the forum's grader does: points (
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `forumId` (required) | integer | The forum's id (course module id) |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
@@ -1784,7 +1784,7 @@ Rate a forum post, a glossary entry or a database record as the person, as the r
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `itemType` (required) | `forum-post`, `glossary-entry`, `database-record` |  |
 | `itemId` (required) | integer | The post's, entry's or record's id |
@@ -1802,7 +1802,7 @@ Read a workshop's phase and its report as a teacher sees it: every submission (a
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `workshopId` (required) | integer | The workshop's id (course module id) |
 
@@ -1817,7 +1817,7 @@ Switch a workshop to a phase (setup, submission, assessment, evaluation, closed)
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `workshopId` (required) | integer | The workshop's id (course module id) |
 | `phase` (required) | `setup`, `submission`, `assessment`, `evaluation`, `closed` |  |
@@ -1833,7 +1833,7 @@ Assess a workshop submission as the person, through the workshop's assessment fo
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `workshopId` (required) | integer | The workshop's id (course module id) |
 | `submissionId` (required) | integer | As get_workshop gives it |
@@ -1852,7 +1852,7 @@ List the person's notifications, newest first (only unread ones when asked), a p
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `unreadOnly` | boolean |  |
 | `limit` | integer | How many (30 by default) |
@@ -1885,7 +1885,7 @@ Read a message conversation, oldest first: its members and each message's sender
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `conversationId` (required) | integer |  |
 
@@ -1900,7 +1900,7 @@ Send a private message to someone, as the messaging drawer does: to user (an ali
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `user` | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
 | `userId` | integer | The participant's user id, when the server shows names |
@@ -1917,7 +1917,7 @@ Send one private message to several participants of a course, as the participant
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `text` (required) | string |  |
@@ -1931,17 +1931,17 @@ Send one private message to several participants of a course, as the participant
 
 ## Calendar and to-dos {#calendar}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`list_events`](#list-events) · List upcoming calendar events | ✓ | ✓ | ✓ |
-| [`get_event`](#get-event) · Read a calendar event | ✓ | ✓ | ✓ |
-| [`create_event`](#create-event) · Create a course event |  | ✓ |  |
-| [`update_event`](#update-event) · Change a calendar event |  | ✓ |  |
-| [`delete_event`](#delete-event) · Delete a calendar event |  | ✓ |  |
-| [`list_deadlines`](#list-deadlines) · List upcoming deadlines | ✓ | ✓ | ✓ |
-| [`list_pending`](#list-pending) · List what I have left | ✓ |  | ✓ |
-| [`get_activities_overview`](#get-activities-overview) · Get a course's activities overview | ✓ | ✓ | ✓ |
-| [`get_course_updates`](#get-course-updates) · Get what changed in a course | ✓ | ✓ | ✓ |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_events`](#list-events) | List upcoming calendar events | ✓ | ✓ | ✓ |
+| [`get_event`](#get-event) | Read a calendar event | ✓ | ✓ | ✓ |
+| [`create_event`](#create-event) | Create a course event |  | ✓ |  |
+| [`update_event`](#update-event) | Change a calendar event |  | ✓ |  |
+| [`delete_event`](#delete-event) | Delete a calendar event |  | ✓ |  |
+| [`list_deadlines`](#list-deadlines) | List upcoming deadlines | ✓ | ✓ | ✓ |
+| [`list_pending`](#list-pending) | List what I have left | ✓ |  | ✓ |
+| [`get_activities_overview`](#get-activities-overview) | Get a course's activities overview | ✓ | ✓ | ✓ |
+| [`get_course_updates`](#get-course-updates) | Get what changed in a course | ✓ | ✓ | ✓ |
 
 ### `list_events` {#list-events}
 
@@ -1952,7 +1952,7 @@ List the upcoming events of the person's calendar, as its "Upcoming events" view
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` | integer | Only this course's; every course when missing |
 
@@ -1967,7 +1967,7 @@ Read one calendar event by its id, as list_events gives them.
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `eventId` (required) | integer |  |
 
@@ -1982,7 +1982,7 @@ Create an event in a course's calendar, which its participants see: a name, a st
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer |  |
 | `name` (required) | string |  |
@@ -2001,7 +2001,7 @@ Change a calendar event through the calendar's own form: only what's given chang
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `eventId` (required) | integer |  |
 | `name` | string |  |
@@ -2023,7 +2023,7 @@ Delete a calendar event the person can manage (a course event, or their own), by
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `eventId` (required) | integer |  |
 
@@ -2038,7 +2038,7 @@ What the person has to do by a date, from Moodle's calendar (submit an assignmen
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` | integer | One course; every course when missing |
 | `days` | integer | How many days ahead (default 30) |
@@ -2054,7 +2054,7 @@ List what the logged-in person still has to do in a course: activities whose com
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 
@@ -2069,7 +2069,7 @@ Moodle's activities overview of a course, as the person sees it: per activity, i
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, from list_courses |
 | `type` | string | One activity type (assign, quiz, forum…; "resource" for every resource type); every type when missing |
@@ -2085,7 +2085,7 @@ What changed in a course's activities since a date (settings, content files, for
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, from list_courses |
 | `since` | string | ISO date and time; a week ago when missing |
@@ -2094,28 +2094,28 @@ What changed in a course's activities since a date (settings, content files, for
 
 ## As a student {#student}
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`get_my_grades`](#get-my-grades) · Get my grades | ✓ |  | ✓ |
-| [`get_assignment`](#get-assignment) · Get an assignment as a student | ✓ |  | ✓ |
-| [`save_submission`](#save-submission) · Save my submission |  |  | ✓ |
-| [`submit_assignment`](#submit-assignment) · Submit my assignment for grading |  |  | ✓ |
-| [`get_quiz_info`](#get-quiz-info) · Get a quiz's information and my attempts | ✓ | ✓ | ✓ |
-| [`start_quiz_attempt`](#start-quiz-attempt) · Start or continue a quiz attempt |  |  | ✓ |
-| [`get_quiz_attempt`](#get-quiz-attempt) · Read an attempt's questions | ✓ |  | ✓ |
-| [`answer_quiz_questions`](#answer-quiz-questions) · Answer quiz questions |  |  | ✓ |
-| [`finish_quiz_attempt`](#finish-quiz-attempt) · Submit a quiz attempt |  |  | ✓ |
-| [`get_attempt_review`](#get-attempt-review) · Review a finished attempt | ✓ | ✓ | ✓ |
-| [`get_survey`](#get-survey) · Get a survey's questions | ✓ |  | ✓ |
-| [`submit_survey`](#submit-survey) · Answer and submit a survey |  |  | ✓ |
-| [`get_choice`](#get-choice) · Read a choice | ✓ | ✓ | ✓ |
-| [`answer_choice`](#answer-choice) · Answer a choice |  |  | ✓ |
-| [`get_lesson_page`](#get-lesson-page) · Read the current lesson page |  |  | ✓ |
-| [`answer_lesson_page`](#answer-lesson-page) · Answer a lesson page |  |  | ✓ |
-| [`get_h5p_activity`](#get-h5p-activity) · Read an H5P activity | ✓ | ✓ | ✓ |
-| [`get_scorm`](#get-scorm) · Read a SCORM activity | ✓ | ✓ | ✓ |
-| [`open_scorm`](#open-scorm) · Open a SCORM package to do it |  |  | ✓ |
-| [`set_completion`](#set-completion) · Mark an activity as done |  |  | ✓ |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`get_my_grades`](#get-my-grades) | Get my grades | ✓ |  | ✓ |
+| [`get_assignment`](#get-assignment) | Get an assignment as a student | ✓ |  | ✓ |
+| [`save_submission`](#save-submission) | Save my submission |  |  | ✓ |
+| [`submit_assignment`](#submit-assignment) | Submit my assignment for grading |  |  | ✓ |
+| [`get_quiz_info`](#get-quiz-info) | Get a quiz's information and my attempts | ✓ | ✓ | ✓ |
+| [`start_quiz_attempt`](#start-quiz-attempt) | Start or continue a quiz attempt |  |  | ✓ |
+| [`get_quiz_attempt`](#get-quiz-attempt) | Read an attempt's questions | ✓ |  | ✓ |
+| [`answer_quiz_questions`](#answer-quiz-questions) | Answer quiz questions |  |  | ✓ |
+| [`finish_quiz_attempt`](#finish-quiz-attempt) | Submit a quiz attempt |  |  | ✓ |
+| [`get_attempt_review`](#get-attempt-review) | Review a finished attempt | ✓ | ✓ | ✓ |
+| [`get_survey`](#get-survey) | Get a survey's questions | ✓ |  | ✓ |
+| [`submit_survey`](#submit-survey) | Answer and submit a survey |  |  | ✓ |
+| [`get_choice`](#get-choice) | Read a choice | ✓ | ✓ | ✓ |
+| [`answer_choice`](#answer-choice) | Answer a choice |  |  | ✓ |
+| [`get_lesson_page`](#get-lesson-page) | Read the current lesson page |  |  | ✓ |
+| [`answer_lesson_page`](#answer-lesson-page) | Answer a lesson page |  |  | ✓ |
+| [`get_h5p_activity`](#get-h5p-activity) | Read an H5P activity | ✓ | ✓ | ✓ |
+| [`get_scorm`](#get-scorm) | Read a SCORM activity | ✓ | ✓ | ✓ |
+| [`open_scorm`](#open-scorm) | Open a SCORM package to do it |  |  | ✓ |
+| [`set_completion`](#set-completion) | Mark an activity as done |  |  | ✓ |
 
 ### `get_my_grades` {#get-my-grades}
 
@@ -2126,7 +2126,7 @@ Get the logged-in person's grade report for a course: each grade item (with its 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `courseId` (required) | integer | The course's id, as list_courses gives it |
 
@@ -2141,7 +2141,7 @@ Read an assignment as the logged-in student sees it: the brief and its files, da
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as get_course_structure gives it |
 
@@ -2156,7 +2156,7 @@ Save the logged-in student's submission to an assignment: its online text (HTML,
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as get_course_structure gives it |
 | `onlineText` | string |  |
@@ -2173,7 +2173,7 @@ Submit the saved submission for grading: it can't be changed afterwards unless t
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `assignmentId` (required) | integer | The assignment's id (course module id), as get_course_structure gives it |
 | `acceptStatement` | boolean | The person accepts the site's submission statement |
@@ -2189,7 +2189,7 @@ Read a quiz's page as the person: description, its rules (attempts allowed, grad
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 
@@ -2204,7 +2204,7 @@ Start an attempt at a quiz, or continue the one in progress, as the quiz page's 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `quizId` (required) | integer | The quiz's id (course module id), as get_course_structure gives it |
 
@@ -2219,7 +2219,7 @@ Read every question of an attempt in progress, page by page: text, images, field
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `attemptId` (required) | integer | The attempt's id, as start_quiz_attempt or get_quiz_info gives it |
 
@@ -2234,7 +2234,7 @@ Save answers in an attempt in progress, as the attempt's pages do; it doesn't fi
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `attemptId` (required) | integer | The attempt's id, as start_quiz_attempt or get_quiz_info gives it |
 | `answers` (required) | object list |  |
@@ -2250,7 +2250,7 @@ Submit an attempt for grading, as "Submit all and finish" does: no answer can ch
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `attemptId` (required) | integer | The attempt's id, as start_quiz_attempt or get_quiz_info gives it |
 
@@ -2265,7 +2265,7 @@ Read a finished attempt's review, as far as the quiz shows it: status, marks and
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `attemptId` (required) | integer | The attempt's id, as start_quiz_attempt or get_quiz_info gives it |
 
@@ -2280,7 +2280,7 @@ Read a survey (the questionnaire plugin, or Moodle's feedback) as the person: wh
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The survey's id (course module id), as get_course_structure gives it |
 | `type` (required) | `questionnaire`, `feedback` | The activity's type, as get_course_structure gives it |
@@ -2296,7 +2296,7 @@ Answer a survey and submit it, page by page as its form goes: responses maps fie
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The survey's id (course module id), as get_course_structure gives it |
 | `type` (required) | `questionnaire`, `feedback` | The activity's type, as get_course_structure gives it |
@@ -2313,7 +2313,7 @@ Read a choice activity (a poll) as the person sees it: its question, the options
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 
@@ -2328,7 +2328,7 @@ Answer a choice activity as the person, with one option (several where the choic
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 | `optionIds` (required) | integer list |  |
@@ -2344,7 +2344,7 @@ Read the page of a lesson the person is on (starting the lesson the first time):
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 
@@ -2359,7 +2359,7 @@ Go on in a lesson as the person: press a content page's button (by its label, or
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 | `button` | string | A content page's button, by its label |
@@ -2377,7 +2377,7 @@ Read an H5P activity: its content type (the H5P library), whether Moodle tracks 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 
@@ -2392,7 +2392,7 @@ Read a SCORM activity as the person sees it: attempts allowed and made, grading 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The SCORM activity's id (course module id), as get_course_structure gives it |
 
@@ -2407,7 +2407,7 @@ Open a SCORM activity in Moodle's player, as the person, in the browser tools' t
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The SCORM activity's id (course module id), as get_course_structure gives it |
 | `scoId` | integer | The SCO to open, as get_scorm gives it; the first when missing |
@@ -2424,7 +2424,7 @@ Mark the person's own completion of an activity with manual completion, done or 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `activityId` (required) | integer | The activity's id (course module id), as get_course_structure gives it |
 | `done` (required) | boolean |  |
@@ -2435,16 +2435,16 @@ Mark the person's own completion of an activity with manual completion, done or 
 
 These are for what no other tool covers: a plugin, a rare setting, the inside of a SCORM package. The agent uses them on your site only, never types passwords, and says which task needed them. With `pseudonymize`, they never open pages about people (participants, grades, reports, forums, messages).
 
-| Tool | Read only | Teacher | Student |
-| --- | :-: | :-: | :-: |
-| [`browser_navigate`](#browser-navigate) · Browser: open a page |  | ✓ | ✓ |
-| [`browser_snapshot`](#browser-snapshot) · Browser: read the page | ✓ | ✓ | ✓ |
-| [`browser_click`](#browser-click) · Browser: click |  | ✓ | ✓ |
-| [`browser_type`](#browser-type) · Browser: type |  | ✓ | ✓ |
-| [`browser_select`](#browser-select) · Browser: choose options |  | ✓ | ✓ |
-| [`browser_upload`](#browser-upload) · Browser: choose files |  | ✓ | ✓ |
-| [`browser_screenshot`](#browser-screenshot) · Browser: screenshot | ✓ | ✓ | ✓ |
-| [`browser_wait`](#browser-wait) · Browser: wait | ✓ | ✓ | ✓ |
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`browser_navigate`](#browser-navigate) | Browser: open a page |  | ✓ | ✓ |
+| [`browser_snapshot`](#browser-snapshot) | Browser: read the page | ✓ | ✓ | ✓ |
+| [`browser_click`](#browser-click) | Browser: click |  | ✓ | ✓ |
+| [`browser_type`](#browser-type) | Browser: type |  | ✓ | ✓ |
+| [`browser_select`](#browser-select) | Browser: choose options |  | ✓ | ✓ |
+| [`browser_upload`](#browser-upload) | Browser: choose files |  | ✓ | ✓ |
+| [`browser_screenshot`](#browser-screenshot) | Browser: screenshot | ✓ | ✓ | ✓ |
+| [`browser_wait`](#browser-wait) | Browser: wait | ✓ | ✓ | ✓ |
 
 ### `browser_navigate` {#browser-navigate}
 
@@ -2455,7 +2455,7 @@ Open a page of the configured Moodle site in the browser tools' tab: a URL of th
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `url` (required) | string | A URL of the site, or a path relative to it (course/view.php?id=3) |
 
@@ -2470,7 +2470,7 @@ The page in the browser tools' tab as an accessibility tree (roles, names, value
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `scope` | `main`, `page` | "main" (default): Moodle's main region; "page": everything, navigation included |
 | `ref` | string | Only this element's subtree (from a previous snapshot) |
@@ -2486,7 +2486,7 @@ Click an element of the browser tools' tab by its snapshot ref (a link, button, 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `ref` (required) | string | The element's ref from the latest browser_snapshot, like e12 |
 | `doubleClick` | boolean |  |
@@ -2502,7 +2502,7 @@ Fill a text field of the browser tools' tab by its snapshot ref, replacing what 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `ref` (required) | string | The element's ref from the latest browser_snapshot, like e12 |
 | `text` (required) | string |  |
@@ -2519,7 +2519,7 @@ Choose options in a select of the browser tools' tab by its snapshot ref, by the
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `ref` (required) | string | The element's ref from the latest browser_snapshot, like e12 |
 | `options` (required) | string list |  |
@@ -2535,7 +2535,7 @@ Set local files on a file input of the browser tools' tab by its snapshot ref (i
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `ref` (required) | string | The element's ref from the latest browser_snapshot, like e12 |
 | `paths` (required) | string list | Absolute paths of local files |
@@ -2555,7 +2555,7 @@ A picture of the browser tools' tab (what's in view), or of one element by its s
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `ref` | string | The element's ref from the latest browser_snapshot, like e12 |
 
@@ -2570,7 +2570,7 @@ Wait in the browser tools' tab until a text shows, until it's gone (in the page 
 <details>
 <summary>Inputs</summary>
 
-| | | |
+| Input | Type | Description |
 | --- | --- | --- |
 | `text` | string | Wait until this text shows |
 | `textGone` | string | Wait until this text is gone |

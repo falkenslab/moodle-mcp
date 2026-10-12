@@ -145,11 +145,11 @@ for (const [lang, t] of Object.entries(TEXT)) {
   for (const area of AREAS) {
     lines.push(`## ${area[lang]} {#${area.id}}`, "");
     if (area.id === "browser") lines.push(t.browser, "");
-    lines.push(`| ${t.area} | ${t.changes} | ${t.teacher} | ${t.student} |`, "| --- | :-: | :-: | :-: |");
+    lines.push(`| ${t.area} | ${t.params[2]} | ${t.changes} | ${t.teacher} | ${t.student} |`, "| --- | --- | :-: | :-: | :-: |");
     for (const name of area.tools) {
       const tool = tools.find((x) => x.name === name);
       const { title } = texts(tool, lang);
-      lines.push(`| [\`${name}\`](#${name.replace(/_/g, "-")}) ${cell(title ? `· ${title}` : "")} | ${readOnly.has(name) ? "✓" : ""} | ${teacher.has(name) ? "✓" : ""} | ${student.has(name) ? "✓" : ""} |`);
+      lines.push(`| [\`${name}\`](#${name.replace(/_/g, "-")}) | ${cell(title)} | ${readOnly.has(name) ? "✓" : ""} | ${teacher.has(name) ? "✓" : ""} | ${student.has(name) ? "✓" : ""} |`);
     }
     lines.push("");
     for (const name of area.tools) {
