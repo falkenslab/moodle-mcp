@@ -9,7 +9,12 @@ const inputSchema = {
 };
 
 const outputSchema = {
-  discussion: z.object({ id: z.number().int(), forumInstanceId: z.number().int().describe("The forum's instance id (not its course module id)"), courseId: z.number().int() }),
+  discussion: z.object({
+    id: z.number().int(),
+    forumInstanceId: z.number().int().describe("The forum's instance id (not its course module id)"),
+    courseId: z.number().int(),
+    subscribed: z.boolean().optional().describe("The person is subscribed to it; none where they can't subscribe or it's forced"),
+  }),
   posts: z.array(
     z.object({
       id: z.number().int(),
@@ -21,6 +26,7 @@ const outputSchema = {
       created: z.string().describe("ISO 8601"),
       modified: z.string().optional().describe("ISO 8601, when edited after posting"),
       text: z.string().describe("The message as plain text"),
+      images: z.array(z.object({ url: z.string().optional().describe("None when pseudonymizing someone else's post"), alt: z.string().optional() })).optional().describe("Images in the message"),
       attachments: z.array(z.object({ name: z.string(), url: z.string().optional().describe("None when pseudonymizing someone else's post: the link carries the file's name") })),
       privateReply: z.boolean(),
       unread: z.boolean().optional(),
@@ -54,6 +60,8 @@ export const registerGetDiscussion: RegisterTool = (server, { config, browser })
             subject: await text(config, siteUrl, post.subject),
             text: await text(config, siteUrl, post.text),
             attachments: await Promise.all(post.attachments.map(async (a) => (pseudonymizing(config) ? { name: await text(config, siteUrl, a.name) } : a))),
+            // Someone else's images are theirs, named in their links as attachments are: only their alt text, redacted.
+            ...(post.images && { images: await Promise.all(post.images.map(async (i) => (pseudonymizing(config) ? { ...(i.alt !== undefined && { alt: await text(config, siteUrl, i.alt) }) } : i))) }),
           };
         }),
       );

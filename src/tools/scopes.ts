@@ -83,6 +83,8 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   grant_extension: ["grantExtension"],
   set_quiz_override: ["setQuizOverride"],
   set_discussion_state: ["setDiscussionState"],
+  // The person's own following of a discussion, given back as the forum lists it (other people's names).
+  set_discussion_subscription: ["category:communication", "category:others-personal"],
   // Copies, backups and restores are content; with users, the tools check the limits themselves (courseLifecycle.ts).
   copy_course: ["category:course-content"],
   backup_course: ["category:course-content"],

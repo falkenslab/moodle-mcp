@@ -9,7 +9,7 @@ import { registerGetActivitiesOverview, registerGetCourseUpdates, registerListDe
 import { registerGetActivitySettings, registerUpdateCourse } from "./courseSettings.js";
 import { registerAddSection, registerDeleteActivity, registerDeleteSection, registerDuplicateActivity, registerEditActivity, registerEditSection } from "./courseLayout.js";
 import { registerDownloadFile } from "./downloadFile.js";
-import { registerCreateDiscussion, registerDeletePost, registerEditPost, registerReplyToPost } from "./forumPosts.js";
+import { registerCreateDiscussion, registerDeletePost, registerEditPost, registerReplyToPost, registerSetDiscussionSubscription } from "./forumPosts.js";
 import { registerGetActivityContent } from "./getActivityContent.js";
 import { registerGetCourseStructure } from "./getCourseStructure.js";
 import { registerGetDiscussion } from "./getDiscussion.js";
@@ -119,6 +119,7 @@ export const TOOLS: RegisterTool[] = [
   registerReplyToPost,
   registerCreateDiscussion,
   registerSetDiscussionState,
+  registerSetDiscussionSubscription,
   registerEditPost,
   registerDeletePost,
   registerGetForumGrades,

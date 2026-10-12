@@ -18,6 +18,7 @@ const outputSchema = {
     .array(z.object({ kind: z.enum(["video", "audio", "youtube", "vimeo", "embed"]), url: z.string(), title: z.string().optional() }))
     .optional()
     .describe("Videos, audio and players in a page's, label's or book's content: download_file saves the site's own files; the rest are links"),
+  images: z.array(z.object({ url: z.string(), alt: z.string().optional() })).optional().describe("Images in a page's, label's or book's content: download_file saves them"),
   url: z.string().optional().describe("A URL resource's target"),
   files: z.array(link).optional().describe("A file resource's or a folder's files"),
   trail: z.enum(["realistic", "fast"]).describe("How it was read: realistic viewed it page by page at a reader's pace"),

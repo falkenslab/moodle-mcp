@@ -19,6 +19,7 @@ const outputSchema = {
       replies: z.number().int().describe("0 means nobody has answered yet"),
       locked: z.boolean(),
       pinned: z.boolean().optional().describe("Kept at the top of the list"),
+      subscribed: z.boolean().optional().describe("The person is subscribed to it"),
     }),
   ),
 };

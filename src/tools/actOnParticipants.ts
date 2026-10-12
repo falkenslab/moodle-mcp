@@ -113,6 +113,7 @@ export const registerSetDiscussionState: RegisterTool = (server, { config, brows
             replies: z.number().int(),
             locked: z.boolean(),
             pinned: z.boolean(),
+            subscribed: z.boolean().optional(),
           })
           .optional(),
       },

@@ -13,6 +13,7 @@ const contentFields = {
   visibility: z.enum(ACTIVITY_VISIBILITIES).optional().describe('"stealth": hidden from the course page but available by link, where the site allows it'),
   restrictions: restrictionsSchema.optional().describe("When students can open it ({ conditions: [] } removes them)"),
   completion: completionSchema.optional(),
+  embed: z.array(z.string()).optional().describe('Absolute local files (images…) to embed in the HTML, which names each by its file name: <img src="shot.png">'),
   settings: z
     .record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]))
     .optional()

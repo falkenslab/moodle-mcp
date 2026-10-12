@@ -65,6 +65,7 @@ export const registerUpdateCourse: RegisterTool = (server, { config, browser }) 
         fullName: z.string().min(1).optional(),
         shortName: z.string().min(1).optional(),
         summary: z.string().optional().describe("HTML"),
+        embed: z.array(z.string()).optional().describe('Absolute local files (images…) to embed in the HTML, which names each by its file name: <img src="shot.png">'),
         settings: formSettings.describe('Other fields by their name in the course settings form, e.g. {"visible": 0, "startdate[day]": 1}'),
       },
       outputSchema: { changed: z.string(), course: course.optional() },
