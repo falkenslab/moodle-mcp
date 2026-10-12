@@ -2,6 +2,7 @@ import { chromium } from "playwright-core";
 import { z } from "zod";
 import { redactUrl } from "../config.js";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "../version.js";
+import { ROLES } from "./roles.js";
 import { SCOPES, STUDENT_DATA_LEVELS, activeScopes } from "./scopes.js";
 import type { RegisterTool, ToolContext } from "./types.js";
 
@@ -18,8 +19,9 @@ export const serverInfoSchema = {
   trail: z.enum(["realistic", "fast"]).describe("How student tools view and do things: through the real pages at a human pace, or as fast as possible"),
   scopes: z.array(z.enum(SCOPES)).describe("The kinds of tools in force (ADR-015), student data's blocks applied"),
   studentData: z.enum(STUDENT_DATA_LEVELS).describe("How others' data reaches the agent: block (no tools on it), pseudonymize or clear (ADR-016)"),
+  role: z.enum(ROLES).describe("The role whose tools the agent gets: teacher, student or all (ADR-018)"),
   sources: z
-    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source })
+    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source })
     .describe("Where each setting came from: configure, argument, environment or default"),
   visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
   browserOpen: z.boolean().describe("Whether the browser is running"),
@@ -45,6 +47,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     trail: config.trail,
     scopes: [...activeScopes(config)],
     studentData: config.studentData,
+    role: config.role,
     sources: { ...config.sources },
     visible: browser.visible(),
     browserOpen: openChannel !== undefined,

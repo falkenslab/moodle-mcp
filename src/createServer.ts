@@ -10,7 +10,7 @@ import { PACKAGE_NAME, PACKAGE_VERSION } from "./version.js";
 /** The MCP server with its instructions and tools, not yet connected to a transport. */
 export function createServer(context: ToolContext): McpServer {
   const { config } = context;
-  const restricted = config.scopes.length < SCOPES.length || config.studentData === "block";
+  const restricted = config.scopes.length < SCOPES.length || config.studentData === "block" || config.role !== "all";
   const server = new McpServer({ name: PACKAGE_NAME, version: PACKAGE_VERSION }, { instructions: instructionsFor({ restricted, description: describeLimits(config) }) });
   // Errors explained outside following, so a tool's own error is explained too.
   explainErrors(server);

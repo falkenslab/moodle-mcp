@@ -7,6 +7,7 @@ import type { BrowserManager } from "@falkenslab/moodle-driver";
 import { ConfigError, loadConfig, type Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
 import { SCOPES, TOOL_FUNCTIONS, holdsOthersFiles, requiredScopes, showsPeople, toolAllowed } from "../../src/tools/scopes.js";
+import { ROLE_LISTS, TOOL_ROLES } from "../../src/tools/roles.js";
 import { testConfig } from "../helpers/fixtures.js";
 
 const browser = await launchTestBrowser();
@@ -136,5 +137,40 @@ describe("deleting without student data", { skip: !browser && "no system browser
     assert.equal(deleted.isError, undefined, JSON.stringify(deleted.content));
     assert.deepEqual(edits, ["cm_delete"]);
     await context.close();
+  });
+});
+
+describe("tools for a role", () => {
+  it("knows every tool's roles, each tool in one list", async () => {
+    const all = await names(await connect(testConfig()));
+    const listed = [...ROLE_LISTS.shared, ...ROLE_LISTS.student, ...ROLE_LISTS.teacher];
+    assert.equal(new Set(listed).size, listed.length, "a tool in two lists");
+    assert.deepEqual(all.filter((name) => !TOOL_ROLES[name]), []);
+    assert.deepEqual(listed.filter((name) => !all.includes(name)).sort(), []);
+  });
+
+  it("gives a student a student's tools, a teacher a teacher's, and combines with the scopes", async () => {
+    const student = await names(await connect(testConfig({ role: "student" })));
+    for (const absent of ["create_activity", "grade_submission", "reset_course", "get_submissions", "enrol_users"]) assert.ok(!student.includes(absent), absent);
+    for (const present of ["start_quiz_attempt", "submit_assignment", "open_scorm", "get_my_grades", "reply_to_post", "get_course_structure", ...SESSION]) assert.ok(student.includes(present), present);
+    const teacher = await names(await connect(testConfig({ role: "teacher" })));
+    for (const absent of ["start_quiz_attempt", "submit_assignment", "get_my_grades"]) assert.ok(!teacher.includes(absent), absent);
+    assert.ok(teacher.includes("grade_submission") && teacher.includes("create_activity"));
+    const building = await names(await connect(testConfig({ role: "teacher", scopes: ["content"] })));
+    assert.ok(building.includes("create_activity") && !building.includes("grade_submission") && !building.includes("reply_to_post") && !building.includes("get_my_grades"));
+    assert.ok(student.length < teacher.length && teacher.length < (await names(await connect(testConfig()))).length);
+  });
+
+  it("lets configure narrow the role from all, never change it otherwise, and reads it at start-up", async () => {
+    const client = await connect(testConfig());
+    const configure = (role: string) => client.callTool({ name: "configure", arguments: { role } });
+    assert.equal((await configure("student")).isError, undefined);
+    assert.ok(!(await names(client)).includes("create_activity"));
+    assert.match(JSON.stringify((await configure("teacher")).content), /only narrow the role/);
+    assert.match(JSON.stringify((await configure("all")).content), /only narrow the role/);
+    assert.equal((loadConfig(["--role", "Teacher"], {}) as Config).role, "teacher");
+    assert.equal((loadConfig([], { MOODLE_MCP_ROLE: "student" }) as Config).role, "student");
+    assert.throws(() => loadConfig(["--role", "admin"], {}), /must be one of all, teacher, student/);
+    assert.match((await connect(testConfig({ role: "student" }))).getInstructions() ?? "", /This server is limited \(role student;/);
   });
 });

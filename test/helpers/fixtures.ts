@@ -13,10 +13,11 @@ export function testConfig(overrides: Partial<Config> = {}): Config {
     trail: "realistic",
     scopes: [...SCOPES],
     studentData: "clear",
-    sources: { moodleUrl: "environment", profileDir: "default", channel: "default", headless: "default", downloadBrowser: "default", trail: "default", scopes: "default", studentData: "default" },
+    role: "all",
+    sources: { moodleUrl: "environment", profileDir: "default", channel: "default", headless: "default", downloadBrowser: "default", trail: "default", scopes: "default", studentData: "default", role: "default" },
     ...overrides,
     // What the person set at start-up, unless a test sets it: the same as what's in force.
-    limits: overrides.limits ?? { scopes: overrides.scopes ?? [...SCOPES], studentData: overrides.studentData ?? "clear" },
+    limits: overrides.limits ?? { scopes: overrides.scopes ?? [...SCOPES], studentData: overrides.studentData ?? "clear", role: overrides.role ?? "all" },
   };
 }
 

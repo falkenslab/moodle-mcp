@@ -4,6 +4,7 @@
 import type { McpServer, RegisteredTool } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { DATA_CATEGORIES, moduleCategories, type DataCategory } from "@falkenslab/moodle-driver";
 import type { Config } from "../config.js";
+import { roleAllows } from "./roles.js";
 
 export const SCOPES = ["content", "student-data", "grading", "communication", "as-student", "browser"] as const;
 export type Scope = (typeof SCOPES)[number];
@@ -197,8 +198,9 @@ export function activeScopes(config: Pick<Config, "scopes" | "studentData">): Se
 }
 
 /** Whether a tool exists for the agent under this configuration. */
-export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData">): boolean {
+export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role">): boolean {
   if (SESSION_TOOLS.has(tool)) return true;
+  if (!roleAllows(tool, config.role)) return false;
   // A picture can't be redacted (ADR-017).
   if (tool === "browser_screenshot" && config.studentData !== "clear") return false;
   const active = activeScopes(config);
@@ -254,8 +256,8 @@ export function applyScopes(server: McpServer, config: Config): void {
 }
 
 /** The limits in words, for messages and the instructions. */
-export function describeLimits(config: Pick<Config, "scopes" | "studentData">): string {
-  return `scopes ${[...activeScopes(config)].join(", ") || "none"}; student data ${config.studentData}`;
+export function describeLimits(config: Pick<Config, "scopes" | "studentData" | "role">): string {
+  return `${config.role === "all" ? "" : `role ${config.role}; `}scopes ${[...activeScopes(config)].join(", ") || "none"}; student data ${config.studentData}`;
 }
 
 /** A scope list or profile name, as the person writes it: `content`, `teacher`, `content,communication`… */

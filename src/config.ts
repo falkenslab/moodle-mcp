@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { CHANNELS, MoodleUrlError, TRAILS, parseSiteUrl, type Channel, type Trail } from "@falkenslab/moodle-driver";
 import { z } from "zod";
+import { ROLES, type Role } from "./tools/roles.js";
 import { PROFILES, STUDENT_DATA_LEVELS, parseScopes, type Scope, type StudentDataLevel } from "./tools/scopes.js";
 
 // Channels and trails are the driver's (its ADR-001 and ADR-005); the server only picks among them.
@@ -33,8 +34,10 @@ export interface Config {
   scopes: Scope[];
   /** How others' data reaches the agent (ADR-016). */
   studentData: StudentDataLevel;
+  /** The role whose tools the agent gets (ADR-018). */
+  role: Role;
   /** What the person set at start-up: configure can narrow below it, never go past it. */
-  limits: { scopes: Scope[]; studentData: StudentDataLevel };
+  limits: { scopes: Scope[]; studentData: StudentDataLevel; role: Role };
   sources: {
     moodleUrl?: SettingSource;
     profileDir: SettingSource;
@@ -44,6 +47,7 @@ export interface Config {
     trail: SettingSource;
     scopes: SettingSource;
     studentData: SettingSource;
+    role: SettingSource;
   };
 }
 
@@ -75,6 +79,8 @@ Options (each overrides its environment variable):
                                                              MOODLE_MCP_SCOPES (default: all)
   --student-data <lvl>  Others' data: block, pseudonymize or MOODLE_MCP_STUDENT_DATA (default: pseudonymize)
                         clear (names, for a local model)
+  --role <role>         Tools for a role: teacher, student or   MOODLE_MCP_ROLE (default: all)
+                        all (every tool)
   --help                Show this help
   --version             Show the version`;
 
@@ -133,6 +139,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         trail: { type: "string" },
         scopes: { type: "string" },
         "student-data": { type: "string" },
+        role: { type: "string" },
         help: { type: "boolean" },
         version: { type: "boolean" },
       },
@@ -151,6 +158,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const studentData = pick(values["student-data"], env.MOODLE_MCP_STUDENT_DATA);
   const scopeList = scopes ? parseScopeSetting(scopes.value) : [...PROFILES.all!];
   const level = studentData ? parseStudentData(studentData.value) : DEFAULT_STUDENT_DATA;
+  const roleSetting = pick(values.role, env.MOODLE_MCP_ROLE);
+  const role = roleSetting ? parseRole(roleSetting.value) : "all";
 
   const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env);
   const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env);
@@ -164,7 +173,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     trail: trail ? parseTrail(trail.value) : "realistic",
     scopes: scopeList,
     studentData: level,
-    limits: { scopes: scopeList, studentData: level },
+    role,
+    limits: { scopes: scopeList, studentData: level, role },
     sources: {
       ...(url ? { moodleUrl: url.source } : {}),
       profileDir: profile?.source ?? "default",
@@ -174,6 +184,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       trail: trail?.source ?? "default",
       scopes: scopes?.source ?? "default",
       studentData: studentData?.source ?? "default",
+      role: roleSetting?.source ?? "default",
     },
   };
 }
@@ -201,6 +212,12 @@ export function parseProfileDir(value: string, packageRoot: string = PACKAGE_ROO
 
 // Others reach the agent as aliases unless the person chooses otherwise (ADR-016).
 const DEFAULT_STUDENT_DATA: StudentDataLevel = "pseudonymize";
+
+export function parseRole(value: string): Role {
+  const role = value.trim().toLowerCase();
+  if (!(ROLES as readonly string[]).includes(role)) throw new ConfigError(`The role must be one of ${ROLES.join(", ")}, not "${value}".`);
+  return role as Role;
+}
 
 export function parseScopeSetting(value: string): Scope[] {
   try {
