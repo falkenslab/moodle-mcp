@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { instructionsFor } from "./instructions.js";
 import { explainErrors } from "./tools/errors.js";
 import { followTools } from "./tools/follow.js";
+import { pseudonymizeTools } from "./tools/pseudonymizeOutput.js";
 import { TOOLS } from "./tools/index.js";
 import { SCOPES, applyScopes, describeLimits, scopeTools } from "./tools/scopes.js";
 import type { ToolContext } from "./tools/types.js";
@@ -12,6 +13,8 @@ export function createServer(context: ToolContext): McpServer {
   const { config } = context;
   const restricted = config.scopes.length < SCOPES.length || config.studentData === "block" || config.role !== "all";
   const server = new McpServer({ name: PACKAGE_NAME, version: PACKAGE_VERSION }, { instructions: instructionsFor({ restricted, description: describeLimits(config) }) });
+  // The pseudonymization net first, so it wraps the others: it sees what the agent will (ADR-019).
+  pseudonymizeTools(server, context);
   // Errors explained outside following, so a tool's own error is explained too.
   explainErrors(server);
   followTools(server, context);

@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { LOG_ACTIONS, PARTICIPATION_ACTIONS, activityReport, courseLogs, participationReport } from "@falkenslab/moodle-driver";
 import { requireSiteUrl } from "../config.js";
-import { people, personByName, personFields, pseudonymizing, shown, targetFields, targetUserId, text } from "../people.js";
+import { people, personByName, personFields, pseudonymizing, redactAll, shown, targetFields, targetUserId } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
@@ -106,17 +106,19 @@ export const registerGetCourseLogs: RegisterTool = (server, { config, browser })
       const who = await people(config, context, siteUrl, named);
       const byId = new Map(named.map((p, i) => [p.userId, shown(who[i]!)]));
       const person = async (id: number | undefined, name: string) => (id !== undefined && byId.get(id)) || (pseudonymizing(config) ? { user: await personByName(config, context, siteUrl, name) } : { fullName: name });
+      // Every entry's free text in one redaction (one read of the directory), user ids included.
+      const texts = await redactAll(config, siteUrl, found.flatMap((e) => [e.context, e.description]));
       const entries = await Promise.all(
-        found.map(async (e) => ({
+        found.map(async (e, i) => ({
           time: e.time,
           by: await person(e.userId, e.userName),
           ...(e.relatedUserName && { about: await person(e.relatedUserId, e.relatedUserName) }),
-          context: await text(config, siteUrl, e.context),
+          context: texts[2 * i]!,
           activityId: e.activityId,
           component: e.component,
           event: e.event,
-          // Moodle's descriptions name users by id ("The user with id '7'…"): the ids go when pseudonymizing.
-          description: pseudonymizing(config) ? (await text(config, siteUrl, e.description)).replace(/(user(?:s)? with id )'?\d+'?/gi, "$1[user]") : e.description,
+          // Moodle's descriptions name users by id ("The user with id '7'…"): redactAll hides them.
+          description: texts[2 * i + 1]!,
           origin: e.origin,
         })),
       );

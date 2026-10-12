@@ -179,3 +179,26 @@ export async function peopleByIds(config: Config, context: BrowserContext, siteU
   const byId = new Map(everyone.map((p, i) => [p.userId, shown(who[i]!)]));
   return new Map(ids.map((id) => [id, byId.get(id) ?? (pseudonymizing(config) ? { user: "[participant]" } : { userId: id })]));
 }
+
+// Joins a result's strings for one redact() call (one read of the directory): a line nothing redacts across.
+const SEPARATOR = "\n␞\n";
+// A user by id in text: "user 7", "users 7, 8", "user with id '7'".
+const USER_IDS = /\b(users?)((?: with ids?)?) '?\d+'?(?:(?:, | and )'?\d+'?)*/gi;
+
+/**
+ * Many strings at once, under `pseudonymize`: user ids in them hidden (in text and in links), then known
+ * people to aliases and contact and identity data to placeholders, in one redact() call; a link is
+ * only stripped of user ids, so it still works. Unchanged otherwise.
+ */
+export async function redactAll(config: Config, siteUrl: string, values: string[]): Promise<string[]> {
+  if (!pseudonymizing(config) || values.length === 0) return values;
+  const hidden = values.map((v) => v.replace(PROFILE_ID, "$1[user]").replace(USER_PARAM, "$1[user]").replace(USER_IDS, "$1$2 [user]"));
+  const isLink = (v: string) => /^https?:\/\/\S+$/.test(v);
+  const prose = hidden.filter((v) => !isLink(v));
+  if (prose.length === 0) return hidden;
+  const joined = (await redact(prose.join(SEPARATOR), { service: serviceOf(siteUrl) })).text.split(SEPARATOR);
+  // A redaction that ran across the separator would misalign them: then one call each.
+  const redacted = joined.length === prose.length ? joined : await Promise.all(prose.map(async (v) => (await redact(v, { service: serviceOf(siteUrl) })).text));
+  let next = 0;
+  return hidden.map((v) => (isLink(v) ? v : redacted[next++]!));
+}
