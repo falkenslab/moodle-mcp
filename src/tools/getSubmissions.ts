@@ -17,8 +17,9 @@ const submission = z.object({
   submitted: z.boolean(),
   needsGrading: z.boolean(),
   extensionGranted: z.boolean(),
+  extensionDueDate: z.string().optional().describe("ISO 8601: the date the participant's extension runs to, when granted"),
   allowSubmissionsFrom: z.string().optional().describe("ISO 8601, for this participant"),
-  dueDate: z.string().optional().describe("ISO 8601, for this participant (overrides and extensions included)"),
+  dueDate: z.string().optional().describe("ISO 8601, for this participant (overrides included; an extension is in extensionDueDate)"),
   cutoffDate: z.string().optional().describe("ISO 8601, for this participant"),
   group: z.object({ id: z.number().int(), name: z.string() }).optional().describe("The participant's group, in a group assignment"),
   workflowState: z.enum(WORKFLOW_STATES).optional().describe("The marking workflow state, when the assignment uses it"),
@@ -54,9 +55,9 @@ export const registerGetSubmissions: RegisterTool = (server, { config, browser }
       const markerList = [...new Map(found.flatMap((s) => s.markers ?? []).map((m) => [m.id, { userId: m.id, fullName: m.name }])).values()];
       const markerShown = new Map((await people(config, context, siteUrl, markerList)).map((p, i) => [markerList[i]!.userId, shown(p)]));
       const submissions = await Promise.all(
-        found.map(async ({ status, submitted, needsGrading, extensionGranted, allowSubmissionsFrom, dueDate, cutoffDate, content, group, workflowState, markers, feedbackFiles }, i) => ({
+        found.map(async ({ status, submitted, needsGrading, extensionGranted, extensionDueDate, allowSubmissionsFrom, dueDate, cutoffDate, content, group, workflowState, markers, feedbackFiles }, i) => ({
           ...(who[i]!.alias ? { user: who[i]!.alias } : { userId: who[i]!.userId, fullName: who[i]!.fullName }),
-          ...{ status, submitted, needsGrading, extensionGranted, allowSubmissionsFrom, dueDate, cutoffDate, workflowState },
+          ...{ status, submitted, needsGrading, extensionGranted, extensionDueDate, allowSubmissionsFrom, dueDate, cutoffDate, workflowState },
           ...(group && { group: { id: group.id, name: await text(config, siteUrl, group.name) } }),
           ...(markers && { markers: markers.map((m) => markerShown.get(m.id)!) }),
           // Feedback files are often named after the student, and so are their links.

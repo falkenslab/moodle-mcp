@@ -4,7 +4,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
-import { PANEL } from "@falkenslab/moodle-driver/testing";
+import { PANEL, moodlePage } from "@falkenslab/moodle-driver/testing";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 import { SITE, launchTestBrowser, serveFakeMoodle, type FakeMoodleState } from "@falkenslab/moodle-driver/testing";
 
@@ -35,6 +35,12 @@ describe("get_submissions", { skip: !browser && "no system browser" }, () => {
   async function connect(state: FakeMoodleState): Promise<{ client: Client; context: BrowserContext }> {
     const context = await browser!.newContext();
     await serveFakeMoodle(context, state);
+    // The extension form of a participant who has one, as Moodle 5.2 renders it, reduced: prefilled with the date.
+    const select = (part: string, values: number[], selected: number) => `<select name="extensionduedate[${part}]">${values.map((v) => `<option value="${v}"${v === selected ? " selected" : ""}>${v}</option>`).join("")}</select>`;
+    const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+    const form = `<form class="mform" method="post" action="${SITE}mod/assign/view.php"><input type="hidden" name="action" value="saveextension"><input type="checkbox" name="extensionduedate[enabled]" value="1" checked>
+${select("day", range(1, 31), 23)}${select("month", range(1, 12), 10)}${select("year", [2026], 2026)}${select("hour", range(0, 23), 14)}${select("minute", range(0, 59), 30)}<input type="submit" name="submitbutton" value="Save changes"></form>`;
+    await context.route(`${SITE}mod/assign/view.php?*action=grantextension*`, (route) => route.fulfill({ status: 200, contentType: "text/html", body: moodlePage({ userId: 3, bodyId: "page-mod-assign-view", body: form }) }));
     const server = createServer({ config: testConfig({ moodleUrl: SITE }), browser: fakeBrowserManager({ context: async () => context }) });
     const client = new Client({ name: "test", version: "0.0.0" });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
@@ -56,6 +62,9 @@ describe("get_submissions", { skip: !browser && "no system browser" }, () => {
     assert.equal((ada?.content as { plugin: string }[]).map((c) => c.plugin).join(), "onlinetext,file,onlinetext");
     assert.equal(alan?.status, "none");
     assert.equal(alan?.extensionGranted, true);
+    // The date it runs to, read from the extension form (#11).
+    assert.match(String(alan?.extensionDueDate), /^2026-10-2[23]T/);
+    assert.equal(ada?.extensionDueDate, undefined);
     assert.equal(alan?.content, undefined);
     const fragment = state.serviceCalls?.find((call) => call.methodname === "core_get_fragment");
     assert.equal(fragment?.args.contextid, 2100);
