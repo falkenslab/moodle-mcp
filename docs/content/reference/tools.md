@@ -537,7 +537,7 @@ List the assignments of a Moodle course: their ids (course module ids, for the o
 
 **Get an assignment's submissions**
 
-Get every participant's submission to a Moodle assignment: who (an alias when the server pseudonymizes, else id and name), status (submitted, draft, none), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Takes the assignment id from list_assignments.
+Get every participant's submission to a Moodle assignment: who (an alias when the server pseudonymizes, else id and name), status (submitted; draft; new: a submission started but nothing in it yet; reopened; none: no submission at all), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Changes nothing, but Moodle logs it as the teacher viewing the grading pages, as it does for its own grader. Takes the assignment id from list_assignments.
 
 <details>
 <summary>Inputs</summary>
@@ -1251,7 +1251,7 @@ Read an activity's participation report: everyone with a role (all the roles it 
 
 **Get a course's logs**
 
-Read a course's logs, newest first, as its logs report lists them: by a user (an alias when the server pseudonymizes), an activity, a kind of action and a time span, up to limit entries (100 by default). Each entry: when, who, who it was about, where, what happened. Never IP addresses.
+Read a course's logs, newest first, as its logs report lists them: by a user (an alias when the server pseudonymizes), an activity, a kind of action and a time span, a page at a time: limit entries (50 by default) after skipping offset; more says whether there are others. Each entry: when, who, who it was about, where, what happened (Moodle's longer description only with includeDescriptions). Never IP addresses.
 
 <details>
 <summary>Inputs</summary>
@@ -1265,7 +1265,9 @@ Read a course's logs, newest first, as its logs report lists them: by a user (an
 | `action` | `create`, `view`, `update`, `delete`, `change` |  |
 | `from` | string | ISO 8601 |
 | `until` | string | ISO 8601 |
-| `limit` | integer |  |
+| `limit` | integer | How many entries (50 by default) |
+| `offset` | integer | How many entries to skip first, newest first (0 by default) |
+| `includeDescriptions` | boolean | Also each entry's description, Moodle's sentence about it (longer; default false) |
 
 </details>
 
@@ -1845,7 +1847,7 @@ Assess a workshop submission as the person, through the workshop's assessment fo
 
 **List my notifications**
 
-List the person's notifications, newest first (only unread ones when asked): subject, text, who it's from (an alias when the server pseudonymizes), when, whether it's read, and where it leads. Names in the texts are redacted when pseudonymizing.
+List the person's notifications, newest first (only unread ones when asked), a page at a time: limit of them (30 by default) after skipping offset; more says whether there are others to ask for with a bigger offset. Each: subject, text, who it's from (an alias when the server pseudonymizes), when, whether it's read, and where it leads. Names in the texts are redacted when pseudonymizing.
 
 <details>
 <summary>Inputs</summary>
@@ -1853,6 +1855,8 @@ List the person's notifications, newest first (only unread ones when asked): sub
 | | | |
 | --- | --- | --- |
 | `unreadOnly` | boolean |  |
+| `limit` | integer | How many (30 by default) |
+| `offset` | integer | How many to skip first, newest first (0 by default); with unreadOnly, it counts unread ones |
 
 </details>
 

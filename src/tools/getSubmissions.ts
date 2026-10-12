@@ -42,7 +42,7 @@ export const registerGetSubmissions: RegisterTool = (server, { config, browser }
     {
       title: "Get an assignment's submissions",
       description:
-        "Get every participant's submission to a Moodle assignment: who (an alias when the server pseudonymizes, else id and name), status (submitted, draft, none), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Takes the assignment id from list_assignments.",
+        "Get every participant's submission to a Moodle assignment: who (an alias when the server pseudonymizes, else id and name), status (submitted; draft; new: a submission started but nothing in it yet; reopened; none: no submission at all), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Changes nothing, but Moodle logs it as the teacher viewing the grading pages, as it does for its own grader. Takes the assignment id from list_assignments.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
