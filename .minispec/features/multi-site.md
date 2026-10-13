@@ -19,7 +19,7 @@ One server knows several Moodle sites, works on one at a time, and moves content
 Phase 1, the active site (no driver work):
 
 - An ADR: a list of sites and one active at a time; where sessions and the server's state live; the limits (ADR-015, 016, 018, 020) the same on every site.
-- Sites from configuration (`MOODLE_MCP_SITES` or `--sites`: a JSON object from name to URL or to `{ url, … }`, or a `name=url,…` list; `MOODLE_URL` alone is a one-site list) and at run time: `list_sites` (read-only: name, URL, active, logged in or not), `add_site({ name, url })`, `use_site(name)` (the active site; the browser opens to log in when it has no session), `remove_site` (a run-time site and its session; a configured one only goes from the configuration).
+- Sites from configuration (`MOODLE_MCP_SITES` or `--sites`: a JSON object from name to URL or to `{ url, … }`, or a list of URLs and `name=url` items; `MOODLE_URL` alone is a one-site list) and at run time: `list_sites` (read-only: name, URL, active, logged in or not), `add_site({ name, url })`, `use_site(name)` (the active site; the browser opens to log in when it has no session), `remove_site` (a run-time site and its session; a configured one only goes from the configuration).
 - Each site its own browser profile and session (two accounts on one host are two sites), each under the data folder by name; the 137 tools work on the active site, unchanged.
 - `server_info` and the instructions name the active site; an agent switches with `use_site` and says so.
 - State that survives a restart: with `CLAUDE_PLUGIN_DATA` and no `MOODLE_MCP_PROFILE_DIR`, profiles and the run-time sites go under `${CLAUDE_PLUGIN_DATA}`; otherwise in the data folder next to the profile. `configure` stays in memory and only narrows.
