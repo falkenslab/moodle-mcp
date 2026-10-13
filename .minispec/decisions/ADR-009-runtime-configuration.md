@@ -2,7 +2,7 @@
 
 ## Decision
 
-The server can start with no configuration. A `configure` tool sets the site URL, the headless mode and the profile folder for the running process, in memory only; the server writes no settings anywhere. Environment variables and arguments stay, optional, as starting values (ADR-003). Precedence: `configure`, then arguments, then variables, then defaults. Supersedes ADR-003's "configured only by environment variables or arguments" and its required `MOODLE_URL`.
+The server can start with no configuration. A `configure` tool sets the site URL, the headless mode and the profile folder for the running process, in memory only; the server writes no settings anywhere. Environment variables and arguments stay, optional, as starting values (ADR-003). Precedence: `configure`, then arguments, then variables, then defaults. Supersedes ADR-003's "configured only by environment variables or arguments" and its required `MOODLE_URL`. Amended by ADR-021: the sites added at run time are the one file the server writes.
 
 ## Motivation
 
