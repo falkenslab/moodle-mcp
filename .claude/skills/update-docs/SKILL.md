@@ -41,7 +41,7 @@ Search too: `grep -rn "<tool or setting>" README.md .minispec docs/content docs/
 - What belongs to moodle-driver or pseudonym (how Moodle is read, how aliases work) is documented there, by their sessions; here, only how this server uses them.
 - No credentials, ever, sandbox accounts included.
 
-Check the site builds in both languages (`npm run build` in `docs/`): it fails on broken links and anchors. Screenshots of sessions and of Moodle are real, from the sandbox; when a change makes one wrong, say so in the report rather than editing the image.
+Check the site builds in both languages (`npm run build` in `docs/`): it fails on broken links and anchors. Screenshots of sessions and of Moodle are real, from the sandbox; when a change makes one wrong, regenerate it with `scripts/screenshots/run.mjs` (the site's developers/testing page says how) or say so in the report, never edit the image.
 
 ## 4. Commit with the code
 

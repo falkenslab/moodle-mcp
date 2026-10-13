@@ -43,3 +43,18 @@ npm run typecheck && npm run lint && npm run build && npm run test:docker
 ```
 
 Plus the schema check from [Developing](./index.md#trying-the-server-by-hand): `tools/list --strict` must report no warnings.
+
+## The documentation's screenshots
+
+The use cases' screenshots are real: Claude Code and Codex, run in Docker in a web terminal against the sandbox, typed and photographed by Playwright, and Moodle's own pages with the result. `scripts/screenshots/` regenerates them:
+
+```bash
+MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs              # every use case, English then Spanish, then Moodle's pages
+MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs --only grading --langs en
+MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs --moodle-only
+```
+
+- The state folder stays outside the repository: `profile-teacher` and `profile-student`, logged in to the sandbox (the `sandbox-check` skill does it), and the sessions' transcripts, to compare with what a page says.
+- The run copies your Claude Code and Codex credentials into it, read-only in the container, and deletes them when it ends, whatever happens. It changes only course 3: before each language's sessions, `seed.mjs` puts back the submission to grade and an unanswered forum question, and deletes that language's quiz and page.
+- `scenarios.json` holds each use case's client, account, settings and turns in both languages.
+- A new session can behave differently from the last one, being a real agent: read its transcript and update the page's text, never the image.

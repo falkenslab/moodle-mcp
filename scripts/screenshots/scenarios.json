@@ -1,0 +1,134 @@
+{
+  "grading": {
+    "client": "claude",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "In my Moodle course mcp-content, which submissions to the assignment \"Tarea MCP\" still need grading? For each one, read it and propose a grade with the assignment's rubric, with a short feedback. Don't save anything yet.",
+        "Looks good. Save that grade and feedback, without notifying the student."
+      ],
+      "es": [
+        "En mi curso de Moodle mcp-content, ¿qué entregas de la tarea \"Tarea MCP\" faltan por calificar? Léelas y propón una nota con la rúbrica de la tarea, con un comentario breve. No guardes nada todavía.",
+        "De acuerdo. Guarda esa nota y el comentario, sin notificar al alumno."
+      ]
+    }
+  },
+  "quiz-from-questions": {
+    "client": "codex",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "In my Moodle course mcp-content, create a hidden quiz called \"Loops: quick check\" in the first section, import these GIFT questions into its question bank, add them to the quiz and put one question per page:\n\n::Repeat:: How many times does for i in range(3) run its block? {=3 ~2 ~4}\n\n::Stop:: Which keyword leaves a loop early? {=break ~continue ~pass}\n\n::While:: A while loop runs while its condition is true. {T}\n\nTell me what you'll do before changing anything.",
+        "Yes, go ahead."
+      ],
+      "es": [
+        "En mi curso de Moodle mcp-content, crea un cuestionario oculto llamado \"Bucles: repaso rápido\" en la primera sección, importa estas preguntas GIFT en su banco, añádelas al cuestionario y pon una pregunta por página:\n\n::Repetir:: ¿Cuántas veces ejecuta su bloque for i in range(3)? {=3 ~2 ~4}\n\n::Salir:: ¿Qué palabra sale antes de un bucle? {=break ~continue ~pass}\n\n::While:: Un bucle while se repite mientras su condición es verdadera. {T}\n\nDime qué vas a hacer antes de cambiar nada.",
+        "Sí, adelante."
+      ]
+    }
+  },
+  "forum-questions": {
+    "client": "claude",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "Are there questions in the \"Foro MCP\" forum of my course mcp-content that nobody has answered yet? Read them and draft a short, friendly answer for each. Don't post anything yet.",
+        "Post it."
+      ],
+      "es": [
+        "¿Hay preguntas en el foro \"Foro MCP\" de mi curso mcp-content que nadie haya respondido todavía? Léelas y redacta una respuesta breve y cercana para cada una. No publiques nada todavía.",
+        "Publícala."
+      ]
+    }
+  },
+  "falling-behind": {
+    "client": "codex",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "In my Moodle course mcp-content, which students haven't completed the page \"Apuntes: bucles\" yet? Prepare a short, friendly reminder for them, and tell me who would get it before sending anything.",
+        "Yes, send it."
+      ],
+      "es": [
+        "En mi curso de Moodle mcp-content, ¿qué alumnos no han completado todavía la página \"Apuntes: bucles\"? Prepárales un recordatorio breve y amable, y dime a quién le llegaría antes de enviar nada.",
+        "Sí, envíalo."
+      ]
+    }
+  },
+  "page-with-image": {
+    "client": "claude",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "In my Moodle course mcp-content, create a hidden page called \"How a for loop works\" in the first section, with a short explanation for beginners and this diagram in it: /home/teacher/Pictures/for-loop.png"
+      ],
+      "es": [
+        "En mi curso de Moodle mcp-content, crea una página oculta llamada \"Cómo funciona un bucle for\" en la primera sección, con una explicación breve para principiantes y este diagrama dentro: /home/teacher/Pictures/for-loop.png"
+      ]
+    }
+  },
+  "reading-assistant": {
+    "client": "claude",
+    "profile": "profile-teacher",
+    "env": [
+      "MOODLE_MCP_ROLE=teacher",
+      "MOODLE_MCP_ACCESS=read"
+    ],
+    "turns": {
+      "en": [
+        "Give me a quick overview of how my Moodle course mcp-content is going: submissions to grade, the gradebook, and forum activity. Then grade the pending submission of \"Tarea MCP\" with a 10."
+      ],
+      "es": [
+        "Dame un resumen rápido de cómo va mi curso de Moodle mcp-content: entregas por calificar, el calificador y la actividad del foro. Después pon un 10 a la entrega pendiente de \"Tarea MCP\"."
+      ]
+    }
+  },
+  "weekly-agenda": {
+    "client": "codex",
+    "profile": "profile-student",
+    "turns": {
+      "en": [
+        "What do I have due in Moodle in the next two weeks, across my courses? Order it by date and tell me what's still left to do."
+      ],
+      "es": [
+        "¿Qué tengo que entregar en Moodle en las próximas dos semanas, en todos mis cursos? Ordénalo por fecha y dime qué me queda por hacer."
+      ]
+    }
+  },
+  "study-notes": {
+    "client": "claude",
+    "profile": "profile-student",
+    "turns": {
+      "en": [
+        "Read the page \"Apuntes: bucles\" and the book \"Libro: funciones\" of my Moodle course mcp-content, and make me a one-page study sheet with the key ideas and an example of each."
+      ],
+      "es": [
+        "Lee la página \"Apuntes: bucles\" y el libro \"Libro: funciones\" de mi curso de Moodle mcp-content, y hazme una hoja de estudio de una página con las ideas clave y un ejemplo de cada una."
+      ]
+    }
+  },
+  "scorm": {
+    "client": "codex",
+    "profile": "profile-student",
+    "turns": {
+      "en": [
+        "In my Moodle course mcp-content, do the SCORM activity \"SCORM MCP (prueba)\" in a new attempt, answering its questions as well as you can, and then tell me what grade Moodle recorded."
+      ],
+      "es": [
+        "En mi curso de Moodle mcp-content, haz la actividad SCORM \"SCORM MCP (prueba)\" en un intento nuevo, respondiendo sus preguntas lo mejor que puedas, y después dime qué nota ha registrado Moodle."
+      ]
+    }
+  },
+  "quiz-review": {
+    "client": "claude",
+    "profile": "profile-student",
+    "turns": {
+      "en": [
+        "I just did the quiz \"Loops: quick check\" in my Moodle course mcp-content. What grade did I get, and which questions did I get wrong? Explain the right answers."
+      ],
+      "es": [
+        "Acabo de hacer el cuestionario \"Bucles: repaso rápido\" de mi curso de Moodle mcp-content. ¿Qué nota he sacado y qué preguntas he fallado? Explícame las respuestas correctas."
+      ]
+    }
+  }
+}
