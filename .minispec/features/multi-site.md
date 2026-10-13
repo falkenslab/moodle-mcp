@@ -10,7 +10,7 @@ One server works with several Moodle sites at once, and moves content between th
 
 - A server is one site today: `MOODLE_URL` (or `configure`), one browser profile (`MOODLE_MCP_PROFILE_DIR`, `~/.moodle-mcp/profile` by default), about 140 tools. One server per site works, but each repeats the tool definitions in the model's context, the model confuses sites, the list is fixed in the client's config, and content between them would pass through the model.
 - Aliases are already per site: `src/people.ts` remembers people under the service `moodle@<host>` (`serviceOf`), so the same Moodle user id on two sites gets two aliases.
-- moodle-driver has `backupCourse` (to a `.mbz` file, without users' data unless asked) and `restoreCourse` (into a new or an existing course, merged or replacing), and `importActivities` (within one site). It has no backup of a single activity or section: a transfer of less than a course needs one there (an issue in its repository, from its session).
+- moodle-driver has `backupCourse` (to a `.mbz` file, without users' data unless asked) and `restoreCourse` (into a new or an existing course, merged or replacing), and `importActivities` (within one site). It has no backup of a single activity or section: a transfer of less than a course needs one there (falkenslab/moodle-driver#57, which also asks how its browser manager holds several sites).
 - Clients like agent-kit restart the server when their settings change, and give a plugin `CLAUDE_PLUGIN_DATA`, a folder kept across sessions and removed with the plugin.
 - Owner's proposal and comments in #16 (13 October 2026).
 
