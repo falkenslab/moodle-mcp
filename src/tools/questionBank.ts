@@ -4,6 +4,7 @@ import { QUESTION_TYPES, createQuestion, deleteQuestions, importQuestions, quest
 import { formSettings } from "./courseSettings.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
+import { more, pageInputs, pagedText } from "./paging.js";
 
 const bankId = z.number().int().positive().describe("The bank's id (a course module id), as list_question_banks gives it");
 const categoryId = z.number().int().positive().optional().describe("The bank category, as list_questions gives it; the bank's default when missing");
@@ -56,12 +57,15 @@ export const registerListQuestions: RegisterTool = (server, { config, browser })
     "list_questions",
     {
       title: "List a bank's questions",
-      description: "List a question bank's categories and every question in them: id, name, type, status and category. Takes the bank id from list_question_banks.",
-      inputSchema: { bankId },
-      outputSchema: { categories: z.array(z.object({ id: z.number().int(), name: z.string() })), questions: z.array(question) },
+      description: `List a question bank's categories and the questions in them, category by category: id, name, type, status and category. ${pagedText("questions", 100)} Takes the bank id from list_question_banks.`,
+      inputSchema: { bankId, ...pageInputs("questions", 100, 1000, ", category by category") },
+      outputSchema: { categories: z.array(z.object({ id: z.number().int(), name: z.string() })), questions: z.array(question), more },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ bankId: id }) => reply(await questions(...(await onSite(config, browser)), id)),
+    async ({ bankId: id, limit = 100, offset }) => {
+      const { categories, questions: page } = await questions(...(await onSite(config, browser)), id, { limit, offset });
+      return reply({ categories, questions: page.items, more: page.more });
+    },
   );
 };
 

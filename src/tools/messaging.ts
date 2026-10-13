@@ -7,6 +7,7 @@ import { requireSiteUrl, type Config } from "../config.js";
 import { people, peopleByIds, personFields, pseudonymizing, refuseAliases, self, shown, targetFields, targetName, targetsFields, targetUserId, targetUserIds, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
+import { more, pageInputs, pagedText } from "./paging.js";
 
 type Shown = ReturnType<typeof shown>;
 
@@ -86,18 +87,19 @@ export const registerListConversations: RegisterTool = (server, { config, browse
     "list_conversations",
     {
       title: "List my conversations",
-      description: "List the person's message conversations, latest first: private, group or with themselves, their members (aliases when the server pseudonymizes), unread count and the last message as text. Read one with get_conversation.",
-      inputSchema: {},
+      description: `List the person's message conversations, latest first: private, group or with themselves, their members (aliases when the server pseudonymizes), unread count and the last message as text. ${pagedText("conversations", 20)} Read one with get_conversation.`,
+      inputSchema: pageInputs("conversations", 20, 100, ", latest first"),
       outputSchema: {
         conversations: z.array(
           z.object({ id: z.number().int().describe("The conversation's id, which get_conversation takes"), type: z.enum(["private", "group", "self"]), name: z.string().optional(), members: z.array(z.object(personFields)), unread: z.number().int(), lastMessage: lastMessage.optional() }),
         ),
+        more,
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async () => {
+    async ({ limit = 20, offset }) => {
       const [context, siteUrl] = await onSite(config, browser);
-      const found = await conversations(context, siteUrl);
+      const { items: found, more } = await conversations(context, siteUrl, { limit, offset });
       const map = await byUserId(config, context, siteUrl, found.flatMap((c) => c.members), found.flatMap((c) => (c.lastMessage ? [c.lastMessage.fromUserId] : [])));
       const list = await Promise.all(
         found.map(async (c) => ({
@@ -109,7 +111,7 @@ export const registerListConversations: RegisterTool = (server, { config, browse
           ...(c.lastMessage && { lastMessage: { from: sender(map, config, c.lastMessage.fromUserId), text: await text(config, siteUrl, c.lastMessage.text), time: c.lastMessage.time } }),
         })),
       );
-      return reply({ conversations: list });
+      return reply({ conversations: list, more });
     },
   );
 };
@@ -119,17 +121,19 @@ export const registerGetConversation: RegisterTool = (server, { config, browser 
     "get_conversation",
     {
       title: "Read a conversation",
-      description: "Read a message conversation, oldest first: its members and each message's sender (aliases when the server pseudonymizes), text and time; names and contact data in the texts are redacted when pseudonymizing. Takes the id from list_conversations.",
-      inputSchema: { conversationId: z.number().int().positive() },
-      outputSchema: { id: z.number().int(), members: z.array(z.object(personFields)), messages: z.array(z.object({ id: z.number().int(), from, text: z.string(), time: z.string().optional() })) },
+      description:
+        "Read a message conversation: its members and each message's sender (aliases when the server pseudonymizes), text and time; names and contact data in the texts are redacted when pseudonymizing. A page at a time, counted from the newest: limit messages (50 by default) after skipping offset, the first page the latest, each page's messages oldest first; more says whether there are older ones. Takes the id from list_conversations.",
+      inputSchema: { conversationId: z.number().int().positive(), ...pageInputs("messages", 50, 200, ", counted from the newest") },
+      outputSchema: { id: z.number().int(), members: z.array(z.object(personFields)), messages: z.array(z.object({ id: z.number().int(), from, text: z.string(), time: z.string().optional() })), more },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ conversationId }) => {
+    async ({ conversationId, limit = 50, offset }) => {
       const [context, siteUrl] = await onSite(config, browser);
-      const found = await conversation(context, siteUrl, conversationId);
-      const map = await byUserId(config, context, siteUrl, found.members, found.messages.map((m) => m.fromUserId));
-      const messages = await Promise.all(found.messages.map(async (m) => ({ id: m.id, from: sender(map, config, m.fromUserId), text: await text(config, siteUrl, m.text), ...(m.time !== undefined && { time: m.time }) })));
-      return reply({ id: found.id, members: found.members.map((m) => sender(map, config, m.userId) as Shown), messages });
+      const found = await conversation(context, siteUrl, conversationId, { limit, offset });
+      const page = found.messages.items;
+      const map = await byUserId(config, context, siteUrl, found.members, page.map((m) => m.fromUserId));
+      const messages = await Promise.all(page.map(async (m) => ({ id: m.id, from: sender(map, config, m.fromUserId), text: await text(config, siteUrl, m.text), ...(m.time !== undefined && { time: m.time }) })));
+      return reply({ id: found.id, members: found.members.map((m) => sender(map, config, m.userId) as Shown), messages, more: found.messages.more });
     },
   );
 };

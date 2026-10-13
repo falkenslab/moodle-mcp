@@ -537,7 +537,7 @@ Lista las tareas de un curso de Moodle: sus ids (ids de módulo del curso, para 
 
 **Obtener las entregas de una tarea**
 
-Obtiene la entrega de cada participante en una tarea de Moodle: quién (un alias cuando el servidor seudonimiza, si no, id y nombre), estado (submitted; draft; new: una entrega iniciada pero aún sin nada; reopened; none: ninguna entrega), si necesita calificación, prórrogas, las fechas del participante y, por defecto, el contenido (texto en línea y enlaces a archivos; los nombres y datos de contacto que contenga se ocultan al seudonimizar). No cambia nada, pero Moodle lo registra como el profesor viendo las páginas de calificación, igual que con su propio calificador. Toma el id de la tarea de list_assignments.
+Obtiene las entregas de los participantes en una tarea de Moodle, por páginas (limit participantes, 25 por defecto, tras saltarse offset; more dice si hay más): quién (un alias cuando el servidor seudonimiza, si no, id y nombre), estado (submitted; draft; new: una entrega iniciada pero aún sin nada; reopened; none: ninguna entrega), si necesita calificación, prórrogas, las fechas del participante y, por defecto, el contenido (texto en línea y enlaces a archivos; los nombres y datos de contacto que contenga se ocultan al seudonimizar). No cambia nada, pero Moodle lo registra como el profesor viendo las páginas de calificación, igual que con su propio calificador. Toma el id de la tarea de list_assignments.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -546,6 +546,8 @@ Obtiene la entrega de cada participante en una tarea de Moodle: quién (un alias
 | --- | :-: | --- | --- |
 | `assignmentId` | ✅ | entero | El id de la tarea (su id de módulo del curso), tal como lo da list_assignments |
 | `includeContent` |  | sí o no | Incluir el contenido de cada entrega: texto en línea y enlaces a archivos (true por defecto) |
+| `limit` |  | entero | Cuántos participantes (25 por defecto, hasta 200) |
+| `offset` |  | entero | Cuántos participantes saltarse primero, en el orden de la tabla de calificación (0 por defecto) |
 
 </details>
 
@@ -688,7 +690,7 @@ Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables p
 
 **Listar las preguntas de un banco**
 
-Lista las categorías de un banco de preguntas y todas las preguntas que contienen: id, nombre, tipo, estado y categoría. Recibe el id del banco de list_question_banks.
+Lista las categorías de un banco de preguntas y las preguntas que contienen, categoría a categoría: id, nombre, tipo, estado y categoría. Por páginas: limit preguntas (100 por defecto) tras saltarse offset; more dice si hay más. Recibe el id del banco de list_question_banks.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -696,6 +698,8 @@ Lista las categorías de un banco de preguntas y todas las preguntas que contien
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
+| `limit` |  | entero | Cuántas preguntas (100 por defecto, hasta 1000) |
+| `offset` |  | entero | Cuántas preguntas saltarse primero, categoría a categoría (0 por defecto) |
 
 </details>
 
@@ -903,7 +907,7 @@ Añade un encabezado de sección a un cuestionario, empezando en un hueco (el pr
 
 **Obtener los resultados de un cuestionario**
 
-Lee los intentos de un cuestionario tal como los muestra su informe de calificaciones: por intento, el participante (un alias cuando el servidor seudonimiza), estado, fechas, calificación y la puntuación por pregunta; con responses, también cada respuesta dada (oculta al seudonimizar).
+Lee los intentos de un cuestionario tal como los muestra su informe de calificaciones: por intento, el participante (un alias cuando el servidor seudonimiza), estado, fechas, calificación y la puntuación por pregunta; con responses, también cada respuesta dada (oculta al seudonimizar). Por páginas: limit intentos (50 por defecto) tras saltarse offset; more dice si hay más.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -912,6 +916,8 @@ Lee los intentos de un cuestionario tal como los muestra su informe de calificac
 | --- | :-: | --- | --- |
 | `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
 | `responses` |  | sí o no | También la respuesta por pregunta (por defecto false) |
+| `limit` |  | entero | Cuántos intentos (50 por defecto, hasta 500) |
+| `offset` |  | entero | Cuántos intentos saltarse primero, en el orden del informe (0 por defecto) |
 
 </details>
 
@@ -1296,7 +1302,7 @@ Lee los registros de un curso, los más recientes primero, tal como los lista su
 
 **Listar los participantes de un curso**
 
-Lista los participantes de un curso con sus roles y grupos, como hace la página de participantes: las personas como alias cuando el servidor seudonimiza, nunca correos electrónicos ni campos del perfil. Filtra por rol, grupo, o quienes no han accedido al curso desde una fecha (inactiveSince).
+Lista los participantes de un curso con sus roles y grupos, como hace la página de participantes: las personas como alias cuando el servidor seudonimiza, nunca correos electrónicos ni campos del perfil. Filtra por rol, grupo, o quienes no han accedido al curso desde una fecha (inactiveSince). Por páginas: limit participantes (50 por defecto) tras saltarse offset; more dice si hay más.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1307,6 +1313,8 @@ Lista los participantes de un curso con sus roles y grupos, como hace la página
 | `role` |  | entero | Solo los de este rol, por su id (tal como lo dan los roles de los participantes) |
 | `group` |  | entero | Solo los miembros de este grupo, por su id de list_groups |
 | `inactiveSince` |  | texto | Solo quienes no han accedido al curso desde esta fecha (ISO 8601) |
+| `limit` |  | entero | Cuántos participantes (50 por defecto, hasta 500) |
+| `offset` |  | entero | Cuántos participantes saltarse primero (0 por defecto) |
 
 </details>
 
@@ -1602,7 +1610,7 @@ Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y q
 
 **Listar los debates de un foro**
 
-Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el autor y la hora del último mensaje, el número de respuestas (0: sin responder) y si está bloqueado. Toma el id del foro de get_course_structure; lee uno con get_discussion.
+Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el autor y la hora del último mensaje, el número de respuestas (0: sin responder) y si está bloqueado. Por páginas: limit debates (30 por defecto) tras saltarse offset; more dice si hay más. Toma el id del foro de get_course_structure; lee uno con get_discussion.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1610,6 +1618,8 @@ Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el 
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `forumId` | ✅ | entero | El id del foro (su id de módulo del curso), tal como lo da get_course_structure |
+| `limit` |  | entero | Cuántos debates (30 por defecto, hasta 100) |
+| `offset` |  | entero | Cuántos debates saltarse primero, en el orden del foro (0 por defecto) |
 
 </details>
 
@@ -1617,7 +1627,7 @@ Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el 
 
 **Leer un debate de un foro**
 
-Lee todos los mensajes de un debate de un foro de Moodle, los más antiguos primero: autor (un alias cuando el servidor seudonimiza), hora, el mensaje al que responde, el mensaje como texto plano (con nombres y datos de contacto ocultos al seudonimizar) y los adjuntos. Toma el id del debate de list_discussions.
+Lee los mensajes de un debate de un foro de Moodle, los más antiguos primero, por páginas (limit mensajes, 50 por defecto, tras saltarse offset; more dice si hay más): autor (un alias cuando el servidor seudonimiza), hora, el mensaje al que responde, el mensaje como texto plano (con nombres y datos de contacto ocultos al seudonimizar) y los adjuntos. Toma el id del debate de list_discussions.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1625,6 +1635,8 @@ Lee todos los mensajes de un debate de un foro de Moodle, los más antiguos prim
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `discussionId` | ✅ | entero | El id del debate, tal como lo da list_discussions |
+| `limit` |  | entero | Cuántos mensajes (50 por defecto, hasta 200) |
+| `offset` |  | entero | Cuántos mensajes saltarse primero, los más antiguos primero (0 por defecto) |
 
 </details>
 
@@ -1872,15 +1884,23 @@ Marca como leídas todas las notificaciones de la persona, como hace "Marcar tod
 
 **Listar mis conversaciones**
 
-Lista las conversaciones de mensajes de la persona, de la más reciente a la más antigua: privadas, de grupo o consigo misma, sus miembros (alias cuando el servidor seudonimiza), el número de no leídos y el último mensaje como texto. Lee una con get_conversation.
+Lista las conversaciones de mensajes de la persona, de la más reciente a la más antigua: privadas, de grupo o consigo misma, sus miembros (alias cuando el servidor seudonimiza), el número de no leídos y el último mensaje como texto. Por páginas: limit conversaciones (20 por defecto) tras saltarse offset; more dice si hay más. Lee una con get_conversation.
 
-*Sin parámetros.*
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `limit` |  | entero | Cuántas conversaciones (20 por defecto, hasta 100) |
+| `offset` |  | entero | Cuántas conversaciones saltarse primero, de la más reciente a la más antigua (0 por defecto) |
+
+</details>
 
 ### `get_conversation` {#get-conversation}
 
 **Leer una conversación**
 
-Lee una conversación de mensajes, de la más antigua a la más reciente: sus miembros y, de cada mensaje, el remitente (alias cuando el servidor seudonimiza), el texto y la hora; los nombres y datos de contacto en los textos se ocultan al seudonimizar. Toma el id de list_conversations.
+Lee una conversación de mensajes: sus miembros y, de cada mensaje, el remitente (alias cuando el servidor seudonimiza), el texto y la hora; los nombres y datos de contacto en los textos se ocultan al seudonimizar. Por páginas, contando desde el más reciente: limit mensajes (50 por defecto) tras saltarse offset, la primera página con los últimos, y los mensajes de cada página del más antiguo al más reciente; more dice si hay mensajes anteriores. Toma el id de list_conversations.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1888,6 +1908,8 @@ Lee una conversación de mensajes, de la más antigua a la más reciente: sus mi
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `conversationId` | ✅ | entero |  |
+| `limit` |  | entero | Cuántos mensajes (50 por defecto, hasta 200) |
+| `offset` |  | entero | Cuántos mensajes saltarse primero, contando desde el más reciente (0 por defecto) |
 
 </details>
 

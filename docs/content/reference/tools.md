@@ -537,7 +537,7 @@ List the assignments of a Moodle course: their ids (course module ids, for the o
 
 **Get an assignment's submissions**
 
-Get every participant's submission to a Moodle assignment: who (an alias when the server pseudonymizes, else id and name), status (submitted; draft; new: a submission started but nothing in it yet; reopened; none: no submission at all), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Changes nothing, but Moodle logs it as the teacher viewing the grading pages, as it does for its own grader. Takes the assignment id from list_assignments.
+Get the participants' submissions to a Moodle assignment, a page at a time (limit participants, 25 by default, after skipping offset; more says whether there are others): who (an alias when the server pseudonymizes, else id and name), status (submitted; draft; new: a submission started but nothing in it yet; reopened; none: no submission at all), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Changes nothing, but Moodle logs it as the teacher viewing the grading pages, as it does for its own grader. Takes the assignment id from list_assignments.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -546,6 +546,8 @@ Get every participant's submission to a Moodle assignment: who (an alias when th
 | --- | :-: | --- | --- |
 | `assignmentId` | ✅ | integer | The assignment's id (its course module id), as list_assignments gives it |
 | `includeContent` |  | boolean | Include each submission's content: online text and file links (default true) |
+| `limit` |  | integer | How many participants (25 by default, up to 200) |
+| `offset` |  | integer | How many participants to skip first, in the grading table's order (0 by default) |
 
 </details>
 
@@ -688,7 +690,7 @@ List the question banks of a course: its shared banks (usable by any quiz in the
 
 **List a bank's questions**
 
-List a question bank's categories and every question in them: id, name, type, status and category. Takes the bank id from list_question_banks.
+List a question bank's categories and the questions in them, category by category: id, name, type, status and category. A page at a time: limit questions (100 by default) after skipping offset; more says whether there are others. Takes the bank id from list_question_banks.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -696,6 +698,8 @@ List a question bank's categories and every question in them: id, name, type, st
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `bankId` | ✅ | integer | The bank's id (a course module id), as list_question_banks gives it |
+| `limit` |  | integer | How many questions (100 by default, up to 1000) |
+| `offset` |  | integer | How many questions to skip first, category by category (0 by default) |
 
 </details>
 
@@ -903,7 +907,7 @@ Add a section heading to a quiz, starting at a slot (the first of its page: see 
 
 **Get a quiz's results**
 
-Read a quiz's attempts as its grades report shows them: per attempt the participant (an alias when the server pseudonymizes), state, dates, grade and the mark per question; with responses, also each answer given (redacted when pseudonymizing).
+Read a quiz's attempts as its grades report shows them: per attempt the participant (an alias when the server pseudonymizes), state, dates, grade and the mark per question; with responses, also each answer given (redacted when pseudonymizing). A page at a time: limit attempts (50 by default) after skipping offset; more says whether there are others.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -912,6 +916,8 @@ Read a quiz's attempts as its grades report shows them: per attempt the particip
 | --- | :-: | --- | --- |
 | `quizId` | ✅ | integer | The quiz's id (course module id), as get_course_structure gives it |
 | `responses` |  | boolean | Also the answer per question (default false) |
+| `limit` |  | integer | How many attempts (50 by default, up to 500) |
+| `offset` |  | integer | How many attempts to skip first, in the report's order (0 by default) |
 
 </details>
 
@@ -1296,7 +1302,7 @@ Read a course's logs, newest first, as its logs report lists them: by a user (an
 
 **List a course's participants**
 
-List a course's participants with their roles and groups, as the participants page does: people as aliases when the server pseudonymizes, never emails or profile fields. Filter by role, group, or those who haven't accessed the course since a date (inactiveSince).
+List a course's participants with their roles and groups, as the participants page does: people as aliases when the server pseudonymizes, never emails or profile fields. Filter by role, group, or those who haven't accessed the course since a date (inactiveSince). A page at a time: limit participants (50 by default) after skipping offset; more says whether there are others.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1307,6 +1313,8 @@ List a course's participants with their roles and groups, as the participants pa
 | `role` |  | integer | Only this role's, by its id (as the participants' roles give it) |
 | `group` |  | integer | Only this group's members, by its id from list_groups |
 | `inactiveSince` |  | string | Only those who haven't accessed the course since this date (ISO 8601) |
+| `limit` |  | integer | How many participants (50 by default, up to 500) |
+| `offset` |  | integer | How many participants to skip first (0 by default) |
 
 </details>
 
@@ -1602,7 +1610,7 @@ Make a grouping's groups exactly groupIds, adding and removing as its page does;
 
 **List a forum's discussions**
 
-List the discussions of a Moodle forum: subject, who started it and when, the last post's author and time, the number of replies (0: unanswered) and whether it's locked. Takes the forum id from get_course_structure; read one with get_discussion.
+List the discussions of a Moodle forum: subject, who started it and when, the last post's author and time, the number of replies (0: unanswered) and whether it's locked. A page at a time: limit discussions (30 by default) after skipping offset; more says whether there are others. Takes the forum id from get_course_structure; read one with get_discussion.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1610,6 +1618,8 @@ List the discussions of a Moodle forum: subject, who started it and when, the la
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `forumId` | ✅ | integer | The forum's id (its course module id), as get_course_structure gives it |
+| `limit` |  | integer | How many discussions (30 by default, up to 100) |
+| `offset` |  | integer | How many discussions to skip first, in the forum's order (0 by default) |
 
 </details>
 
@@ -1617,7 +1627,7 @@ List the discussions of a Moodle forum: subject, who started it and when, the la
 
 **Read a forum discussion**
 
-Read every post of a Moodle forum discussion, oldest first: author (an alias when the server pseudonymizes), time, the post it replies to, the message as plain text (names and contact data redacted when pseudonymizing) and attachments. Takes the discussion id from list_discussions.
+Read a Moodle forum discussion's posts, oldest first, a page at a time (limit posts, 50 by default, after skipping offset; more says whether there are others): author (an alias when the server pseudonymizes), time, the post it replies to, the message as plain text (names and contact data redacted when pseudonymizing) and attachments. Takes the discussion id from list_discussions.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1625,6 +1635,8 @@ Read every post of a Moodle forum discussion, oldest first: author (an alias whe
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `discussionId` | ✅ | integer | The discussion id, as list_discussions gives it |
+| `limit` |  | integer | How many posts (50 by default, up to 200) |
+| `offset` |  | integer | How many posts to skip first, oldest first (0 by default) |
 
 </details>
 
@@ -1872,15 +1884,23 @@ Mark all the person's notifications read, as the notifications popover's "Mark a
 
 **List my conversations**
 
-List the person's message conversations, latest first: private, group or with themselves, their members (aliases when the server pseudonymizes), unread count and the last message as text. Read one with get_conversation.
+List the person's message conversations, latest first: private, group or with themselves, their members (aliases when the server pseudonymizes), unread count and the last message as text. A page at a time: limit conversations (20 by default) after skipping offset; more says whether there are others. Read one with get_conversation.
 
-*No inputs.*
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `limit` |  | integer | How many conversations (20 by default, up to 100) |
+| `offset` |  | integer | How many conversations to skip first, latest first (0 by default) |
+
+</details>
 
 ### `get_conversation` {#get-conversation}
 
 **Read a conversation**
 
-Read a message conversation, oldest first: its members and each message's sender (aliases when the server pseudonymizes), text and time; names and contact data in the texts are redacted when pseudonymizing. Takes the id from list_conversations.
+Read a message conversation: its members and each message's sender (aliases when the server pseudonymizes), text and time; names and contact data in the texts are redacted when pseudonymizing. A page at a time, counted from the newest: limit messages (50 by default) after skipping offset, the first page the latest, each page's messages oldest first; more says whether there are older ones. Takes the id from list_conversations.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1888,6 +1908,8 @@ Read a message conversation, oldest first: its members and each message's sender
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `conversationId` | ✅ | integer |  |
+| `limit` |  | integer | How many messages (50 by default, up to 200) |
+| `offset` |  | integer | How many messages to skip first, counted from the newest (0 by default) |
 
 </details>
 

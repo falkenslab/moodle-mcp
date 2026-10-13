@@ -5,6 +5,7 @@ import { completionReport, graderReport, groups, participants, quizResults, COMP
 import { people, personFields, pseudonymizing, shown, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
+import { more, pageInputs, pagedText } from "./paging.js";
 
 const courseId = z.number().int().positive();
 const group = z.number().int().positive().optional().describe("Only this group's members, by its id from list_groups");
@@ -16,25 +17,26 @@ export const registerListParticipants: RegisterTool = (server, { config, browser
     {
       title: "List a course's participants",
       description:
-        "List a course's participants with their roles and groups, as the participants page does: people as aliases when the server pseudonymizes, never emails or profile fields. Filter by role, group, or those who haven't accessed the course since a date (inactiveSince).",
+        "List a course's participants with their roles and groups, as the participants page does: people as aliases when the server pseudonymizes, never emails or profile fields. Filter by role, group, or those who haven't accessed the course since a date (inactiveSince). " + pagedText("participants", 50),
       inputSchema: {
         courseId,
         role: z.number().int().positive().optional().describe("Only this role's, by its id (as the participants' roles give it)"),
         group,
         inactiveSince: z.string().optional().describe("Only those who haven't accessed the course since this date (ISO 8601)"),
+        ...pageInputs("participants", 50, 500),
       },
-      outputSchema: { participants: z.array(z.object({ ...personFields, roles: z.array(idAndName), groups: z.array(idAndName) })) },
+      outputSchema: { participants: z.array(z.object({ ...personFields, roles: z.array(idAndName), groups: z.array(idAndName) })), more },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ courseId: id, role, group: groupId, inactiveSince }) => {
+    async ({ courseId: id, role, group: groupId, inactiveSince, limit = 50, offset }) => {
       const since = inactiveSince === undefined ? undefined : new Date(inactiveSince);
       if (since && Number.isNaN(since.getTime())) throw new Error(`"${inactiveSince}" isn't an ISO 8601 date.`);
       const [context, siteUrl] = await onSite(config, browser);
-      const found = await participants(context, siteUrl, id, { role, group: groupId, inactiveSince: since });
+      const { items: found, more } = await participants(context, siteUrl, id, { role, group: groupId, inactiveSince: since, limit, offset });
       const who = await people(config, context, siteUrl, found);
       // A group's name is the teacher's, but it may name a student ("Ana's team").
       const named = async (list: { id: number; name: string }[]) => Promise.all(list.map(async (g) => ({ id: g.id, name: await text(config, siteUrl, g.name) })));
-      return reply({ participants: await Promise.all(found.map(async (p, i) => ({ ...shown(who[i]!), roles: p.roles, groups: await named(p.groups) }))) });
+      return reply({ participants: await Promise.all(found.map(async (p, i) => ({ ...shown(who[i]!), roles: p.roles, groups: await named(p.groups) }))), more });
     },
   );
 };
@@ -114,8 +116,12 @@ export const registerGetQuizResults: RegisterTool = (server, { config, browser }
     {
       title: "Get a quiz's results",
       description:
-        "Read a quiz's attempts as its grades report shows them: per attempt the participant (an alias when the server pseudonymizes), state, dates, grade and the mark per question; with responses, also each answer given (redacted when pseudonymizing).",
-      inputSchema: { quizId: z.number().int().positive().describe("The quiz's id (course module id), as get_course_structure gives it"), responses: z.boolean().optional().describe("Also the answer per question (default false)") },
+        "Read a quiz's attempts as its grades report shows them: per attempt the participant (an alias when the server pseudonymizes), state, dates, grade and the mark per question; with responses, also each answer given (redacted when pseudonymizing). " + pagedText("attempts", 50),
+      inputSchema: {
+        quizId: z.number().int().positive().describe("The quiz's id (course module id), as get_course_structure gives it"),
+        responses: z.boolean().optional().describe("Also the answer per question (default false)"),
+        ...pageInputs("attempts", 50, 500, ", in the report's order"),
+      },
       outputSchema: {
         quiz: z.object({ id: z.number().int() }),
         attempts: z.array(
@@ -130,22 +136,24 @@ export const registerGetQuizResults: RegisterTool = (server, { config, browser }
             questions: z.array(z.object({ slot: z.number().int(), mark: z.string().optional(), response: z.string().optional(), result: z.string().optional() })),
           }),
         ),
+        more,
       },
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ quizId, responses }) => {
+    async ({ quizId, responses, limit = 50, offset }) => {
       const [context, siteUrl] = await onSite(config, browser);
-      const results = await quizResults(context, siteUrl, quizId, { responses });
-      const who = await people(config, context, siteUrl, results.attempts);
+      const results = await quizResults(context, siteUrl, quizId, { responses, limit, offset });
+      const page = results.attempts.items;
+      const who = await people(config, context, siteUrl, page);
       const attempts = await Promise.all(
-        results.attempts.map(async ({ id, state, started, completed, duration, grade, questions }, i) => ({
+        page.map(async ({ id, state, started, completed, duration, grade, questions }, i) => ({
           id,
           ...shown(who[i]!),
           ...{ state, started, completed, duration, grade },
           questions: await Promise.all(questions.map(async (q) => (q.response === undefined ? q : { ...q, response: await text(config, siteUrl, q.response) }))),
         })),
       );
-      return reply({ quiz: results.quiz, attempts });
+      return reply({ quiz: results.quiz, attempts, more: results.attempts.more });
     },
   );
 };

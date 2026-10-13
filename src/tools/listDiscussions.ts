@@ -3,9 +3,11 @@ import { forumDiscussions } from "@falkenslab/moodle-driver";
 import { personByName, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
+import { more, pageInputs, pagedText } from "./paging.js";
 
 const inputSchema = {
   forumId: z.number().int().positive().describe("The forum's id (its course module id), as get_course_structure gives it"),
+  ...pageInputs("discussions", 30, 100, ", in the forum's order"),
 };
 
 const outputSchema = {
@@ -22,6 +24,7 @@ const outputSchema = {
       subscribed: z.boolean().optional().describe("The person is subscribed to it"),
     }),
   ),
+  more,
 };
 
 export const registerListDiscussions: RegisterTool = (server, { config, browser }) => {
@@ -30,14 +33,16 @@ export const registerListDiscussions: RegisterTool = (server, { config, browser 
     {
       title: "List a forum's discussions",
       description:
-        "List the discussions of a Moodle forum: subject, who started it and when, the last post's author and time, the number of replies (0: unanswered) and whether it's locked. Takes the forum id from get_course_structure; read one with get_discussion.",
+        "List the discussions of a Moodle forum: subject, who started it and when, the last post's author and time, the number of replies (0: unanswered) and whether it's locked. " +
+        pagedText("discussions", 30) +
+        " Takes the forum id from get_course_structure; read one with get_discussion.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ forumId }) => {
+    async ({ forumId, limit = 30, offset }) => {
       const [context, siteUrl] = await onSite(config, browser);
-      const found = await forumDiscussions(context, siteUrl, forumId);
+      const { items: found, more } = await forumDiscussions(context, siteUrl, forumId, { limit, offset });
       // The page shows names without user ids: only names the directory already knows become aliases.
       const discussions = await Promise.all(
         found.map(async (d) => ({
@@ -47,7 +52,7 @@ export const registerListDiscussions: RegisterTool = (server, { config, browser 
           lastPost: { ...d.lastPost, author: await personByName(config, context, siteUrl, d.lastPost.author) },
         })),
       );
-      return reply({ discussions });
+      return reply({ discussions, more });
     },
   );
 };

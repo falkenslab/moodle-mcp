@@ -71,14 +71,16 @@
     }
   },
   "list_participants": {
-    "source": "da6475e26690",
+    "source": "5bf051267c0f",
     "title": "Listar los participantes de un curso",
-    "description": "Lista los participantes de un curso con sus roles y grupos, como hace la página de participantes: las personas como alias cuando el servidor seudonimiza, nunca correos electrónicos ni campos del perfil. Filtra por rol, grupo, o quienes no han accedido al curso desde una fecha (inactiveSince).",
+    "description": "Lista los participantes de un curso con sus roles y grupos, como hace la página de participantes: las personas como alias cuando el servidor seudonimiza, nunca correos electrónicos ni campos del perfil. Filtra por rol, grupo, o quienes no han accedido al curso desde una fecha (inactiveSince). Por páginas: limit participantes (50 por defecto) tras saltarse offset; more dice si hay más.",
     "inputs": {
       "courseId": "",
       "role": "Solo los de este rol, por su id (tal como lo dan los roles de los participantes)",
       "group": "Solo los miembros de este grupo, por su id de list_groups",
-      "inactiveSince": "Solo quienes no han accedido al curso desde esta fecha (ISO 8601)"
+      "inactiveSince": "Solo quienes no han accedido al curso desde esta fecha (ISO 8601)",
+      "limit": "Cuántos participantes (50 por defecto, hasta 500)",
+      "offset": "Cuántos participantes saltarse primero (0 por defecto)"
     }
   },
   "list_groups": {
@@ -345,28 +347,34 @@
     }
   },
   "get_submissions": {
-    "source": "57736b21d02e",
+    "source": "cca06d2fe505",
     "title": "Obtener las entregas de una tarea",
-    "description": "Obtiene la entrega de cada participante en una tarea de Moodle: quién (un alias cuando el servidor seudonimiza, si no, id y nombre), estado (submitted; draft; new: una entrega iniciada pero aún sin nada; reopened; none: ninguna entrega), si necesita calificación, prórrogas, las fechas del participante y, por defecto, el contenido (texto en línea y enlaces a archivos; los nombres y datos de contacto que contenga se ocultan al seudonimizar). No cambia nada, pero Moodle lo registra como el profesor viendo las páginas de calificación, igual que con su propio calificador. Toma el id de la tarea de list_assignments.",
+    "description": "Obtiene las entregas de los participantes en una tarea de Moodle, por páginas (limit participantes, 25 por defecto, tras saltarse offset; more dice si hay más): quién (un alias cuando el servidor seudonimiza, si no, id y nombre), estado (submitted; draft; new: una entrega iniciada pero aún sin nada; reopened; none: ninguna entrega), si necesita calificación, prórrogas, las fechas del participante y, por defecto, el contenido (texto en línea y enlaces a archivos; los nombres y datos de contacto que contenga se ocultan al seudonimizar). No cambia nada, pero Moodle lo registra como el profesor viendo las páginas de calificación, igual que con su propio calificador. Toma el id de la tarea de list_assignments.",
     "inputs": {
       "assignmentId": "El id de la tarea (su id de módulo del curso), tal como lo da list_assignments",
-      "includeContent": "Incluir el contenido de cada entrega: texto en línea y enlaces a archivos (true por defecto)"
+      "includeContent": "Incluir el contenido de cada entrega: texto en línea y enlaces a archivos (true por defecto)",
+      "limit": "Cuántos participantes (25 por defecto, hasta 200)",
+      "offset": "Cuántos participantes saltarse primero, en el orden de la tabla de calificación (0 por defecto)"
     }
   },
   "list_discussions": {
-    "source": "93f30ec3b3d4",
+    "source": "184af72e2b30",
     "title": "Listar los debates de un foro",
-    "description": "Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el autor y la hora del último mensaje, el número de respuestas (0: sin responder) y si está bloqueado. Toma el id del foro de get_course_structure; lee uno con get_discussion.",
+    "description": "Lista los debates de un foro de Moodle: asunto, quién lo inició y cuándo, el autor y la hora del último mensaje, el número de respuestas (0: sin responder) y si está bloqueado. Por páginas: limit debates (30 por defecto) tras saltarse offset; more dice si hay más. Toma el id del foro de get_course_structure; lee uno con get_discussion.",
     "inputs": {
-      "forumId": "El id del foro (su id de módulo del curso), tal como lo da get_course_structure"
+      "forumId": "El id del foro (su id de módulo del curso), tal como lo da get_course_structure",
+      "limit": "Cuántos debates (30 por defecto, hasta 100)",
+      "offset": "Cuántos debates saltarse primero, en el orden del foro (0 por defecto)"
     }
   },
   "get_discussion": {
-    "source": "f16fdf0e87b3",
+    "source": "266a47a6aabe",
     "title": "Leer un debate de un foro",
-    "description": "Lee todos los mensajes de un debate de un foro de Moodle, los más antiguos primero: autor (un alias cuando el servidor seudonimiza), hora, el mensaje al que responde, el mensaje como texto plano (con nombres y datos de contacto ocultos al seudonimizar) y los adjuntos. Toma el id del debate de list_discussions.",
+    "description": "Lee los mensajes de un debate de un foro de Moodle, los más antiguos primero, por páginas (limit mensajes, 50 por defecto, tras saltarse offset; more dice si hay más): autor (un alias cuando el servidor seudonimiza), hora, el mensaje al que responde, el mensaje como texto plano (con nombres y datos de contacto ocultos al seudonimizar) y los adjuntos. Toma el id del debate de list_discussions.",
     "inputs": {
-      "discussionId": "El id del debate, tal como lo da list_discussions"
+      "discussionId": "El id del debate, tal como lo da list_discussions",
+      "limit": "Cuántos mensajes (50 por defecto, hasta 200)",
+      "offset": "Cuántos mensajes saltarse primero, los más antiguos primero (0 por defecto)"
     }
   },
   "get_my_grades": {
@@ -561,12 +569,14 @@
     }
   },
   "get_quiz_results": {
-    "source": "b2ff11bc6e7c",
+    "source": "bb2ea8970203",
     "title": "Obtener los resultados de un cuestionario",
-    "description": "Lee los intentos de un cuestionario tal como los muestra su informe de calificaciones: por intento, el participante (un alias cuando el servidor seudonimiza), estado, fechas, calificación y la puntuación por pregunta; con responses, también cada respuesta dada (oculta al seudonimizar).",
+    "description": "Lee los intentos de un cuestionario tal como los muestra su informe de calificaciones: por intento, el participante (un alias cuando el servidor seudonimiza), estado, fechas, calificación y la puntuación por pregunta; con responses, también cada respuesta dada (oculta al seudonimizar). Por páginas: limit intentos (50 por defecto) tras saltarse offset; more dice si hay más.",
     "inputs": {
       "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
-      "responses": "También la respuesta por pregunta (por defecto false)"
+      "responses": "También la respuesta por pregunta (por defecto false)",
+      "limit": "Cuántos intentos (50 por defecto, hasta 500)",
+      "offset": "Cuántos intentos saltarse primero, en el orden del informe (0 por defecto)"
     }
   },
   "set_quiz_override": {
@@ -840,17 +850,22 @@
     "inputs": {}
   },
   "list_conversations": {
-    "source": "066f0242f796",
+    "source": "89108d34a638",
     "title": "Listar mis conversaciones",
-    "description": "Lista las conversaciones de mensajes de la persona, de la más reciente a la más antigua: privadas, de grupo o consigo misma, sus miembros (alias cuando el servidor seudonimiza), el número de no leídos y el último mensaje como texto. Lee una con get_conversation.",
-    "inputs": {}
+    "description": "Lista las conversaciones de mensajes de la persona, de la más reciente a la más antigua: privadas, de grupo o consigo misma, sus miembros (alias cuando el servidor seudonimiza), el número de no leídos y el último mensaje como texto. Por páginas: limit conversaciones (20 por defecto) tras saltarse offset; more dice si hay más. Lee una con get_conversation.",
+    "inputs": {
+      "limit": "Cuántas conversaciones (20 por defecto, hasta 100)",
+      "offset": "Cuántas conversaciones saltarse primero, de la más reciente a la más antigua (0 por defecto)"
+    }
   },
   "get_conversation": {
-    "source": "563cbd834c84",
+    "source": "0e6b8561bb1f",
     "title": "Leer una conversación",
-    "description": "Lee una conversación de mensajes, de la más antigua a la más reciente: sus miembros y, de cada mensaje, el remitente (alias cuando el servidor seudonimiza), el texto y la hora; los nombres y datos de contacto en los textos se ocultan al seudonimizar. Toma el id de list_conversations.",
+    "description": "Lee una conversación de mensajes: sus miembros y, de cada mensaje, el remitente (alias cuando el servidor seudonimiza), el texto y la hora; los nombres y datos de contacto en los textos se ocultan al seudonimizar. Por páginas, contando desde el más reciente: limit mensajes (50 por defecto) tras saltarse offset, la primera página con los últimos, y los mensajes de cada página del más antiguo al más reciente; more dice si hay mensajes anteriores. Toma el id de list_conversations.",
     "inputs": {
-      "conversationId": ""
+      "conversationId": "",
+      "limit": "Cuántos mensajes (50 por defecto, hasta 200)",
+      "offset": "Cuántos mensajes saltarse primero, contando desde el más reciente (0 por defecto)"
     }
   },
   "send_message": {
@@ -1074,11 +1089,13 @@
     }
   },
   "list_questions": {
-    "source": "cd4b1e8696df",
+    "source": "c125ca4ab2e8",
     "title": "Listar las preguntas de un banco",
-    "description": "Lista las categorías de un banco de preguntas y todas las preguntas que contienen: id, nombre, tipo, estado y categoría. Recibe el id del banco de list_question_banks.",
+    "description": "Lista las categorías de un banco de preguntas y las preguntas que contienen, categoría a categoría: id, nombre, tipo, estado y categoría. Por páginas: limit preguntas (100 por defecto) tras saltarse offset; more dice si hay más. Recibe el id del banco de list_question_banks.",
     "inputs": {
-      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks"
+      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks",
+      "limit": "Cuántas preguntas (100 por defecto, hasta 1000)",
+      "offset": "Cuántas preguntas saltarse primero, categoría a categoría (0 por defecto)"
     }
   },
   "import_questions": {

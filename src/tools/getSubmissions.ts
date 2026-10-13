@@ -3,10 +3,12 @@ import { WORKFLOW_STATES, assignmentSubmissions } from "@falkenslab/moodle-drive
 import { people, personFields, pseudonymizing, shown, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
+import { more, pageInputs } from "./paging.js";
 
 const inputSchema = {
   assignmentId: z.number().int().positive().describe("The assignment's id (its course module id), as list_assignments gives it"),
   includeContent: z.boolean().optional().describe("Include each submission's content: online text and file links (default true)"),
+  ...pageInputs("participants", 25, 200, ", in the grading table's order"),
 };
 
 const submission = z.object({
@@ -34,6 +36,7 @@ const submission = z.object({
 const outputSchema = {
   assignment: z.object({ id: z.number().int() }),
   submissions: z.array(submission),
+  more,
 };
 
 export const registerGetSubmissions: RegisterTool = (server, { config, browser }) => {
@@ -42,14 +45,14 @@ export const registerGetSubmissions: RegisterTool = (server, { config, browser }
     {
       title: "Get an assignment's submissions",
       description:
-        "Get every participant's submission to a Moodle assignment: who (an alias when the server pseudonymizes, else id and name), status (submitted; draft; new: a submission started but nothing in it yet; reopened; none: no submission at all), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Changes nothing, but Moodle logs it as the teacher viewing the grading pages, as it does for its own grader. Takes the assignment id from list_assignments.",
+        "Get the participants' submissions to a Moodle assignment, a page at a time (limit participants, 25 by default, after skipping offset; more says whether there are others): who (an alias when the server pseudonymizes, else id and name), status (submitted; draft; new: a submission started but nothing in it yet; reopened; none: no submission at all), whether it needs grading, extensions, the participant's dates and, by default, the content (online text and file links; names and contact data in it redacted when pseudonymizing). Changes nothing, but Moodle logs it as the teacher viewing the grading pages, as it does for its own grader. Takes the assignment id from list_assignments.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ assignmentId, includeContent = true }) => {
+    async ({ assignmentId, includeContent = true, limit = 25, offset }) => {
       const [context, siteUrl] = await onSite(config, browser);
-      const found = await assignmentSubmissions(context, siteUrl, assignmentId, { includeContent });
+      const { items: found, more } = await assignmentSubmissions(context, siteUrl, assignmentId, { includeContent, limit, offset });
       const who = await people(config, context, siteUrl, found);
       // Markers are people too: one list for all of them, so each gets one alias.
       const markerList = [...new Map(found.flatMap((s) => s.markers ?? []).map((m) => [m.id, { userId: m.id, fullName: m.name }])).values()];
@@ -74,7 +77,7 @@ export const registerGetSubmissions: RegisterTool = (server, { config, browser }
           }),
         })),
       );
-      return reply({ assignment: { id: assignmentId }, submissions });
+      return reply({ assignment: { id: assignmentId }, submissions, more });
     },
   );
 };

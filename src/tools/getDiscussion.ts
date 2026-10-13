@@ -3,9 +3,11 @@ import { discussion } from "@falkenslab/moodle-driver";
 import { people, pseudonymizing, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
+import { more, pageInputs } from "./paging.js";
 
 const inputSchema = {
   discussionId: z.number().int().positive().describe("The discussion id, as list_discussions gives it"),
+  ...pageInputs("posts", 50, 200, ", oldest first"),
 };
 
 const outputSchema = {
@@ -32,6 +34,7 @@ const outputSchema = {
       unread: z.boolean().optional(),
     }),
   ),
+  more,
 };
 
 export const registerGetDiscussion: RegisterTool = (server, { config, browser }) => {
@@ -40,14 +43,15 @@ export const registerGetDiscussion: RegisterTool = (server, { config, browser })
     {
       title: "Read a forum discussion",
       description:
-        "Read every post of a Moodle forum discussion, oldest first: author (an alias when the server pseudonymizes), time, the post it replies to, the message as plain text (names and contact data redacted when pseudonymizing) and attachments. Takes the discussion id from list_discussions.",
+        "Read a Moodle forum discussion's posts, oldest first, a page at a time (limit posts, 50 by default, after skipping offset; more says whether there are others): author (an alias when the server pseudonymizes), time, the post it replies to, the message as plain text (names and contact data redacted when pseudonymizing) and attachments. Takes the discussion id from list_discussions.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ discussionId }) => {
+    async ({ discussionId, limit = 50, offset }) => {
       const [context, siteUrl] = await onSite(config, browser);
-      const found = await discussion(context, siteUrl, discussionId);
+      const { discussion: about, posts: page } = await discussion(context, siteUrl, discussionId, { limit, offset });
+      const found = { discussion: about, posts: page.items };
       // Authors first, so the texts below find them in the directory (a reply naming another participant).
       const authors = await people(config, context, siteUrl, found.posts.map((p) => ({ userId: p.author.id, fullName: p.author.fullName })));
       const posts = await Promise.all(
@@ -65,7 +69,7 @@ export const registerGetDiscussion: RegisterTool = (server, { config, browser })
           };
         }),
       );
-      return reply({ ...found, posts });
+      return reply({ ...found, posts, more: page.more });
     },
   );
 };
