@@ -130,5 +130,23 @@
         "Acabo de hacer el cuestionario \"Bucles: repaso rápido\" de mi curso de Moodle mcp-content. ¿Qué nota he sacado y qué preguntas he fallado? Explícame las respuestas correctas."
       ]
     }
+  },
+  "copy-between-sites": {
+    "client": "claude",
+    "profile": "profile-teacher",
+    "env": [
+      "MOODLE_MCP_SITES=school=http://localhost:8080,uni=http://localhost:8080",
+      "CLAUDE_PLUGIN_DATA=/state/sites-data"
+    ],
+    "turns": {
+      "en": [
+        "For this demo, my Moodle sites \"school\" and \"uni\" are the same test Moodle under two names. Copy the page \"Apuntes: bucles\" from my course mcp-content on \"school\" to the same course on \"uni\", at the end of its last section. Tell me what you'll do first.",
+        "Yes, go ahead."
+      ],
+      "es": [
+        "Para esta demostración, mis sitios Moodle «school» y «uni» son el mismo Moodle de pruebas con dos nombres. Copia la página \"Apuntes: bucles\" de mi curso mcp-content en «school» al mismo curso en «uni», al final de su última sección. Dime antes qué vas a hacer.",
+        "Sí, adelante."
+      ]
+    }
   }
 }

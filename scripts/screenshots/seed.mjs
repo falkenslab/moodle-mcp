@@ -5,7 +5,11 @@
 //                                    unanswered question in Foro MCP
 //   node seed.mjs attempt <en|es>    after them: the quiz the teacher made shown, and done by the student
 //                                    with one right answer and two wrong, for the quiz review
-import { open } from "./client.mjs";
+// reset also gives the copy-between-sites session its second site, "uni": a copy of the teacher's
+// profile where the server keeps a second site's (CLAUDE_PLUGIN_DATA=/state/sites-data), and removes
+// the copies of "Apuntes: bucles" an earlier run made.
+import { cpSync, rmSync } from "node:fs";
+import { open, unlock } from "./client.mjs";
 
 const COURSE = 3;
 const ASSIGNMENT = 35; // Tarea MCP
@@ -54,7 +58,11 @@ if (command === "setup") {
   await t.close();
 } else if (command === "reset" && data) {
   const t = await open("profile-teacher");
-  for (const a of await activities(t)) if (a.name === data.quiz || a.name === data.page) await t.call("delete_activity", { courseId: COURSE, activityId: a.id });
+  const all = await activities(t);
+  for (const a of all) if (a.name === data.quiz || a.name === data.page) await t.call("delete_activity", { courseId: COURSE, activityId: a.id });
+  // The page copied between sites: the original is the oldest of that name, the others are copies.
+  const notes = all.filter((a) => a.name === "Apuntes: bucles").sort((x, y) => x.id - y.id);
+  for (const copy of notes.slice(1)) await t.call("delete_activity", { courseId: COURSE, activityId: copy.id });
   // An earlier run's question nobody answered would make two: one open question per run.
   const discussions = (await t.call("list_discussions", { forumId: FORUM, limit: 100 }))?.discussions ?? [];
   for (const d of discussions.filter((d) => d.subject === data.question[0] && d.replies === 0)) {
@@ -67,6 +75,9 @@ if (command === "setup") {
   if ((await s.call("get_assignment", { assignmentId: ASSIGNMENT }))?.canSubmit) await s.call("submit_assignment", { assignmentId: ASSIGNMENT, acceptStatement: true });
   await s.call("create_discussion", { forumId: FORUM, subject: data.question[0], message: data.question[1] });
   await s.close();
+  unlock("profile-teacher");
+  rmSync("/state/sites-data", { recursive: true, force: true });
+  cpSync("/state/profile-teacher", "/state/sites-data/sites/uni/profile", { recursive: true });
 } else if (command === "attempt" && data) {
   const t = await open("profile-teacher");
   const quiz = (await activities(t)).find((a) => a.name === data.quiz);

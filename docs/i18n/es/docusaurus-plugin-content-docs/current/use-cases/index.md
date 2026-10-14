@@ -20,6 +20,7 @@ En todas las sesiones, el alumnado llega a la IA como alias del tipo `A-8FT4A1`:
 | [Alumnos que se quedan atrás](./teacher/falling-behind.md) | "¿Quién no ha completado los apuntes? Mándales un recordatorio." | Codex |
 | [Una página con una imagen](./teacher/page-with-image.md) | "Crea una página con una explicación y este diagrama." | Claude Code |
 | [Un asistente de solo lectura](./teacher/reading-assistant.md) | "¿Cómo va mi curso?", con un agente que no puede cambiar nada | Claude Code |
+| [Copiar entre sitios](./teacher/copy-between-sites.md) | "Copia esta página de mi curso en un Moodle al mismo curso en otro." | Claude Code |
 
 ## Como alumno
 

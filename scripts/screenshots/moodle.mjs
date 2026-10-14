@@ -18,6 +18,7 @@ const quiz = byName("Loops: quick check");
 const page = byName("How a for loop works");
 const notes = byName("Apuntes: bucles");
 const scorm = byName("SCORM MCP (prueba)");
+const lastSection = (await t.call("get_course_structure", { courseId: 3 })).sections.at(-1)?.id;
 await t.close();
 const s = await open("profile-student");
 const attempt = quiz ? (await s.call("get_quiz_info", { quizId: quiz }))?.attempts?.[0]?.id : undefined;
@@ -29,6 +30,8 @@ const SHOTS = {
     "quiz-edit": `${SITE}/mod/quiz/edit.php?cmid=${quiz}`,
     "forum-reply": `${SITE}/mod/forum/view.php?id=37`,
     "page-with-image": `${SITE}/mod/page/view.php?id=${page}`,
+    // The copy-between-sites session's page, at the end of the course's last section.
+    "copied-page": `${SITE}/course/section.php?id=${lastSection}`,
   },
   student: {
     // The conversation with the teacher (user 3), open: the reminder the falling-behind session sent.
@@ -39,7 +42,7 @@ const SHOTS = {
     "quiz-review": `${SITE}/mod/quiz/review.php?attempt=${attempt}`,
   },
 };
-const FULL_PAGE = ["page-with-image", "quiz-review", "study-page", "upcoming"];
+const FULL_PAGE = ["page-with-image", "quiz-review", "study-page", "upcoming", "copied-page"];
 
 async function shoot(tab, name, url) {
   if (wanted.size && !wanted.has(name)) return;

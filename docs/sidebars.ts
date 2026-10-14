@@ -18,7 +18,7 @@ const sidebars: SidebarsConfig = {
           type: "category",
           label: "As a teacher",
           collapsed: false,
-          items: ["use-cases/teacher/grading", "use-cases/teacher/quiz-from-questions", "use-cases/teacher/forum-questions", "use-cases/teacher/falling-behind", "use-cases/teacher/page-with-image", "use-cases/teacher/reading-assistant"],
+          items: ["use-cases/teacher/grading", "use-cases/teacher/quiz-from-questions", "use-cases/teacher/forum-questions", "use-cases/teacher/falling-behind", "use-cases/teacher/page-with-image", "use-cases/teacher/reading-assistant", "use-cases/teacher/copy-between-sites"],
         },
         {
           type: "category",

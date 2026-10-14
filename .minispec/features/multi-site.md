@@ -22,7 +22,7 @@ Phase 2, transfers: done (`copy_between_sites`, `src/tools/siteTransfer.ts`).
 
 Apart: elicitation done for `add_site`; not for `login`, which sees the login by itself (ADR-021).
 
-Docs in both languages: done but for a use case moving an activity between two sites, with its screenshots.
+Docs in both languages: done, with the copy-between-sites use case and its screenshots.
 
 ## Acceptance
 
