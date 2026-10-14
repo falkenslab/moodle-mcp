@@ -42,3 +42,9 @@ See [Developing moodle-mcp](https://falkenslab.github.io/moodle-mcp/developers) 
 ## License
 
 [MIT](LICENSE) © Falkenslab
+
+<div align="center">
+
+Made with 💖 by Falken's Lab Team
+
+</div>

@@ -50,9 +50,5 @@
   "link.item.label.Moodle": {
     "message": "Moodle",
     "description": "The label of footer link with label=Moodle linking to https://moodle.org"
-  },
-  "copyright": {
-    "message": "Licencia MIT. Copyright © 2026 Francisco Vargas Ruiz.",
-    "description": "The footer copyright"
   }
 }
