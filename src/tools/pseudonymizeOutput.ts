@@ -7,7 +7,7 @@ import { pseudonymizing, redactAll } from "../people.js";
 import type { ToolContext } from "./types.js";
 
 /** The person's own session and the server itself: their own email and name stay. */
-const EXEMPT = new Set(["configure", "login", "logout", "get_me", "get_site_info", "list_courses", "show_browser", "server_info"]);
+const EXEMPT = new Set(["configure", "login", "logout", "get_me", "get_site_info", "list_courses", "show_browser", "server_info", "list_sites", "add_site", "use_site", "remove_site"]);
 
 type Handler = (args: unknown, extra: unknown) => Promise<unknown>;
 type Result = { content?: { type: string; text?: string }[]; structuredContent?: unknown; isError?: boolean };

@@ -34,8 +34,8 @@ export type StudentDataLevel = (typeof STUDENT_DATA_LEVELS)[number];
 /** What `block` takes away, whatever the scopes: others' data, decisions about others, the browser that reaches anything. */
 const BLOCKED: readonly Scope[] = ["student-data", "grading", "browser"];
 
-/** Tools that are always there: the session, the site, the person's own courses, the server itself. */
-const SESSION_TOOLS = new Set(["configure", "login", "logout", "get_me", "get_site_info", "list_courses", "show_browser", "server_info"]);
+/** Tools that are always there: the session, the sites, the person's own courses, the server itself. */
+const SESSION_TOOLS = new Set(["configure", "login", "logout", "get_me", "get_site_info", "list_courses", "show_browser", "server_info", "list_sites", "add_site", "use_site", "remove_site"]);
 
 const BROWSER_TOOLS = ["browser_navigate", "browser_snapshot", "browser_click", "browser_type", "browser_select", "browser_upload", "browser_screenshot", "browser_wait"];
 

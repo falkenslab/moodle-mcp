@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **138 herramientas**, 137 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **142 herramientas**, 141 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -22,6 +22,10 @@ En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: 
 | [`configure`](#configure) | Configurar el servidor | ✓ | ✓ | ✓ |
 | [`show_browser`](#show-browser) | Mostrar u ocultar el navegador | ✓ | ✓ | ✓ |
 | [`server_info`](#server-info) | Información del servidor | ✓ | ✓ | ✓ |
+| [`list_sites`](#list-sites) | Listar los sitios Moodle | ✓ | ✓ | ✓ |
+| [`add_site`](#add-site) | Añadir un sitio Moodle | ✓ | ✓ | ✓ |
+| [`use_site`](#use-site) | Cambiar a otro sitio Moodle | ✓ | ✓ | ✓ |
+| [`remove_site`](#remove-site) | Quitar un sitio Moodle | ✓ | ✓ | ✓ |
 
 ### `login` {#login}
 
@@ -80,7 +84,7 @@ Lo que el sitio Moodle dice de sí mismo: su nombre, URL, idioma, cómo se inici
 
 **Configurar el servidor**
 
-Establece la configuración de este servidor para esta sesión: el sitio Moodle (url), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role) o el acceso a solo lectura (access) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria. Devuelve la configuración efectiva, como server_info.
+Establece la configuración de este servidor para esta sesión: el sitio Moodle (url; uno nuevo se añade a los sitios del servidor y se guarda, uno conocido pasa a ser el activo, consulta use_site), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role) o el acceso a solo lectura (access) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria, salvo un sitio nuevo, que se queda entre los sitios del servidor. Devuelve la configuración efectiva, como server_info.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -117,9 +121,63 @@ Muestra el navegador a la persona, para que pueda ver lo que hacen las herramien
 
 **Información del servidor**
 
-Muestra la versión de este servidor y su configuración efectiva: el sitio Moodle, la carpeta del perfil del navegador, el navegador y de dónde viene cada ajuste. No contiene secretos. No abre el navegador.
+Muestra la versión de este servidor y su configuración efectiva: el sitio Moodle activo y los demás, la carpeta del perfil del navegador, el navegador y de dónde viene cada ajuste. No contiene secretos. No abre el navegador.
 
 *Sin parámetros.*
+
+### `list_sites` {#list-sites}
+
+**Listar los sitios Moodle**
+
+Lista los sitios Moodle que conoce este servidor, por nombre: su URL, cuál es el activo (en el que trabajan todas las demás herramientas) y si cada uno viene de la configuración de la persona o se añadió durante el trabajo. Se cambia de sitio con use_site.
+
+*Sin parámetros.*
+
+### `add_site` {#add-site}
+
+**Añadir un sitio Moodle**
+
+Añade un sitio Moodle a este servidor, que se guarda para las siguientes sesiones: su URL (vale cualquier página del sitio) y, opcionalmente, un nombre corto (letras, números, puntos y guiones; por defecto, su host). Dos cuentas en un mismo sitio son dos sitios: añade la segunda con un nombre propio. No pasa a ser el activo: cambia a él con use_site, e inicia sesión allí cuando una herramienta lo pida. Solo cuando la persona pida otro sitio.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `url` | ✅ | texto | La URL del sitio, o cualquier página suya |
+| `name` |  | texto | Un nombre corto para él; por defecto, su host |
+
+</details>
+
+### `use_site` {#use-site}
+
+**Cambiar a otro sitio Moodle**
+
+Hace activo otro sitio conocido, por su nombre (list_sites): desde ese momento todas las demás herramientas trabajan en él. El navegador del sitio anterior se cierra y conserva su sesión; si el nuevo no tiene sesión, la siguiente herramienta pedirá iniciarla. Dile a la persona en qué sitio trabajas ahora. Dura esta sesión.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `name` | ✅ | texto | El nombre del sitio, tal como lo da list_sites |
+
+</details>
+
+### `remove_site` {#remove-site}
+
+**Quitar un sitio Moodle**
+
+Olvida un sitio añadido durante el trabajo, por su nombre, y borra su perfil de navegador con su sesión. Ni el sitio activo (cambia antes de sitio) ni uno de la configuración de la persona (lo quita ella allí). No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `name` | ✅ | texto | El nombre del sitio, tal como lo da list_sites |
+
+</details>
 
 ## Cursos y contenido {#content}
 

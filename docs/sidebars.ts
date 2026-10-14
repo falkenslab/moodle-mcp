@@ -30,6 +30,7 @@ const sidebars: SidebarsConfig = {
     },
     "privacy",
     "limits",
+    "several-sites",
     "settings",
     "troubleshooting",
     {

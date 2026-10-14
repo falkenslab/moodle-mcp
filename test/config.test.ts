@@ -34,6 +34,9 @@ describe("loadConfig", () => {
       studentData: "pseudonymize",
       role: "all",
       access: "write",
+      dataDir: path.join(homedir(), ".moodle-mcp"),
+      sites: [{ name: "moodle.example.org", url: "https://moodle.example.org/campus/", origin: "configuration", profileDir: PROFILE }],
+      activeSite: "moodle.example.org",
       limits: { scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"], studentData: "pseudonymize", role: "all", access: "write" },
       sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment", scopes: "default", studentData: "default", role: "default", access: "default" },
     });

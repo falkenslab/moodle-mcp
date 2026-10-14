@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { createBrowserManager } from "@falkenslab/moodle-driver";
 import { ConfigError, USAGE, loadConfig } from "./config.js";
 import { createServer } from "./createServer.js";
+import { loadRuntimeSites } from "./sites.js";
 import { PACKAGE_VERSION } from "./version.js";
 
 async function main(): Promise<void> {
@@ -11,6 +12,8 @@ async function main(): Promise<void> {
   if (config === "help") return void process.stdout.write(`${USAGE}\n`);
   if (config === "version") return void process.stdout.write(`${PACKAGE_VERSION}\n`);
 
+  // Sites added at run time in earlier sessions (ADR-021).
+  loadRuntimeSites(config);
   const browser = createBrowserManager(config);
   const server = createServer({ config, browser });
 
@@ -28,7 +31,7 @@ async function main(): Promise<void> {
   process.on("SIGTERM", shutdown);
 
   await server.connect(new StdioServerTransport());
-  const site = config.moodleUrl ? new URL(config.moodleUrl).origin : "no site yet (configure)";
+  const site = config.moodleUrl ? `${config.activeSite} (${new URL(config.moodleUrl).origin})${config.sites.length > 1 ? ` of ${config.sites.length} sites` : ""}` : "no site yet (configure)";
   console.error(`moodle-mcp ${PACKAGE_VERSION} running on stdio for ${site}`);
 }
 

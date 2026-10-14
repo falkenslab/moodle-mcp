@@ -32,6 +32,7 @@ import { registerCreateQuestion, registerDeleteQuestions, registerImportQuestion
 import { registerAddQuestionsToQuiz, registerAddQuizSection, registerEditQuizSlot, registerGetQuizStructure, registerRemoveQuizSlot, registerSetQuizPages } from "./quizStructure.js";
 import { registerGetScorm, registerOpenScorm } from "./scorm.js";
 import { registerServerInfo } from "./serverInfo.js";
+import { registerAddSite, registerListSites, registerRemoveSite, registerUseSite } from "./sites.js";
 import { registerShowBrowser } from "./showBrowser.js";
 import { registerAnswerChoice, registerAnswerLessonPage, registerGetChoice, registerGetH5PActivity, registerGetLessonPage, registerSetCompletion } from "./studentActivities.js";
 import { registerGetSurvey, registerSubmitSurvey } from "./surveys.js";
@@ -177,4 +178,8 @@ export const TOOLS: RegisterTool[] = [
   registerShowBrowser,
   ...BROWSER_TOOLS,
   registerServerInfo,
+  registerListSites,
+  registerAddSite,
+  registerUseSite,
+  registerRemoveSite,
 ];

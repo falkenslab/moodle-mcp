@@ -21,7 +21,7 @@ const OUT = {
 };
 
 const AREAS = [
-  { id: "session", en: "Session", es: "Sesión", tools: ["login", "logout", "get_me", "get_site_info", "configure", "show_browser", "server_info"] },
+  { id: "session", en: "Session", es: "Sesión", tools: ["login", "logout", "get_me", "get_site_info", "configure", "show_browser", "server_info", "list_sites", "add_site", "use_site", "remove_site"] },
   { id: "content", en: "Courses and content", es: "Cursos y contenido", tools: ["list_courses", "get_course_structure", "get_activity_content", "get_activity_settings", "download_file", "create_activity", "update_activity", "edit_activity", "duplicate_activity", "delete_activity", "add_section", "edit_section", "delete_section", "update_course"] },
   { id: "lifecycle", en: "Course life cycle", es: "Ciclo de vida del curso", tools: ["copy_course", "backup_course", "restore_course", "import_activities", "reset_course"] },
   { id: "grading", en: "Assignments and grading", es: "Tareas y calificación", tools: ["list_assignments", "get_submissions", "get_rubric", "grade_submission", "grant_extension", "set_workflow_state", "allocate_marker"] },

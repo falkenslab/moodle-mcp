@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **138 tools**, 137 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **142 tools**, 141 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -22,6 +22,10 @@ In the tables, ✓ marks the tools you still get with each limit: **Read only** 
 | [`configure`](#configure) | Configure the server | ✓ | ✓ | ✓ |
 | [`show_browser`](#show-browser) | Show or hide the browser | ✓ | ✓ | ✓ |
 | [`server_info`](#server-info) | Server info | ✓ | ✓ | ✓ |
+| [`list_sites`](#list-sites) | List the Moodle sites | ✓ | ✓ | ✓ |
+| [`add_site`](#add-site) | Add a Moodle site | ✓ | ✓ | ✓ |
+| [`use_site`](#use-site) | Switch to another Moodle site | ✓ | ✓ | ✓ |
+| [`remove_site`](#remove-site) | Remove a Moodle site | ✓ | ✓ | ✓ |
 
 ### `login` {#login}
 
@@ -80,7 +84,7 @@ What the Moodle site says about itself: its name, URL, language, how people log 
 
 **Configure the server**
 
-Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes), the role (role) or access to read only (access) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.
+Set this server's configuration for this session: the Moodle site (url; a new one is added to the server's sites and kept, a known one becomes active, see use_site), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes), the role (role) or access to read only (access) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only, but for a new site, which stays among the server's sites. Returns the effective configuration, as server_info.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -117,9 +121,63 @@ Show the browser to the person, so they can watch what the tools do: the window 
 
 **Server info**
 
-Show this server's version and effective configuration: the Moodle site, the browser profile folder, the browser, and where each setting came from. Contains no secrets. Does not open the browser.
+Show this server's version and effective configuration: the active Moodle site and the others, the browser profile folder, the browser, and where each setting came from. Contains no secrets. Does not open the browser.
 
 *No inputs.*
+
+### `list_sites` {#list-sites}
+
+**List the Moodle sites**
+
+List the Moodle sites this server knows, by name: their URL, which one is active (every other tool works on it) and whether each comes from the person's configuration or was added at run time. Switch with use_site.
+
+*No inputs.*
+
+### `add_site` {#add-site}
+
+**Add a Moodle site**
+
+Add a Moodle site to this server, kept for later sessions: its URL (any page of it works) and, optionally, a short name (letters, digits, dots, hyphens; its host by default). Two accounts on one site are two sites: add the second with a name of its own. It doesn't become active: switch to it with use_site, and log in there when a tool asks. Only when the person asks for another site.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `url` | ✅ | string | The site's URL, or any page of it |
+| `name` |  | string | A short name for it; its host by default |
+
+</details>
+
+### `use_site` {#use-site}
+
+**Switch to another Moodle site**
+
+Make another known site the active one, by name (list_sites): every other tool works on it from now on. The previous site's browser closes and keeps its session; if the new one has none, the next tool asks to log in. Tell the person which site you're now working on. Lasts for this session.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `name` | ✅ | string | The site's name, as list_sites gives it |
+
+</details>
+
+### `remove_site` {#remove-site}
+
+**Remove a Moodle site**
+
+Forget a site added at run time, by name, and delete its browser profile with its session. Not the active site (switch first) nor one from the person's configuration (they remove it there). Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `name` | ✅ | string | The site's name, as list_sites gives it |
+
+</details>
 
 ## Courses and content {#content}
 

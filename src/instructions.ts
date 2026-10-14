@@ -12,6 +12,7 @@ export const INSTRUCTIONS = `This server works a Moodle site through a real brow
 - Moodle pages can be slow: prefer one tool call that returns what you need over many small ones.
 - When a tool says the server is downloading a browser (no Edge or Chrome on the machine), tell the person and retry after a minute or two.
 - Other people may reach you as aliases (A-7KQ2XM): the server pseudonymizes them, and names, emails and other personal data in their texts become aliases or placeholders. Use the aliases as given, also to act on someone (grade_submission takes user). Never try to find out who an alias is: the person resolves aliases on their own machine. Text you write to Moodle (feedback, posts) is refused if it holds an alias, because people would read it as is: address the student as "you" instead.
+- The server may know several Moodle sites (list_sites); every tool works on the active one. When the person means another site, switch with use_site and say which one you're working on.
 - server_info shows the effective configuration (site, profile folder, browser, scopes, student data), useful when something fails.`;
 
 /**

@@ -10,6 +10,17 @@ import { ACCESS_LEVELS, PROFILES, STUDENT_DATA_LEVELS, parseScopes, type AccessL
 // Channels and trails are the driver's (its ADR-001 and ADR-005); the server only picks among them.
 export { CHANNELS, SYSTEM_CHANNELS, TRAILS, type Channel, type Trail } from "@falkenslab/moodle-driver";
 
+/** A Moodle site the server knows (ADR-021): its name, URL and browser profile, and where it came from. */
+export interface Site {
+  name: string;
+  /** Its base URL, as `moodleUrl` keeps it. */
+  url: string;
+  /** Its own browser profile, absolute. */
+  profileDir: string;
+  /** From the person's configuration, or added at run time (`add_site`, `configure`) and saved in the data folder. */
+  origin: "configuration" | "run-time";
+}
+
 /** Where a setting's value came from: the `configure` tool wins over arguments, which win over the environment (ADR-009). */
 export type SettingSource = "configure" | "argument" | "environment" | "default";
 
@@ -38,6 +49,12 @@ export interface Config {
   role: Role;
   /** Whether the agent may change Moodle, or only read it (ADR-020). */
   access: AccessLevel;
+  /** The server's own folder: the plugin's data folder (CLAUDE_PLUGIN_DATA) or ~/.moodle-mcp (ADR-021). */
+  dataDir: string;
+  /** The sites it knows; the active one's URL and profile are `moodleUrl` and `profileDir` (ADR-021). */
+  sites: Site[];
+  /** The active site's name; none until there's a site. */
+  activeSite: string | undefined;
   /** What the person set at start-up: configure can narrow below it, never go past it. */
   limits: { scopes: Scope[]; studentData: StudentDataLevel; role: Role; access: AccessLevel };
   sources: {
@@ -72,7 +89,10 @@ export const USAGE = `Usage: moodle-mcp [options]
 Every setting is optional here: a client can also give them with the configure tool.
 Options (each overrides its environment variable):
   --url <url>           Moodle site URL                      MOODLE_URL
-  --profile-dir <dir>   Browser profile folder               MOODLE_MCP_PROFILE_DIR (default: ~/.moodle-mcp/profile)
+  --sites <list>        Several sites: name=url,url,… or JSON MOODLE_MCP_SITES
+                        {"name": "url" | {"url": "…"}}; the first is active
+  --profile-dir <dir>   Browser profile folder (first site)  MOODLE_MCP_PROFILE_DIR (default: profile in the data folder,
+                        CLAUDE_PLUGIN_DATA or ~/.moodle-mcp)
   --channel <name>      Browser: msedge, chrome or chromium  MOODLE_MCP_CHANNEL (default: msedge, then chrome, then chromium)
   --headless / --headed Run the browser without a window     MOODLE_MCP_HEADLESS (default: true)
   --no-download-browser Never download Chromium              MOODLE_MCP_DOWNLOAD_BROWSER (default: true)
@@ -92,7 +112,6 @@ Options (each overrides its environment variable):
 /** The package's root folder: the parent of `dist/` in the bundle, of `src/` in development. */
 export const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const DEFAULT_PROFILE_DIR = path.join(homedir(), ".moodle-mcp", "profile");
 
 const booleanText = z
   .string()
@@ -136,6 +155,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       allowPositionals: false,
       options: {
         url: { type: "string" },
+        sites: { type: "string" },
         "profile-dir": { type: "string" },
         channel: { type: "string" },
         headless: { type: "boolean" },
@@ -157,6 +177,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   if (values.version) return "version";
 
   const url = pick(values.url, env.MOODLE_URL);
+  const sitesSetting = pick(values.sites, env.MOODLE_MCP_SITES);
   const profile = pick(values["profile-dir"], env.MOODLE_MCP_PROFILE_DIR);
   const channel = pick(values.channel, env.MOODLE_MCP_CHANNEL);
   const trail = pick(values.trail, env.MOODLE_MCP_TRAIL);
@@ -172,9 +193,15 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env);
   const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env);
 
+  // The data folder is the plugin's when the server runs as one: each plugin its own sessions, gone with it (ADR-021).
+  const dataDir = path.resolve(env.CLAUDE_PLUGIN_DATA?.trim() || path.join(homedir(), ".moodle-mcp"));
+  const mainProfile = parseProfileDir(profile?.value ?? path.join(dataDir, "profile"), packageRoot);
+  const sites = configuredSites(url ? parseMoodleUrl(url.value) : undefined, sitesSetting ? parseSitesSetting(sitesSetting.value) : [], mainProfile, dataDir);
+  const urlSource = url ? url.source : sitesSetting?.source;
+
   return {
-    moodleUrl: url ? parseMoodleUrl(url.value) : undefined,
-    profileDir: parseProfileDir(profile?.value ?? DEFAULT_PROFILE_DIR, packageRoot),
+    moodleUrl: sites[0]?.url,
+    profileDir: sites[0]?.profileDir ?? mainProfile,
     channel: channel ? parseChannel(channel.value) : undefined,
     headless: headless.value,
     downloadBrowser: downloadBrowser.value,
@@ -183,9 +210,12 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     studentData: level,
     role,
     access,
+    dataDir,
+    sites,
+    activeSite: sites[0]?.name,
     limits: { scopes: scopeList, studentData: level, role, access },
     sources: {
-      ...(url ? { moodleUrl: url.source } : {}),
+      ...(urlSource ? { moodleUrl: urlSource } : {}),
       profileDir: profile?.source ?? "default",
       channel: channel?.source ?? "default",
       headless: headless.source,
@@ -197,6 +227,78 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       access: accessSetting?.source ?? "default",
     },
   };
+}
+
+/**
+ * The configured sites, in order: MOODLE_URL first unless MOODLE_MCP_SITES already has its URL, so a
+ * 0.2 configuration that adds sites keeps its active site; the first site keeps the main profile, so
+ * no one logs in again, and every other gets its own in the data folder (ADR-021).
+ */
+function configuredSites(url: string | undefined, listed: { name: string; url: string }[], mainProfile: string, dataDir: string): Site[] {
+  const all = url && !listed.some((site) => site.url === url) ? [{ name: siteNameOf(url), url }, ...listed] : listed;
+  const seen = new Set<string>();
+  for (const { name } of all) {
+    if (seen.has(name)) throw new ConfigError(`Two sites are named "${name}": name them in MOODLE_MCP_SITES (name=url), such as two accounts on one site.`);
+    seen.add(name);
+  }
+  return all.map((site, i) => ({ ...site, origin: "configuration", profileDir: i === 0 ? mainProfile : siteProfileDir(dataDir, site.name) }));
+}
+
+/** A site's own profile in the data folder, for every site but the first. */
+export function siteProfileDir(dataDir: string, name: string): string {
+  return path.join(dataDir, "sites", name, "profile");
+}
+
+/**
+ * MOODLE_MCP_SITES (ADR-021): JSON when it starts with `{` (name to URL, or to `{ url }`), else a
+ * comma-separated list of URLs (each named after its host) and `name=url` items.
+ */
+export function parseSitesSetting(value: string): { name: string; url: string }[] {
+  const text = value.trim();
+  let entries: [string | undefined, string][];
+  if (text.startsWith("{")) {
+    let json: unknown;
+    try {
+      json = JSON.parse(text);
+    } catch (error) {
+      throw new ConfigError(`MOODLE_MCP_SITES starts with "{" but isn't valid JSON (${(error as Error).message}).`);
+    }
+    if (!json || typeof json !== "object" || Array.isArray(json)) throw new ConfigError('MOODLE_MCP_SITES as JSON must be an object: {"name": "https://…"}.');
+    entries = Object.entries(json).map(([name, site]): [string, string] => {
+      const siteUrl = typeof site === "string" ? site : site && typeof site === "object" && typeof (site as { url?: unknown }).url === "string" ? (site as { url: string }).url : undefined;
+      if (!siteUrl) throw new ConfigError(`MOODLE_MCP_SITES: the site "${name}" needs a URL, as a string or {"url": "…"}.`);
+      return [name, siteUrl];
+    });
+  } else {
+    entries = text
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .map((item): [string | undefined, string] => {
+        // A URL may hold "=" in its query: only an item that isn't a URL is name=url.
+        if (/^https?:\/\//i.test(item)) return [undefined, item];
+        const at = item.indexOf("=");
+        if (at < 1) throw new ConfigError(`MOODLE_MCP_SITES: "${item}" is neither a URL nor name=url.`);
+        return [item.slice(0, at).trim(), item.slice(at + 1).trim()];
+      });
+  }
+  if (entries.length === 0) throw new ConfigError("MOODLE_MCP_SITES has no site.");
+  return entries.map(([name, siteUrl]) => {
+    const parsed = parseMoodleUrl(siteUrl);
+    return { name: name === undefined ? siteNameOf(parsed) : parseSiteName(name), url: parsed };
+  });
+}
+
+/** A site's name: letters, digits, dots and hyphens, as its folder in the data folder is named. */
+export function parseSiteName(value: string): string {
+  const name = value.trim();
+  if (!/^[A-Za-z0-9][A-Za-z0-9.-]{0,62}$/.test(name)) throw new ConfigError(`A site's name is letters, digits, dots and hyphens (up to 63), starting with a letter or digit, not "${value}".`);
+  return name;
+}
+
+/** The name of a site given without one: its host, with its port (campus.example.org, localhost-8080). */
+export function siteNameOf(siteUrl: string): string {
+  return new URL(siteUrl).host.replace(/[^A-Za-z0-9.]+/g, "-").slice(0, 63);
 }
 
 /** A site URL as the server keeps it: http(s), no query or fragment, ending in `/`. */

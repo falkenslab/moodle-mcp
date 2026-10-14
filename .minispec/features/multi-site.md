@@ -16,13 +16,7 @@ One server knows several Moodle sites, works on one at a time, and moves content
 
 ## Changes
 
-Phase 1, the active site (no driver work):
-
-- An ADR: a list of sites and one active at a time; where sessions and the server's state live; the limits (ADR-015, 016, 018, 020) the same on every site.
-- Sites from configuration (`MOODLE_MCP_SITES` or `--sites`: a JSON object from name to URL or to `{ url, … }`, or a list of URLs and `name=url` items; `MOODLE_URL` alone is a one-site list) and at run time: `list_sites` (read-only: name, URL, active, logged in or not), `add_site({ name, url })`, `use_site(name)` (the active site; the browser opens to log in when it has no session), `remove_site` (a run-time site and its session; a configured one only goes from the configuration).
-- Each site its own browser profile and session (two accounts on one host are two sites), each under the data folder by name; the 137 tools work on the active site, unchanged.
-- `server_info` and the instructions name the active site; an agent switches with `use_site` and says so.
-- State that survives a restart: with `CLAUDE_PLUGIN_DATA` and no `MOODLE_MCP_PROFILE_DIR`, profiles and the run-time sites go under `${CLAUDE_PLUGIN_DATA}`; otherwise in the data folder next to the profile. `configure` stays in memory and only narrows.
+Phase 1, the active site: done (ADR-021, `src/sites.ts`, `src/tools/sites.ts`, the site's several-sites page).
 
 Phase 2, transfers (the driver's part is in 0.8):
 
@@ -36,6 +30,6 @@ Docs in both languages: settings, a page on several sites, a use case moving an 
 
 ## Acceptance
 
-- Phase 1: with two sandbox sites (two Docker Moodles, or one with two accounts), `use_site` switches between them, `list_courses` gives the active site's courses, and the tool list has only the new site tools more than with one site; `MOODLE_URL` alone works as today; run-time sites are there after a restart, under `CLAUDE_PLUGIN_DATA` when it's given; an alias from one site is unknown on the other.
+- Phase 1: done; checked with two accounts of the sandbox as two sites.
 - Phase 2: an activity, a section and a course copied from one site to the other arrive with their settings and files, and no users' data.
 - Docker tests, `--strict` with no warnings, and a sandbox check.

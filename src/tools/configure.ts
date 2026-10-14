@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ConfigError, atLeastAsStrict, parseProfileDir, parseScopeSetting } from "../config.js";
+import { addSite, useSite } from "../sites.js";
 import { findMoodleSite } from "@falkenslab/moodle-driver";
 import { ROLES, roleWithin } from "./roles.js";
 import { ACCESS_LEVELS, STUDENT_DATA_LEVELS, applyScopes } from "./scopes.js";
@@ -27,7 +28,7 @@ export const registerConfigure: RegisterTool = (server, context) => {
     {
       title: "Configure the server",
       description:
-        "Set this server's configuration for this session: the Moodle site (url), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes), the role (role) or access to read only (access) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only. Returns the effective configuration, as server_info.",
+        "Set this server's configuration for this session: the Moodle site (url; a new one is added to the server's sites and kept, a known one becomes active, see use_site), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes), the role (role) or access to read only (access) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only, but for a new site, which stays among the server's sites. Returns the effective configuration, as server_info.",
       inputSchema,
       outputSchema: serverInfoSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
@@ -54,13 +55,18 @@ export const registerConfigure: RegisterTool = (server, context) => {
       const relaunch = (dir !== undefined && dir !== config.profileDir) || (headless !== undefined && headless !== config.headless);
       if (relaunch) await browser.close();
 
+      // A site is one of the server's sites (ADR-021): a known one becomes active, a new one is added and kept.
       if (moodleUrl !== undefined) {
-        config.moodleUrl = moodleUrl;
+        const site = config.sites.find((s) => s.url === moodleUrl) ?? addSite(config, moodleUrl);
+        await useSite(config, browser, site.name);
         config.sources.moodleUrl = "configure";
       }
       if (dir !== undefined) {
         config.profileDir = dir;
         config.sources.profileDir = "configure";
+        // For this session, the active site's profile too.
+        const active = config.sites.find((s) => s.name === config.activeSite);
+        if (active) active.profileDir = dir;
       }
       if (trail !== undefined) {
         config.trail = trail;

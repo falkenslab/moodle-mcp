@@ -13,7 +13,7 @@ import { testConfig } from "../helpers/fixtures.js";
 const browser = await launchTestBrowser();
 after(() => browser?.close());
 
-const SESSION = ["configure", "login", "logout", "get_me", "get_site_info", "list_courses", "show_browser", "server_info"];
+const SESSION = ["configure", "login", "logout", "get_me", "get_site_info", "list_courses", "show_browser", "server_info", "list_sites", "add_site", "use_site", "remove_site"];
 
 async function connect(config: Config, manager: BrowserManager = fakeBrowserManager()) {
   const server = createServer({ config, browser: manager });

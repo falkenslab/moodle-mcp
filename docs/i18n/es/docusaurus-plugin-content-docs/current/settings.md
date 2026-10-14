@@ -58,11 +58,12 @@ Cada ajuste también puede ser un argumento de línea de comandos después del n
 | Variable | Argumento | Por defecto | Qué hace |
 | --- | --- | --- | --- |
 | `MOODLE_URL` | `--url` | ninguno | Tu sitio Moodle, como `https://campus.example.org`. Vale cualquier página del sitio. |
+| `MOODLE_MCP_SITES` | `--sites` | ninguno | Varios sitios, el primero activo: `nombre=url,…` o JSON. Consulta [Varios sitios](./several-sites.md). |
 | `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | Lo que ve la IA de otras personas: `block`, `pseudonymize` o `clear`. Consulta [Privacidad del alumnado](./privacy.md). |
 | `MOODLE_MCP_ROLE` | `--role` | `all` | Solo las herramientas de un rol: `teacher`, `student` o `all`. Consulta [Limitar al agente](./limits.md#tu-rol). |
 | `MOODLE_MCP_ACCESS` | `--access` | `write` | `read` deja solo las herramientas que no cambian nada. Consulta [Limitar al agente](./limits.md#solo-lectura). |
 | `MOODLE_MCP_SCOPES` | `--scopes` | `all` | Los tipos de herramientas: un perfil o una lista de ámbitos. Consulta [Limitar al agente](./limits.md#ámbitos). |
-| `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | La carpeta del perfil del navegador que guarda tu sesión. |
+| `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | La carpeta del perfil del navegador que guarda tu sesión (la del primer sitio, si hay varios). Dentro de un plugin de Claude Code, la guarda en su lugar la carpeta de datos del plugin. |
 | `MOODLE_MCP_CHANNEL` | `--channel` | Edge, después Chrome, después Chromium | Qué navegador usar: `msedge`, `chrome` o `chromium`. |
 | `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | `false` trabaja siempre con una ventana visible. Para iniciar sesión siempre se muestra una. |
 | `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | `false` no descarga nunca Chromium cuando no hay Edge ni Chrome. |

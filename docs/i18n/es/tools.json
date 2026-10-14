@@ -1,8 +1,8 @@
 {
   "configure": {
-    "source": "198d62e8f054",
+    "source": "388cbdedaff3",
     "title": "Configurar el servidor",
-    "description": "Establece la configuración de este servidor para esta sesión: el sitio Moodle (url), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role) o el acceso a solo lectura (access) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria. Devuelve la configuración efectiva, como server_info.",
+    "description": "Establece la configuración de este servidor para esta sesión: el sitio Moodle (url; uno nuevo se añade a los sitios del servidor y se guarda, uno conocido pasa a ser el activo, consulta use_site), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role) o el acceso a solo lectura (access) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria, salvo un sitio nuevo, que se queda entre los sitios del servidor. Devuelve la configuración efectiva, como server_info.",
     "inputs": {
       "url": "La URL del sitio Moodle, o de cualquier página suya (vale la URL de un curso: el sitio se obtiene de ella)",
       "headless": "Ejecutar el navegador sin ventana (iniciar sesión siempre muestra una)",
@@ -1433,9 +1433,40 @@
     }
   },
   "server_info": {
-    "source": "07666436d31d",
+    "source": "0f10b475c118",
     "title": "Información del servidor",
-    "description": "Muestra la versión de este servidor y su configuración efectiva: el sitio Moodle, la carpeta del perfil del navegador, el navegador y de dónde viene cada ajuste. No contiene secretos. No abre el navegador.",
+    "description": "Muestra la versión de este servidor y su configuración efectiva: el sitio Moodle activo y los demás, la carpeta del perfil del navegador, el navegador y de dónde viene cada ajuste. No contiene secretos. No abre el navegador.",
     "inputs": {}
+  },
+  "list_sites": {
+    "title": "Listar los sitios Moodle",
+    "description": "Lista los sitios Moodle que conoce este servidor, por nombre: su URL, cuál es el activo (en el que trabajan todas las demás herramientas) y si cada uno viene de la configuración de la persona o se añadió durante el trabajo. Se cambia de sitio con use_site.",
+    "inputs": {},
+    "source": "b8bf6dc63999"
+  },
+  "add_site": {
+    "title": "Añadir un sitio Moodle",
+    "description": "Añade un sitio Moodle a este servidor, que se guarda para las siguientes sesiones: su URL (vale cualquier página del sitio) y, opcionalmente, un nombre corto (letras, números, puntos y guiones; por defecto, su host). Dos cuentas en un mismo sitio son dos sitios: añade la segunda con un nombre propio. No pasa a ser el activo: cambia a él con use_site, e inicia sesión allí cuando una herramienta lo pida. Solo cuando la persona pida otro sitio.",
+    "inputs": {
+      "url": "La URL del sitio, o cualquier página suya",
+      "name": "Un nombre corto para él; por defecto, su host"
+    },
+    "source": "4bb463a67c22"
+  },
+  "use_site": {
+    "title": "Cambiar a otro sitio Moodle",
+    "description": "Hace activo otro sitio conocido, por su nombre (list_sites): desde ese momento todas las demás herramientas trabajan en él. El navegador del sitio anterior se cierra y conserva su sesión; si el nuevo no tiene sesión, la siguiente herramienta pedirá iniciarla. Dile a la persona en qué sitio trabajas ahora. Dura esta sesión.",
+    "inputs": {
+      "name": "El nombre del sitio, tal como lo da list_sites"
+    },
+    "source": "9eea35d4ddd9"
+  },
+  "remove_site": {
+    "title": "Quitar un sitio Moodle",
+    "description": "Olvida un sitio añadido durante el trabajo, por su nombre, y borra su perfil de navegador con su sesión. Ni el sitio activo (cambia antes de sitio) ni uno de la configuración de la persona (lo quita ella allí). No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "name": "El nombre del sitio, tal como lo da list_sites"
+    },
+    "source": "91bca6cd18c5"
   }
 }
