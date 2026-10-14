@@ -104,7 +104,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `MIT licensed. Copyright © ${new Date().getFullYear()} Francisco Vargas Ruiz.<br/>Made with 💖 by Falken's Lab Team`,
+      copyright: "Made with 💖 by Falken's Lab Team",
     },
     prism: {
       theme: prismThemes.github,
