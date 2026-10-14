@@ -45,6 +45,21 @@ El sitio se guarda para las siguientes sesiones. Para olvidarlo, y borrar su ses
 
 El agente te pregunta antes. Los sitios de tu configuración solo se quitan ahí.
 
+## Copiar entre sitios
+
+El agente puede copiar contenido de un curso de uno de tus sitios a otro: algunas actividades, algunas secciones o un curso entero.
+
+> Copia el cuestionario «Bucles: repaso rápido» y la página «Cómo funciona un bucle for» de mi curso Programación 1 de «centro» a mi curso Python de «uni», en su primera sección.
+
+moodle-mcp lo hace con la copia de seguridad del propio Moodle en el primer sitio y su restauración en el segundo, con la herramienta `copy_between_sites`:
+
+- **Los ajustes y los ficheros viajan con el contenido**: un cuestionario conserva sus preguntas y opciones, una página sus imágenes, una carpeta sus ficheros.
+- **Los datos de las personas, nunca**: ni entregas, ni notas, ni mensajes, ni nombres. La copia no nombra a nadie, ni siquiera el sitio de donde viene.
+- **Nada pasa por la IA**: el fichero de la copia se queda en tu ordenador y se borra en cuanto se restaura.
+- **Te dice qué revisar**: las actividades que dependían de algo que no se copió (una restricción, un enlace a otra actividad) aparecen en una lista para que las arregles.
+
+Los dos sitios necesitan su sesión: si uno no la tiene, el agente te dice que inicies sesión allí. El sitio en el que estabas trabajando sigue activo. Dentro de un mismo sitio, el agente copia con la importación de Moodle.
+
 ## Dónde se guardan las sesiones
 
 Cada sitio tiene su propio perfil de navegador, y por tanto su propia sesión:

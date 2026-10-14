@@ -45,6 +45,21 @@ The site is kept for later sessions. To forget it, and delete its session:
 
 The agent asks you first. Sites from your configuration can only be removed there.
 
+## Copying between sites
+
+The agent can copy course content from one of your sites to another: some activities, some sections, or a whole course.
+
+> Copy the quiz "Loops: quick check" and the page "How a for loop works" from my course Programming 1 on "school" to my course Python on "uni", into its first section.
+
+moodle-mcp does it through Moodle's own backup on the first site and restore on the second, with the `copy_between_sites` tool:
+
+- **Settings and files travel with the content**: a quiz keeps its questions and options, a page its images, a folder its files.
+- **People's data never does**: no submissions, grades, posts or names. The copy names no one, and not even the site it came from.
+- **Nothing passes through the AI**: the backup file stays on your computer, and is deleted once restored.
+- **You hear what to check**: activities that depended on something not copied (a restriction, a link to another activity) are listed for you to fix.
+
+Both sites need their session: if one has none, the agent tells you to log in there. The site you were working on stays active. Within one site, the agent copies with Moodle's import instead.
+
 ## Where sessions are kept
 
 Each site has its own browser profile, so its own session:

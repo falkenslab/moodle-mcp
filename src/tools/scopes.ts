@@ -100,6 +100,7 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   copy_course: ["category:course-content"],
   backup_course: ["category:course-content"],
   restore_course: ["category:course-content"],
+  copy_between_sites: ["category:course-content"],
   import_activities: ["importActivities"],
   reset_course: ["resetCourse"],
   edit_quiz_slot: ["editQuizSlot"],

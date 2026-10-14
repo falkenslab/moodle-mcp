@@ -179,6 +179,25 @@ describe("list_sites, add_site, use_site and remove_site", () => {
     assert.equal(config.sites[0]!.profileDir, path.join(config.dataDir, "profile"));
   });
 
+  it("copy_between_sites refuses one site twice, an unknown site, and a part of a course into a new one, before any browser", async () => {
+    const config = fresh();
+    config.sites.push({ name: "a", url: `${origin}/one/`, profileDir: config.profileDir, origin: "configuration" }, { name: "b", url: `${origin}/two/`, profileDir: path.join(config.dataDir, "sites", "b", "profile"), origin: "configuration" });
+    config.activeSite = "a";
+    config.moodleUrl = `${origin}/one/`;
+    const { call, closes } = await connect(config);
+    const refused = async (args: Record<string, unknown>, pattern: RegExp) => {
+      const result = await call("copy_between_sites", { fromSite: "a", courseId: 3, toSite: "b", ...args });
+      assert.equal(result.isError, true);
+      assert.match(JSON.stringify(result.content), pattern);
+    };
+    await refused({ toSite: "a", toCourseId: 4 }, /same site/);
+    await refused({ toSite: "c", toCourseId: 4 }, /No site is named \\"c\\"/);
+    await refused({}, /Say where to copy it/);
+    await refused({ activityIds: [5], toCategoryId: 1 }, /existing course/);
+    assert.equal(closes(), 0);
+    assert.equal(config.activeSite, "a");
+  });
+
   it("are session tools, there under every limit", async () => {
     const { call } = await connect(testConfig({ role: "student", access: "read", studentData: "block", scopes: ["content"] }));
     for (const name of ["list_sites", "add_site", "use_site", "remove_site"]) {

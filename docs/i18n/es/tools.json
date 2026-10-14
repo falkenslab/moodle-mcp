@@ -1468,5 +1468,21 @@
       "name": "El nombre del sitio, tal como lo da list_sites"
     },
     "source": "91bca6cd18c5"
+  },
+  "copy_between_sites": {
+    "source": "dbeecd421dbd",
+    "title": "Copiar contenido de un curso a otro sitio",
+    "description": "Copia el contenido de un curso de uno de los sitios de este servidor a otro (list_sites): algunas actividades (activityIds), algunas secciones con todo lo que contienen (sectionIds) o, sin ninguna de las dos, el curso entero. Mediante la copia de seguridad de Moodle en el primer sitio y su restauración en el segundo, nunca con datos de personas y sin nombrar a nadie; el fichero se queda en este ordenador, nunca pasa por ti y se borra al terminar. Va a un curso existente (toCourseId): al final de una de sus secciones (toSectionId) o, para secciones, como secciones nuevas después de toAfterSectionId; un curso entero puede ir en su lugar a un curso nuevo en una categoría (toCategoryId). Devuelve lo que se ha creado, y en warnings lo que quedó roto (restricciones o enlaces a lo que no se copió) para que la persona lo arregle. Cada sitio necesita una sesión (use_site y después login). El sitio activo sigue siendo el mismo. Dentro de un mismo sitio, usa import_activities o copy_course. Puede tardar minutos. Cambia el sitio de destino: confírmalo antes con la persona.",
+    "inputs": {
+      "fromSite": "El nombre de un sitio, tal como lo da list_sites",
+      "courseId": "El curso del que copiar, en fromSite",
+      "activityIds": "Solo estas actividades y recursos, por id del módulo del curso",
+      "sectionIds": "Solo estas secciones, por id, cada una con todo lo que contiene",
+      "toSite": "El nombre de un sitio, tal como lo da list_sites",
+      "toCourseId": "Un curso existente en toSite al que copiar",
+      "toSectionId": "En toCourseId: todas las actividades copiadas al final de esta sección",
+      "toAfterSectionId": "En toCourseId: las secciones copiadas como secciones nuevas después de esta",
+      "toCategoryId": "Solo un curso entero: un curso nuevo en esta categoría de toSite, en lugar de toCourseId"
+    }
   }
 }

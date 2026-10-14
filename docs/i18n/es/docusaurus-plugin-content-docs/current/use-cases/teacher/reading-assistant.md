@@ -17,7 +17,7 @@ Añade moodle-mcp una segunda vez, como asistente de docente de solo lectura:
 $ claude mcp add moodle-read -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_ACCESS=read -- npx -y @falkenslab/moodle-mcp
 `}</Terminal>
 
-Recibe 55 herramientas en lugar de 141. Consulta [Limitar al agente](../../limits.md).
+Recibe 55 herramientas en lugar de 142. Consulta [Limitar al agente](../../limits.md).
 
 ## Lo que pides
 

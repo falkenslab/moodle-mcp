@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **142 herramientas**, 141 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **143 herramientas**, 142 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -466,6 +466,7 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 | [`restore_course`](#restore-course) | Restaurar una copia de seguridad de un curso |  | ✓ |  |
 | [`import_activities`](#import-activities) | Importar actividades de otro curso |  | ✓ |  |
 | [`reset_course`](#reset-course) | Reiniciar un curso para un nuevo año |  | ✓ |  |
+| [`copy_between_sites`](#copy-between-sites) | Copiar contenido de un curso a otro sitio |  | ✓ |  |
 
 ### `copy_course` {#copy-course}
 
@@ -566,6 +567,29 @@ Reinicia un curso como hace el formulario de reinicio de Moodle: elimina solo lo
 | `unenrolRoles` |  | lista de entero | Ids de los roles cuyas personas se desmatriculan |
 | `start` |  | texto | La nueva fecha de inicio, ISO 8601 |
 | `fields` |  | objeto | Cualquier otro campo del formulario de reinicio, por su nombre |
+
+</details>
+
+### `copy_between_sites` {#copy-between-sites}
+
+**Copiar contenido de un curso a otro sitio**
+
+Copia el contenido de un curso de uno de los sitios de este servidor a otro (list_sites): algunas actividades (activityIds), algunas secciones con todo lo que contienen (sectionIds) o, sin ninguna de las dos, el curso entero. Mediante la copia de seguridad de Moodle en el primer sitio y su restauración en el segundo, nunca con datos de personas y sin nombrar a nadie; el fichero se queda en este ordenador, nunca pasa por ti y se borra al terminar. Va a un curso existente (toCourseId): al final de una de sus secciones (toSectionId) o, para secciones, como secciones nuevas después de toAfterSectionId; un curso entero puede ir en su lugar a un curso nuevo en una categoría (toCategoryId). Devuelve lo que se ha creado, y en warnings lo que quedó roto (restricciones o enlaces a lo que no se copió) para que la persona lo arregle. Cada sitio necesita una sesión (use_site y después login). El sitio activo sigue siendo el mismo. Dentro de un mismo sitio, usa import_activities o copy_course. Puede tardar minutos. Cambia el sitio de destino: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `fromSite` | ✅ | texto | El nombre de un sitio, tal como lo da list_sites |
+| `courseId` | ✅ | entero | El curso del que copiar, en fromSite |
+| `activityIds` |  | lista de entero | Solo estas actividades y recursos, por id del módulo del curso |
+| `sectionIds` |  | lista de entero | Solo estas secciones, por id, cada una con todo lo que contiene |
+| `toSite` | ✅ | texto | El nombre de un sitio, tal como lo da list_sites |
+| `toCourseId` |  | entero | Un curso existente en toSite al que copiar |
+| `toSectionId` |  | entero | En toCourseId: todas las actividades copiadas al final de esta sección |
+| `toAfterSectionId` |  | entero | En toCourseId: las secciones copiadas como secciones nuevas después de esta |
+| `toCategoryId` |  | entero | Solo un curso entero: un curso nuevo en esta categoría de toSite, en lugar de toCourseId |
 
 </details>
 

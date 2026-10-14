@@ -25,8 +25,8 @@ Para ver los límites en vigor, pregúntale al agente:
 
 | Rol | Herramientas | Qué incluye | Tamaño de las descripciones de las herramientas |
 | --- | --- | --- | --- |
-| `all` (por defecto) | 141 | Todo | unos 30.700 tokens |
-| `teacher` | 125 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 27.900 tokens |
+| `all` (por defecto) | 142 | Todo | unos 31.300 tokens |
+| `teacher` | 126 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 28.500 tokens |
 | `student` | 65 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 11.500 tokens |
 
 Claude Code carga las herramientas a medida que las necesita, así que ahí el tamaño importa menos. Claude Desktop, Codex y la mayoría de las demás aplicaciones las cargan todas al empezar cada chat.
@@ -68,7 +68,7 @@ Un docente que quiere ayuda para crear cursos, y nada más:
 claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp
 ```
 
-Son 70 herramientas, unos 15.400 tokens.
+Son 71 herramientas, unos 16.000 tokens.
 
 Un asistente de estudio para un alumno que no puede entregar ni publicar nada:
 

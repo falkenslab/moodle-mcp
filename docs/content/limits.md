@@ -25,8 +25,8 @@ To see the limits in force, ask the agent:
 
 | Role | Tools | What's in it | Size of the tools' descriptions |
 | --- | --- | --- | --- |
-| `all` (default) | 141 | Everything | about 30,700 tokens |
-| `teacher` | 125 | Building and running courses, grading, people, reports, forums and messages | about 27,900 tokens |
+| `all` (default) | 142 | Everything | about 31,300 tokens |
+| `teacher` | 126 | Building and running courses, grading, people, reports, forums and messages | about 28,500 tokens |
 | `student` | 65 | Reading courses, doing activities, your grades and to-dos, forums and messages | about 11,500 tokens |
 
 Claude Code loads tools as it needs them, so the size matters less there. Claude Desktop, Codex and most other apps load them all at the start of each chat.
@@ -68,7 +68,7 @@ A teacher who wants help building courses, and nothing else:
 claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp
 ```
 
-That's 70 tools, about 15,400 tokens.
+That's 71 tools, about 16,000 tokens.
 
 A student's study assistant that can't submit or post anything:
 

@@ -18,18 +18,16 @@ One server knows several Moodle sites, works on one at a time, and moves content
 
 Phase 1, the active site: done (ADR-021, `src/sites.ts`, `src/tools/sites.ts`, the site's several-sites page).
 
-Phase 2, transfers (the driver's part is in 0.8):
-
-- `copy_activity({ from: { site, course, activity }, to: { site, course, section } })`, and the same for a section and a whole course: backup on one site, restore on the other, without users' data, the file never passing through the model. The result names what was created and what to check (dates, groups, grade settings, links between activities). These tools take both sites; they change the target only.
+Phase 2, transfers: done (`copy_between_sites`, `src/tools/siteTransfer.ts`).
 
 Apart, useful with one site too:
 
 - Elicitation (`elicitation/create`) when the client supports it: `add_site` asks the person for the URL and name, `login` for a confirmation once they've logged in; without it, today's arguments and wait.
 
-Docs in both languages: settings, a page on several sites, a use case moving an activity between two sites, the tools reference.
+Docs in both languages: done but for a use case moving an activity between two sites, with its screenshots.
 
 ## Acceptance
 
 - Phase 1: done; checked with two accounts of the sandbox as two sites.
-- Phase 2: an activity, a section and a course copied from one site to the other arrive with their settings and files, and no users' data.
+- Phase 2: done; checked on the sandbox, an activity copied between two sites into a section.
 - Docker tests, `--strict` with no warnings, and a sandbox check.

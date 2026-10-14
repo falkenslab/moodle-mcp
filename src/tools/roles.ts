@@ -95,6 +95,7 @@ const TEACHER = [
   "copy_course",
   "backup_course",
   "restore_course",
+  "copy_between_sites",
   "import_activities",
   "reset_course",
   "list_question_banks",

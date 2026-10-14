@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **142 tools**, 141 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **143 tools**, 142 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -466,6 +466,7 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 | [`restore_course`](#restore-course) | Restore a course backup |  | ✓ |  |
 | [`import_activities`](#import-activities) | Import activities from another course |  | ✓ |  |
 | [`reset_course`](#reset-course) | Reset a course for a new year |  | ✓ |  |
+| [`copy_between_sites`](#copy-between-sites) | Copy course content to another site |  | ✓ |  |
 
 ### `copy_course` {#copy-course}
 
@@ -566,6 +567,29 @@ Reset a course as Moodle's reset form does: delete only what's named in delete (
 | `unenrolRoles` |  | integer list | Role ids whose people are unenrolled |
 | `start` |  | string | The new start date, ISO 8601 |
 | `fields` |  | object | Any other field of the reset form, by name |
+
+</details>
+
+### `copy_between_sites` {#copy-between-sites}
+
+**Copy course content to another site**
+
+Copy a course's content from one of this server's sites to another (list_sites): some activities (activityIds), some sections with everything in them (sectionIds), or, with neither, the whole course. Through Moodle's backup on the first site and its restore on the second, never with people's data and naming no one; the file stays on this computer, never passes through you, and is deleted after. It goes into an existing course (toCourseId): at the end of one of its sections (toSectionId), or, for sections, as new ones after toAfterSectionId; a whole course can go into a new course in a category instead (toCategoryId). Returns what was created, and warnings for what was left broken (restrictions or links to what wasn't copied) for the person to fix. Each site needs a session (use_site, then login). The active site stays the same. Within one site, use import_activities or copy_course. It can take minutes. Changes the target site: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `fromSite` | ✅ | string | A site's name, as list_sites gives it |
+| `courseId` | ✅ | integer | The course to copy from, on fromSite |
+| `activityIds` |  | integer list | Only these activities and resources, by course module id |
+| `sectionIds` |  | integer list | Only these sections, by id, each with everything in it |
+| `toSite` | ✅ | string | A site's name, as list_sites gives it |
+| `toCourseId` |  | integer | An existing course on toSite to copy into |
+| `toSectionId` |  | integer | Into toCourseId: every copied activity at the end of this section |
+| `toAfterSectionId` |  | integer | Into toCourseId: copied sections as new sections after this one |
+| `toCategoryId` |  | integer | A whole course only: a new course in this category on toSite, instead of toCourseId |
 
 </details>
 
