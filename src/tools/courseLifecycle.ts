@@ -55,21 +55,25 @@ export const registerBackupCourse: RegisterTool = (server, { config, browser }) 
     "backup_course",
     {
       title: "Back up a course",
-      description: `Back a course up to a .mbz file in a local folder, through Moodle's backup wizard: its content, and with withUsers its people's data too (anonymize makes their names anonymous). Moodle keeps a copy in the course's backup area. Restore it with restore_course. ${LONG}`,
+      description: `Back a course up to a .mbz file in a local folder, through Moodle's backup wizard: its content, and with withUsers its people's data too (anonymize makes their names anonymous). Or only some of it: sections (each with everything in it) and activities, never with people's data, and the file naming no one and no site unless anonymous is false. Moodle keeps a copy in the course's backup area. Restore it with restore_course, on this site or another. ${LONG}`,
       inputSchema: {
         courseId,
         destDir: z.string().describe("An absolute local folder for the file"),
         withUsers: z.boolean().optional().describe("Also its participants' data (default false)"),
         anonymize: z.boolean().optional().describe("With users: Moodle makes their names and contact data anonymous"),
+        sections: z.array(z.number().int().positive()).optional().describe("Only these sections, by id (get_course_structure), each with everything in it"),
+        activities: z.array(z.number().int().positive()).optional().describe("Only these activities and resources, by course module id"),
+        anonymous: z.boolean().optional().describe("The file names no person and no site or course of origin: true by default for sections or activities, false for a whole course"),
       },
       outputSchema: { changed: z.string(), file: z.object({ path: z.string(), name: z.string(), size: z.number(), contentType: z.string().optional() }) },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ courseId: id, destDir, withUsers, anonymize }) => {
+    async ({ courseId: id, destDir, withUsers, anonymize, sections, activities, anonymous }) => {
+      if (withUsers && (sections?.length || activities?.length)) throw new Error("A backup of sections or activities never holds people's data: leave withUsers out, or back up the whole course.");
       refuseUsersWithoutStudentData(config, withUsers);
       // A file on this machine can't be pseudonymized: people's names in it only with names in clear, or anonymized by Moodle.
       if (withUsers && !anonymize && !othersFilesAllowed(config)) throw new OutOfScopeError("A backup with users holds students' names, and this server pseudonymizes them: back it up with anonymize, or without users.");
-      return reply(await backupCourse(...(await onSite(config, browser)), id, destDir, { withUsers, anonymize }));
+      return reply(await backupCourse(...(await onSite(config, browser)), id, destDir, { withUsers, anonymize, sections, activities, anonymous }));
     },
   );
 };
@@ -79,7 +83,7 @@ export const registerRestoreCourse: RegisterTool = (server, { config, browser })
     "restore_course",
     {
       title: "Restore a course backup",
-      description: `Restore a .mbz backup through Moodle's restore wizard: into a new course in a category (no intoCourseId), or into an existing course, adding to its content (mode merge, the default) or replacing it (replace deletes the course's content first). A new course takes the backup's names unless fullName and shortName are given. ${LONG} Changes Moodle, and replace can't be undone: confirm with the person first.`,
+      description: `Restore a .mbz backup through Moodle's restore wizard: into a new course in a category (no intoCourseId), or into an existing course, adding to its content (mode merge, the default) or replacing it (replace deletes the course's content first). Merged into a course, sectionId puts every restored activity at the end of that section, and afterSectionId the backup's sections as new ones after that one; the result names the new sections and activities, and warnings what was left broken (restrictions or links to what wasn't restored) for the person to fix. A new course takes the backup's names unless fullName and shortName are given. A backup from a newer Moodle, or with activity types this site doesn't offer, is refused. ${LONG} Changes Moodle, and replace can't be undone: confirm with the person first.`,
       inputSchema: {
         file: z.string().describe("The backup's absolute local path (.mbz)"),
         intoCourseId: z.number().int().positive().optional().describe("An existing course to restore into; a new course when missing"),
@@ -88,8 +92,28 @@ export const registerRestoreCourse: RegisterTool = (server, { config, browser })
         fullName: z.string().min(1).optional(),
         shortName: z.string().min(1).optional(),
         withUsers: z.boolean().optional().describe("Restore the participants' data the backup has (default false)"),
+        sectionId: z.number().int().positive().optional().describe("Merged into a course: every restored activity at the end of this section"),
+        afterSectionId: z.number().int().positive().optional().describe("Merged into a course: the backup's sections as new sections after this one"),
       },
-      outputSchema: { changed: z.string(), course: courseRef },
+      outputSchema: {
+        changed: z.string(),
+        course: courseRef,
+        sectionIds: z.array(z.number().int()).optional().describe("The sections the restore created, merged into a course"),
+        activityIds: z.array(z.number().int()).optional().describe("The activities the restore created, merged into a course"),
+        warnings: z
+          .array(
+            z.object({
+              activityId: z.number().int(),
+              name: z.string(),
+              kind: z.enum(["restriction", "link"]).describe("restriction: an access condition on something not restored; link: a link to an activity outside the course"),
+              condition: z.enum(["completion", "grade", "group", "grouping"]).optional(),
+              url: z.string().optional(),
+              message: z.string(),
+            }),
+          )
+          .optional()
+          .describe("What the restore left broken, for the person to fix"),
+      },
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     },
     async ({ file, intoCourseId, ...rest }) => {

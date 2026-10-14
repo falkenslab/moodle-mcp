@@ -435,7 +435,7 @@ Copy a course into a new one, as Moodle's "Copy course" does: its content (and, 
 
 **Back up a course**
 
-Back a course up to a .mbz file in a local folder, through Moodle's backup wizard: its content, and with withUsers its people's data too (anonymize makes their names anonymous). Moodle keeps a copy in the course's backup area. Restore it with restore_course. It can take minutes: Moodle does it in steps, and waits up to ten.
+Back a course up to a .mbz file in a local folder, through Moodle's backup wizard: its content, and with withUsers its people's data too (anonymize makes their names anonymous). Or only some of it: sections (each with everything in it) and activities, never with people's data, and the file naming no one and no site unless anonymous is false. Moodle keeps a copy in the course's backup area. Restore it with restore_course, on this site or another. It can take minutes: Moodle does it in steps, and waits up to ten.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -446,6 +446,9 @@ Back a course up to a .mbz file in a local folder, through Moodle's backup wizar
 | `destDir` | ✅ | string | An absolute local folder for the file |
 | `withUsers` |  | boolean | Also its participants' data (default false) |
 | `anonymize` |  | boolean | With users: Moodle makes their names and contact data anonymous |
+| `sections` |  | integer list | Only these sections, by id (get_course_structure), each with everything in it |
+| `activities` |  | integer list | Only these activities and resources, by course module id |
+| `anonymous` |  | boolean | The file names no person and no site or course of origin: true by default for sections or activities, false for a whole course |
 
 </details>
 
@@ -453,7 +456,7 @@ Back a course up to a .mbz file in a local folder, through Moodle's backup wizar
 
 **Restore a course backup**
 
-Restore a .mbz backup through Moodle's restore wizard: into a new course in a category (no intoCourseId), or into an existing course, adding to its content (mode merge, the default) or replacing it (replace deletes the course's content first). A new course takes the backup's names unless fullName and shortName are given. It can take minutes: Moodle does it in steps, and waits up to ten. Changes Moodle, and replace can't be undone: confirm with the person first.
+Restore a .mbz backup through Moodle's restore wizard: into a new course in a category (no intoCourseId), or into an existing course, adding to its content (mode merge, the default) or replacing it (replace deletes the course's content first). Merged into a course, sectionId puts every restored activity at the end of that section, and afterSectionId the backup's sections as new ones after that one; the result names the new sections and activities, and warnings what was left broken (restrictions or links to what wasn't restored) for the person to fix. A new course takes the backup's names unless fullName and shortName are given. A backup from a newer Moodle, or with activity types this site doesn't offer, is refused. It can take minutes: Moodle does it in steps, and waits up to ten. Changes Moodle, and replace can't be undone: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -467,6 +470,8 @@ Restore a .mbz backup through Moodle's restore wizard: into a new course in a ca
 | `fullName` |  | string |  |
 | `shortName` |  | string |  |
 | `withUsers` |  | boolean | Restore the participants' data the backup has (default false) |
+| `sectionId` |  | integer | Merged into a course: every restored activity at the end of this section |
+| `afterSectionId` |  | integer | Merged into a course: the backup's sections as new sections after this one |
 
 </details>
 

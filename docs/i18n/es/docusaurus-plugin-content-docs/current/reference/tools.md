@@ -435,7 +435,7 @@ Copia un curso en uno nuevo, como hace "Copiar curso" de Moodle: su contenido (y
 
 **Hacer una copia de seguridad de un curso**
 
-Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local, mediante el asistente de copia de seguridad de Moodle: su contenido, y con withUsers también los datos de sus personas (anonymize anonimiza sus nombres). Moodle guarda una copia en el área de copias de seguridad del curso. Se restaura con restore_course. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez.
+Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local, mediante el asistente de copia de seguridad de Moodle: su contenido, y con withUsers también los datos de sus personas (anonymize anonimiza sus nombres). O solo una parte: secciones (cada una con todo lo que contiene) y actividades, nunca con datos de personas, y con un archivo que no nombra a nadie ni ningún sitio salvo que anonymous sea false. Moodle guarda una copia en el área de copias de seguridad del curso. Se restaura con restore_course, en este sitio o en otro. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -446,6 +446,9 @@ Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local,
 | `destDir` | ✅ | texto | Una carpeta local absoluta para el archivo |
 | `withUsers` |  | sí o no | También los datos de sus participantes (por defecto false) |
 | `anonymize` |  | sí o no | Con usuarios: Moodle anonimiza sus nombres y datos de contacto |
+| `sections` |  | lista de entero | Solo estas secciones, por id (get_course_structure), cada una con todo lo que contiene |
+| `activities` |  | lista de entero | Solo estas actividades y recursos, por id del módulo del curso |
+| `anonymous` |  | sí o no | El archivo no nombra a ninguna persona ni el sitio o curso de origen: true por defecto con secciones o actividades, false con un curso entero |
 
 </details>
 
@@ -453,7 +456,7 @@ Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local,
 
 **Restaurar una copia de seguridad de un curso**
 
-Restaura una copia de seguridad .mbz mediante el asistente de restauración de Moodle: en un curso nuevo en una categoría (sin intoCourseId), o en un curso existente, añadiendo a su contenido (modo merge, el predeterminado) o sustituyéndolo (replace elimina antes el contenido del curso). Un curso nuevo toma los nombres de la copia de seguridad salvo que se indiquen fullName y shortName. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia Moodle, y replace no se puede deshacer: confírmalo antes con la persona.
+Restaura una copia de seguridad .mbz mediante el asistente de restauración de Moodle: en un curso nuevo en una categoría (sin intoCourseId), o en un curso existente, añadiendo a su contenido (modo merge, el predeterminado) o sustituyéndolo (replace elimina antes el contenido del curso). Añadida a un curso, sectionId pone todas las actividades restauradas al final de esa sección, y afterSectionId las secciones de la copia como secciones nuevas después de esa; el resultado nombra las secciones y actividades nuevas, y warnings lo que quedó roto (restricciones o enlaces a lo que no se restauró) para que la persona lo arregle. Un curso nuevo toma los nombres de la copia de seguridad salvo que se indiquen fullName y shortName. Se rechaza una copia de un Moodle más nuevo, o con tipos de actividad que este sitio no ofrece. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia Moodle, y replace no se puede deshacer: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -467,6 +470,8 @@ Restaura una copia de seguridad .mbz mediante el asistente de restauración de M
 | `fullName` |  | texto |  |
 | `shortName` |  | texto |  |
 | `withUsers` |  | sí o no | Restaurar los datos de los participantes que tenga la copia de seguridad (por defecto false) |
+| `sectionId` |  | entero | Añadida a un curso: todas las actividades restauradas al final de esta sección |
+| `afterSectionId` |  | entero | Añadida a un curso: las secciones de la copia como secciones nuevas después de esta |
 
 </details>
 

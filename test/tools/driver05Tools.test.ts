@@ -45,6 +45,8 @@ describe("the tools of moodle-driver 0.5", () => {
     assert.ok(names.includes("backup_course") && names.includes("copy_course") && !names.includes("enrol_users") && !names.includes("get_course_logs"));
     const backup = await content.callTool({ name: "backup_course", arguments: { courseId: 3, destDir: "/tmp", withUsers: true } });
     assert.match(text(backup), /configured without students' data/);
+    // A backup of some activities never carries people's data, whatever the limits.
+    assert.match(text(await content.callTool({ name: "backup_course", arguments: { courseId: 3, destDir: "/tmp", activities: [5], withUsers: true } })), /never holds people's data/);
 
     const pseudonymous = await connect(testConfig({ moodleUrl: "http://moodle.test/", studentData: "pseudonymize" }));
     assert.match(text(await pseudonymous.callTool({ name: "backup_course", arguments: { courseId: 3, destDir: "/tmp", withUsers: true } })), /back it up with anonymize/);
