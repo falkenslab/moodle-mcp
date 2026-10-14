@@ -39,10 +39,6 @@ Claude Desktop, settings, limits, privacy and real use cases with screenshots ar
 
 See [Developing moodle-mcp](https://falkenslab.github.io/moodle-mcp/developers) for building, tests in Docker and the Moodle sandbox, and [.minispec/](.minispec/README.md) for the design decisions.
 
-## License
-
-[MIT](LICENSE) © Falkenslab
-
 <div align="center">
 
 Made with 💖 by Falken's Lab Team
