@@ -20,9 +20,7 @@ Phase 1, the active site: done (ADR-021, `src/sites.ts`, `src/tools/sites.ts`, t
 
 Phase 2, transfers: done (`copy_between_sites`, `src/tools/siteTransfer.ts`).
 
-Apart, useful with one site too:
-
-- Elicitation (`elicitation/create`) when the client supports it: `add_site` asks the person for the URL and name, `login` for a confirmation once they've logged in; without it, today's arguments and wait.
+Apart: elicitation done for `add_site`; not for `login`, which sees the login by itself (ADR-021).
 
 Docs in both languages: done but for a use case moving an activity between two sites, with its screenshots.
 

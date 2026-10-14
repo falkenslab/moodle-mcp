@@ -137,14 +137,14 @@ Lista los sitios Moodle que conoce este servidor, por nombre: su URL, cuál es e
 
 **Añadir un sitio Moodle**
 
-Añade un sitio Moodle a este servidor, que se guarda para las siguientes sesiones: su URL (vale cualquier página del sitio) y, opcionalmente, un nombre corto (letras, números, puntos y guiones; por defecto, su host). Dos cuentas en un mismo sitio son dos sitios: añade la segunda con un nombre propio. No pasa a ser el activo: cambia a él con use_site, e inicia sesión allí cuando una herramienta lo pida. Solo cuando la persona pida otro sitio.
+Añade un sitio Moodle a este servidor, que se guarda para las siguientes sesiones: su URL (vale cualquier página del sitio) y, opcionalmente, un nombre corto (letras, números, puntos y guiones; por defecto, su host). Sin url, se le preguntan ambos a la persona en su aplicación, cuando el cliente puede preguntarle (elicitación MCP); si no, pregúntaselos tú. Dos cuentas en un mismo sitio son dos sitios: añade la segunda con un nombre propio. No pasa a ser el activo: cambia a él con use_site, e inicia sesión allí cuando una herramienta lo pida. Solo cuando la persona pida otro sitio.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
 
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
-| `url` | ✅ | texto | La URL del sitio, o cualquier página suya |
+| `url` |  | texto | La URL del sitio, o cualquier página suya; sin ella, se le pregunta a la persona en su aplicación cuando se puede |
 | `name` |  | texto | Un nombre corto para él; por defecto, su host |
 
 </details>

@@ -7,6 +7,7 @@ import path from "node:path";
 import { after, before, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { ElicitRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigError, loadConfig, type Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
 import { loadRuntimeSites, resolveConfiguredSites } from "../../src/sites.js";
@@ -196,6 +197,25 @@ describe("list_sites, add_site, use_site and remove_site", () => {
     await refused({ activityIds: [5], toCategoryId: 1 }, /existing course/);
     assert.equal(closes(), 0);
     assert.equal(config.activeSite, "a");
+  });
+
+  it("add_site asks the person for the site in their app when the client can, and says to give it when it can't", async () => {
+    const config = fresh();
+    const server = createServer({ config, browser: fakeBrowserManager({}) });
+    const client = new Client({ name: "test", version: "0.0.0" }, { capabilities: { elicitation: {} } });
+    let asked = "";
+    client.setRequestHandler(ElicitRequestSchema, (request) => {
+      asked = request.params.message;
+      return { action: "accept", content: { url: `${origin}/two/course/view.php?id=3`, name: "asked" } };
+    });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+    const added = (await client.callTool({ name: "add_site", arguments: {} })).structuredContent as Listed;
+    assert.match(asked, /Which Moodle site/);
+    assert.deepEqual(added.sites.map((s) => [s.name, s.url]), [["asked", `${origin}/two/`]]);
+
+    const { call } = await connect(fresh());
+    assert.match(JSON.stringify((await call("add_site", {})).content), /Give the site's url/);
   });
 
   it("are session tools, there under every limit", async () => {

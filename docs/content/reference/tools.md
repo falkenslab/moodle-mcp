@@ -137,14 +137,14 @@ List the Moodle sites this server knows, by name: their URL, which one is active
 
 **Add a Moodle site**
 
-Add a Moodle site to this server, kept for later sessions: its URL (any page of it works) and, optionally, a short name (letters, digits, dots, hyphens; its host by default). Two accounts on one site are two sites: add the second with a name of its own. It doesn't become active: switch to it with use_site, and log in there when a tool asks. Only when the person asks for another site.
+Add a Moodle site to this server, kept for later sessions: its URL (any page of it works) and, optionally, a short name (letters, digits, dots, hyphens; its host by default). Without url, the person is asked for both in their app, where the client can ask them (MCP elicitation); else ask them yourself. Two accounts on one site are two sites: add the second with a name of its own. It doesn't become active: switch to it with use_site, and log in there when a tool asks. Only when the person asks for another site.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
 
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
-| `url` | ✅ | string | The site's URL, or any page of it |
+| `url` |  | string | The site's URL, or any page of it; without it, the person is asked in their app when it can |
 | `name` |  | string | A short name for it; its host by default |
 
 </details>

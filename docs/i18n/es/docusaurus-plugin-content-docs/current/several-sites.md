@@ -39,6 +39,8 @@ No hace falta cambiar la configuración para añadir un sitio: pídeselo al agen
 
 > Añade el sitio Moodle https://moodle.uni.example.es, como «uni».
 
+Si no dices qué sitio, y tu aplicación de IA puede preguntarte ella misma (elicitación MCP), se abre en la aplicación un pequeño formulario para su dirección y su nombre: van directamente a moodle-mcp, sin pasar por la IA.
+
 El sitio se guarda para las siguientes sesiones. Para olvidarlo, y borrar su sesión:
 
 > Quita el sitio «uni».

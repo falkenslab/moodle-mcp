@@ -39,6 +39,8 @@ You don't need to change your configuration to add a site: ask the agent.
 
 > Add the Moodle site https://moodle.uni.example.es, as "uni".
 
+If you don't say which site, and your AI app can ask you itself (MCP elicitation), a small form opens in the app for its address and name: they go straight to moodle-mcp, not through the AI.
+
 The site is kept for later sessions. To forget it, and delete its session:
 
 > Remove the site "uni".

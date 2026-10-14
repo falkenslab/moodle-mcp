@@ -4,6 +4,7 @@ import { z } from "zod";
 import { findMoodleSite } from "@falkenslab/moodle-driver";
 import { redactUrl, type Config } from "../config.js";
 import { addSite, removeSite, useSite } from "../sites.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { RegisterTool } from "./types.js";
 
 const sitesSchema = {
@@ -37,22 +38,47 @@ export const registerListSites: RegisterTool = (server, { config }) => {
   );
 };
 
+/**
+ * The site's URL and name from the person, in their app (MCP elicitation, ADR-021): they never pass
+ * through the model. A client that can't ask gets an error saying to give the URL.
+ */
+async function askForSite(server: McpServer): Promise<{ url: string; name?: string }> {
+  if (!server.server.getClientCapabilities()?.elicitation) throw new Error("Give the site's url: ask the person for it.");
+  const answer = await server.server.elicitInput({
+    mode: "form",
+    message: "Which Moodle site do you want to add? Any page of it works, such as a course's.",
+    requestedSchema: {
+      type: "object",
+      properties: {
+        url: { type: "string", title: "The site's URL", description: "https://…, or any page of the site" },
+        name: { type: "string", title: "A short name (optional)", description: "Letters, digits, dots and hyphens; its host if empty" },
+      },
+      required: ["url"],
+    },
+  });
+  const content = answer.content as { url?: unknown; name?: unknown } | undefined;
+  if (answer.action !== "accept" || typeof content?.url !== "string" || !content.url.trim()) throw new Error("The person didn't give a site: nothing was added.");
+  const name = typeof content.name === "string" && content.name.trim() ? content.name.trim() : undefined;
+  return { url: content.url.trim(), ...(name && { name }) };
+}
+
 export const registerAddSite: RegisterTool = (server, { config }) => {
   server.registerTool(
     "add_site",
     {
       title: "Add a Moodle site",
       description:
-        "Add a Moodle site to this server, kept for later sessions: its URL (any page of it works) and, optionally, a short name (letters, digits, dots, hyphens; its host by default). Two accounts on one site are two sites: add the second with a name of its own. It doesn't become active: switch to it with use_site, and log in there when a tool asks. Only when the person asks for another site.",
+        "Add a Moodle site to this server, kept for later sessions: its URL (any page of it works) and, optionally, a short name (letters, digits, dots, hyphens; its host by default). Without url, the person is asked for both in their app, where the client can ask them (MCP elicitation); else ask them yourself. Two accounts on one site are two sites: add the second with a name of its own. It doesn't become active: switch to it with use_site, and log in there when a tool asks. Only when the person asks for another site.",
       inputSchema: {
-        url: z.string().describe("The site's URL, or any page of it"),
+        url: z.string().optional().describe("The site's URL, or any page of it; without it, the person is asked in their app when it can"),
         name: z.string().optional().describe("A short name for it; its host by default"),
       },
       outputSchema: sitesSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
     async ({ url, name }) => {
-      addSite(config, await findMoodleSite(url), name);
+      const given = url !== undefined ? { url, name } : await askForSite(server);
+      addSite(config, await findMoodleSite(given.url), given.name);
       return reply(sitesOf(config));
     },
   );
