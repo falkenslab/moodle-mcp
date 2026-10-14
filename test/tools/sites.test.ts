@@ -9,7 +9,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { ConfigError, loadConfig, type Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
-import { loadRuntimeSites } from "../../src/sites.js";
+import { loadRuntimeSites, resolveConfiguredSites } from "../../src/sites.js";
 import { moodlePage } from "@falkenslab/moodle-driver/testing";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 
@@ -98,6 +98,17 @@ function fresh(): Config {
 }
 
 type Listed = { sites: { name: string; url: string; active: boolean; origin: string }[] };
+
+describe("a configured site's base URL", () => {
+  it("is found from any page of it, once, and an unreachable one stays as given", async () => {
+    const config = load({ MOODLE_URL: `${origin}/one/course/view.php?id=2`, MOODLE_MCP_SITES: "gone=http://127.0.0.1:9/moodle/course/view.php" });
+    assert.equal(config.moodleUrl, `${origin}/one/course/view.php/`);
+    await resolveConfiguredSites(config);
+    assert.equal(config.moodleUrl, `${origin}/one/`);
+    assert.equal(config.sites[0]!.url, `${origin}/one/`);
+    assert.equal(config.sites[1]!.url, "http://127.0.0.1:9/moodle/course/view.php/");
+  });
+});
 
 describe("list_sites, add_site, use_site and remove_site", () => {
   it("add sites that survive a restart, the first on today's profile, and switch between them", async () => {

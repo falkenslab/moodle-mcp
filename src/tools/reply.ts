@@ -1,6 +1,7 @@
 import type { BrowserManager } from "@falkenslab/moodle-driver";
 import type { BrowserContext } from "playwright-core";
 import { requireSiteUrl, type Config } from "../config.js";
+import { resolveActiveSite } from "../sites.js";
 
 /**
  * A tool's result: `output` as structured content (checked against the tool's output schema) and the
@@ -15,6 +16,8 @@ export function reply(output: object) {
  * server without a site says to configure it before opening any browser.
  */
 export async function onSite(config: Config, browser: BrowserManager): Promise<[BrowserContext, string]> {
+  requireSiteUrl(config);
+  await resolveActiveSite(config);
   const siteUrl = requireSiteUrl(config);
   return [await browser.context(), siteUrl];
 }

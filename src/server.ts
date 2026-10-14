@@ -3,7 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { createBrowserManager } from "@falkenslab/moodle-driver";
 import { ConfigError, USAGE, loadConfig } from "./config.js";
 import { createServer } from "./createServer.js";
-import { loadRuntimeSites } from "./sites.js";
+import { loadRuntimeSites, resolveConfiguredSites } from "./sites.js";
 import { PACKAGE_VERSION } from "./version.js";
 
 async function main(): Promise<void> {
@@ -14,6 +14,8 @@ async function main(): Promise<void> {
 
   // Sites added at run time in earlier sessions (ADR-021).
   loadRuntimeSites(config);
+  // A configured URL may be any page of its site: the site's base, found before the first tool.
+  await resolveConfiguredSites(config);
   const browser = createBrowserManager(config);
   const server = createServer({ config, browser });
 

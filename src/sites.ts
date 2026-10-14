@@ -3,7 +3,7 @@
 // `profileDir`, as it did with one site.
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import type { BrowserManager } from "@falkenslab/moodle-driver";
+import { findMoodleSite, type BrowserManager } from "@falkenslab/moodle-driver";
 import { ConfigError, parseSiteName, siteNameOf, siteProfileDir, type Config, type Site } from "./config.js";
 
 const SITES_FILE = "sites.json";
@@ -80,6 +80,41 @@ export async function useSite(config: Config, browser: BrowserManager, name: str
   config.sources.moodleUrl = "configure";
   config.sources.profileDir = "configure";
   return site;
+}
+
+// URLs already found to be a site's base: one visit each, per process.
+const resolved = new Set<string>();
+
+/**
+ * A configured site's real base URL. MOODLE_URL and MOODLE_MCP_SITES may be any page of a site (a
+ * course's), which configuration can only normalize: the page names the site's base (M.cfg.wwwroot),
+ * as configure and add_site read it. A URL at the root of its host is a base already; another is
+ * visited once, and kept as given when it can't be reached, to be tried again on its next use.
+ */
+export async function resolveSite(config: Config, site: Site): Promise<void> {
+  if (resolved.has(site.url) || new URL(site.url).pathname === "/") return;
+  let base: string;
+  try {
+    base = await Promise.race([findMoodleSite(site.url), new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), 15_000).unref())]);
+  } catch {
+    return;
+  }
+  resolved.add(base);
+  if (base === site.url) return;
+  const active = config.moodleUrl === site.url;
+  site.url = base;
+  if (active) config.moodleUrl = base;
+}
+
+/** Every configured site's base URL, at start-up; those it can't reach are tried again when used. */
+export async function resolveConfiguredSites(config: Config): Promise<void> {
+  await Promise.all(config.sites.filter((site) => site.origin === "configuration").map((site) => resolveSite(config, site)));
+}
+
+/** The active site's base URL before a tool uses it, when start-up couldn't find it. */
+export async function resolveActiveSite(config: Config): Promise<void> {
+  const active = config.sites.find((site) => site.name === config.activeSite);
+  if (active && active.url === config.moodleUrl) await resolveSite(config, active);
 }
 
 /** Forgets a site added at run time and deletes its profile, never the active one or a configured one. */
