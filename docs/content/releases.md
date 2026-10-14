@@ -5,9 +5,19 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.1.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.3.0`.
 
 Each release's documentation is kept: pick it in the version menu at the top of the page. The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.3.0 (14 October 2026)
+
+- **Several Moodle sites in one server.** Give it your school's and your university's sites in `MOODLE_MCP_SITES`, or add one while you talk (`add_site`); the agent works on one at a time and switches when you ask (`list_sites`, `use_site`, `remove_site`). Each site keeps its own login. `MOODLE_URL` works as before, as the first site. See [Several sites](./several-sites.md).
+- **Copy course content between sites.** `copy_between_sites` copies activities, sections or a whole course from one site to another, through Moodle's own backup and restore, without people's data and without passing through the AI, and tells you what it created and what's left to fix.
+- **Back up and restore part of a course.** `backup_course` takes the sections or activities to keep, without people's data; `restore_course` puts them in a chosen section and says what it created and what it left broken.
+- **Eight more long lists a page at a time**: conversations, discussions and their posts, submissions, participants, quiz results and question banks.
+- **Read-only access keeps `download_file` and `export_grades`**, which only read Moodle and save a file on your computer.
+- **`MOODLE_URL` may be any page of your site**, such as a course's address, as the docs said.
+- With moodle-driver 0.8, which also starts quizzes with a time limit.
 
 ## 0.2.0 (12 October 2026)
 

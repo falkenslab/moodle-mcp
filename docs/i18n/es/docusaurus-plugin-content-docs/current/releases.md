@@ -5,9 +5,19 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.1.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.3.0`.
 
 La documentación de cada versión se conserva: elígela en el menú de versiones de la parte de arriba de la página. Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.3.0 (14 de octubre de 2026)
+
+- **Varios sitios Moodle en un servidor.** Dale los sitios de tu instituto y de tu universidad en `MOODLE_MCP_SITES`, o añade uno mientras hablas (`add_site`); el agente trabaja en uno cada vez y cambia cuando se lo pides (`list_sites`, `use_site`, `remove_site`). Cada sitio conserva su propio inicio de sesión. `MOODLE_URL` funciona como antes, como primer sitio. Consulta [Varios sitios](./several-sites.md).
+- **Copiar contenido de cursos entre sitios.** `copy_between_sites` copia actividades, secciones o un curso entero de un sitio a otro, con la copia de seguridad y la restauración del propio Moodle, sin datos de personas y sin pasar por la IA, y te dice qué ha creado y qué queda por arreglar.
+- **Copia de seguridad y restauración de parte de un curso.** `backup_course` admite las secciones o actividades que quieres guardar, sin datos de personas; `restore_course` las coloca en la sección que elijas y te dice qué ha creado y qué ha quedado roto.
+- **Ocho listas largas más por páginas**: conversaciones, debates y sus mensajes, entregas, participantes, resultados de cuestionarios y bancos de preguntas.
+- **El acceso de solo lectura conserva `download_file` y `export_grades`**, que solo leen Moodle y guardan un fichero en tu ordenador.
+- **`MOODLE_URL` puede ser cualquier página de tu sitio**, como la dirección de un curso, como decía la documentación.
+- Con moodle-driver 0.8, que además empieza cuestionarios con límite de tiempo.
 
 ## 0.2.0 (12 de octubre de 2026)
 

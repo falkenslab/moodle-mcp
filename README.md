@@ -114,7 +114,7 @@ Every tool, with what it takes and what it gives, is in the [tools reference](ht
 - **[Use cases](https://falkenslab.github.io/moodle-mcp/use-cases)**: real sessions as a teacher and as a student, with screenshots.
 - **[Students' privacy](https://falkenslab.github.io/moodle-mcp/privacy)**: aliases, and what the AI does and doesn't see.
 - **[Limiting the agent](https://falkenslab.github.io/moodle-mcp/limits)**: roles, read-only access and scopes.
-- **[Several sites](https://falkenslab.github.io/moodle-mcp/next/several-sites)** and **[settings](https://falkenslab.github.io/moodle-mcp/settings)**.
+- **[Several sites](https://falkenslab.github.io/moodle-mcp/several-sites)** and **[settings](https://falkenslab.github.io/moodle-mcp/settings)**.
 
 ## 🛠️ Developing
 
