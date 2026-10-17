@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **143 herramientas**, 142 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **173 herramientas**, 172 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -307,7 +307,7 @@ Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, f
 
 **Actualizar los ajustes o el contenido de una actividad**
 
-Cambia una actividad existente mediante el propio formulario de Moodle: nombre, descripción, el contenido de una página o de una etiqueta, el destino de una URL, visibilidad, restricciones de acceso, finalización, los archivos de un recurso de archivo o de una carpeta (añadir, quitar por su ruta tal como los lista get_activity_settings, o sustituirlos todos), o cualquier otro ajuste por el nombre de su campo del formulario en settings. Solo cambia lo que se indica. Devuelve la estructura del curso. Cambia el curso: confírmalo antes con la persona.
+Cambia una actividad existente mediante el propio formulario de Moodle: nombre, descripción, el contenido de una página o de una etiqueta, el destino de una URL, visibilidad, restricciones de acceso, finalización, los archivos de un recurso de archivo o de una carpeta (añadir, quitar por su ruta tal como los lista get_activity_settings, o sustituirlos todos), el paquete de un SCORM (sustituido en su sitio: la actividad conserva su id, sus ajustes y su elemento de calificación; los intentos se quedan en los SCO que el nuevo paquete conserva, por su identificador, y se van con los que quita), o cualquier otro ajuste por el nombre de su campo del formulario en settings. Solo cambia lo que se indica. Devuelve la estructura del curso, y un SCORM tal como lo lee get_scorm tras un paquete nuevo. Cambia el curso: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -325,6 +325,7 @@ Cambia una actividad existente mediante el propio formulario de Moodle: nombre, 
 | `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
 | `settings` |  | objeto | Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
 | `files` |  | objeto | Los archivos de un recurso de archivo o de una carpeta; sin cambios si falta |
+| `package` |  | texto | El nuevo paquete de un SCORM: una ruta local absoluta a un .zip, que sustituye al actual en su sitio |
 
 </details>
 
@@ -454,6 +455,369 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 | `summary` |  | texto | HTML |
 | `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
 | `settings` |  | objeto | Otros campos por su nombre en el formulario de configuración del curso, p. ej. &#123;"visible": 0, "startdate[day]": 1&#125; |
+
+</details>
+
+## Libros, lecciones y bases de datos {#activities}
+
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_book_chapters`](#list-book-chapters) | Listar los capítulos de un libro | ✓ | ✓ |  |
+| [`add_book_chapter`](#add-book-chapter) | Añadir un capítulo a un libro |  | ✓ |  |
+| [`edit_book_chapter`](#edit-book-chapter) | Cambiar un capítulo de un libro |  | ✓ |  |
+| [`move_book_chapter`](#move-book-chapter) | Subir o bajar un capítulo de un libro |  | ✓ |  |
+| [`set_book_chapter_visibility`](#set-book-chapter-visibility) | Mostrar u ocultar un capítulo de un libro |  | ✓ |  |
+| [`delete_book_chapter`](#delete-book-chapter) | Eliminar un capítulo de un libro |  | ✓ |  |
+| [`get_lesson_pages`](#get-lesson-pages) | Leer las páginas de una lección como su profesor | ✓ | ✓ |  |
+| [`add_lesson_page`](#add-lesson-page) | Añadir una página a una lección |  | ✓ |  |
+| [`edit_lesson_page`](#edit-lesson-page) | Cambiar una página de una lección |  | ✓ |  |
+| [`move_lesson_page`](#move-lesson-page) | Mover una página de una lección |  | ✓ |  |
+| [`delete_lesson_page`](#delete-lesson-page) | Eliminar una página de una lección |  | ✓ |  |
+| [`get_database_fields`](#get-database-fields) | Leer los campos de una base de datos | ✓ | ✓ |  |
+| [`add_database_field`](#add-database-field) | Añadir un campo a una base de datos |  | ✓ |  |
+| [`edit_database_field`](#edit-database-field) | Cambiar un campo de una base de datos |  | ✓ |  |
+| [`delete_database_field`](#delete-database-field) | Eliminar un campo de una base de datos |  | ✓ |  |
+| [`get_database_templates`](#get-database-templates) | Leer las plantillas de una base de datos | ✓ | ✓ |  |
+| [`set_database_template`](#set-database-template) | Guardar una plantilla de una base de datos |  | ✓ |  |
+| [`list_database_presets`](#list-database-presets) | Listar los preajustes de una base de datos | ✓ | ✓ |  |
+| [`apply_database_preset`](#apply-database-preset) | Dar un preajuste a una base de datos |  | ✓ |  |
+
+### `list_book_chapters` {#list-book-chapters}
+
+**Listar los capítulos de un libro**
+
+Lista los capítulos de un libro en orden: id, título, si cada uno es un subcapítulo o está oculto, y su posición; con content, también el HTML y las imágenes de cada capítulo (se lee una página por capítulo, y Moodle lo registra como una visita). Un profesor ve los capítulos ocultos; un estudiante, no. Los ids de capítulo son los que toman las demás herramientas del libro.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | entero | El id del libro (id del módulo del curso), tal como lo da get_course_structure |
+| `content` |  | sí o no | También el HTML y las imágenes de cada capítulo |
+
+</details>
+
+### `add_book_chapter` {#add-book-chapter}
+
+**Añadir un capítulo a un libro**
+
+Añade un capítulo a un libro mediante el formulario de capítulo de Moodle: su título y su contenido (HTML, con imágenes locales incrustadas), al final o después de otro capítulo, como subcapítulo del capítulo anterior si se pide, oculto si se pide (visible por defecto, como lo añade Moodle: ocúltalo si el libro es visible y el capítulo no está listo). Devuelve el id del nuevo capítulo y los capítulos. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | entero | El id del libro (id del módulo del curso), tal como lo da get_course_structure |
+| `title` | ✅ | texto |  |
+| `content` | ✅ | texto | Su contenido (HTML); Moodle exige alguno |
+| `subchapter` |  | sí o no | Un subcapítulo del capítulo anterior (no para el primero) |
+| `hidden` |  | sí o no | Oculto a los estudiantes |
+| `afterChapterId` |  | entero | El capítulo tras el que va; al final si falta |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el contenido, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `edit_book_chapter` {#edit-book-chapter}
+
+**Cambiar un capítulo de un libro**
+
+Cambia el título, el contenido (HTML, con imágenes locales incrustadas) o si es un subcapítulo, mediante su formulario: solo cambia lo que se indica. move_book_chapter lo mueve y set_book_chapter_visibility lo muestra u oculta. Devuelve después los capítulos. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | entero | El id del libro (id del módulo del curso), tal como lo da get_course_structure |
+| `chapterId` | ✅ | entero | El id del capítulo, tal como lo da list_book_chapters |
+| `title` |  | texto |  |
+| `content` |  | texto |  |
+| `subchapter` |  | sí o no |  |
+| `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el contenido, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `move_book_chapter` {#move-book-chapter}
+
+**Subir o bajar un capítulo de un libro**
+
+Mueve un capítulo un puesto arriba o abajo, como las flechas de la tabla de contenidos: un capítulo se mueve con sus subcapítulos, saltando el capítulo entero anterior o siguiente; un subcapítulo se mueve solo. Vuelve a llamarla para moverlo más. Devuelve después los capítulos. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | entero | El id del libro (id del módulo del curso), tal como lo da get_course_structure |
+| `chapterId` | ✅ | entero | El id del capítulo, tal como lo da list_book_chapters |
+| `direction` | ✅ | `up`, `down` |  |
+
+</details>
+
+### `set_book_chapter_visibility` {#set-book-chapter-visibility}
+
+**Mostrar u ocultar un capítulo de un libro**
+
+Muestra un capítulo a los estudiantes o se lo oculta, como el ojo de la tabla de contenidos: los subcapítulos de un capítulo van con él, y un subcapítulo de un capítulo oculto sigue oculto. Devuelve después los capítulos. Cambia lo que ven los estudiantes: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | entero | El id del libro (id del módulo del curso), tal como lo da get_course_structure |
+| `chapterId` | ✅ | entero | El id del capítulo, tal como lo da list_book_chapters |
+| `visible` | ✅ | sí o no |  |
+
+</details>
+
+### `delete_book_chapter` {#delete-book-chapter}
+
+**Eliminar un capítulo de un libro**
+
+Elimina un capítulo con sus archivos; eliminar un capítulo (no un subcapítulo) elimina también sus subcapítulos. Devuelve después los capítulos. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | entero | El id del libro (id del módulo del curso), tal como lo da get_course_structure |
+| `chapterId` | ✅ | entero | El id del capítulo, tal como lo da list_book_chapters |
+
+</details>
+
+### `get_lesson_pages` {#get-lesson-pages}
+
+**Leer las páginas de una lección como su profesor**
+
+Lee las páginas de una lección tal como las tiene su profesor en el editor de lecciones de Moodle, en orden: tipo (contenido, un tipo de pregunta, grupo, fin de grupo, fin de rama), título, contenido, y los botones de una página de contenido o las respuestas de una pregunta con sus retroalimentaciones, puntuaciones y saltos (el id de una página, o next-page, end-of-lesson…). Requiere el rol de profesor; un estudiante recorre una lección con get_lesson_page.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | entero | El id de la lección (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `add_lesson_page` {#add-lesson-page}
+
+**Añadir una página a una lección**
+
+Añade una página a una lección mediante el editor de lecciones de Moodle: una página de contenido con sus botones, una página de pregunta (multichoice, truefalse, shortanswer, numerical, matching, essay) con sus respuestas, retroalimentaciones, puntuaciones y saltos, o un grupo, un fin de grupo o un fin de rama; tras una página, o al final. Un salto a una página que la lección no tiene se rechaza antes de guardar nada, así que añade primero las páginas y pon después sus saltos con edit_lesson_page cuando apunten hacia delante. Devuelve el id de la nueva página y los ids de las páginas de la lección en orden. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | entero | El id de la lección (id del módulo del curso), tal como lo da get_course_structure |
+| `type` | ✅ | `content`, `multichoice`, `truefalse`, `shortanswer`, `numerical`, `matching`, `essay`, `cluster`, `end-of-cluster`, `end-of-branch` |  |
+| `title` |  | texto |  |
+| `contents` |  | texto | El contenido de la página (HTML); los archivos locales que nombra (&#60;img src="shot.png"&#62;) van en embed |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en el contenido, las respuestas o las retroalimentaciones |
+| `buttons` |  | lista de objeto | Los botones de una página de contenido, en orden; si se dan, sustituyen a todos |
+| `answers` |  | lista de objeto | Las respuestas de una página de pregunta, en orden (si se dan, sustituyen a todas); la única fila de un ensayo o de una página estructural |
+| `multipleAnswers` |  | sí o no | Opción múltiple: puede haber más de una respuesta correcta |
+| `caseSensitive` |  | sí o no | Respuesta corta: las respuestas se comparan distinguiendo mayúsculas |
+| `fields` |  | objeto | Cualquier otro campo del formulario de la página, por nombre (layout, display…) |
+| `after` |  | entero | La página tras la que va (0: la primera); al final si falta |
+
+</details>
+
+### `edit_lesson_page` {#edit-lesson-page}
+
+**Cambiar una página de una lección**
+
+Cambia una página de una lección mediante su formulario en el editor de lecciones: título, contenido, botones o respuestas (si se dan, sustituyen a todos), opciones y otros campos; solo cambia lo que se indica, y una página conserva su tipo. Un salto a una página que la lección no tiene se rechaza antes de guardar nada. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | entero | El id de la lección (id del módulo del curso), tal como lo da get_course_structure |
+| `pageId` | ✅ | entero | El id de la página, tal como lo da get_lesson_pages |
+| `title` |  | texto |  |
+| `contents` |  | texto | El contenido de la página (HTML); los archivos locales que nombra (&#60;img src="shot.png"&#62;) van en embed |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en el contenido, las respuestas o las retroalimentaciones |
+| `buttons` |  | lista de objeto | Los botones de una página de contenido, en orden; si se dan, sustituyen a todos |
+| `answers` |  | lista de objeto | Las respuestas de una página de pregunta, en orden (si se dan, sustituyen a todas); la única fila de un ensayo o de una página estructural |
+| `multipleAnswers` |  | sí o no | Opción múltiple: puede haber más de una respuesta correcta |
+| `caseSensitive` |  | sí o no | Respuesta corta: las respuestas se comparan distinguiendo mayúsculas |
+| `fields` |  | objeto | Cualquier otro campo del formulario de la página, por nombre (layout, display…) |
+
+</details>
+
+### `move_lesson_page` {#move-lesson-page}
+
+**Mover una página de una lección**
+
+Mueve una página de una lección tras otra (0: la primera), como el enlace de mover del editor de lecciones. Los saltos por id de página siguen llevando a las mismas páginas; next-page y previous-page siguen el nuevo orden. Devuelve los ids de las páginas en orden. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | entero | El id de la lección (id del módulo del curso), tal como lo da get_course_structure |
+| `pageId` | ✅ | entero | El id de la página, tal como lo da get_lesson_pages |
+| `after` | ✅ | entero | La página tras la que va (0: la primera) |
+
+</details>
+
+### `delete_lesson_page` {#delete-lesson-page}
+
+**Eliminar una página de una lección**
+
+Elimina una página de una lección. Las respuestas de otras páginas que saltaban a ella quedan como las deja Moodle: revísalas con get_lesson_pages. Devuelve los ids de las páginas que quedan, en orden. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | entero | El id de la lección (id del módulo del curso), tal como lo da get_course_structure |
+| `pageId` | ✅ | entero | El id de la página, tal como lo da get_lesson_pages |
+
+</details>
+
+### `get_database_fields` {#get-database-fields}
+
+**Leer los campos de una base de datos**
+
+Lee los campos de una actividad de base de datos en orden: el id de cada uno, su nombre (las plantillas lo nombran [[nombre]]), su tipo, su descripción, si una entrada lo necesita y los ajustes de su tipo (opciones, tamaños…). Requiere el rol de profesor con permiso de edición.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `add_database_field` {#add-database-field}
+
+**Añadir un campo a una base de datos**
+
+Añade un campo a una actividad de base de datos mediante el formulario de Moodle para su tipo: text, textarea, number, date, menu, radiobutton, checkbox, multimenu, url, file, picture o latlong, con un nombre único en la base de datos, una descripción, si es obligatorio (no para una fecha) y los ajustes del tipo. Las plantillas por defecto de Moodle lo muestran; a una plantilla guardada puede que haya que añadírselo (set_database_template). Devuelve su id y los campos. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `type` | ✅ | `text`, `textarea`, `number`, `date`, `menu`, `radiobutton`, `checkbox`, `multimenu`, `url`, `file`, `picture`, `latlong` |  |
+| `name` | ✅ | texto |  |
+| `description` |  | texto |  |
+| `required` |  | sí o no |  |
+| `options` |  | objeto | Los ajustes del tipo; cada tipo admite solo los suyos |
+
+</details>
+
+### `edit_database_field` {#edit-database-field}
+
+**Cambiar un campo de una base de datos**
+
+Cambia el nombre, la descripción, si es obligatorio o los ajustes de su tipo (uno a uno) de un campo de una base de datos: lo que falta se queda como está. Renombrarlo renombra su etiqueta en las plantillas, como hace Moodle. Su tipo no puede cambiar: elimínalo y añade otro. Devuelve los campos. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `fieldId` | ✅ | entero | El id del campo, tal como lo da get_database_fields |
+| `name` |  | texto |  |
+| `description` |  | texto |  |
+| `required` |  | sí o no |  |
+| `options` |  | objeto | Los ajustes del tipo; cada tipo admite solo los suyos |
+
+</details>
+
+### `delete_database_field` {#delete-database-field}
+
+**Eliminar un campo de una base de datos**
+
+Elimina un campo de una base de datos: lo que cada entrada tiene en él se va también, y sus etiquetas salen de las plantillas. Devuelve los campos. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `fieldId` | ✅ | entero | El id del campo, tal como lo da get_database_fields |
+
+</details>
+
+### `get_database_templates` {#get-database-templates}
+
+**Leer las plantillas de una base de datos**
+
+Lee las plantillas de una actividad de base de datos (list, listHeader, listFooter, single, add, search, rss, rssTitle, css, js): lo que se guardó, o lo predeterminado de Moodle para sus campos. Los campos aparecen como [[nombre]] y las demás etiquetas de Moodle como ##etiqueta##. Se rechaza mientras la base de datos no tenga campos (Moodle aún no tiene plantillas). Requiere el rol de profesor con permiso de edición.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `set_database_template` {#set-database-template}
+
+**Guardar una plantilla de una base de datos**
+
+Guarda una de las plantillas de una base de datos tal como se da, sin el editor HTML de Moodle de por medio: list (repetida por entrada, entre listHeader y listFooter), single, add (el formulario de entrada: la etiqueta de cada campo una vez), search, rss, rssTitle, css o js. Los campos van como [[nombre]] y las demás etiquetas de Moodle como ##etiqueta## (##edit##, ##delete##, ##more##, ##user##…). reset: true vuelve a lo predeterminado de Moodle. Devuelve todas las plantillas. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `template` | ✅ | `list`, `listHeader`, `listFooter`, `single`, `add`, `search`, `rss`, `rssTitle`, `css`, `js` |  |
+| `html` |  | texto | La plantilla (HTML, o CSS o JavaScript) |
+| `reset` |  | sí o no | Lo predeterminado de Moodle en su lugar (la cabecera y el pie de la lista se quedan) |
+
+</details>
+
+### `list_database_presets` {#list-database-presets}
+
+**Listar los preajustes de una base de datos**
+
+Lista los preajustes que se pueden dar a una actividad de base de datos: los propios de Moodle (galería de imágenes, diario, propuestas, recursos) y los guardados en el sitio que la persona puede ver, cada uno con el id que toma apply_database_preset.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `apply_database_preset` {#apply-database-preset}
+
+**Dar un preajuste a una base de datos**
+
+Da un preajuste a una actividad de base de datos, como «Usar este preajuste» de Moodle: se añaden sus campos, un campo con el mismo nombre y tipo se conserva con lo que tienen las entradas, todos los demás campos se eliminan con su contenido, y sus plantillas sustituyen a las de la base de datos. Devuelve los campos. Puede borrar contenido de las entradas: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `presetId` | ✅ | texto | Tal como lo da list_database_presets |
 
 </details>
 
@@ -600,6 +964,7 @@ Copia el contenido de un curso de uno de los sitios de este servidor a otro (lis
 | [`list_assignments`](#list-assignments) | Listar las tareas de un curso | ✓ | ✓ | ✓ |
 | [`get_submissions`](#get-submissions) | Obtener las entregas de una tarea | ✓ | ✓ |  |
 | [`get_rubric`](#get-rubric) | Obtener los criterios de calificación de una tarea | ✓ | ✓ |  |
+| [`set_rubric`](#set-rubric) | Definir la rúbrica o la guía de evaluación de una tarea |  | ✓ |  |
 | [`grade_submission`](#grade-submission) | Calificar una entrega |  | ✓ |  |
 | [`grant_extension`](#grant-extension) | Conceder una prórroga en una tarea |  | ✓ |  |
 | [`set_workflow_state`](#set-workflow-state) | Establecer el estado del flujo de trabajo de calificación |  | ✓ |  |
@@ -650,6 +1015,26 @@ Lee cómo se califica una tarea: simple (una nota o una escala), una rúbrica (c
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
+
+</details>
+
+### `set_rubric` {#set-rubric}
+
+**Definir la rúbrica o la guía de evaluación de una tarea**
+
+Define cómo se califica una tarea con una rúbrica (criterios, cada uno con dos niveles o más: una definición y su puntuación) o con una guía de evaluación (criterios, cada uno con un nombre corto, una descripción para los estudiantes, otra para los evaluadores y una puntuación máxima, y los comentarios frecuentes de la guía), mediante el editor de calificación avanzada de Moodle, lista para usarse. Crea una donde no la hay y sustituye la que hay, así que cambian los ids de sus criterios y niveles. Se rechaza en cuanto se ha calificado algo con ella: Moodle recalificaría. Devuelve la definición tal como la da get_rubric. Cambia cómo se califica a los estudiantes: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da list_assignments |
+| `method` | ✅ | `rubric`, `guide` |  |
+| `name` | ✅ | texto | Su nombre, tal como lo lista la página de calificación avanzada |
+| `description` |  | texto | Su descripción (HTML) |
+| `criteria` | ✅ | lista de objeto | En orden |
+| `comments` |  | lista de texto | Los comentarios frecuentes de una guía de evaluación, en orden |
 
 </details>
 
@@ -1296,6 +1681,104 @@ Establece la finalización de una actividad de un participante como hace un prof
 
 </details>
 
+## Insignias {#badges}
+
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_badges`](#list-badges) | Listar las insignias de un curso | ✓ | ✓ | ✓ |
+| [`create_badge`](#create-badge) | Crear una insignia del curso |  | ✓ |  |
+| [`set_badge_criteria`](#set-badge-criteria) | Fijar qué otorga una insignia |  | ✓ |  |
+| [`set_badge_enabled`](#set-badge-enabled) | Activar o desactivar una insignia |  | ✓ |  |
+| [`award_badge`](#award-badge) | Conceder una insignia a mano |  | ✓ |  |
+
+### `list_badges` {#list-badges}
+
+**Listar las insignias de un curso**
+
+Lista las insignias de un curso: nombre, descripción, imagen, qué la otorga (el resumen de Moodle), si está activada y si la persona la tiene; para un profesor, también las desactivadas y cuántas personas tiene cada una. Falla con un error claro donde el sitio tiene las insignias desactivadas.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `create_badge` {#create-badge}
+
+**Crear una insignia del curso**
+
+Crea una insignia del curso, desactivada y sin criterios, mediante el formulario de nueva insignia de Moodle: su nombre, su descripción (texto plano) y su imagen (un PNG, JPEG o GIF local, de 256 KB como mucho). Después set_badge_criteria le da criterios y set_badge_enabled la pone a disposición. Devuelve la insignia. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `description` | ✅ | texto | Texto plano: Moodle quita las etiquetas |
+| `image` | ✅ | texto | Una ruta local absoluta a su imagen: PNG, JPEG o GIF, de 256 KB como mucho |
+| `imageCaption` |  | texto | El texto alternativo de la imagen |
+
+</details>
+
+### `set_badge_criteria` {#set-badge-criteria}
+
+**Fijar qué otorga una insignia**
+
+Fija los criterios de una insignia: completar actividades (con seguimiento de finalización; todas o cualquiera), completar el curso (con una calificación mínima del curso y una fecha), o concedida a mano por personas con ciertos roles (cualquiera de ellas por defecto); all dice si hay que cumplir todos los criterios o cualquiera. Un criterio dado sustituye los ajustes de ese tipo, uno en remove se quita, y uno que no se da se queda. Moodle solo deja cambiar los criterios mientras la insignia está desactivada y nadie la tiene. Devuelve los criterios. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `badgeId` | ✅ | entero | El id de la insignia, tal como lo da list_badges |
+| `activities` |  | objeto |  |
+| `courseCompletion` |  | objeto |  |
+| `manual` |  | objeto |  |
+| `all` |  | sí o no | Con más de un criterio: hay que cumplirlos todos, o cualquiera |
+| `remove` |  | lista de `activities`, `courseCompletion`, `manual` | Criterios que quitar |
+
+</details>
+
+### `set_badge_enabled` {#set-badge-enabled}
+
+**Activar o desactivar una insignia**
+
+Pone una insignia a disposición de los usuarios, o la retira. Al activarla se concede en el acto a todos los que ya cumplen sus criterios, y se les avisa: confírmalo antes con la persona. Necesita criterios antes. Devuelve la insignia.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `badgeId` | ✅ | entero | El id de la insignia, tal como lo da list_badges |
+| `enabled` | ✅ | sí o no |  |
+
+</details>
+
+### `award_badge` {#award-badge}
+
+**Conceder una insignia a mano**
+
+Concede a mano una insignia a un participante (un alias cuando el servidor seudonimiza), como uno de los roles que nombra su criterio manual (roleId cuando la persona tiene varios). La insignia tiene que estar activada y tener un criterio manual. Moodle la emite en el acto cuando basta con la concesión manual; si no, cuando se cumple el resto de sus criterios. Se avisa al participante: confírmalo antes con la persona. Devuelve la insignia.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `badgeId` | ✅ | entero | El id de la insignia, tal como lo da list_badges |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `roleId` |  | entero | El rol con el que concederla |
+
+</details>
+
 ## Informes {#reports}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
@@ -1686,6 +2169,11 @@ Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y q
 | [`get_workshop`](#get-workshop) | Leer un taller | ✓ | ✓ |  |
 | [`set_workshop_phase`](#set-workshop-phase) | Cambiar la fase de un taller |  | ✓ |  |
 | [`assess_workshop_submission`](#assess-workshop-submission) | Evaluar una entrega de un taller |  | ✓ | ✓ |
+| [`get_workshop_allocation`](#get-workshop-allocation) | Leer quién evalúa a quién en un taller | ✓ | ✓ |  |
+| [`allocate_workshop_reviewer`](#allocate-workshop-reviewer) | Asignar un revisor a una entrega de un taller |  | ✓ |  |
+| [`remove_workshop_reviewer`](#remove-workshop-reviewer) | Quitar un revisor de una entrega de un taller |  | ✓ |  |
+| [`allocate_workshop_randomly`](#allocate-workshop-randomly) | Asignar al azar los revisores de un taller |  | ✓ |  |
+| [`schedule_workshop_allocation`](#schedule-workshop-allocation) | Programar la asignación aleatoria de un taller |  | ✓ |  |
 | [`list_notifications`](#list-notifications) | Listar mis notificaciones | ✓ | ✓ | ✓ |
 | [`mark_notifications_read`](#mark-notifications-read) | Marcar mis notificaciones como leídas |  | ✓ | ✓ |
 | [`list_conversations`](#list-conversations) | Listar mis conversaciones | ✓ | ✓ | ✓ |
@@ -1939,6 +2427,105 @@ Evalúa una entrega de un taller como la persona, mediante el formulario de eval
 | `criteria` |  | lista de objeto | En el orden del formulario |
 | `feedback` |  | texto | Comentarios de retroalimentación generales para el autor (HTML); sin alias |
 | `fields` |  | objeto | Cualquier otro campo del formulario, por nombre |
+
+</details>
+
+### `get_workshop_allocation` {#get-workshop-allocation}
+
+**Leer quién evalúa a quién en un taller**
+
+Lee la asignación de un taller tal como la muestra su página de asignación manual (en el grupo actual del curso): cada entrega con su autor y los revisores asignados, y los participantes que se pueden asignar como revisores. Las personas como alias cuando el servidor seudonimiza. Requiere el rol de profesor.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+
+</details>
+
+### `allocate_workshop_reviewer` {#allocate-workshop-reviewer}
+
+**Asignar un revisor a una entrega de un taller**
+
+Asigna un revisor a una entrega, como hace «Añadir revisor» en la página de asignación manual, en cualquier fase. La entrega por su id o por su autor; el revisor, uno que get_workshop_allocation lista como posible revisor (alias cuando el servidor seudonimiza). Un revisor ya asignado se deja como está. Devuelve después los revisores de la entrega. Da trabajo al revisor: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `submissionId` |  | entero | La entrega, tal como la da get_workshop_allocation; o su autor |
+| `author` |  | texto | El alias del autor de la entrega, cuando el servidor seudonimiza |
+| `authorId` |  | entero | El id de usuario del autor de la entrega, cuando el servidor muestra los nombres |
+| `reviewer` |  | texto | El alias del revisor, cuando el servidor seudonimiza |
+| `reviewerId` |  | entero | El id de usuario del revisor, cuando el servidor muestra los nombres |
+
+</details>
+
+### `remove_workshop_reviewer` {#remove-workshop-reviewer}
+
+**Quitar un revisor de una entrega de un taller**
+
+Quita la asignación de un revisor a una entrega: Moodle borra su evaluación de ella. Una evaluación ya calificada solo se borra con evenIfAssessed, y su calificación se pierde. Devuelve después los revisores de la entrega. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `submissionId` |  | entero | La entrega, tal como la da get_workshop_allocation; o su autor |
+| `author` |  | texto | El alias del autor de la entrega, cuando el servidor seudonimiza |
+| `authorId` |  | entero | El id de usuario del autor de la entrega, cuando el servidor muestra los nombres |
+| `reviewer` |  | texto | El alias del revisor, cuando el servidor seudonimiza |
+| `reviewerId` |  | entero | El id de usuario del revisor, cuando el servidor muestra los nombres |
+| `evenIfAssessed` |  | sí o no | También si ya la ha evaluado (se borran la evaluación y su calificación) |
+
+</details>
+
+### `allocate_workshop_randomly` {#allocate-workshop-randomly}
+
+**Asignar al azar los revisores de un taller**
+
+Asigna entregas a revisores al azar, como la asignación aleatoria del taller: perSubmission revisiones por entrega, o perReviewer por revisor; conservando las asignaciones actuales salvo que keepCurrent sea false (las calificadas nunca se quitan), entre revisores con entrega salvo con withoutSubmission, con autoevaluaciones si se pide y sin compañeros del mismo grupo si se pide. Devuelve cuántas se añadieron y quitaron, el informe de Moodle y sus problemas (no hay revisores suficientes…), y la asignación resultante. Da trabajo a los participantes: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `perSubmission` |  | entero | Revisiones que recibe cada entrega; o perReviewer |
+| `perReviewer` |  | entero | Revisiones que hace cada revisor |
+| `keepCurrent` |  | sí o no | Conservar las asignaciones que hay (por defecto); false las quita antes, nunca las ya calificadas |
+| `withoutSubmission` |  | sí o no | También revisores sin entrega propia; desactivado por defecto |
+| `selfAssessment` |  | sí o no | Añadir la autoevaluación de cada autor, donde el taller la permite |
+| `excludeSameGroup` |  | sí o no | Sin revisiones entre compañeros del mismo grupo (solo en modo de grupos visibles) |
+
+</details>
+
+### `schedule_workshop_allocation` {#schedule-workshop-allocation}
+
+**Programar la asignación aleatoria de un taller**
+
+Activa o desactiva la asignación programada del taller: activada, Moodle asigna al azar por su cuenta al final de la fase de envío (cuando pasa la fecha límite de entrega), con los ajustes de la asignación aleatoria que se den aquí (los que falten conservan lo que tiene el formulario). Devuelve los ajustes y el estado que le da Moodle (sin fecha límite de entrega nunca se ejecuta). Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `enabled` | ✅ | sí o no |  |
+| `perSubmission` |  | entero | Revisiones que recibe cada entrega; o perReviewer |
+| `perReviewer` |  | entero | Revisiones que hace cada revisor |
+| `keepCurrent` |  | sí o no | Conservar las asignaciones que hay (por defecto); false las quita antes, nunca las ya calificadas |
+| `withoutSubmission` |  | sí o no | También revisores sin entrega propia; desactivado por defecto |
+| `selfAssessment` |  | sí o no | Añadir la autoevaluación de cada autor, donde el taller la permite |
+| `excludeSameGroup` |  | sí o no | Sin revisiones entre compañeros del mismo grupo (solo en modo de grupos visibles) |
 
 </details>
 

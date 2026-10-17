@@ -221,6 +221,31 @@ ${people.slice(1).map((p) => `<tr class="userrow" data-uid="${p.id}"><th><a clas
     await context.close();
   });
 
+  it("gives a workshop's authors and reviewers as aliases, and redacts the titles", async () => {
+    const { state } = moodle();
+    const names: Record<number, string> = { 7: "Ada Lovelace", 8: "Alan Turing" };
+    const picture = (id: number) => `<a href="${SITE}user/view.php?id=${id}&amp;course=5"><span class="userinitials" title="${names[id]}">XX</span></a>`;
+    // Moodle's manual allocator, reduced: Ada submitted and Alan reviews her; Alan has nothing to review.
+    state.bodies!["/mod/workshop/allocation.php"] = `<div id="region-main"><div role="main"><div class="manual-allocator"><table class="allocations"><tbody>
+<tr><td class="reviewedby cell c0"><div class="singleselect"><form method="get" action="${SITE}mod/workshop/allocation.php"><input type="hidden" name="of" value="7"><select name="by"><option value="" selected>Choose user...</option><option value="8">Alan Turing</option></select></form></div><ul><li>${picture(8)}Alan Turing<a href="${SITE}mod/workshop/allocation.php?cmid=58&amp;method=manual&amp;mode=del&amp;what=11&amp;sesskey=s1" class="action-icon">x</a></li></ul></td>
+<td class="peer cell c1">${picture(7)}Ada Lovelace<div class="submission"><div class="title"><a href="${SITE}mod/workshop/submission.php?cmid=58&amp;id=1">Ada Lovelace's essay</a></div></div></td><td class="reviewerof cell c2"><ul></ul></td></tr>
+<tr><td class="reviewedby cell c0"><div class="info">Nothing to review</div><ul></ul></td><td class="peer cell c1">${picture(8)}Alan Turing<div class="submission"><div class="info">No submission found for this user</div></div></td>
+<td class="reviewerof cell c2"><ul><li>${picture(7)}Ada Lovelace<a href="${SITE}mod/workshop/allocation.php?cmid=58&amp;method=manual&amp;mode=del&amp;what=11&amp;sesskey=s1" class="action-icon">x</a></li></ul></td></tr>
+</tbody></table></div></div></div>`;
+    const { client, context } = await connect(pseudonymous(), state);
+
+    const result = await client.callTool({ name: "get_workshop_allocation", arguments: { workshopId: 58 } });
+    assert.equal(result.isError, undefined, text(result));
+    const { submissions, potentialReviewers } = result.structuredContent as { submissions: { author: { user?: string }; title: string; reviewers: { reviewer: { user?: string } }[] }[]; potentialReviewers: { user?: string }[] };
+    assert.equal(submissions.length, 1);
+    assert.match(submissions[0]!.author.user ?? "", ALIAS);
+    assert.match(submissions[0]!.reviewers[0]!.reviewer.user ?? "", ALIAS);
+    assert.notEqual(submissions[0]!.author.user, submissions[0]!.reviewers[0]!.reviewer.user);
+    assert.ok(potentialReviewers.every((p) => p.user && ALIAS.test(p.user)));
+    assert.doesNotMatch(text(result), /Lovelace|Turing|"userId"|"fullName"/);
+    await context.close();
+  });
+
   it("gives senders and conversation members as aliases, and sends by alias", async () => {
     const { state } = moodle();
     const sent: Record<string, unknown>[] = [];

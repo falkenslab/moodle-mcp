@@ -17,7 +17,7 @@ Your students stay anonymous to the AI, and you decide what it can do.
 
 </div>
 
-moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 140 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 5 site.
+moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 170 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 5 site.
 
 ## ✨ Why moodle-mcp
 
@@ -96,12 +96,13 @@ More sessions with Claude Code and Codex, and what they changed in Moodle, are i
 
 | Area | For example |
 | --- | --- |
-| 📚 Courses and content | Pages, files, folders, labels and links with your images; sections; restrictions and completion |
-| 📝 Assignments and grading | Submissions, rubrics and marking guides, extensions, the marking workflow |
+| 📚 Courses and content | Pages, files, folders, labels and links with your images; books' chapters, lessons' pages and databases' fields; sections; restrictions and completion |
+| 📝 Assignments and grading | Submissions, rubrics and marking guides (read and defined), extensions, the marking workflow |
 | ❓ Quizzes and questions | Question banks, GIFT and Moodle XML import, quiz layout, results, manual grading |
 | 📊 Gradebook and reports | The grader report, grade items and categories, completion, activity and participation reports, logs |
 | 👥 Participants and groups | Enrolments, roles, groups and groupings |
-| 💬 Forums and messages | Discussions, replies, ratings, workshops, notifications and private messages |
+| 💬 Forums and messages | Discussions, replies, ratings, workshops and who reviews whom, notifications and private messages |
+| 🏅 Badges | Create them, set what earns them, award them by hand |
 | 📅 Calendar and to-dos | Events, deadlines, what's pending and what changed |
 | 🧑‍🎓 As a student | Quizzes, assignments, lessons, surveys, choices, H5P and SCORM |
 | 🔄 Course life cycle | Copies, backups and restores, whole or in part, and imports, within a site or between sites |

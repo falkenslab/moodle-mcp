@@ -121,6 +121,11 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `delete_module` | Delete an activity | W | AJAX (`cm_delete`) | T 1 page deleted | Done as `delete_activity` |
 | `upload_files` | Upload local files to a draft area for a form (used by the tools above) | W | Page (`repository/repository_ajax.php`) | T file picker took 8 calls and a wrong first try | Done inside `create_activity` |
 | `get_module_file` | Download a file stored in an activity | R | Page (`pluginfile.php`) | T PDF opened to capture slides | Done via `download_file` |
+| Book chapters | List, add, edit, move, show or hide, delete a book's chapters (`list_book_chapters`…) | R/W | Pages and forms (`mod/book/edit.php`) | #18; sandbox, 17 Oct 2026 | Done |
+| Lesson pages | A lesson's pages, answers and jumps, as its editor has them (`get_lesson_pages`…) | R/W | Lesson editor forms | #19; sandbox, a branching lesson built | Done |
+| Database fields and templates | Fields, templates and presets of a database activity (`get_database_fields`…) | R/W | Pages and forms (`mod/data/field.php`, `templates.php`, `preset.php`) | #20; sandbox | Done |
+| Badges | List, create, set criteria, enable and award course badges (`list_badges`…) | R/W | Pages, forms and `core_badges_enable_badges` | #21; sandbox, one badge in course 3 | Done |
+| SCORM package | Replace a SCORM's package in place | W | Form (`update_activity`'s `package`) | #23; sandbox | Done |
 
 ## Teacher: assignments and grading
 
@@ -129,6 +134,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_submissions` | Participants' status, dates and content of one assignment | R | Fragment + AJAX | T "are there submissions pending?" | Done |
 | `get_assignment_settings` | Dates, submission types, grading method, max grade | R | Page | T read descriptions and dates | Done (get_activity_settings) |
 | `get_rubric` | Grading method, rubric or marking guide criteria and levels | R | Page (`grade/grading/manage.php`) or Fragment | T rubric read as text: 6 criteria, 4 levels | Done |
+| `set_rubric` | Define a rubric or marking guide, refused once used for grading | W | Form (`grade/grading/form/<method>/edit.php`) | #17; sandbox | Done |
 | `download_submission_files` | Save a participant's submitted files locally | R | Page (`pluginfile.php`) | none | Done via `download_file` |
 | `grade_submission` | Grade (points, scale or rubric levels) with feedback text and files, notifying or not | W | AJAX (`mod_assign_submit_grading_form`, form from the `gradingpanel` fragment) | none yet: no submissions existed; a core need | Done |
 | `grant_extension` | Extend the due date for some participants | W | Form (`view.php?action=grantextension`) | none | Done |
@@ -158,6 +164,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `create_event` | Course calendar event | W | AJAX (`core_calendar_submit_create_update_form`) | none | Done |
 | `list_events` | Upcoming calendar events, in a course or all | R | AJAX (`core_calendar_get_calendar_upcoming_view`) | none | Done |
 | `delete_event` | Delete a course or user event | W | AJAX (`core_calendar_delete_calendar_events`) | none | Done |
+| Workshop allocation | Who assesses whom: read, by hand, at random, scheduled (`get_workshop_allocation`…) | R/W | Page and forms (`mod/workshop/allocation.php`) | #22; sandbox without submissions | Done |
 
 ## Teacher: participants, progress and gradebook
 

@@ -31,6 +31,7 @@ export const FOLLOWED_PAGES: Record<string, (args: Args) => string> = {
   get_conversation: () => "message/index.php",
   send_message: () => "message/index.php",
   get_rubric: (a) => `mod/assign/view.php?id=${a.assignmentId}`,
+  set_badge_enabled: (a) => `badges/overview.php?id=${a.badgeId}`,
   list_events: (a) => `calendar/view.php?view=upcoming${a.courseId ? `&course=${a.courseId}` : ""}`,
   create_event: (a) => `calendar/view.php?view=upcoming&course=${a.courseId}`,
   delete_event: () => "calendar/view.php?view=upcoming",

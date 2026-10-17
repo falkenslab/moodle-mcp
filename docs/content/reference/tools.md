@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **143 tools**, 142 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **173 tools**, 172 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -307,7 +307,7 @@ Create an activity or resource of any type (page, label, url, resource, folder, 
 
 **Update an activity's settings or content**
 
-Change an existing activity through Moodle's own form: name, description, a page's or label's content, a URL's target, visibility, access restrictions, completion, a file resource's or folder's files (add, remove by their path as get_activity_settings lists them, or replace all), or any other setting by its form field name in settings. Only what is given changes. Returns the course structure. Changes the course: confirm with the person first.
+Change an existing activity through Moodle's own form: name, description, a page's or label's content, a URL's target, visibility, access restrictions, completion, a file resource's or folder's files (add, remove by their path as get_activity_settings lists them, or replace all), a SCORM's package (replaced in place: the activity keeps its id, settings and grade item; attempts stay in the SCOs the new package keeps, by their identifier, and go with the SCOs it drops), or any other setting by its form field name in settings. Only what is given changes. Returns the course structure, and a SCORM as get_scorm reads it after a new package. Changes the course: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -325,6 +325,7 @@ Change an existing activity through Moodle's own form: name, description, a page
 | `embed` |  | string list | Absolute local files (images…) to embed in the HTML, which names each by its file name: &#60;img src="shot.png"&#62; |
 | `settings` |  | object | Any other form field by its name in Moodle's activity form, e.g. &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
 | `files` |  | object | A file resource's or folder's files; untouched when missing |
+| `package` |  | string | A SCORM's new package: an absolute local path to a .zip, replacing the current one in place |
 
 </details>
 
@@ -454,6 +455,369 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 | `summary` |  | string | HTML |
 | `embed` |  | string list | Absolute local files (images…) to embed in the HTML, which names each by its file name: &#60;img src="shot.png"&#62; |
 | `settings` |  | object | Other fields by their name in the course settings form, e.g. &#123;"visible": 0, "startdate[day]": 1&#125; |
+
+</details>
+
+## Books, lessons and databases {#activities}
+
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_book_chapters`](#list-book-chapters) | List a book's chapters | ✓ | ✓ |  |
+| [`add_book_chapter`](#add-book-chapter) | Add a chapter to a book |  | ✓ |  |
+| [`edit_book_chapter`](#edit-book-chapter) | Change a book's chapter |  | ✓ |  |
+| [`move_book_chapter`](#move-book-chapter) | Move a book's chapter up or down |  | ✓ |  |
+| [`set_book_chapter_visibility`](#set-book-chapter-visibility) | Show or hide a book's chapter |  | ✓ |  |
+| [`delete_book_chapter`](#delete-book-chapter) | Delete a book's chapter |  | ✓ |  |
+| [`get_lesson_pages`](#get-lesson-pages) | Read a lesson's pages as its teacher | ✓ | ✓ |  |
+| [`add_lesson_page`](#add-lesson-page) | Add a page to a lesson |  | ✓ |  |
+| [`edit_lesson_page`](#edit-lesson-page) | Change a lesson's page |  | ✓ |  |
+| [`move_lesson_page`](#move-lesson-page) | Move a lesson's page |  | ✓ |  |
+| [`delete_lesson_page`](#delete-lesson-page) | Delete a lesson's page |  | ✓ |  |
+| [`get_database_fields`](#get-database-fields) | Read a database's fields | ✓ | ✓ |  |
+| [`add_database_field`](#add-database-field) | Add a field to a database |  | ✓ |  |
+| [`edit_database_field`](#edit-database-field) | Change a database's field |  | ✓ |  |
+| [`delete_database_field`](#delete-database-field) | Delete a database's field |  | ✓ |  |
+| [`get_database_templates`](#get-database-templates) | Read a database's templates | ✓ | ✓ |  |
+| [`set_database_template`](#set-database-template) | Set a database's template |  | ✓ |  |
+| [`list_database_presets`](#list-database-presets) | List the presets for a database | ✓ | ✓ |  |
+| [`apply_database_preset`](#apply-database-preset) | Give a database a preset |  | ✓ |  |
+
+### `list_book_chapters` {#list-book-chapters}
+
+**List a book's chapters**
+
+List a book's chapters in order: id, title, whether each is a subchapter or hidden, and its place; with content, each chapter's HTML and images too (one page read per chapter, logged by Moodle as a view). A teacher sees hidden chapters, a student doesn't. The chapter ids are what the other book tools take.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | integer | The book's id (course module id), as get_course_structure gives it |
+| `content` |  | boolean | Also each chapter's HTML and images |
+
+</details>
+
+### `add_book_chapter` {#add-book-chapter}
+
+**Add a chapter to a book**
+
+Add a chapter to a book through Moodle's chapter form: its title and content (HTML, with local images embedded), at the end or after another chapter, as a subchapter of the chapter before it if asked, hidden if asked (shown by default, as Moodle adds it: hide it while the book is visible and the chapter isn't ready). Returns the new chapter's id and the chapters. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | integer | The book's id (course module id), as get_course_structure gives it |
+| `title` | ✅ | string |  |
+| `content` | ✅ | string | Its content (HTML); Moodle requires some |
+| `subchapter` |  | boolean | A subchapter of the chapter before it (not for the first) |
+| `hidden` |  | boolean | Hidden from students |
+| `afterChapterId` |  | integer | The chapter it goes after; at the end without it |
+| `embed` |  | string list | Absolute local files (images…) to embed in the content, which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `edit_book_chapter` {#edit-book-chapter}
+
+**Change a book's chapter**
+
+Change a chapter's title, content (HTML, with local images embedded) or whether it is a subchapter, through its form: only what is given changes. move_book_chapter moves it, set_book_chapter_visibility shows or hides it. Returns the chapters afterwards. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | integer | The book's id (course module id), as get_course_structure gives it |
+| `chapterId` | ✅ | integer | The chapter's id, as list_book_chapters gives it |
+| `title` |  | string |  |
+| `content` |  | string |  |
+| `subchapter` |  | boolean |  |
+| `embed` |  | string list | Absolute local files (images…) to embed in the content, which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `move_book_chapter` {#move-book-chapter}
+
+**Move a book's chapter up or down**
+
+Move a chapter one place up or down, as the table of contents' arrows do: a chapter moves with its subchapters, past the whole chapter before or after it; a subchapter moves alone. Call it again to move further. Returns the chapters afterwards. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | integer | The book's id (course module id), as get_course_structure gives it |
+| `chapterId` | ✅ | integer | The chapter's id, as list_book_chapters gives it |
+| `direction` | ✅ | `up`, `down` |  |
+
+</details>
+
+### `set_book_chapter_visibility` {#set-book-chapter-visibility}
+
+**Show or hide a book's chapter**
+
+Show a chapter to students or hide it from them, as the table of contents' eye does: a chapter's subchapters go with it, and a subchapter of a hidden chapter stays hidden. Returns the chapters afterwards. Changes what students see: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | integer | The book's id (course module id), as get_course_structure gives it |
+| `chapterId` | ✅ | integer | The chapter's id, as list_book_chapters gives it |
+| `visible` | ✅ | boolean |  |
+
+</details>
+
+### `delete_book_chapter` {#delete-book-chapter}
+
+**Delete a book's chapter**
+
+Delete a chapter with its files; deleting a chapter (not a subchapter) deletes its subchapters too. Returns the chapters afterwards. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bookId` | ✅ | integer | The book's id (course module id), as get_course_structure gives it |
+| `chapterId` | ✅ | integer | The chapter's id, as list_book_chapters gives it |
+
+</details>
+
+### `get_lesson_pages` {#get-lesson-pages}
+
+**Read a lesson's pages as its teacher**
+
+Read a lesson's pages as its teacher has them in Moodle's lesson editor, in order: type (content, a question type, cluster, end of cluster, end of branch), title, contents, and a content page's buttons or a question's answers with their responses, scores and jumps (a page's id, or next-page, end-of-lesson…). Takes a teacher's role; a student plays a lesson with get_lesson_page.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | integer | The lesson's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `add_lesson_page` {#add-lesson-page}
+
+**Add a page to a lesson**
+
+Add a page to a lesson through Moodle's lesson editor: a content page with its buttons, a question page (multichoice, truefalse, shortanswer, numerical, matching, essay) with its answers, responses, scores and jumps, or a cluster, end of cluster or end of branch; after a page, or last. A jump to a page the lesson doesn't have is refused before anything is saved, so add the pages first and set their jumps after with edit_lesson_page when they point forward. Returns the new page's id and the lesson's page ids in order. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | integer | The lesson's id (course module id), as get_course_structure gives it |
+| `type` | ✅ | `content`, `multichoice`, `truefalse`, `shortanswer`, `numerical`, `matching`, `essay`, `cluster`, `end-of-cluster`, `end-of-branch` |  |
+| `title` |  | string |  |
+| `contents` |  | string | The page's contents (HTML); local files it names (&#60;img src="shot.png"&#62;) go in embed |
+| `embed` |  | string list | Absolute local files to embed in the contents, answers or responses |
+| `buttons` |  | object list | A content page's buttons, in order; given, they replace them all |
+| `answers` |  | object list | A question page's answers, in order (given, they replace them all); an essay or structural page's single row |
+| `multipleAnswers` |  | boolean | Multichoice: more than one answer can be right |
+| `caseSensitive` |  | boolean | Short answer: answers compared case-sensitively |
+| `fields` |  | object | Any other field of the page's form, by name (layout, display…) |
+| `after` |  | integer | The page it goes after (0: first); last without it |
+
+</details>
+
+### `edit_lesson_page` {#edit-lesson-page}
+
+**Change a lesson's page**
+
+Change a lesson's page through its form in the lesson editor: title, contents, buttons or answers (given, they replace them all), options and other fields; only what is given changes, and a page keeps its type. A jump to a page the lesson doesn't have is refused before anything is saved. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | integer | The lesson's id (course module id), as get_course_structure gives it |
+| `pageId` | ✅ | integer | The page's id, as get_lesson_pages gives it |
+| `title` |  | string |  |
+| `contents` |  | string | The page's contents (HTML); local files it names (&#60;img src="shot.png"&#62;) go in embed |
+| `embed` |  | string list | Absolute local files to embed in the contents, answers or responses |
+| `buttons` |  | object list | A content page's buttons, in order; given, they replace them all |
+| `answers` |  | object list | A question page's answers, in order (given, they replace them all); an essay or structural page's single row |
+| `multipleAnswers` |  | boolean | Multichoice: more than one answer can be right |
+| `caseSensitive` |  | boolean | Short answer: answers compared case-sensitively |
+| `fields` |  | object | Any other field of the page's form, by name (layout, display…) |
+
+</details>
+
+### `move_lesson_page` {#move-lesson-page}
+
+**Move a lesson's page**
+
+Move a lesson's page after another (0: first), as the lesson editor's move link does. Jumps by page id still lead to the same pages; next-page and previous-page follow the new order. Returns the page ids in order. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | integer | The lesson's id (course module id), as get_course_structure gives it |
+| `pageId` | ✅ | integer | The page's id, as get_lesson_pages gives it |
+| `after` | ✅ | integer | The page it goes after (0: first) |
+
+</details>
+
+### `delete_lesson_page` {#delete-lesson-page}
+
+**Delete a lesson's page**
+
+Delete a lesson's page. Answers of other pages that jumped to it are left as Moodle leaves them: check them with get_lesson_pages. Returns the page ids left, in order. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `lessonId` | ✅ | integer | The lesson's id (course module id), as get_course_structure gives it |
+| `pageId` | ✅ | integer | The page's id, as get_lesson_pages gives it |
+
+</details>
+
+### `get_database_fields` {#get-database-fields}
+
+**Read a database's fields**
+
+Read a database activity's fields in order: each one's id, name (templates name it [[name]]), type, description, whether an entry needs it, and its type's settings (choices, sizes…). Takes an editing teacher's role.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `add_database_field` {#add-database-field}
+
+**Add a field to a database**
+
+Add a field to a database activity through Moodle's form for its type: text, textarea, number, date, menu, radiobutton, checkbox, multimenu, url, file, picture or latlong, with a name unique in the database, a description, whether it's required (not for a date), and the type's settings. Templates at Moodle's default show it; a saved template may need it added (set_database_template). Returns its id and the fields. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `type` | ✅ | `text`, `textarea`, `number`, `date`, `menu`, `radiobutton`, `checkbox`, `multimenu`, `url`, `file`, `picture`, `latlong` |  |
+| `name` | ✅ | string |  |
+| `description` |  | string |  |
+| `required` |  | boolean |  |
+| `options` |  | object | The type's settings; each type takes only its own |
+
+</details>
+
+### `edit_database_field` {#edit-database-field}
+
+**Change a database's field**
+
+Change a database field's name, description, whether it's required, or its type's settings (one by one): what is left out stays. Renaming it renames its tag in the templates, as Moodle does. Its type can't change: delete it and add another. Returns the fields. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `fieldId` | ✅ | integer | The field's id, as get_database_fields gives it |
+| `name` |  | string |  |
+| `description` |  | string |  |
+| `required` |  | boolean |  |
+| `options` |  | object | The type's settings; each type takes only its own |
+
+</details>
+
+### `delete_database_field` {#delete-database-field}
+
+**Delete a database's field**
+
+Delete a database field: what every entry has in it goes too, and its tags leave the templates. Returns the fields. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `fieldId` | ✅ | integer | The field's id, as get_database_fields gives it |
+
+</details>
+
+### `get_database_templates` {#get-database-templates}
+
+**Read a database's templates**
+
+Read a database activity's templates (list, listHeader, listFooter, single, add, search, rss, rssTitle, css, js): what was saved, or Moodle's default for its fields. Fields appear as [[name]], Moodle's other tags as ##tag##. Refused before the database has a field (Moodle has no templates yet). Takes an editing teacher's role.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `set_database_template` {#set-database-template}
+
+**Set a database's template**
+
+Save one of a database's templates as given, without Moodle's HTML editor in between: list (repeated per entry, between listHeader and listFooter), single, add (the entry form: each field's tag once), search, rss, rssTitle, css or js. Fields go in as [[name]], Moodle's other tags as ##tag## (##edit##, ##delete##, ##more##, ##user##…). reset: true puts back Moodle's default. Returns every template. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `template` | ✅ | `list`, `listHeader`, `listFooter`, `single`, `add`, `search`, `rss`, `rssTitle`, `css`, `js` |  |
+| `html` |  | string | The template (HTML, or CSS or JavaScript) |
+| `reset` |  | boolean | Moodle's default instead (the list's header and footer stay) |
+
+</details>
+
+### `list_database_presets` {#list-database-presets}
+
+**List the presets for a database**
+
+List the presets a database activity can be given: Moodle's own (image gallery, journal, proposals, resources) and those saved on the site that the person can see, each with the id apply_database_preset takes.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `apply_database_preset` {#apply-database-preset}
+
+**Give a database a preset**
+
+Give a database activity a preset, as Moodle's "Use this preset" does: its fields are added, a field with the same name and type is kept with what entries have in it, every other field is deleted with its content, and its templates replace the database's. Returns the fields. Can delete entries' content: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `presetId` | ✅ | string | As list_database_presets gives it |
 
 </details>
 
@@ -600,6 +964,7 @@ Copy a course's content from one of this server's sites to another (list_sites):
 | [`list_assignments`](#list-assignments) | List a course's assignments | ✓ | ✓ | ✓ |
 | [`get_submissions`](#get-submissions) | Get an assignment's submissions | ✓ | ✓ |  |
 | [`get_rubric`](#get-rubric) | Get an assignment's grading criteria | ✓ | ✓ |  |
+| [`set_rubric`](#set-rubric) | Define an assignment's rubric or marking guide |  | ✓ |  |
 | [`grade_submission`](#grade-submission) | Grade a submission |  | ✓ |  |
 | [`grant_extension`](#grant-extension) | Grant an assignment extension |  | ✓ |  |
 | [`set_workflow_state`](#set-workflow-state) | Set the marking workflow state |  | ✓ |  |
@@ -650,6 +1015,26 @@ Read how an assignment is graded: simple (a grade or a scale), a rubric (criteri
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `assignmentId` | ✅ | integer | The assignment's id (course module id), as list_assignments gives it |
+
+</details>
+
+### `set_rubric` {#set-rubric}
+
+**Define an assignment's rubric or marking guide**
+
+Define how an assignment is graded with a rubric (criteria, each with two levels or more: a definition and its score) or a marking guide (criteria, each with a short name, a description for students, one for markers and a maximum score, and the guide's frequently used comments), through Moodle's advanced grading editor, ready to use. Creates one where there is none and replaces the one there is, so its criterion and level ids change. Refused once anything has been graded with it: Moodle would regrade. Returns the definition as get_rubric gives it. Changes how students are graded: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | integer | The assignment's id (course module id), as list_assignments gives it |
+| `method` | ✅ | `rubric`, `guide` |  |
+| `name` | ✅ | string | Its name, as the advanced grading page lists it |
+| `description` |  | string | Its description (HTML) |
+| `criteria` | ✅ | object list | In order |
+| `comments` |  | string list | A marking guide's frequently used comments, in order |
 
 </details>
 
@@ -1296,6 +1681,104 @@ Set a participant's completion of an activity as a teacher does from the progres
 
 </details>
 
+## Badges {#badges}
+
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_badges`](#list-badges) | List a course's badges | ✓ | ✓ | ✓ |
+| [`create_badge`](#create-badge) | Create a course badge |  | ✓ |  |
+| [`set_badge_criteria`](#set-badge-criteria) | Set what earns a badge |  | ✓ |  |
+| [`set_badge_enabled`](#set-badge-enabled) | Enable or disable a badge |  | ✓ |  |
+| [`award_badge`](#award-badge) | Award a badge by hand |  | ✓ |  |
+
+### `list_badges` {#list-badges}
+
+**List a course's badges**
+
+List a course's badges: name, description, image, what earns it (Moodle's summary), whether it's enabled and whether the person has it; for a teacher, disabled badges too and how many people have each. Fails with a clear error where the site has badges turned off.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `create_badge` {#create-badge}
+
+**Create a course badge**
+
+Create a course badge, disabled and without criteria, through Moodle's new badge form: its name, description (plain text) and image (a local PNG, JPEG or GIF, at most 256 KB). Then set_badge_criteria gives it criteria and set_badge_enabled makes it available. Returns the badge. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `name` | ✅ | string |  |
+| `description` | ✅ | string | Plain text: Moodle strips tags |
+| `image` | ✅ | string | An absolute local path to its image: PNG, JPEG or GIF, at most 256 KB |
+| `imageCaption` |  | string | The image's alternative text |
+
+</details>
+
+### `set_badge_criteria` {#set-badge-criteria}
+
+**Set what earns a badge**
+
+Set a badge's criteria: completing activities (with completion tracking; all of them or any one), completing the course (with a minimum course grade and a date), or awarded by hand by people with some roles (any one of them by default); all says whether every criterion must be met or any one. A criterion given replaces that kind's settings, one in remove goes, one not given stays. Moodle lets criteria change only while the badge is disabled and nobody has it. Returns the criteria. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `badgeId` | ✅ | integer | The badge's id, as list_badges gives it |
+| `activities` |  | object |  |
+| `courseCompletion` |  | object |  |
+| `manual` |  | object |  |
+| `all` |  | boolean | With more than one criterion: all must be met, or any one |
+| `remove` |  | `activities`, `courseCompletion`, `manual` list | Criteria to take away |
+
+</details>
+
+### `set_badge_enabled` {#set-badge-enabled}
+
+**Enable or disable a badge**
+
+Make a badge available to users or not. Enabling it awards it at once to everyone who already meets its criteria, and they're told: confirm with the person first. It needs criteria first. Returns the badge.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `badgeId` | ✅ | integer | The badge's id, as list_badges gives it |
+| `enabled` | ✅ | boolean |  |
+
+</details>
+
+### `award_badge` {#award-badge}
+
+**Award a badge by hand**
+
+Award a badge by hand to a participant (an alias when the server pseudonymizes), as one of the roles its manual criterion names (roleId when the person holds several). The badge must be enabled and have a manual criterion. Moodle issues it at once when the manual award is enough, else once the rest of its criteria are met. The participant is told: confirm with the person first. Returns the badge.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `badgeId` | ✅ | integer | The badge's id, as list_badges gives it |
+| `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
+| `userId` |  | integer | The participant's user id, when the server shows names |
+| `roleId` |  | integer | The role to award it as |
+
+</details>
+
 ## Reports {#reports}
 
 | Tool | Description | Read only | Teacher | Student |
@@ -1686,6 +2169,11 @@ Make a grouping's groups exactly groupIds, adding and removing as its page does;
 | [`get_workshop`](#get-workshop) | Read a workshop | ✓ | ✓ |  |
 | [`set_workshop_phase`](#set-workshop-phase) | Switch a workshop's phase |  | ✓ |  |
 | [`assess_workshop_submission`](#assess-workshop-submission) | Assess a workshop submission |  | ✓ | ✓ |
+| [`get_workshop_allocation`](#get-workshop-allocation) | Read who assesses whom in a workshop | ✓ | ✓ |  |
+| [`allocate_workshop_reviewer`](#allocate-workshop-reviewer) | Allocate a reviewer to a workshop submission |  | ✓ |  |
+| [`remove_workshop_reviewer`](#remove-workshop-reviewer) | Remove a reviewer from a workshop submission |  | ✓ |  |
+| [`allocate_workshop_randomly`](#allocate-workshop-randomly) | Allocate a workshop's reviewers at random |  | ✓ |  |
+| [`schedule_workshop_allocation`](#schedule-workshop-allocation) | Schedule a workshop's random allocation |  | ✓ |  |
 | [`list_notifications`](#list-notifications) | List my notifications | ✓ | ✓ | ✓ |
 | [`mark_notifications_read`](#mark-notifications-read) | Mark my notifications read |  | ✓ | ✓ |
 | [`list_conversations`](#list-conversations) | List my conversations | ✓ | ✓ | ✓ |
@@ -1939,6 +2427,105 @@ Assess a workshop submission as the person, through the workshop's assessment fo
 | `criteria` |  | object list | In the form's order |
 | `feedback` |  | string | Overall feedback for the author (HTML); no aliases in it |
 | `fields` |  | object | Any other field of the form, by name |
+
+</details>
+
+### `get_workshop_allocation` {#get-workshop-allocation}
+
+**Read who assesses whom in a workshop**
+
+Read a workshop's allocation as its manual allocation page shows it (in the course's current group): each submission with its author and the reviewers allocated to it, and the participants who may be allocated as reviewers. People as aliases when the server pseudonymizes. Takes a teacher's role.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+
+</details>
+
+### `allocate_workshop_reviewer` {#allocate-workshop-reviewer}
+
+**Allocate a reviewer to a workshop submission**
+
+Allocate a reviewer to a submission, as the manual allocation page's "Add reviewer" does, in any phase. The submission by its id or its author, the reviewer one get_workshop_allocation lists as a potential reviewer (aliases when the server pseudonymizes). A reviewer already allocated is left as is. Returns the submission's reviewers afterwards. The reviewer is given work: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `submissionId` |  | integer | The submission, as get_workshop_allocation gives it; or its author |
+| `author` |  | string | The submission's author's alias, when the server pseudonymizes |
+| `authorId` |  | integer | The submission's author's user id, when the server shows names |
+| `reviewer` |  | string | The reviewer's alias, when the server pseudonymizes |
+| `reviewerId` |  | integer | The reviewer's user id, when the server shows names |
+
+</details>
+
+### `remove_workshop_reviewer` {#remove-workshop-reviewer}
+
+**Remove a reviewer from a workshop submission**
+
+Remove a reviewer's allocation to a submission: Moodle deletes their assessment of it. An assessment already graded is only deleted with evenIfAssessed, and its grade is lost. Returns the submission's reviewers afterwards. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `submissionId` |  | integer | The submission, as get_workshop_allocation gives it; or its author |
+| `author` |  | string | The submission's author's alias, when the server pseudonymizes |
+| `authorId` |  | integer | The submission's author's user id, when the server shows names |
+| `reviewer` |  | string | The reviewer's alias, when the server pseudonymizes |
+| `reviewerId` |  | integer | The reviewer's user id, when the server shows names |
+| `evenIfAssessed` |  | boolean | Also when they already assessed it (the assessment and its grade are deleted) |
+
+</details>
+
+### `allocate_workshop_randomly` {#allocate-workshop-randomly}
+
+**Allocate a workshop's reviewers at random**
+
+Allocate submissions to reviewers at random, as the workshop's random allocation does: perSubmission reviews for each submission, or perReviewer for each reviewer; keeping the current allocations unless keepCurrent is false (graded ones are never removed), among reviewers with a submission unless withoutSubmission, with self-assessments if asked, without peers of the same group if asked. Returns how many were added and removed, Moodle's report and its problems (not enough reviewers…), and the allocation afterwards. Gives participants work: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `perSubmission` |  | integer | Reviews each submission gets; or perReviewer |
+| `perReviewer` |  | integer | Reviews each reviewer does |
+| `keepCurrent` |  | boolean | Keep the allocations there are (default); false removes them first, never graded ones |
+| `withoutSubmission` |  | boolean | Reviewers without a submission of their own too; off by default |
+| `selfAssessment` |  | boolean | Add each author's self-assessment, where the workshop allows it |
+| `excludeSameGroup` |  | boolean | No reviews by peers of the same group (visible groups mode only) |
+
+</details>
+
+### `schedule_workshop_allocation` {#schedule-workshop-allocation}
+
+**Schedule a workshop's random allocation**
+
+Turn the workshop's scheduled allocation on or off: when on, Moodle allocates at random by itself at the end of the submission phase (once its submissions deadline passes), with the random allocation's settings given here (those left out keep what the form has). Returns the settings and Moodle's status of it (without a submissions deadline it never runs). Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `enabled` | ✅ | boolean |  |
+| `perSubmission` |  | integer | Reviews each submission gets; or perReviewer |
+| `perReviewer` |  | integer | Reviews each reviewer does |
+| `keepCurrent` |  | boolean | Keep the allocations there are (default); false removes them first, never graded ones |
+| `withoutSubmission` |  | boolean | Reviewers without a submission of their own too; off by default |
+| `selfAssessment` |  | boolean | Add each author's self-assessment, where the workshop allows it |
+| `excludeSameGroup` |  | boolean | No reviews by peers of the same group (visible groups mode only) |
 
 </details>
 

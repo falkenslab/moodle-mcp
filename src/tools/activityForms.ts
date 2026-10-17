@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ACTIVITY_VISIBILITIES, createActivity, updateActivity } from "@falkenslab/moodle-driver";
 import { completionSchema, restrictionsSchema, toCompletion, toRestrictions } from "./conditions.js";
 import { section } from "./getCourseStructure.js";
+import { scormFields } from "./scorm.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
@@ -57,7 +58,7 @@ export const registerUpdateActivity: RegisterTool = (server, { config, browser }
     {
       title: "Update an activity's settings or content",
       description:
-        "Change an existing activity through Moodle's own form: name, description, a page's or label's content, a URL's target, visibility, access restrictions, completion, a file resource's or folder's files (add, remove by their path as get_activity_settings lists them, or replace all), or any other setting by its form field name in settings. Only what is given changes. Returns the course structure. Changes the course: confirm with the person first.",
+        "Change an existing activity through Moodle's own form: name, description, a page's or label's content, a URL's target, visibility, access restrictions, completion, a file resource's or folder's files (add, remove by their path as get_activity_settings lists them, or replace all), a SCORM's package (replaced in place: the activity keeps its id, settings and grade item; attempts stay in the SCOs the new package keeps, by their identifier, and go with the SCOs it drops), or any other setting by its form field name in settings. Only what is given changes. Returns the course structure, and a SCORM as get_scorm reads it after a new package. Changes the course: confirm with the person first.",
       inputSchema: {
         activityId: z.number().int().positive().describe("The activity's id (course module id), as get_course_structure gives it"),
         name: z.string().min(1).optional(),
@@ -70,8 +71,9 @@ export const registerUpdateActivity: RegisterTool = (server, { config, browser }
           })
           .optional()
           .describe("A file resource's or folder's files; untouched when missing"),
+        package: z.string().optional().describe("A SCORM's new package: an absolute local path to a .zip, replacing the current one in place"),
       },
-      outputSchema: resultSchema,
+      outputSchema: { ...resultSchema, scorm: z.object(scormFields).optional().describe("A SCORM after a new package, as get_scorm gives it") },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ activityId, restrictions, completion, ...input }) =>

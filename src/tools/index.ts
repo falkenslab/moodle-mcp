@@ -16,7 +16,7 @@ import { registerGetDiscussion } from "./getDiscussion.js";
 import { registerGetMe } from "./getMe.js";
 import { registerGetSiteInfo } from "./getSiteInfo.js";
 import { registerGetMyGrades } from "./getMyGrades.js";
-import { registerGetRubric } from "./getRubric.js";
+import { registerGetRubric, registerSetRubric } from "./getRubric.js";
 import { registerGetSubmissions } from "./getSubmissions.js";
 import { registerAddGradeCategory, registerAddGradeItem, registerDeleteGradeCategory, registerDeleteGradeItem, registerGetGradebookSetup, registerUpdateGradeCategory, registerUpdateGradeItem } from "./gradebook.js";
 import { registerGradeSubmission } from "./gradeSubmission.js";
@@ -44,6 +44,11 @@ import { registerAllocateMarker, registerExportGrades, registerGetForumGrades, r
 import { registerCreateGroup, registerCreateGrouping, registerDeleteGroup, registerDeleteGrouping, registerListGroupings, registerSetGroupingGroups, registerUpdateGroup } from "./groups.js";
 import { registerGetActivityReport, registerGetCourseLogs, registerGetParticipationReport } from "./reports.js";
 import { registerAssessWorkshopSubmission, registerGetWorkshop, registerSetWorkshopPhase } from "./workshops.js";
+import { registerAllocateWorkshopRandomly, registerAllocateWorkshopReviewer, registerGetWorkshopAllocation, registerRemoveWorkshopReviewer, registerScheduleWorkshopAllocation } from "./workshopAllocation.js";
+import { registerAddBookChapter, registerDeleteBookChapter, registerEditBookChapter, registerListBookChapters, registerMoveBookChapter, registerSetBookChapterVisibility } from "./books.js";
+import { registerAddLessonPage, registerDeleteLessonPage, registerEditLessonPage, registerGetLessonPages, registerMoveLessonPage } from "./lessonPages.js";
+import { registerAddDatabaseField, registerApplyDatabasePreset, registerDeleteDatabaseField, registerEditDatabaseField, registerGetDatabaseFields, registerGetDatabaseTemplates, registerListDatabasePresets, registerSetDatabaseTemplate } from "./databases.js";
+import { registerAwardBadge, registerCreateBadge, registerListBadges, registerSetBadgeCriteria, registerSetBadgeEnabled } from "./badges.js";
 import type { RegisterTool } from "./types.js";
 
 /** Every tool the server exposes, in the order clients list them. */
@@ -114,6 +119,7 @@ export const TOOLS: RegisterTool[] = [
   registerSaveSubmission,
   registerSubmitAssignment,
   registerGetRubric,
+  registerSetRubric,
   registerGradeSubmission,
   registerGrantExtension,
   registerSetWorkflowState,
@@ -130,6 +136,11 @@ export const TOOLS: RegisterTool[] = [
   registerGetWorkshop,
   registerSetWorkshopPhase,
   registerAssessWorkshopSubmission,
+  registerGetWorkshopAllocation,
+  registerAllocateWorkshopReviewer,
+  registerRemoveWorkshopReviewer,
+  registerAllocateWorkshopRandomly,
+  registerScheduleWorkshopAllocation,
   registerListNotifications,
   registerMarkNotificationsRead,
   registerListConversations,
@@ -142,6 +153,30 @@ export const TOOLS: RegisterTool[] = [
   registerEditActivity,
   registerDuplicateActivity,
   registerDeleteActivity,
+  registerListBookChapters,
+  registerAddBookChapter,
+  registerEditBookChapter,
+  registerMoveBookChapter,
+  registerSetBookChapterVisibility,
+  registerDeleteBookChapter,
+  registerGetLessonPages,
+  registerAddLessonPage,
+  registerEditLessonPage,
+  registerMoveLessonPage,
+  registerDeleteLessonPage,
+  registerGetDatabaseFields,
+  registerAddDatabaseField,
+  registerEditDatabaseField,
+  registerDeleteDatabaseField,
+  registerGetDatabaseTemplates,
+  registerSetDatabaseTemplate,
+  registerListDatabasePresets,
+  registerApplyDatabasePreset,
+  registerListBadges,
+  registerCreateBadge,
+  registerSetBadgeCriteria,
+  registerSetBadgeEnabled,
+  registerAwardBadge,
   registerAddSection,
   registerEditSection,
   registerDeleteSection,

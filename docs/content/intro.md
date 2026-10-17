@@ -12,7 +12,7 @@ moodle-mcp lets an AI agent such as **Claude** or **Codex** work in your Moodle 
 
 ## How it works
 
-moodle-mcp is an [MCP server](https://modelcontextprotocol.io). It's a small program that your AI app starts in the background, and it gives the agent about 140 tools for Moodle. When the agent uses one, moodle-mcp does the work in a real browser on your computer, logged in as you.
+moodle-mcp is an [MCP server](https://modelcontextprotocol.io). It's a small program that your AI app starts in the background, and it gives the agent about 170 tools for Moodle. When the agent uses one, moodle-mcp does the work in a real browser on your computer, logged in as you.
 
 ```mermaid
 flowchart LR

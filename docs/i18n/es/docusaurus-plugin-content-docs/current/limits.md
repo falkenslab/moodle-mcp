@@ -5,7 +5,7 @@ sidebar_label: Limitar al agente
 
 # Limitar lo que puede hacer el agente
 
-Por defecto, el agente recibe todas las herramientas: unas 140, para docentes y alumnos, para leer y para cambiar. Tres ajustes reducen esa lista. Se suman: una herramienta solo está si todos los ajustes la permiten.
+Por defecto, el agente recibe todas las herramientas: unas 170, para docentes y alumnos, para leer y para cambiar. Tres ajustes reducen esa lista. Se suman: una herramienta solo está si todos los ajustes la permiten.
 
 | Ajuste | Pregunta que responde | Valores |
 | --- | --- | --- |
@@ -25,9 +25,9 @@ Para ver los límites en vigor, pregúntale al agente:
 
 | Rol | Herramientas | Qué incluye | Tamaño de las descripciones de las herramientas |
 | --- | --- | --- | --- |
-| `all` (por defecto) | 142 | Todo | unos 31.300 tokens |
-| `teacher` | 126 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 28.500 tokens |
-| `student` | 65 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 11.500 tokens |
+| `all` (por defecto) | 172 | Todo | unos 39.600 tokens |
+| `teacher` | 156 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 37.200 tokens |
+| `student` | 66 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 11.600 tokens |
 
 Claude Code carga las herramientas a medida que las necesita, así que ahí el tamaño importa menos. Claude Desktop, Codex y la mayoría de las demás aplicaciones las cargan todas al empezar cada chat.
 
@@ -37,9 +37,9 @@ Claude Code carga las herramientas a medida que las necesita, así que ahí el t
 
 | Con el rol | Herramientas que quedan |
 | --- | --- |
-| `all` | 60 |
-| `teacher` | 55 |
-| `student` | 40 |
+| `all` | 67 |
+| `teacher` | 62 |
+| `student` | 41 |
 
 También se quedan fuera las herramientas que parecen de lectura pero empiezan algo en Moodle (una lección, un intento de cuestionario, un intento de SCORM). Descargar los ficheros de un curso o exportar sus calificaciones sí se queda: no cambia nada en Moodle, solo guarda un fichero en tu ordenador, y tu aplicación de IA puede seguir preguntándote antes de cada uno.
 
@@ -68,7 +68,7 @@ Un docente que quiere ayuda para crear cursos, y nada más:
 claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp
 ```
 
-Son 71 herramientas, unos 16.000 tokens.
+Son 93 herramientas, unos 22.100 tokens.
 
 Un asistente de estudio para un alumno que no puede entregar ni publicar nada:
 

@@ -9,6 +9,19 @@ import type { RegisterTool } from "./types.js";
 const activityId = z.number().int().positive().describe("The SCORM activity's id (course module id), as get_course_structure gives it");
 const SCO_STATUSES = ["not-attempted", "incomplete", "completed", "passed", "failed", "browsed", "suspended"] as const;
 
+/** A SCORM as get_scorm gives it (update_activity gives it too, after a new package). */
+export const scormFields = {
+  id: z.number().int(),
+  name: z.string(),
+  description: z.string().optional().describe("HTML"),
+  attemptsAllowed: z.number().int().optional().describe("None means unlimited"),
+  attemptsMade: z.number().int().optional(),
+  gradingMethod: z.string().optional(),
+  grade: z.string().optional().describe("The grade reported to the gradebook, as Moodle shows it"),
+  attemptGrades: z.array(z.object({ attempt: z.number().int(), grade: z.string() })),
+  scos: z.array(z.object({ id: z.number().int().describe("The SCO's id, which open_scorm takes"), title: z.string(), status: z.enum(SCO_STATUSES).optional(), score: z.number().optional() })),
+};
+
 export const registerGetScorm: RegisterTool = (server, { config, browser }) => {
   server.registerTool(
     "get_scorm",
@@ -17,17 +30,7 @@ export const registerGetScorm: RegisterTool = (server, { config, browser }) => {
       description:
         "Read a SCORM activity as the person sees it: attempts allowed and made, grading method, the grade reported and each attempt's, and its SCOs (the package's parts) with the person's status and score in the last attempt. Use it before open_scorm, and after doing the package to see what Moodle recorded.",
       inputSchema: { activityId },
-      outputSchema: {
-        id: z.number().int(),
-        name: z.string(),
-        description: z.string().optional().describe("HTML"),
-        attemptsAllowed: z.number().int().optional().describe("None means unlimited"),
-        attemptsMade: z.number().int().optional(),
-        gradingMethod: z.string().optional(),
-        grade: z.string().optional().describe("The grade reported to the gradebook, as Moodle shows it"),
-        attemptGrades: z.array(z.object({ attempt: z.number().int(), grade: z.string() })),
-        scos: z.array(z.object({ id: z.number().int().describe("The SCO's id, which open_scorm takes"), title: z.string(), status: z.enum(SCO_STATUSES).optional(), score: z.number().optional() })),
-      },
+      outputSchema: scormFields,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ activityId: id }) => reply(await scorm(...(await onSite(config, browser)), id)),

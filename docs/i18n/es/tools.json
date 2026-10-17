@@ -913,9 +913,9 @@
     }
   },
   "update_activity": {
-    "source": "31412ad29742",
+    "source": "d30faed554b1",
     "title": "Actualizar los ajustes o el contenido de una actividad",
-    "description": "Cambia una actividad existente mediante el propio formulario de Moodle: nombre, descripción, el contenido de una página o de una etiqueta, el destino de una URL, visibilidad, restricciones de acceso, finalización, los archivos de un recurso de archivo o de una carpeta (añadir, quitar por su ruta tal como los lista get_activity_settings, o sustituirlos todos), o cualquier otro ajuste por el nombre de su campo del formulario en settings. Solo cambia lo que se indica. Devuelve la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "description": "Cambia una actividad existente mediante el propio formulario de Moodle: nombre, descripción, el contenido de una página o de una etiqueta, el destino de una URL, visibilidad, restricciones de acceso, finalización, los archivos de un recurso de archivo o de una carpeta (añadir, quitar por su ruta tal como los lista get_activity_settings, o sustituirlos todos), el paquete de un SCORM (sustituido en su sitio: la actividad conserva su id, sus ajustes y su elemento de calificación; los intentos se quedan en los SCO que el nuevo paquete conserva, por su identificador, y se van con los que quita), o cualquier otro ajuste por el nombre de su campo del formulario en settings. Solo cambia lo que se indica. Devuelve la estructura del curso, y un SCORM tal como lo lee get_scorm tras un paquete nuevo. Cambia el curso: confírmalo antes con la persona.",
     "inputs": {
       "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
       "name": "",
@@ -927,7 +927,8 @@
       "completion": "Cuándo cuenta como completado",
       "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
       "settings": "Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., {\"duedate[enabled]\": true, \"duedate[day]\": 12, \"grade[modgrade_point]\": 10}",
-      "files": "Los archivos de un recurso de archivo o de una carpeta; sin cambios si falta"
+      "files": "Los archivos de un recurso de archivo o de una carpeta; sin cambios si falta",
+      "package": "El nuevo paquete de un SCORM: una ruta local absoluta a un .zip, que sustituye al actual en su sitio"
     }
   },
   "get_activity_settings": {
@@ -1483,6 +1484,342 @@
       "toSectionId": "En toCourseId: todas las actividades copiadas al final de esta sección",
       "toAfterSectionId": "En toCourseId: las secciones copiadas como secciones nuevas después de esta",
       "toCategoryId": "Solo un curso entero: un curso nuevo en esta categoría de toSite, en lugar de toCourseId"
+    }
+  },
+  "set_rubric": {
+    "source": "06c11de24f4e",
+    "title": "Definir la rúbrica o la guía de evaluación de una tarea",
+    "description": "Define cómo se califica una tarea con una rúbrica (criterios, cada uno con dos niveles o más: una definición y su puntuación) o con una guía de evaluación (criterios, cada uno con un nombre corto, una descripción para los estudiantes, otra para los evaluadores y una puntuación máxima, y los comentarios frecuentes de la guía), mediante el editor de calificación avanzada de Moodle, lista para usarse. Crea una donde no la hay y sustituye la que hay, así que cambian los ids de sus criterios y niveles. Se rechaza en cuanto se ha calificado algo con ella: Moodle recalificaría. Devuelve la definición tal como la da get_rubric. Cambia cómo se califica a los estudiantes: confírmalo antes con la persona.",
+    "inputs": {
+      "assignmentId": "El id de la tarea (id del módulo del curso), tal como lo da list_assignments",
+      "method": "",
+      "name": "Su nombre, tal como lo lista la página de calificación avanzada",
+      "description": "Su descripción (HTML)",
+      "criteria": "En orden",
+      "comments": "Los comentarios frecuentes de una guía de evaluación, en orden"
+    }
+  },
+  "get_workshop_allocation": {
+    "source": "bbb04941e55d",
+    "title": "Leer quién evalúa a quién en un taller",
+    "description": "Lee la asignación de un taller tal como la muestra su página de asignación manual (en el grupo actual del curso): cada entrega con su autor y los revisores asignados, y los participantes que se pueden asignar como revisores. Las personas como alias cuando el servidor seudonimiza. Requiere el rol de profesor.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)"
+    }
+  },
+  "allocate_workshop_reviewer": {
+    "source": "647578f99804",
+    "title": "Asignar un revisor a una entrega de un taller",
+    "description": "Asigna un revisor a una entrega, como hace «Añadir revisor» en la página de asignación manual, en cualquier fase. La entrega por su id o por su autor; el revisor, uno que get_workshop_allocation lista como posible revisor (alias cuando el servidor seudonimiza). Un revisor ya asignado se deja como está. Devuelve después los revisores de la entrega. Da trabajo al revisor: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "submissionId": "La entrega, tal como la da get_workshop_allocation; o su autor",
+      "author": "El alias del autor de la entrega, cuando el servidor seudonimiza",
+      "authorId": "El id de usuario del autor de la entrega, cuando el servidor muestra los nombres",
+      "reviewer": "El alias del revisor, cuando el servidor seudonimiza",
+      "reviewerId": "El id de usuario del revisor, cuando el servidor muestra los nombres"
+    }
+  },
+  "remove_workshop_reviewer": {
+    "source": "ff6d736e4fce",
+    "title": "Quitar un revisor de una entrega de un taller",
+    "description": "Quita la asignación de un revisor a una entrega: Moodle borra su evaluación de ella. Una evaluación ya calificada solo se borra con evenIfAssessed, y su calificación se pierde. Devuelve después los revisores de la entrega. Confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "submissionId": "La entrega, tal como la da get_workshop_allocation; o su autor",
+      "author": "El alias del autor de la entrega, cuando el servidor seudonimiza",
+      "authorId": "El id de usuario del autor de la entrega, cuando el servidor muestra los nombres",
+      "reviewer": "El alias del revisor, cuando el servidor seudonimiza",
+      "reviewerId": "El id de usuario del revisor, cuando el servidor muestra los nombres",
+      "evenIfAssessed": "También si ya la ha evaluado (se borran la evaluación y su calificación)"
+    }
+  },
+  "allocate_workshop_randomly": {
+    "source": "29a89540515a",
+    "title": "Asignar al azar los revisores de un taller",
+    "description": "Asigna entregas a revisores al azar, como la asignación aleatoria del taller: perSubmission revisiones por entrega, o perReviewer por revisor; conservando las asignaciones actuales salvo que keepCurrent sea false (las calificadas nunca se quitan), entre revisores con entrega salvo con withoutSubmission, con autoevaluaciones si se pide y sin compañeros del mismo grupo si se pide. Devuelve cuántas se añadieron y quitaron, el informe de Moodle y sus problemas (no hay revisores suficientes…), y la asignación resultante. Da trabajo a los participantes: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "perSubmission": "Revisiones que recibe cada entrega; o perReviewer",
+      "perReviewer": "Revisiones que hace cada revisor",
+      "keepCurrent": "Conservar las asignaciones que hay (por defecto); false las quita antes, nunca las ya calificadas",
+      "withoutSubmission": "También revisores sin entrega propia; desactivado por defecto",
+      "selfAssessment": "Añadir la autoevaluación de cada autor, donde el taller la permite",
+      "excludeSameGroup": "Sin revisiones entre compañeros del mismo grupo (solo en modo de grupos visibles)"
+    }
+  },
+  "schedule_workshop_allocation": {
+    "source": "8294a13da3b0",
+    "title": "Programar la asignación aleatoria de un taller",
+    "description": "Activa o desactiva la asignación programada del taller: activada, Moodle asigna al azar por su cuenta al final de la fase de envío (cuando pasa la fecha límite de entrega), con los ajustes de la asignación aleatoria que se den aquí (los que falten conservan lo que tiene el formulario). Devuelve los ajustes y el estado que le da Moodle (sin fecha límite de entrega nunca se ejecuta). Confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "enabled": "",
+      "perSubmission": "Revisiones que recibe cada entrega; o perReviewer",
+      "perReviewer": "Revisiones que hace cada revisor",
+      "keepCurrent": "Conservar las asignaciones que hay (por defecto); false las quita antes, nunca las ya calificadas",
+      "withoutSubmission": "También revisores sin entrega propia; desactivado por defecto",
+      "selfAssessment": "Añadir la autoevaluación de cada autor, donde el taller la permite",
+      "excludeSameGroup": "Sin revisiones entre compañeros del mismo grupo (solo en modo de grupos visibles)"
+    }
+  },
+  "list_book_chapters": {
+    "source": "bb102ea7968e",
+    "title": "Listar los capítulos de un libro",
+    "description": "Lista los capítulos de un libro en orden: id, título, si cada uno es un subcapítulo o está oculto, y su posición; con content, también el HTML y las imágenes de cada capítulo (se lee una página por capítulo, y Moodle lo registra como una visita). Un profesor ve los capítulos ocultos; un estudiante, no. Los ids de capítulo son los que toman las demás herramientas del libro.",
+    "inputs": {
+      "bookId": "El id del libro (id del módulo del curso), tal como lo da get_course_structure",
+      "content": "También el HTML y las imágenes de cada capítulo"
+    }
+  },
+  "add_book_chapter": {
+    "source": "022828b9da95",
+    "title": "Añadir un capítulo a un libro",
+    "description": "Añade un capítulo a un libro mediante el formulario de capítulo de Moodle: su título y su contenido (HTML, con imágenes locales incrustadas), al final o después de otro capítulo, como subcapítulo del capítulo anterior si se pide, oculto si se pide (visible por defecto, como lo añade Moodle: ocúltalo si el libro es visible y el capítulo no está listo). Devuelve el id del nuevo capítulo y los capítulos. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "bookId": "El id del libro (id del módulo del curso), tal como lo da get_course_structure",
+      "title": "",
+      "content": "Su contenido (HTML); Moodle exige alguno",
+      "subchapter": "Un subcapítulo del capítulo anterior (no para el primero)",
+      "hidden": "Oculto a los estudiantes",
+      "afterChapterId": "El capítulo tras el que va; al final si falta",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el contenido, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "edit_book_chapter": {
+    "source": "b2ab734e3896",
+    "title": "Cambiar un capítulo de un libro",
+    "description": "Cambia el título, el contenido (HTML, con imágenes locales incrustadas) o si es un subcapítulo, mediante su formulario: solo cambia lo que se indica. move_book_chapter lo mueve y set_book_chapter_visibility lo muestra u oculta. Devuelve después los capítulos. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "bookId": "El id del libro (id del módulo del curso), tal como lo da get_course_structure",
+      "chapterId": "El id del capítulo, tal como lo da list_book_chapters",
+      "title": "",
+      "content": "",
+      "subchapter": "",
+      "embed": "Archivos locales absolutos (imágenes…) que incrustar en el contenido, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "move_book_chapter": {
+    "source": "07b91c030fe0",
+    "title": "Subir o bajar un capítulo de un libro",
+    "description": "Mueve un capítulo un puesto arriba o abajo, como las flechas de la tabla de contenidos: un capítulo se mueve con sus subcapítulos, saltando el capítulo entero anterior o siguiente; un subcapítulo se mueve solo. Vuelve a llamarla para moverlo más. Devuelve después los capítulos. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "bookId": "El id del libro (id del módulo del curso), tal como lo da get_course_structure",
+      "chapterId": "El id del capítulo, tal como lo da list_book_chapters",
+      "direction": ""
+    }
+  },
+  "set_book_chapter_visibility": {
+    "source": "15ff63c5a4da",
+    "title": "Mostrar u ocultar un capítulo de un libro",
+    "description": "Muestra un capítulo a los estudiantes o se lo oculta, como el ojo de la tabla de contenidos: los subcapítulos de un capítulo van con él, y un subcapítulo de un capítulo oculto sigue oculto. Devuelve después los capítulos. Cambia lo que ven los estudiantes: confírmalo antes con la persona.",
+    "inputs": {
+      "bookId": "El id del libro (id del módulo del curso), tal como lo da get_course_structure",
+      "chapterId": "El id del capítulo, tal como lo da list_book_chapters",
+      "visible": ""
+    }
+  },
+  "delete_book_chapter": {
+    "source": "841787ea5ec2",
+    "title": "Eliminar un capítulo de un libro",
+    "description": "Elimina un capítulo con sus archivos; eliminar un capítulo (no un subcapítulo) elimina también sus subcapítulos. Devuelve después los capítulos. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "bookId": "El id del libro (id del módulo del curso), tal como lo da get_course_structure",
+      "chapterId": "El id del capítulo, tal como lo da list_book_chapters"
+    }
+  },
+  "get_lesson_pages": {
+    "source": "697da3a64c72",
+    "title": "Leer las páginas de una lección como su profesor",
+    "description": "Lee las páginas de una lección tal como las tiene su profesor en el editor de lecciones de Moodle, en orden: tipo (contenido, un tipo de pregunta, grupo, fin de grupo, fin de rama), título, contenido, y los botones de una página de contenido o las respuestas de una pregunta con sus retroalimentaciones, puntuaciones y saltos (el id de una página, o next-page, end-of-lesson…). Requiere el rol de profesor; un estudiante recorre una lección con get_lesson_page.",
+    "inputs": {
+      "lessonId": "El id de la lección (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_lesson_page": {
+    "source": "5e4c8bb75dc6",
+    "title": "Añadir una página a una lección",
+    "description": "Añade una página a una lección mediante el editor de lecciones de Moodle: una página de contenido con sus botones, una página de pregunta (multichoice, truefalse, shortanswer, numerical, matching, essay) con sus respuestas, retroalimentaciones, puntuaciones y saltos, o un grupo, un fin de grupo o un fin de rama; tras una página, o al final. Un salto a una página que la lección no tiene se rechaza antes de guardar nada, así que añade primero las páginas y pon después sus saltos con edit_lesson_page cuando apunten hacia delante. Devuelve el id de la nueva página y los ids de las páginas de la lección en orden. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "lessonId": "El id de la lección (id del módulo del curso), tal como lo da get_course_structure",
+      "type": "",
+      "title": "",
+      "contents": "El contenido de la página (HTML); los archivos locales que nombra (<img src=\"shot.png\">) van en embed",
+      "embed": "Archivos locales absolutos que incrustar en el contenido, las respuestas o las retroalimentaciones",
+      "buttons": "Los botones de una página de contenido, en orden; si se dan, sustituyen a todos",
+      "answers": "Las respuestas de una página de pregunta, en orden (si se dan, sustituyen a todas); la única fila de un ensayo o de una página estructural",
+      "multipleAnswers": "Opción múltiple: puede haber más de una respuesta correcta",
+      "caseSensitive": "Respuesta corta: las respuestas se comparan distinguiendo mayúsculas",
+      "fields": "Cualquier otro campo del formulario de la página, por nombre (layout, display…)",
+      "after": "La página tras la que va (0: la primera); al final si falta"
+    }
+  },
+  "edit_lesson_page": {
+    "source": "4f0eef9c7f43",
+    "title": "Cambiar una página de una lección",
+    "description": "Cambia una página de una lección mediante su formulario en el editor de lecciones: título, contenido, botones o respuestas (si se dan, sustituyen a todos), opciones y otros campos; solo cambia lo que se indica, y una página conserva su tipo. Un salto a una página que la lección no tiene se rechaza antes de guardar nada. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "lessonId": "El id de la lección (id del módulo del curso), tal como lo da get_course_structure",
+      "pageId": "El id de la página, tal como lo da get_lesson_pages",
+      "title": "",
+      "contents": "El contenido de la página (HTML); los archivos locales que nombra (<img src=\"shot.png\">) van en embed",
+      "embed": "Archivos locales absolutos que incrustar en el contenido, las respuestas o las retroalimentaciones",
+      "buttons": "Los botones de una página de contenido, en orden; si se dan, sustituyen a todos",
+      "answers": "Las respuestas de una página de pregunta, en orden (si se dan, sustituyen a todas); la única fila de un ensayo o de una página estructural",
+      "multipleAnswers": "Opción múltiple: puede haber más de una respuesta correcta",
+      "caseSensitive": "Respuesta corta: las respuestas se comparan distinguiendo mayúsculas",
+      "fields": "Cualquier otro campo del formulario de la página, por nombre (layout, display…)"
+    }
+  },
+  "move_lesson_page": {
+    "source": "6b981d28a9b3",
+    "title": "Mover una página de una lección",
+    "description": "Mueve una página de una lección tras otra (0: la primera), como el enlace de mover del editor de lecciones. Los saltos por id de página siguen llevando a las mismas páginas; next-page y previous-page siguen el nuevo orden. Devuelve los ids de las páginas en orden. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "lessonId": "El id de la lección (id del módulo del curso), tal como lo da get_course_structure",
+      "pageId": "El id de la página, tal como lo da get_lesson_pages",
+      "after": "La página tras la que va (0: la primera)"
+    }
+  },
+  "delete_lesson_page": {
+    "source": "53a25d325297",
+    "title": "Eliminar una página de una lección",
+    "description": "Elimina una página de una lección. Las respuestas de otras páginas que saltaban a ella quedan como las deja Moodle: revísalas con get_lesson_pages. Devuelve los ids de las páginas que quedan, en orden. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "lessonId": "El id de la lección (id del módulo del curso), tal como lo da get_course_structure",
+      "pageId": "El id de la página, tal como lo da get_lesson_pages"
+    }
+  },
+  "get_database_fields": {
+    "source": "52eed68bed43",
+    "title": "Leer los campos de una base de datos",
+    "description": "Lee los campos de una actividad de base de datos en orden: el id de cada uno, su nombre (las plantillas lo nombran [[nombre]]), su tipo, su descripción, si una entrada lo necesita y los ajustes de su tipo (opciones, tamaños…). Requiere el rol de profesor con permiso de edición.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_database_field": {
+    "source": "b3d0cad83de9",
+    "title": "Añadir un campo a una base de datos",
+    "description": "Añade un campo a una actividad de base de datos mediante el formulario de Moodle para su tipo: text, textarea, number, date, menu, radiobutton, checkbox, multimenu, url, file, picture o latlong, con un nombre único en la base de datos, una descripción, si es obligatorio (no para una fecha) y los ajustes del tipo. Las plantillas por defecto de Moodle lo muestran; a una plantilla guardada puede que haya que añadírselo (set_database_template). Devuelve su id y los campos. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "type": "",
+      "name": "",
+      "description": "",
+      "required": "",
+      "options": "Los ajustes del tipo; cada tipo admite solo los suyos"
+    }
+  },
+  "edit_database_field": {
+    "source": "0fc1bc7735f6",
+    "title": "Cambiar un campo de una base de datos",
+    "description": "Cambia el nombre, la descripción, si es obligatorio o los ajustes de su tipo (uno a uno) de un campo de una base de datos: lo que falta se queda como está. Renombrarlo renombra su etiqueta en las plantillas, como hace Moodle. Su tipo no puede cambiar: elimínalo y añade otro. Devuelve los campos. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "fieldId": "El id del campo, tal como lo da get_database_fields",
+      "name": "",
+      "description": "",
+      "required": "",
+      "options": "Los ajustes del tipo; cada tipo admite solo los suyos"
+    }
+  },
+  "delete_database_field": {
+    "source": "0584bfbcfa6c",
+    "title": "Eliminar un campo de una base de datos",
+    "description": "Elimina un campo de una base de datos: lo que cada entrada tiene en él se va también, y sus etiquetas salen de las plantillas. Devuelve los campos. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "fieldId": "El id del campo, tal como lo da get_database_fields"
+    }
+  },
+  "get_database_templates": {
+    "source": "32064da6611e",
+    "title": "Leer las plantillas de una base de datos",
+    "description": "Lee las plantillas de una actividad de base de datos (list, listHeader, listFooter, single, add, search, rss, rssTitle, css, js): lo que se guardó, o lo predeterminado de Moodle para sus campos. Los campos aparecen como [[nombre]] y las demás etiquetas de Moodle como ##etiqueta##. Se rechaza mientras la base de datos no tenga campos (Moodle aún no tiene plantillas). Requiere el rol de profesor con permiso de edición.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "set_database_template": {
+    "source": "d0a6d2dc70b5",
+    "title": "Guardar una plantilla de una base de datos",
+    "description": "Guarda una de las plantillas de una base de datos tal como se da, sin el editor HTML de Moodle de por medio: list (repetida por entrada, entre listHeader y listFooter), single, add (el formulario de entrada: la etiqueta de cada campo una vez), search, rss, rssTitle, css o js. Los campos van como [[nombre]] y las demás etiquetas de Moodle como ##etiqueta## (##edit##, ##delete##, ##more##, ##user##…). reset: true vuelve a lo predeterminado de Moodle. Devuelve todas las plantillas. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "template": "",
+      "html": "La plantilla (HTML, o CSS o JavaScript)",
+      "reset": "Lo predeterminado de Moodle en su lugar (la cabecera y el pie de la lista se quedan)"
+    }
+  },
+  "list_database_presets": {
+    "source": "aa177d2a9821",
+    "title": "Listar los preajustes de una base de datos",
+    "description": "Lista los preajustes que se pueden dar a una actividad de base de datos: los propios de Moodle (galería de imágenes, diario, propuestas, recursos) y los guardados en el sitio que la persona puede ver, cada uno con el id que toma apply_database_preset.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "apply_database_preset": {
+    "source": "95d9fe2c9300",
+    "title": "Dar un preajuste a una base de datos",
+    "description": "Da un preajuste a una actividad de base de datos, como «Usar este preajuste» de Moodle: se añaden sus campos, un campo con el mismo nombre y tipo se conserva con lo que tienen las entradas, todos los demás campos se eliminan con su contenido, y sus plantillas sustituyen a las de la base de datos. Devuelve los campos. Puede borrar contenido de las entradas: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "presetId": "Tal como lo da list_database_presets"
+    }
+  },
+  "list_badges": {
+    "source": "4966cac867e7",
+    "title": "Listar las insignias de un curso",
+    "description": "Lista las insignias de un curso: nombre, descripción, imagen, qué la otorga (el resumen de Moodle), si está activada y si la persona la tiene; para un profesor, también las desactivadas y cuántas personas tiene cada una. Falla con un error claro donde el sitio tiene las insignias desactivadas.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "create_badge": {
+    "source": "2e18d459ffcb",
+    "title": "Crear una insignia del curso",
+    "description": "Crea una insignia del curso, desactivada y sin criterios, mediante el formulario de nueva insignia de Moodle: su nombre, su descripción (texto plano) y su imagen (un PNG, JPEG o GIF local, de 256 KB como mucho). Después set_badge_criteria le da criterios y set_badge_enabled la pone a disposición. Devuelve la insignia. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "description": "Texto plano: Moodle quita las etiquetas",
+      "image": "Una ruta local absoluta a su imagen: PNG, JPEG o GIF, de 256 KB como mucho",
+      "imageCaption": "El texto alternativo de la imagen"
+    }
+  },
+  "set_badge_criteria": {
+    "source": "85f8e4603a18",
+    "title": "Fijar qué otorga una insignia",
+    "description": "Fija los criterios de una insignia: completar actividades (con seguimiento de finalización; todas o cualquiera), completar el curso (con una calificación mínima del curso y una fecha), o concedida a mano por personas con ciertos roles (cualquiera de ellas por defecto); all dice si hay que cumplir todos los criterios o cualquiera. Un criterio dado sustituye los ajustes de ese tipo, uno en remove se quita, y uno que no se da se queda. Moodle solo deja cambiar los criterios mientras la insignia está desactivada y nadie la tiene. Devuelve los criterios. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "badgeId": "El id de la insignia, tal como lo da list_badges",
+      "activities": "",
+      "courseCompletion": "",
+      "manual": "",
+      "all": "Con más de un criterio: hay que cumplirlos todos, o cualquiera",
+      "remove": "Criterios que quitar"
+    }
+  },
+  "set_badge_enabled": {
+    "source": "3e7d865e5c21",
+    "title": "Activar o desactivar una insignia",
+    "description": "Pone una insignia a disposición de los usuarios, o la retira. Al activarla se concede en el acto a todos los que ya cumplen sus criterios, y se les avisa: confírmalo antes con la persona. Necesita criterios antes. Devuelve la insignia.",
+    "inputs": {
+      "badgeId": "El id de la insignia, tal como lo da list_badges",
+      "enabled": ""
+    }
+  },
+  "award_badge": {
+    "source": "5a25ea211a51",
+    "title": "Conceder una insignia a mano",
+    "description": "Concede a mano una insignia a un participante (un alias cuando el servidor seudonimiza), como uno de los roles que nombra su criterio manual (roleId cuando la persona tiene varios). La insignia tiene que estar activada y tener un criterio manual. Moodle la emite en el acto cuando basta con la concesión manual; si no, cuando se cumple el resto de sus criterios. Se avisa al participante: confírmalo antes con la persona. Devuelve la insignia.",
+    "inputs": {
+      "badgeId": "El id de la insignia, tal como lo da list_badges",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "roleId": "El rol con el que concederla"
     }
   }
 }

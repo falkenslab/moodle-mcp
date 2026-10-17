@@ -12,7 +12,7 @@ moodle-mcp permite que un agente de IA como **Claude** o **Codex** trabaje en tu
 
 ## Cómo funciona
 
-moodle-mcp es un [servidor MCP](https://modelcontextprotocol.io). Es un pequeño programa que tu aplicación de IA arranca en segundo plano y que le da al agente unas 140 herramientas para Moodle. Cuando el agente usa una, moodle-mcp hace el trabajo en un navegador real de tu ordenador, con tu sesión iniciada.
+moodle-mcp es un [servidor MCP](https://modelcontextprotocol.io). Es un pequeño programa que tu aplicación de IA arranca en segundo plano y que le da al agente unas 170 herramientas para Moodle. Cuando el agente usa una, moodle-mcp hace el trabajo en un navegador real de tu ordenador, con tu sesión iniciada.
 
 ```mermaid
 flowchart LR
