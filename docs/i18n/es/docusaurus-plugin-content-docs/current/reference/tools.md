@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **173 herramientas**, 172 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **175 herramientas**, 174 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -190,6 +190,7 @@ Olvida un sitio añadido durante el trabajo, por su nombre, y borra su perfil de
 | [`download_file`](#download-file) | Descargar un archivo de Moodle | ✓ | ✓ | ✓ |
 | [`create_activity`](#create-activity) | Crear una actividad o un recurso |  | ✓ |  |
 | [`update_activity`](#update-activity) | Actualizar los ajustes o el contenido de una actividad |  | ✓ |  |
+| [`validate_html`](#validate-html) | Comprobar HTML antes de enviarlo a Moodle | ✓ | ✓ | ✓ |
 | [`edit_activity`](#edit-activity) | Mover, renombrar, mostrar u ocultar una actividad |  | ✓ |  |
 | [`duplicate_activity`](#duplicate-activity) | Duplicar una actividad |  | ✓ |  |
 | [`delete_activity`](#delete-activity) | Eliminar una actividad |  | ✓ |  |
@@ -326,6 +327,23 @@ Cambia una actividad existente mediante el propio formulario de Moodle: nombre, 
 | `settings` |  | objeto | Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
 | `files` |  | objeto | Los archivos de un recurso de archivo o de una carpeta; sin cambios si falta |
 | `package` |  | texto | El nuevo paquete de un SCORM: una ruta local absoluta a un .zip, que sustituye al actual en su sitio |
+
+</details>
+
+### `validate_html` {#validate-html}
+
+**Comprobar HTML antes de enviarlo a Moodle**
+
+Comprueba el HTML de una página, una etiqueta, una descripción o un mensaje antes de enviarlo, sin Moodle y de forma aproximada: solo Moodle sabe exactamente qué conserva su limpieza. Informa, con sus líneas, de errores de análisis y etiquetas sin cerrar, de lo que quita la limpieza de Moodle (scripts, estilos, marcos, formularios, atributos de eventos como onclick, enlaces javascript:), de archivos que el HTML nombra y que no son URLs ni están en embed, y de archivos de embed que no existen o que el HTML no nombra. Da embed como se lo darías a la herramienta de contenido.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `text` |  | texto | El HTML |
+| `file` |  | texto | O una ruta local absoluta a un archivo HTML |
+| `embed` |  | lista de texto | Los archivos locales que vas a incrustar, tal como los toman las herramientas de contenido |
 
 </details>
 
@@ -1127,6 +1145,7 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 | --- | --- | :-: | :-: | :-: |
 | [`list_question_banks`](#list-question-banks) | Listar los bancos de preguntas de un curso | ✓ | ✓ |  |
 | [`list_questions`](#list-questions) | Listar las preguntas de un banco | ✓ | ✓ |  |
+| [`validate_gift`](#validate-gift) | Comprobar preguntas GIFT antes de importarlas | ✓ | ✓ |  |
 | [`import_questions`](#import-questions) | Importar preguntas a un banco |  | ✓ |  |
 | [`create_question`](#create-question) | Crear una pregunta en un banco |  | ✓ |  |
 | [`update_question`](#update-question) | Cambiar una pregunta de un banco |  | ✓ |  |
@@ -1172,6 +1191,22 @@ Lista las categorías de un banco de preguntas y las preguntas que contienen, ca
 | `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
 | `limit` |  | entero | Cuántas preguntas (100 por defecto, hasta 1000) |
 | `offset` |  | entero | Cuántas preguntas saltarse primero, categoría a categoría (0 por defecto) |
+
+</details>
+
+### `validate_gift` {#validate-gift}
+
+**Comprobar preguntas GIFT antes de importarlas**
+
+Comprueba preguntas en GIFT antes de import_questions, sin Moodle: cada pregunta, separada por líneas en blanco como hace el importador de Moodle, con su tipo en los nombres de Moodle, título, texto y respuestas, y cada problema con su línea (una pregunta que Moodle no puede leer, un peso que no admite, una opción múltiple sin respuesta correcta, una pregunta de emparejamiento con menos de dos parejas). Corrige lo que indique y vuelve a comprobar; valid significa que Moodle debería importar todas las preguntas.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `text` |  | texto | Las preguntas en GIFT |
+| `file` |  | texto | O una ruta local absoluta a un archivo GIFT |
 
 </details>
 

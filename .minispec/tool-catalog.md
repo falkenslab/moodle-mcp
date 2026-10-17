@@ -134,6 +134,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_submissions` | Participants' status, dates and content of one assignment | R | Fragment + AJAX | T "are there submissions pending?" | Done |
 | `get_assignment_settings` | Dates, submission types, grading method, max grade | R | Page | T read descriptions and dates | Done (get_activity_settings) |
 | `get_rubric` | Grading method, rubric or marking guide criteria and levels | R | Page (`grade/grading/manage.php`) or Fragment | T rubric read as text: 6 criteria, 4 levels | Done |
+| `validate_gift`, `validate_html` | Check GIFT and HTML before sending them, without Moodle (HTML approximately) | R | Local (`gift-pegjs`, `parse5`) | #24; miyagi validated both itself | Done |
 | `set_rubric` | Define a rubric or marking guide, refused once used for grading | W | Form (`grade/grading/form/<method>/edit.php`) | #17; sandbox | Done |
 | `download_submission_files` | Save a participant's submitted files locally | R | Page (`pluginfile.php`) | none | Done via `download_file` |
 | `grade_submission` | Grade (points, scale or rubric levels) with feedback text and files, notifying or not | W | AJAX (`mod_assign_submit_grading_form`, form from the `gradingpanel` fragment) | none yet: no submissions existed; a core need | Done |

@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **173 tools**, 172 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **175 tools**, 174 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -190,6 +190,7 @@ Forget a site added at run time, by name, and delete its browser profile with it
 | [`download_file`](#download-file) | Download a file from Moodle | ✓ | ✓ | ✓ |
 | [`create_activity`](#create-activity) | Create an activity or resource |  | ✓ |  |
 | [`update_activity`](#update-activity) | Update an activity's settings or content |  | ✓ |  |
+| [`validate_html`](#validate-html) | Check HTML before sending it to Moodle | ✓ | ✓ | ✓ |
 | [`edit_activity`](#edit-activity) | Move, rename, show or hide an activity |  | ✓ |  |
 | [`duplicate_activity`](#duplicate-activity) | Duplicate an activity |  | ✓ |  |
 | [`delete_activity`](#delete-activity) | Delete an activity |  | ✓ |  |
@@ -326,6 +327,23 @@ Change an existing activity through Moodle's own form: name, description, a page
 | `settings` |  | object | Any other form field by its name in Moodle's activity form, e.g. &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
 | `files` |  | object | A file resource's or folder's files; untouched when missing |
 | `package` |  | string | A SCORM's new package: an absolute local path to a .zip, replacing the current one in place |
+
+</details>
+
+### `validate_html` {#validate-html}
+
+**Check HTML before sending it to Moodle**
+
+Check HTML for a page, a label, a description or a post before sending it, without Moodle, and approximately: only Moodle knows exactly what its cleaning keeps. Reports, with their lines, parse errors and tags left open, what Moodle's cleaning removes (scripts, styles, frames, forms, event attributes such as onclick, javascript: links), files the HTML names that are neither URLs nor in embed, and embed files that don't exist or the HTML doesn't name. Give embed as you would to the content tool.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `text` |  | string | The HTML |
+| `file` |  | string | Or an absolute path to a local HTML file |
+| `embed` |  | string list | The local files you'll embed, as the content tools take them |
 
 </details>
 
@@ -1127,6 +1145,7 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 | --- | --- | :-: | :-: | :-: |
 | [`list_question_banks`](#list-question-banks) | List a course's question banks | ✓ | ✓ |  |
 | [`list_questions`](#list-questions) | List a bank's questions | ✓ | ✓ |  |
+| [`validate_gift`](#validate-gift) | Check GIFT questions before importing them | ✓ | ✓ |  |
 | [`import_questions`](#import-questions) | Import questions into a bank |  | ✓ |  |
 | [`create_question`](#create-question) | Create a question in a bank |  | ✓ |  |
 | [`update_question`](#update-question) | Change a question in a bank |  | ✓ |  |
@@ -1172,6 +1191,22 @@ List a question bank's categories and the questions in them, category by categor
 | `bankId` | ✅ | integer | The bank's id (a course module id), as list_question_banks gives it |
 | `limit` |  | integer | How many questions (100 by default, up to 1000) |
 | `offset` |  | integer | How many questions to skip first, category by category (0 by default) |
+
+</details>
+
+### `validate_gift` {#validate-gift}
+
+**Check GIFT questions before importing them**
+
+Check questions in GIFT before import_questions, without Moodle: each question split at blank lines as Moodle's importer does, with its type in Moodle's names, title, text and answers, and each problem with its line (a question Moodle can't read, a weight it doesn't take, a multiple choice with no right answer, a matching question with fewer than two pairs). Fix what it reports and check again; valid means Moodle should import every question.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `text` |  | string | The questions in GIFT |
+| `file` |  | string | Or an absolute path to a local GIFT file |
 
 </details>
 

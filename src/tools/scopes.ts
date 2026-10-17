@@ -167,6 +167,9 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   add_questions_to_quiz: ["addQuestionsToQuiz"],
   get_rubric: ["rubric"],
   set_rubric: ["setGradingDefinition"],
+  // Checked here, without Moodle: what they read is what the agent gives them.
+  validate_gift: ["category:course-content"],
+  validate_html: ["category:course-content"],
   list_book_chapters: ["bookChapters"],
   add_book_chapter: ["addBookChapter"],
   edit_book_chapter: ["editBookChapter"],

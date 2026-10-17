@@ -98,7 +98,7 @@ More sessions with Claude Code and Codex, and what they changed in Moodle, are i
 | --- | --- |
 | 📚 Courses and content | Pages, files, folders, labels and links with your images; books' chapters, lessons' pages and databases' fields; sections; restrictions and completion |
 | 📝 Assignments and grading | Submissions, rubrics and marking guides (read and defined), extensions, the marking workflow |
-| ❓ Quizzes and questions | Question banks, GIFT and Moodle XML import, quiz layout, results, manual grading |
+| ❓ Quizzes and questions | Question banks, GIFT and Moodle XML import (GIFT checked first), quiz layout, results, manual grading |
 | 📊 Gradebook and reports | The grader report, grade items and categories, completion, activity and participation reports, logs |
 | 👥 Participants and groups | Enrolments, roles, groups and groupings |
 | 💬 Forums and messages | Discussions, replies, ratings, workshops and who reviews whom, notifications and private messages |

@@ -17,6 +17,7 @@ import { registerGetMe } from "./getMe.js";
 import { registerGetSiteInfo } from "./getSiteInfo.js";
 import { registerGetMyGrades } from "./getMyGrades.js";
 import { registerGetRubric, registerSetRubric } from "./getRubric.js";
+import { registerValidateGift, registerValidateHtml } from "./validate.js";
 import { registerGetSubmissions } from "./getSubmissions.js";
 import { registerAddGradeCategory, registerAddGradeItem, registerDeleteGradeCategory, registerDeleteGradeItem, registerGetGradebookSetup, registerUpdateGradeCategory, registerUpdateGradeItem } from "./gradebook.js";
 import { registerGradeSubmission } from "./gradeSubmission.js";
@@ -149,6 +150,7 @@ export const TOOLS: RegisterTool[] = [
   registerMessageParticipants,
   registerCreateActivity,
   registerUpdateActivity,
+  registerValidateHtml,
   registerGetActivitySettings,
   registerEditActivity,
   registerDuplicateActivity,
@@ -188,6 +190,7 @@ export const TOOLS: RegisterTool[] = [
   registerResetCourse,
   registerListQuestionBanks,
   registerListQuestions,
+  registerValidateGift,
   registerImportQuestions,
   registerCreateQuestion,
   registerUpdateQuestion,

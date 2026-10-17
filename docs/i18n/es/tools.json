@@ -1821,5 +1821,24 @@
       "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
       "roleId": "El rol con el que concederla"
     }
+  },
+  "validate_html": {
+    "source": "3d66c374cb57",
+    "title": "Comprobar HTML antes de enviarlo a Moodle",
+    "description": "Comprueba el HTML de una página, una etiqueta, una descripción o un mensaje antes de enviarlo, sin Moodle y de forma aproximada: solo Moodle sabe exactamente qué conserva su limpieza. Informa, con sus líneas, de errores de análisis y etiquetas sin cerrar, de lo que quita la limpieza de Moodle (scripts, estilos, marcos, formularios, atributos de eventos como onclick, enlaces javascript:), de archivos que el HTML nombra y que no son URLs ni están en embed, y de archivos de embed que no existen o que el HTML no nombra. Da embed como se lo darías a la herramienta de contenido.",
+    "inputs": {
+      "text": "El HTML",
+      "file": "O una ruta local absoluta a un archivo HTML",
+      "embed": "Los archivos locales que vas a incrustar, tal como los toman las herramientas de contenido"
+    }
+  },
+  "validate_gift": {
+    "source": "65af44dda3dc",
+    "title": "Comprobar preguntas GIFT antes de importarlas",
+    "description": "Comprueba preguntas en GIFT antes de import_questions, sin Moodle: cada pregunta, separada por líneas en blanco como hace el importador de Moodle, con su tipo en los nombres de Moodle, título, texto y respuestas, y cada problema con su línea (una pregunta que Moodle no puede leer, un peso que no admite, una opción múltiple sin respuesta correcta, una pregunta de emparejamiento con menos de dos parejas). Corrige lo que indique y vuelve a comprobar; valid significa que Moodle debería importar todas las preguntas.",
+    "inputs": {
+      "text": "Las preguntas en GIFT",
+      "file": "O una ruta local absoluta a un archivo GIFT"
+    }
   }
 }
