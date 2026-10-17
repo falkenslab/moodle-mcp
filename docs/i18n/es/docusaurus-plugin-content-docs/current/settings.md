@@ -69,6 +69,8 @@ Cada ajuste también puede ser un argumento de línea de comandos después del n
 | `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | `false` no descarga nunca Chromium cuando no hay Edge ni Chrome. |
 | `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | Las actividades hechas como alumno: `realistic` (páginas reales, al ritmo de un lector, para que Moodle registre las visitas y la finalización) o `fast`. |
 
+Un ajuste vacío, o que tu aplicación pasa como un `${…}` sin sustituir (como hace Codex con los ajustes de un plugin), cuenta como no puesto: se aplica su valor por defecto, y `server_info` lista los que llegaron así. Sin sitio, el agente te pide la dirección de tu Moodle y la añade.
+
 ## Cambiar ajustes durante un chat
 
 El agente puede cambiar algunos ajustes para el resto de la sesión, con su herramienta `configure`. Puede poner el sitio si no se dio ninguno, y puede hacer los límites más estrictos (menos herramientas, más privacidad), pero nunca más permisivos que tu configuración. Por ejemplo:

@@ -69,6 +69,8 @@ Each setting can also be a command-line argument after the package name (such as
 | `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | `false` never downloads Chromium when there's no Edge or Chrome. |
 | `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | Activities done as a student: `realistic` (real pages, at a reader's pace, so Moodle records views and completion) or `fast`. |
 
+A setting left empty, or that your app passes as an unexpanded `${…}` (as Codex does with a plugin's settings), counts as not set: its default applies, and `server_info` lists the ones that came so. Without a site, the agent asks you for your Moodle's address and adds it.
+
 ## Changing settings during a chat
 
 The agent can change some settings for the rest of the session, through its `configure` tool. It can set the site if none was given, and it can make the limits stricter (fewer tools, more privacy), but never looser than your configuration. For example:

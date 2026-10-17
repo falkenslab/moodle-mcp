@@ -45,7 +45,7 @@ describe("configure", () => {
     for (const name of ["login", "list_courses"]) {
       const result = await client.callTool({ name, arguments: {} });
       assert.equal(result.isError, true);
-      assert.match(JSON.stringify(result.content), /call configure/i);
+      assert.match(JSON.stringify(result.content), /add it with add_site/i);
     }
   });
 

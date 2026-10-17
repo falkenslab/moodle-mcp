@@ -69,6 +69,8 @@ export interface Config {
     role: SettingSource;
     access: SettingSource;
   };
+  /** Settings the client passed as an unexpanded `${…}` placeholder, taken as not set (a client without the plugin's settings). */
+  unexpanded?: string[];
 }
 
 /** A setting invalid at startup (the server stops with this message) or in `configure`. */
@@ -80,7 +82,7 @@ export class ConfigError extends Error {
 export class NotConfiguredError extends Error {
   override name = "NotConfiguredError";
   constructor() {
-    super("The server has no Moodle site yet. Call configure with the site's URL (from your own configuration, or ask the person), then retry.");
+    super("The server has no Moodle site yet. Add it with add_site, the URL from your own configuration or the address the person gives you, then retry.");
   }
 }
 
@@ -123,19 +125,36 @@ const booleanText = z
 /** What `--help` and `--version` ask for instead of running the server. */
 export type CliRequest = "help" | "version";
 
+/** A whole `${…}` a client left as it was: Codex, for one, passes a plugin's `${user_config.*}` unexpanded. */
+const UNEXPANDED = /^\s*\$\{[^}]*\}\s*$/;
+
+/**
+ * A value that counts as set: not empty (a client may expand `${VAR}` to nothing for a variable that
+ * doesn't exist) and not an unexpanded placeholder, which goes in `unexpanded` under `name`.
+ */
+function given(value: string | undefined, name: string, unexpanded: string[]): string | undefined {
+  if (!value?.trim()) return undefined;
+  if (UNEXPANDED.test(value)) {
+    unexpanded.push(name);
+    return undefined;
+  }
+  return value;
+}
+
 /** The first of `[argument, environment]` that has a value, and its source. */
-function pick(argument: string | undefined, environment: string | undefined): { value: string; source: SettingSource } | undefined {
-  if (argument?.trim()) return { value: argument, source: "argument" };
-  // An empty variable counts as unset: a client may pass `${VAR}` for a variable that doesn't exist.
-  if (environment?.trim()) return { value: environment, source: "environment" };
+function pick(argument: string | undefined, variable: string, env: NodeJS.ProcessEnv, unexpanded: string[]): { value: string; source: SettingSource } | undefined {
+  const fromArgument = given(argument, variable, unexpanded);
+  if (fromArgument) return { value: fromArgument, source: "argument" };
+  const fromEnvironment = given(env[variable], variable, unexpanded);
+  if (fromEnvironment) return { value: fromEnvironment, source: "environment" };
   return undefined;
 }
 
 /** A boolean setting, true by default: the argument's value, else the variable's. */
-function pickBoolean(argument: boolean | undefined, variable: string, env: NodeJS.ProcessEnv): { value: boolean; source: SettingSource } {
+function pickBoolean(argument: boolean | undefined, variable: string, env: NodeJS.ProcessEnv, unexpanded: string[]): { value: boolean; source: SettingSource } {
   if (argument !== undefined) return { value: argument, source: "argument" };
-  const text = env[variable];
-  if (!text?.trim()) return { value: true, source: "default" };
+  const text = given(env[variable], variable, unexpanded);
+  if (!text) return { value: true, source: "default" };
   const parsed = booleanText.safeParse(text);
   if (!parsed.success) throw new ConfigError(`${variable} must be true or false, not "${text}".`);
   return { value: parsed.data, source: "environment" };
@@ -176,25 +195,26 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   if (values.help) return "help";
   if (values.version) return "version";
 
-  const url = pick(values.url, env.MOODLE_URL);
-  const sitesSetting = pick(values.sites, env.MOODLE_MCP_SITES);
-  const profile = pick(values["profile-dir"], env.MOODLE_MCP_PROFILE_DIR);
-  const channel = pick(values.channel, env.MOODLE_MCP_CHANNEL);
-  const trail = pick(values.trail, env.MOODLE_MCP_TRAIL);
-  const scopes = pick(values.scopes, env.MOODLE_MCP_SCOPES);
-  const studentData = pick(values["student-data"], env.MOODLE_MCP_STUDENT_DATA);
+  const unexpanded: string[] = [];
+  const url = pick(values.url, "MOODLE_URL", env, unexpanded);
+  const sitesSetting = pick(values.sites, "MOODLE_MCP_SITES", env, unexpanded);
+  const profile = pick(values["profile-dir"], "MOODLE_MCP_PROFILE_DIR", env, unexpanded);
+  const channel = pick(values.channel, "MOODLE_MCP_CHANNEL", env, unexpanded);
+  const trail = pick(values.trail, "MOODLE_MCP_TRAIL", env, unexpanded);
+  const scopes = pick(values.scopes, "MOODLE_MCP_SCOPES", env, unexpanded);
+  const studentData = pick(values["student-data"], "MOODLE_MCP_STUDENT_DATA", env, unexpanded);
   const scopeList = scopes ? parseScopeSetting(scopes.value) : [...PROFILES.all!];
   const level = studentData ? parseStudentData(studentData.value) : DEFAULT_STUDENT_DATA;
-  const roleSetting = pick(values.role, env.MOODLE_MCP_ROLE);
+  const roleSetting = pick(values.role, "MOODLE_MCP_ROLE", env, unexpanded);
   const role = roleSetting ? parseRole(roleSetting.value) : "all";
-  const accessSetting = pick(values.access, env.MOODLE_MCP_ACCESS);
+  const accessSetting = pick(values.access, "MOODLE_MCP_ACCESS", env, unexpanded);
   const access = accessSetting ? parseAccess(accessSetting.value) : "write";
 
-  const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env);
-  const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env);
+  const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env, unexpanded);
+  const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env, unexpanded);
 
   // The data folder is the plugin's when the server runs as one: each plugin its own sessions, gone with it (ADR-021).
-  const dataDir = path.resolve(env.CLAUDE_PLUGIN_DATA?.trim() || path.join(homedir(), ".moodle-mcp"));
+  const dataDir = path.resolve(given(env.CLAUDE_PLUGIN_DATA, "CLAUDE_PLUGIN_DATA", unexpanded)?.trim() || path.join(homedir(), ".moodle-mcp"));
   const mainProfile = parseProfileDir(profile?.value ?? path.join(dataDir, "profile"), packageRoot);
   const sites = configuredSites(url ? parseMoodleUrl(url.value) : undefined, sitesSetting ? parseSitesSetting(sitesSetting.value) : [], mainProfile, dataDir);
   const urlSource = url ? url.source : sitesSetting?.source;
@@ -226,6 +246,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       role: roleSetting?.source ?? "default",
       access: accessSetting?.source ?? "default",
     },
+    ...(unexpanded.length > 0 && { unexpanded: [...new Set(unexpanded)] }),
   };
 }
 

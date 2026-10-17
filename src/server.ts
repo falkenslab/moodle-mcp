@@ -33,7 +33,7 @@ async function main(): Promise<void> {
   process.on("SIGTERM", shutdown);
 
   await server.connect(new StdioServerTransport());
-  const site = config.moodleUrl ? `${config.activeSite} (${new URL(config.moodleUrl).origin})${config.sites.length > 1 ? ` of ${config.sites.length} sites` : ""}` : "no site yet (configure)";
+  const site = config.moodleUrl ? `${config.activeSite} (${new URL(config.moodleUrl).origin})${config.sites.length > 1 ? ` of ${config.sites.length} sites` : ""}` : "no site yet (add_site)";
   console.error(`moodle-mcp ${PACKAGE_VERSION} running on stdio for ${site}`);
 }
 

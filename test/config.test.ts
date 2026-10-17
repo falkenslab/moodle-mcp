@@ -62,6 +62,28 @@ describe("loadConfig", () => {
     assert.equal(config.channel, undefined);
   });
 
+  it("treats placeholders a client left unexpanded as unset, and says which", () => {
+    const placeholders = {
+      MOODLE_MCP_SITES: "${user_config.sites}",
+      MOODLE_MCP_HEADLESS: "${user_config.headless}",
+      MOODLE_MCP_ACCESS: " ${user_config.access} ",
+      MOODLE_MCP_STUDENT_DATA: "${user_config.student_data}",
+      CLAUDE_PLUGIN_DATA: "${CLAUDE_PLUGIN_DATA}",
+    };
+    const config = load([], placeholders);
+    assert.equal(config.moodleUrl, undefined);
+    assert.deepEqual(config.sites, []);
+    assert.equal(config.headless, true);
+    assert.equal(config.access, "write");
+    assert.equal(config.studentData, "pseudonymize");
+    assert.equal(config.sources.access, "default");
+    assert.ok(!config.dataDir.includes("${"));
+    assert.deepEqual([...(config.unexpanded ?? [])].sort(), ["CLAUDE_PLUGIN_DATA", "MOODLE_MCP_ACCESS", "MOODLE_MCP_HEADLESS", "MOODLE_MCP_SITES", "MOODLE_MCP_STUDENT_DATA"]);
+    // A value that only holds a placeholder somewhere is the person's: it's read, and refused if wrong.
+    assert.throws(() => load([], { MOODLE_MCP_TRAIL: "fast ${user_config.trail}" }), /trail must be/);
+    assert.equal(load([], {}).unexpanded, undefined);
+  });
+
   it("defaults to a profile under the home folder, any channel and headless", () => {
     const config = load([], { MOODLE_URL: "http://localhost:8080/" });
     assert.equal(config.profileDir, path.join(homedir(), ".moodle-mcp", "profile"));

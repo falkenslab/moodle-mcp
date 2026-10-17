@@ -27,6 +27,7 @@ export const serverInfoSchema = {
   sources: z
     .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source })
     .describe("Where each setting came from: configure, argument, environment or default"),
+  unexpanded: z.array(z.string()).optional().describe("Settings the client passed as unexpanded ${…} placeholders (its plugin settings missing), taken as not set: their defaults apply"),
   visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
   browserOpen: z.boolean().describe("Whether the browser is running"),
   openChannel: z.string().optional().describe("The browser actually running, if any"),
@@ -57,6 +58,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     role: config.role,
     access: config.access,
     sources: { ...config.sources },
+    ...(config.unexpanded && { unexpanded: config.unexpanded }),
     visible: browser.visible(),
     browserOpen: openChannel !== undefined,
     openChannel,
