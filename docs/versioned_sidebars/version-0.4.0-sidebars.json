@@ -1,0 +1,74 @@
+{
+  "guide": [
+    "intro",
+    {
+      "type": "category",
+      "label": "Getting started",
+      "collapsed": false,
+      "items": [
+        "getting-started/requirements",
+        "getting-started/claude-code",
+        "getting-started/claude-desktop",
+        "getting-started/codex",
+        "getting-started/first-login",
+        "getting-started/watching"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Use cases",
+      "link": {
+        "type": "doc",
+        "id": "use-cases/index"
+      },
+      "items": [
+        {
+          "type": "category",
+          "label": "As a teacher",
+          "collapsed": false,
+          "items": [
+            "use-cases/teacher/grading",
+            "use-cases/teacher/quiz-from-questions",
+            "use-cases/teacher/forum-questions",
+            "use-cases/teacher/falling-behind",
+            "use-cases/teacher/page-with-image",
+            "use-cases/teacher/reading-assistant",
+            "use-cases/teacher/copy-between-sites"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "As a student",
+          "collapsed": false,
+          "items": [
+            "use-cases/student/weekly-agenda",
+            "use-cases/student/study-notes",
+            "use-cases/student/scorm",
+            "use-cases/student/quiz-review"
+          ]
+        }
+      ]
+    },
+    "privacy",
+    "limits",
+    "several-sites",
+    "settings",
+    "troubleshooting",
+    {
+      "type": "category",
+      "label": "Reference",
+      "items": [
+        "reference/tools",
+        "releases"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "For developers",
+      "items": [
+        "developers/index",
+        "developers/testing"
+      ]
+    }
+  ]
+}

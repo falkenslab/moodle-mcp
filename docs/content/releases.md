@@ -5,9 +5,19 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.3.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.4.0`.
 
 Each release's documentation is kept: pick it in the version menu at the top of the page. The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.4.0 (18 October 2026)
+
+- **About 120 more tools**, 233 by default. For building courses: books' chapters, lessons' pages and jumps, wikis, glossaries, databases (fields, templates, presets and entries), feedback questions, rubrics and marking guides, badges, every question type (Cloze, ordering, drag and drop, calculated…) with categories and export. For running them: workshops from submission to grades, choice and survey results, quiz statistics, course completion, grades imported from CSV, scales and grade letters, groups made at once.
+- **Advanced tools, on request.** Course blocks, the content bank, BigBlueButton, competencies, notes about participants and external tools (LTI): 30 more tools, off unless you set `MOODLE_MCP_ADVANCED=true`, so every chat doesn't pay for them. See [Limiting the agent](./limits.md#advanced-tools).
+- **Moodle 4.5 too.** It works on Moodle 4.5, the long-term support release, as well as 5.x, with the Boost and Classic themes. What a site's Moodle lacks (the activities overview on 4.5) is refused with a clear message.
+- **Check before uploading.** `validate_gift` checks GIFT questions and `validate_html` checks HTML before they reach Moodle.
+- **Codex plugins.** Settings an app leaves as `${…}` placeholders count as not set, so the plugins work in Codex too; without a site, the agent asks you for it.
+- A SCORM's package can be replaced in place, and the people in every new tool reach the AI as aliases, as before.
+- With moodle-driver 0.10.
 
 ## 0.3.0 (14 October 2026)
 
