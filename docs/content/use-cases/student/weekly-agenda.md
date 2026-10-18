@@ -34,4 +34,4 @@ Moodle's calendar also shows an exam on 23 October. It isn't a deadline, so the 
 
 - **Every morning**: "What's due today and tomorrow?" or "What changed in my courses since yesterday?"
 - **Details**: "What does Práctica 2 ask for exactly?" reads the assignment's instructions and files.
-- **A student's tools only**: with `MOODLE_MCP_ROLE=student`, the agent gets 83 tools instead of 233, and works faster and better. See [Limiting the agent](../../limits.md#your-role).
+- **A student's tools only**: with `MOODLE_MCP_ROLE=student`, the agent gets 83 tools instead of 235, and works faster and better. See [Limiting the agent](../../limits.md#your-role).

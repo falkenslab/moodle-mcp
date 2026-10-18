@@ -33,4 +33,4 @@ El calendario de Moodle también muestra un examen el 23 de octubre. No es una e
 
 - **Cada mañana**: "¿Qué tengo para hoy y mañana?" o "¿Qué ha cambiado en mis cursos desde ayer?"
 - **Detalles**: "¿Qué pide exactamente la Práctica 2?" lee las instrucciones y los archivos de la tarea.
-- **Solo las herramientas de alumno**: con `MOODLE_MCP_ROLE=student`, el agente recibe 83 herramientas en lugar de 233, y trabaja más rápido y mejor. Consulta [Limitar al agente](../../limits.md#tu-rol).
+- **Solo las herramientas de alumno**: con `MOODLE_MCP_ROLE=student`, el agente recibe 83 herramientas en lugar de 235, y trabaja más rápido y mejor. Consulta [Limitar al agente](../../limits.md#tu-rol).

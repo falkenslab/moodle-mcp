@@ -25,8 +25,8 @@ Para ver los límites en vigor, pregúntale al agente:
 
 | Rol | Herramientas | Qué incluye | Tamaño de las descripciones de las herramientas |
 | --- | --- | --- | --- |
-| `all` (por defecto) | 233 | Todo | unos 54.000 tokens |
-| `teacher` | 217 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.200 tokens |
+| `all` (por defecto) | 235 | Todo | unos 54.600 tokens |
+| `teacher` | 219 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.800 tokens |
 | `student` | 83 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 15.500 tokens |
 
 Claude Code carga las herramientas a medida que las necesita, así que ahí el tamaño importa menos. Claude Desktop, Codex y la mayoría de las demás aplicaciones las cargan todas al empezar cada chat.
@@ -37,8 +37,8 @@ Claude Code carga las herramientas a medida que las necesita, así que ahí el t
 
 | Con el rol | Herramientas que quedan |
 | --- | --- |
-| `all` | 89 |
-| `teacher` | 84 |
+| `all` | 91 |
+| `teacher` | 86 |
 | `student` | 48 |
 
 También se quedan fuera las herramientas que parecen de lectura pero empiezan algo en Moodle (una lección, un intento de cuestionario, un intento de SCORM). Descargar los ficheros de un curso o exportar sus calificaciones sí se queda: no cambia nada en Moodle, solo guarda un fichero en tu ordenador, y tu aplicación de IA puede seguir preguntándote antes de cada uno.
@@ -72,7 +72,7 @@ Un docente que quiere ayuda para crear cursos, y nada más:
 claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp
 ```
 
-Son 131 herramientas, unos 30.400 tokens.
+Son 133 herramientas, unos 31.000 tokens.
 
 Un asistente de estudio para un alumno que no puede entregar ni publicar nada:
 

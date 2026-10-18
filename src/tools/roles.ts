@@ -179,6 +179,8 @@ const TEACHER = [
   "grade_forum_user",
   "get_workshop",
   "set_workshop_phase",
+  "read_backup",
+  "anonymize_backup",
   "list_course_blocks",
   "add_block",
   "configure_block",

@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **264 herramientas**, 263 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **266 herramientas**, 265 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -1408,6 +1408,8 @@ Elimina una plantilla de feedback (una pública requiere permisos de gestor). No
 | [`copy_course`](#copy-course) | Copiar un curso |  | ✓ |  |
 | [`backup_course`](#backup-course) | Hacer una copia de seguridad de un curso |  | ✓ |  |
 | [`restore_course`](#restore-course) | Restaurar una copia de seguridad de un curso |  | ✓ |  |
+| [`read_backup`](#read-backup) | Leer lo que contiene una copia de seguridad | ✓ | ✓ |  |
+| [`anonymize_backup`](#anonymize-backup) | Anonimizar una copia de seguridad | ✓ | ✓ |  |
 | [`import_activities`](#import-activities) | Importar actividades de otro curso |  | ✓ |  |
 | [`reset_course`](#reset-course) | Reiniciar un curso para un nuevo año |  | ✓ |  |
 | [`copy_between_sites`](#copy-between-sites) | Copiar contenido de un curso a otro sitio |  | ✓ |  |
@@ -1475,6 +1477,37 @@ Restaura una copia de seguridad .mbz mediante el asistente de restauración de M
 | `withUsers` |  | sí o no | Restaurar los datos de los participantes que tenga la copia de seguridad (por defecto false) |
 | `sectionId` |  | entero | Añadida a un curso: todas las actividades restauradas al final de esta sección |
 | `afterSectionId` |  | entero | Añadida a un curso: las secciones de la copia como secciones nuevas después de esta |
+
+</details>
+
+### `read_backup` {#read-backup}
+
+**Leer lo que contiene una copia de seguridad**
+
+Lee un archivo de copia de seguridad de Moodle (.mbz) en este ordenador sin restaurarlo, sin Moodle: el Moodle que lo hizo, el sitio y el curso de origen, sus secciones y actividades (con los ids del sitio de origen), los plugins que necesita un sitio para restaurarlo, si contiene datos de personas o el calificador, a qué se refiere cada actividad que la copia no contiene (restricciones sobre actividades que se quedaron fuera, enlaces a ellas, su categoría de calificación), que una restauración en otro sitio deja rotos, y qué nombra todavía a una persona, al sitio o al curso. Úsalo antes de restore_course o de compartir una copia.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `file` | ✅ | texto | Una ruta local absoluta al archivo .mbz |
+
+</details>
+
+### `anonymize_backup` {#anonymize-backup}
+
+**Anonimizar una copia de seguridad**
+
+Escribe una copia de un archivo de copia de seguridad de Moodle (.mbz) que no nombra a nadie ni a ningún sitio, en este ordenador, sin Moodle: todos los ids de usuario a 0, los nombres de los autores vacíos, y la dirección del sitio de origen, el id y los nombres del curso y el registro de la copia sustituidos por valores neutros; el contenido (textos, ajustes, archivos) queda como estaba. Moodle la restaura como una copia de otro sitio. Se rechaza una copia con datos de personas (esas las hace el propio anonimizado de Moodle). Devuelve lo que se limpió. Para compartir una unidad con otros profesores.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `file` | ✅ | texto | Una ruta local absoluta al archivo .mbz |
+| `destFile` | ✅ | texto | Dónde escribir la copia (una ruta local absoluta; puede ser el propio file) |
 
 </details>
 

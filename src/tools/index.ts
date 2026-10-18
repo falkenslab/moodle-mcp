@@ -18,6 +18,7 @@ import { registerGetSiteInfo } from "./getSiteInfo.js";
 import { registerGetMyGrades } from "./getMyGrades.js";
 import { registerGetRubric, registerSetRubric } from "./getRubric.js";
 import { registerValidateGift, registerValidateHtml } from "./validate.js";
+import { registerAnonymizeBackup, registerReadBackup } from "./backupFiles.js";
 import { registerAddBlock, registerConfigureBlock, registerDeleteBlock, registerListCourseBlocks, registerMoveBlock } from "./blocks.js";
 import { registerDeleteContent, registerDownloadContent, registerListContentBank, registerRenameContent, registerUploadToContentBank } from "./contentBank.js";
 import { registerDeleteRecording, registerGetBigBlueButton, registerGetBigBlueButtonJoinUrl, registerSetRecordingPublished } from "./bigBlueButton.js";
@@ -279,6 +280,8 @@ export const TOOLS: RegisterTool[] = [
   registerCopyCourse,
   registerBackupCourse,
   registerRestoreCourse,
+  registerReadBackup,
+  registerAnonymizeBackup,
   registerImportActivities,
   registerResetCourse,
   registerListQuestionBanks,

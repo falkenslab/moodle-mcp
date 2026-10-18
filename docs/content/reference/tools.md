@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **264 tools**, 263 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **266 tools**, 265 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -1408,6 +1408,8 @@ Delete a feedback template (a public one takes a manager's rights). Can't be und
 | [`copy_course`](#copy-course) | Copy a course |  | ✓ |  |
 | [`backup_course`](#backup-course) | Back up a course |  | ✓ |  |
 | [`restore_course`](#restore-course) | Restore a course backup |  | ✓ |  |
+| [`read_backup`](#read-backup) | Read what a backup file holds | ✓ | ✓ |  |
+| [`anonymize_backup`](#anonymize-backup) | Anonymize a backup file | ✓ | ✓ |  |
 | [`import_activities`](#import-activities) | Import activities from another course |  | ✓ |  |
 | [`reset_course`](#reset-course) | Reset a course for a new year |  | ✓ |  |
 | [`copy_between_sites`](#copy-between-sites) | Copy course content to another site |  | ✓ |  |
@@ -1475,6 +1477,37 @@ Restore a .mbz backup through Moodle's restore wizard: into a new course in a ca
 | `withUsers` |  | boolean | Restore the participants' data the backup has (default false) |
 | `sectionId` |  | integer | Merged into a course: every restored activity at the end of this section |
 | `afterSectionId` |  | integer | Merged into a course: the backup's sections as new sections after this one |
+
+</details>
+
+### `read_backup` {#read-backup}
+
+**Read what a backup file holds**
+
+Read a Moodle backup file (.mbz) on this computer without restoring it, without Moodle: the Moodle that made it, the original site and course, its sections and activities (the original site's ids), the plugins a site needs to restore it, whether it holds people's data or the gradebook, what each activity refers to that the backup doesn't hold (restrictions on activities left out, links to them, its grade category), which a restore elsewhere leaves broken, and what in it still names a person, the site or the course. Use it before restore_course or before sharing a backup.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `file` | ✅ | string | An absolute local path to the .mbz file |
+
+</details>
+
+### `anonymize_backup` {#anonymize-backup}
+
+**Anonymize a backup file**
+
+Write a copy of a Moodle backup file (.mbz) that names no one and no site, on this computer, without Moodle: every user id 0, authors' names empty, the original site's address, the course's id and names and the backup's log replaced by neutral values; the content (texts, settings, files) as it was. Moodle restores it as a backup from another site. Refused for a backup with people's data (Moodle's own anonymize makes those). Returns what was cleared. For sharing a unit with other teachers.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `file` | ✅ | string | An absolute local path to the .mbz file |
+| `destFile` | ✅ | string | Where to write the copy (an absolute local path; it may be file itself) |
 
 </details>
 

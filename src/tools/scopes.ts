@@ -26,7 +26,7 @@ export type AccessLevel = (typeof ACCESS_LEVELS)[number];
 const readOnlyTools = new Set<string>();
 // Tools that only read Moodle but save a file on the person's computer: not read-only to MCP, which
 // counts the disk as the environment (so a client may ask before each), yet they change nothing in Moodle.
-const LOCAL_FILE_TOOLS = new Set(["download_file", "export_grades", "export_glossary", "export_database_entries", "export_questions"]);
+const LOCAL_FILE_TOOLS = new Set(["download_file", "export_grades", "export_glossary", "export_database_entries", "export_questions", "anonymize_backup"]);
 
 /** How others' data reaches the agent, strictest first (ADR-016). */
 export const STUDENT_DATA_LEVELS = ["block", "pseudonymize", "clear"] as const;
@@ -170,6 +170,8 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   set_rubric: ["setGradingDefinition"],
   // Checked here, without Moodle: what they read is what the agent gives them.
   validate_gift: ["category:course-content"],
+  read_backup: ["backupContents"],
+  anonymize_backup: ["anonymizeBackup"],
   list_course_blocks: ["courseBlocks"],
   add_block: ["addBlock"],
   configure_block: ["configureBlock"],

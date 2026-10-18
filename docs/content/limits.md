@@ -25,8 +25,8 @@ To see the limits in force, ask the agent:
 
 | Role | Tools | What's in it | Size of the tools' descriptions |
 | --- | --- | --- | --- |
-| `all` (default) | 233 | Everything | about 54,000 tokens |
-| `teacher` | 217 | Building and running courses, grading, people, reports, forums and messages | about 52,200 tokens |
+| `all` (default) | 235 | Everything | about 54,600 tokens |
+| `teacher` | 219 | Building and running courses, grading, people, reports, forums and messages | about 52,800 tokens |
 | `student` | 83 | Reading courses, doing activities, your grades and to-dos, forums and messages | about 15,500 tokens |
 
 Claude Code loads tools as it needs them, so the size matters less there. Claude Desktop, Codex and most other apps load them all at the start of each chat.
@@ -37,8 +37,8 @@ Claude Code loads tools as it needs them, so the size matters less there. Claude
 
 | With role | Tools left |
 | --- | --- |
-| `all` | 89 |
-| `teacher` | 84 |
+| `all` | 91 |
+| `teacher` | 86 |
 | `student` | 48 |
 
 Tools that look like reading but start something in Moodle (a lesson, a quiz attempt, a SCORM attempt) are left out too. Downloading a course's files or exporting its grades stays: it changes nothing in Moodle, only saves a file on your computer, and your AI app may still ask you before each.
@@ -72,7 +72,7 @@ A teacher who wants help building courses, and nothing else:
 claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp
 ```
 
-That's 131 tools, about 30,400 tokens.
+That's 133 tools, about 31,000 tokens.
 
 A student's study assistant that can't submit or post anything:
 

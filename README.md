@@ -106,7 +106,7 @@ More sessions with Claude Code and Codex, and what they changed in Moodle, are i
 | 📅 Calendar and to-dos | Events, deadlines, what's pending and what changed |
 | 🧑‍🎓 As a student | Quizzes, assignments, lessons, surveys, choices, H5P and SCORM |
 | 🧩 Advanced, on request | Course blocks, the content bank, BigBlueButton, competencies, notes about participants and external tools, with `MOODLE_MCP_ADVANCED=true` |
-| 🔄 Course life cycle | Copies, backups and restores, whole or in part, and imports, within a site or between sites |
+| 🔄 Course life cycle | Copies, backups and restores, whole or in part, backups read and anonymized, and imports, within a site or between sites |
 
 Every tool, with what it takes and what it gives, is in the [tools reference](https://falkenslab.github.io/moodle-mcp/reference/tools).
 

@@ -180,7 +180,7 @@ describe("read-only access", () => {
     const client = await connect(testConfig({ role: "teacher", access: "read" }));
     const { tools } = await client.listTools();
     // Saving a file on the person's computer changes nothing in Moodle: those tools stay, still not read-only to MCP.
-    const localFiles = ["download_file", "export_grades", "export_glossary", "export_database_entries", "export_questions"];
+    const localFiles = ["download_file", "export_grades", "export_glossary", "export_database_entries", "export_questions", "anonymize_backup"];
     for (const tool of tools) assert.ok(tool.annotations?.readOnlyHint === true || SESSION.includes(tool.name) || localFiles.includes(tool.name), tool.name);
     const listed = tools.map((t) => t.name);
     for (const present of ["get_submissions", "get_grader_report", "get_course_logs", "get_course_structure", "login", "configure", ...localFiles]) assert.ok(listed.includes(present), present);

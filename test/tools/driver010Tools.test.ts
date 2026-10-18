@@ -18,7 +18,7 @@ async function connect(config: Config): Promise<Client> {
 const text = (result: Record<string, unknown>) => JSON.stringify(result.content);
 const site = "http://moodle.test/";
 
-const READS = ["list_glossary_entries", "list_glossary_categories", "list_database_entries", "get_choice_results", "get_survey_results", "get_workshop_submission", "list_workshop_examples", "get_course_completion_criteria", "get_course_completion_status", "list_question_categories"];
+const READS = ["read_backup", "list_glossary_entries", "list_glossary_categories", "list_database_entries", "get_choice_results", "get_survey_results", "get_workshop_submission", "list_workshop_examples", "get_course_completion_criteria", "get_course_completion_status", "list_question_categories"];
 const DESTRUCTIVE = ["delete_glossary_entry", "delete_database_entry", "delete_workshop_example", "set_course_completion_criteria", "delete_question_category"];
 
 describe("the tools of moodle-driver 0.10, first batch", () => {
