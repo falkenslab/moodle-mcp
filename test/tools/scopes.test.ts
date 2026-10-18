@@ -142,7 +142,7 @@ describe("deleting without student data", { skip: !browser && "no system browser
 
 describe("tools for a role", () => {
   it("knows every tool's roles, each tool in one list", async () => {
-    const all = await names(await connect(testConfig()));
+    const all = await names(await connect(testConfig({ advanced: true })));
     const listed = [...ROLE_LISTS.shared, ...ROLE_LISTS.student, ...ROLE_LISTS.teacher];
     assert.equal(new Set(listed).size, listed.length, "a tool in two lists");
     assert.deepEqual(all.filter((name) => !TOOL_ROLES[name]), []);

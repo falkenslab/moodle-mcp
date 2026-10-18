@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **234 herramientas**, 233 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **264 herramientas**, 263 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -293,6 +293,7 @@ Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, f
 | `type` | ✅ | texto | El nombre del módulo en Moodle: page, label, url, resource, folder, assign, quiz, forum, book… |
 | `name` |  | texto | Obligatorio salvo para las etiquetas |
 | `files` |  | lista de texto | Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip) |
+| `toolId` |  | entero | type lti: la herramienta externa a partir de la que se crea, tal como la da list_external_tools (Moodle 5 solo crea actividades LTI a partir de una herramienta) |
 | `description` |  | texto | La descripción (HTML), que se muestra en la página de la actividad |
 | `content` |  | texto | El contenido de una página, o el texto de una etiqueta (HTML) |
 | `url` |  | texto | El destino de un recurso URL |
@@ -2720,6 +2721,543 @@ Concede a mano una insignia a un participante (un alias cuando el servidor seudo
 | `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
 | `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
 | `roleId` |  | entero | El rol con el que concederla |
+
+</details>
+
+## Herramientas avanzadas (MOODLE_MCP_ADVANCED) {#advanced}
+
+Están desactivadas por defecto, por ser de áreas que usa poca gente: `MOODLE_MCP_ADVANCED=true` las activa, y los demás límites siguen aplicándose. Consulta [Limitar al agente](../limits.md#herramientas-avanzadas).
+
+| Herramienta | Descripción | Solo lectura | Profesor | Alumno |
+| --- | --- | :-: | :-: | :-: |
+| [`list_course_blocks`](#list-course-blocks) | Listar los bloques de la página de un curso | ✓ | ✓ |  |
+| [`add_block`](#add-block) | Añadir un bloque a la página de un curso |  | ✓ |  |
+| [`configure_block`](#configure-block) | Configurar un bloque de la página de un curso |  | ✓ |  |
+| [`move_block`](#move-block) | Mover un bloque de la página de un curso |  | ✓ |  |
+| [`delete_block`](#delete-block) | Eliminar un bloque de la página de un curso |  | ✓ |  |
+| [`list_content_bank`](#list-content-bank) | Listar el banco de contenido de un curso | ✓ | ✓ |  |
+| [`upload_to_content_bank`](#upload-to-content-bank) | Subir contenido H5P al banco de contenido de un curso |  | ✓ |  |
+| [`rename_content`](#rename-content) | Renombrar un contenido del banco de contenido |  | ✓ |  |
+| [`download_content`](#download-content) | Descargar un contenido del banco de contenido |  | ✓ |  |
+| [`delete_content`](#delete-content) | Eliminar un contenido del banco de contenido |  | ✓ |  |
+| [`get_bigbluebutton`](#get-bigbluebutton) | Leer una actividad BigBlueButton | ✓ | ✓ | ✓ |
+| [`get_bigbluebutton_join_url`](#get-bigbluebutton-join-url) | Obtener el enlace para entrar a una reunión BigBlueButton | ✓ | ✓ | ✓ |
+| [`set_recording_published`](#set-recording-published) | Publicar u ocultar una grabación de BigBlueButton |  | ✓ |  |
+| [`delete_recording`](#delete-recording) | Eliminar una grabación de BigBlueButton |  | ✓ |  |
+| [`list_notes`](#list-notes) | Leer las notas sobre los participantes de un curso | ✓ | ✓ |  |
+| [`add_note`](#add-note) | Escribir una nota sobre un participante |  | ✓ |  |
+| [`edit_note`](#edit-note) | Cambiar una nota sobre un participante |  | ✓ |  |
+| [`delete_note`](#delete-note) | Eliminar una nota sobre un participante |  | ✓ |  |
+| [`list_competency_frameworks`](#list-competency-frameworks) | Listar los marcos de competencias que puede usar un curso | ✓ | ✓ |  |
+| [`list_course_competencies`](#list-course-competencies) | Listar las competencias de un curso | ✓ | ✓ |  |
+| [`add_course_competency`](#add-course-competency) | Añadir una competencia a un curso |  | ✓ |  |
+| [`remove_course_competency`](#remove-course-competency) | Quitar una competencia de un curso |  | ✓ |  |
+| [`set_activity_competencies`](#set-activity-competencies) | Vincular competencias a una actividad |  | ✓ |  |
+| [`get_competency_rating`](#get-competency-rating) | Leer la valoración de un participante en una competencia | ✓ | ✓ | ✓ |
+| [`rate_competency`](#rate-competency) | Valorar a un participante en una competencia |  | ✓ |  |
+| [`list_external_tools`](#list-external-tools) | Listar las herramientas externas de un curso | ✓ | ✓ |  |
+| [`add_external_tool`](#add-external-tool) | Añadir una herramienta externa a un curso |  | ✓ |  |
+| [`set_external_tool_in_chooser`](#set-external-tool-in-chooser) | Mostrar una herramienta externa en el selector de actividades |  | ✓ |  |
+| [`delete_external_tool`](#delete-external-tool) | Eliminar una herramienta externa de un curso |  | ✓ |  |
+| [`get_external_tool_launch_url`](#get-external-tool-launch-url) | Obtener el enlace que lanza una actividad LTI | ✓ | ✓ | ✓ |
+
+### `list_course_blocks` {#list-course-blocks}
+
+**Listar los bloques de la página de un curso**
+
+Lista los bloques de la página de un curso: tipo, título, región, orden y visibilidad, y el contenido de un bloque de texto.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `add_block` {#add-block}
+
+**Añadir un bloque a la página de un curso**
+
+Añade un bloque a la página de un curso: un bloque de texto (type html) con su título y su contenido HTML (con imágenes locales incrustadas), u otro bloque del núcleo por su tipo (calendar_upcoming, recent_activity…), en una región o en la predeterminada de la página. Devuelve el bloque. Lo ve todo el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `type` | ✅ | texto | html para un bloque de texto, o el nombre del plugin de otro bloque |
+| `region` |  | texto |  |
+| `title` |  | texto |  |
+| `content` |  | texto | El HTML de un bloque de texto |
+| `embed` |  | lista de texto | Archivos locales absolutos que nombra el contenido, que van en él: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `configure_block` {#configure-block}
+
+**Configurar un bloque de la página de un curso**
+
+Cambia un bloque: el título y el contenido de un bloque de texto, o cualquier campo de su formulario de configuración por nombre en settings (bui_visible, config_…). Devuelve el bloque. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `blockId` | ✅ | entero | El id del bloque, tal como lo da list_course_blocks |
+| `title` |  | texto |  |
+| `content` |  | texto |  |
+| `embed` |  | lista de texto | Archivos locales absolutos que nombra el contenido, que van en él: &#60;img src="shot.png"&#62; |
+| `settings` |  | objeto | Otros campos del formulario de configuración del bloque, por nombre |
+
+</details>
+
+### `move_block` {#move-block}
+
+**Mover un bloque de la página de un curso**
+
+Mueve un bloque a otra región o a otro sitio dentro de ella (weight: el menor va primero). Devuelve el bloque. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `blockId` | ✅ | entero | El id del bloque, tal como lo da list_course_blocks |
+| `region` |  | texto |  |
+| `weight` |  | entero |  |
+
+</details>
+
+### `delete_block` {#delete-block}
+
+**Eliminar un bloque de la página de un curso**
+
+Elimina un bloque de la página de un curso, con su configuración. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `blockId` | ✅ | entero | El id del bloque, tal como lo da list_course_blocks |
+
+</details>
+
+### `list_content_bank` {#list-content-bank}
+
+**Listar el banco de contenido de un curso**
+
+Lista el banco de contenido de un curso: el nombre de cada contenido, su biblioteca H5P, autor, fecha, tamaño, cuántas actividades lo usan y si está oculto en la lista.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `upload_to_content_bank` {#upload-to-content-bank}
+
+**Subir contenido H5P al banco de contenido de un curso**
+
+Sube un archivo .h5p local al banco de contenido de un curso, donde pueden usarlo las actividades H5P. Devuelve el contenido. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `file` | ✅ | texto | Una ruta local absoluta al archivo .h5p |
+
+</details>
+
+### `rename_content` {#rename-content}
+
+**Renombrar un contenido del banco de contenido**
+
+Renombra un contenido de un banco de contenido. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `contentId` | ✅ | entero | El id del contenido, tal como lo da list_content_bank |
+| `name` | ✅ | texto |  |
+
+</details>
+
+### `download_content` {#download-content}
+
+**Descargar un contenido del banco de contenido**
+
+Guarda un contenido del banco de contenido (su archivo .h5p) en una carpeta local.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `contentId` | ✅ | entero | El id del contenido, tal como lo da list_content_bank |
+| `destDir` | ✅ | texto | Una carpeta local absoluta |
+
+</details>
+
+### `delete_content` {#delete-content}
+
+**Eliminar un contenido del banco de contenido**
+
+Elimina un contenido de un banco de contenido. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `contentId` | ✅ | entero | El id del contenido, tal como lo da list_content_bank |
+
+</details>
+
+### `get_bigbluebutton` {#get-bigbluebutton}
+
+**Leer una actividad BigBlueButton**
+
+Lee una actividad BigBlueButton: si aún no está abierta, abierta, en curso o cerrada, su horario, cuántos hay dentro mientras está en curso, si la persona puede entrar y como moderadora, y sus grabaciones (todas para quien las gestiona, las publicadas para los demás). Falla con un error claro donde el servidor BigBlueButton del sitio no está configurado.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `get_bigbluebutton_join_url` {#get-bigbluebutton-join-url}
+
+**Obtener el enlace para entrar a una reunión BigBlueButton**
+
+Da el enlace con el que la persona entra a una reunión BigBlueButton, para que lo abra ella; aquí no se entra a nada. El enlace es de la propia persona: dáselo a ella y a nadie más.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `set_recording_published` {#set-recording-published}
+
+**Publicar u ocultar una grabación de BigBlueButton**
+
+Publica una grabación de BigBlueButton para los estudiantes, o se la oculta. Devuelve la grabación. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure |
+| `recordingId` | ✅ | entero | El id de la grabación, tal como lo da get_bigbluebutton |
+| `published` | ✅ | sí o no |  |
+
+</details>
+
+### `delete_recording` {#delete-recording}
+
+**Eliminar una grabación de BigBlueButton**
+
+Elimina una grabación de BigBlueButton. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure |
+| `recordingId` | ✅ | entero | El id de la grabación, tal como lo da get_bigbluebutton |
+
+</details>
+
+### `list_notes` {#list-notes}
+
+**Leer las notas sobre los participantes de un curso**
+
+Lee las notas sobre los participantes de un curso, o sobre uno: sobre quién es y quién la escribió (alias cuando el servidor seudonimiza), su contenido, si es personal, del curso o del sitio, y si la persona puede cambiarla. Una página cada vez: limit notas (50 por defecto) tras saltar offset; more dice si hay más.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `limit` |  | entero | Cuántas notas (50 por defecto, hasta 200) |
+| `offset` |  | entero | Cuántas notas saltar antes (0 por defecto) |
+
+</details>
+
+### `add_note` {#add-note}
+
+**Escribir una nota sobre un participante**
+
+Escribe una nota sobre un participante (un alias cuando el servidor seudonimiza): su contenido (HTML, sin alias) y quién la ve. Devuelve la nota. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `content` | ✅ | texto |  |
+| `context` |  | `personal`, `course`, `site` | personal: solo la ve su autor; course: los profesores del curso; site: los profesores de cualquier curso |
+
+</details>
+
+### `edit_note` {#edit-note}
+
+**Cambiar una nota sobre un participante**
+
+Cambia el contenido de una nota (sin alias) o quién la ve. Devuelve la nota. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `noteId` | ✅ | entero | El id de la nota, tal como lo da list_notes |
+| `content` |  | texto |  |
+| `context` |  | `personal`, `course`, `site` | personal: solo la ve su autor; course: los profesores del curso; site: los profesores de cualquier curso |
+
+</details>
+
+### `delete_note` {#delete-note}
+
+**Eliminar una nota sobre un participante**
+
+Elimina una nota. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `noteId` | ✅ | entero | El id de la nota, tal como lo da list_notes |
+
+</details>
+
+### `list_competency_frameworks` {#list-competency-frameworks}
+
+**Listar los marcos de competencias que puede usar un curso**
+
+Lista los marcos de competencias de los que un curso puede tomar sus competencias, cada uno con sus competencias (id, nombre corto, número de ID, descripción, madre). Falla con un error claro donde el sitio tiene las competencias desactivadas.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `list_course_competencies` {#list-course-competencies}
+
+**Listar las competencias de un curso**
+
+Lista las competencias de un curso, cada una con su marco y las actividades del curso vinculadas a ella.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `add_course_competency` {#add-course-competency}
+
+**Añadir una competencia a un curso**
+
+Añade a un curso una competencia de un marco. Devuelve las competencias del curso. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `competencyId` | ✅ | entero | El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies |
+
+</details>
+
+### `remove_course_competency` {#remove-course-competency}
+
+**Quitar una competencia de un curso**
+
+Quita una competencia de un curso, y sus vínculos con las actividades del curso. Devuelve las competencias del curso. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `competencyId` | ✅ | entero | El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies |
+
+</details>
+
+### `set_activity_competencies` {#set-activity-competencies}
+
+**Vincular competencias a una actividad**
+
+Fija las competencias del curso vinculadas a una actividad: la lista dada sustituye sus vínculos ([] los quita). Devuelve las competencias de la actividad. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | Tal como lo da get_course_structure |
+| `competencyIds` | ✅ | lista de entero | Las competencias del curso, tal como las da list_course_competencies |
+
+</details>
+
+### `get_competency_rating` {#get-competency-rating}
+
+**Leer la valoración de un participante en una competencia**
+
+Lee la valoración de un participante en una competencia del curso (un alias cuando el servidor seudonimiza; la de la propia persona si falta): la valoración, si es competente, la escala, las evidencias en el curso (la más reciente primero) y si la persona puede valorarle.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `competencyId` | ✅ | entero | El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+
+</details>
+
+### `rate_competency` {#rate-competency}
+
+**Valorar a un participante en una competencia**
+
+Valora a un participante (un alias cuando el servidor seudonimiza) en una competencia del curso: un valor de su escala (1 el primero) o el nombre del elemento, con una nota que se guarda como evidencia (sin alias). Devuelve la valoración. El participante la ve: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `competencyId` | ✅ | entero | El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `rating` | ✅ | texto | El valor del elemento de la escala ("2") o su nombre |
+| `note` |  | texto |  |
+
+</details>
+
+### `list_external_tools` {#list-external-tools}
+
+**Listar las herramientas externas de un curso**
+
+Lista las herramientas externas (LTI) que puede usar un curso: las que un administrador configuró para el sitio y las del propio curso, cada una con si los profesores la encuentran en el selector de actividades. create_activity crea una actividad LTI a partir de una por su id (type lti, toolId).
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `add_external_tool` {#add-external-tool}
+
+**Añadir una herramienta externa a un curso**
+
+Añade una herramienta externa (LTI 1.0/1.1) a un curso por su URL de lanzamiento, con la clave de consumidor y el secreto compartido que dio su proveedor (Moodle guarda el secreto; nada lo devuelve), y cualquier otro campo del formulario de herramienta del curso por nombre. Devuelve la herramienta. Una herramienta lleva a la gente del curso a otro sitio: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `url` | ✅ | texto | La URL de lanzamiento de la herramienta, o la de un cartucho |
+| `description` |  | texto |  |
+| `key` |  | texto | La clave de consumidor |
+| `secret` |  | texto | El secreto compartido |
+| `settings` |  | objeto | Otros campos del formulario de herramienta del curso, por nombre (lti_launchcontainer, lti_sendname…) |
+
+</details>
+
+### `set_external_tool_in_chooser` {#set-external-tool-in-chooser}
+
+**Mostrar una herramienta externa en el selector de actividades**
+
+Muestra una herramienta externa del curso en el selector de actividades, o la deja fuera. Devuelve la herramienta. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `toolId` | ✅ | entero | El id de la herramienta, tal como lo da list_external_tools |
+| `shown` | ✅ | sí o no |  |
+
+</details>
+
+### `delete_external_tool` {#delete-external-tool}
+
+**Eliminar una herramienta externa de un curso**
+
+Elimina una de las herramientas externas propias del curso. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `toolId` | ✅ | entero | El id de la herramienta, tal como lo da list_external_tools |
+
+</details>
+
+### `get_external_tool_launch_url` {#get-external-tool-launch-url}
+
+**Obtener el enlace que lanza una actividad LTI**
+
+Da el enlace que lanza una actividad LTI para la persona, para que lo abra ella; aquí no se lanza nada. El enlace es de la propia persona: dáselo a ella y a nadie más.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad LTI (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 

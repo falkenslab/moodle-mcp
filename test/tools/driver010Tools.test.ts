@@ -74,6 +74,29 @@ describe("the tools of moodle-driver 0.10, first batch", () => {
     assert.match(text(await pseudonymous.callTool({ name: "list_wiki_pages", arguments: { wikiId: 9, participantId: 7 } })), /give the participant as user/);
   });
 
+  it("keep the advanced tools off unless the person turns them on (ADR-022)", async () => {
+    const ADVANCED = ["list_course_blocks", "add_block", "list_content_bank", "get_bigbluebutton", "list_notes", "add_note", "list_course_competencies", "rate_competency", "list_external_tools", "add_external_tool"];
+    const byDefault = (await (await connect(testConfig({ moodleUrl: site }))).listTools()).tools.map((t) => t.name);
+    for (const name of ADVANCED) assert.ok(!byDefault.includes(name), name);
+    const advanced = await connect(testConfig({ moodleUrl: site, advanced: true }));
+    const on = (await advanced.listTools()).tools.map((t) => t.name);
+    for (const name of ADVANCED) assert.ok(on.includes(name), name);
+    // The other limits still apply to them.
+    const student = (await (await connect(testConfig({ moodleUrl: site, advanced: true, role: "student" }))).listTools()).tools.map((t) => t.name);
+    assert.ok(student.includes("get_bigbluebutton_join_url") && !student.includes("add_note") && !student.includes("add_block"));
+    const content = (await (await connect(testConfig({ moodleUrl: site, advanced: true, scopes: ["content"] }))).listTools()).tools.map((t) => t.name);
+    assert.ok(content.includes("add_block") && !content.includes("list_notes") && !content.includes("rate_competency"));
+    // A client that kept an advanced tool from another server is refused before Moodle.
+    const refused = await (await connect(testConfig({ moodleUrl: site }))).callTool({ name: "list_course_blocks", arguments: { courseId: 3 } });
+    assert.equal(refused.isError, true);
+
+    const pseudonymous = await connect(testConfig({ moodleUrl: site, advanced: true, studentData: "pseudonymize" }));
+    const call = async (name: string, args: Record<string, unknown>) => text(await pseudonymous.callTool({ name, arguments: args }));
+    assert.match(await call("add_note", { courseId: 3, userId: 7, content: "<p>Doing well</p>" }), /give the participant as user/);
+    assert.match(await call("add_note", { courseId: 3, user: "A-7KQ2XM", content: "<p>Ask A-7KQ2XM</p>" }), /an alias/);
+    assert.match(await call("rate_competency", { courseId: 3, competencyId: 2, userId: 7, rating: "2" }), /give the participant as user/);
+  });
+
   it("keep others' files and texts out under pseudonymize, and take people as aliases", async () => {
     const client = await connect(testConfig({ moodleUrl: site, studentData: "pseudonymize" }));
     const call = async (name: string, args: Record<string, unknown>) => text(await client.callTool({ name, arguments: args }));

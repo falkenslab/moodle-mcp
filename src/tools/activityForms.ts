@@ -42,6 +42,7 @@ export const registerCreateActivity: RegisterTool = (server, { config, browser }
         type: z.string().regex(/^[a-z0-9_]+$/).describe("Moodle's module name: page, label, url, resource, folder, assign, quiz, forum, book…"),
         name: z.string().min(1).optional().describe("Required except for labels"),
         files: z.array(z.string()).optional().describe("Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip)"),
+        toolId: z.number().int().positive().optional().describe("type lti: the external tool it's made from, as list_external_tools gives it (Moodle 5 makes LTI activities only from a tool)"),
         ...contentFields,
       },
       outputSchema: resultSchema,

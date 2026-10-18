@@ -62,7 +62,7 @@ Or a list of scopes, separated by commas: `content`, `student-data`, `grading`, 
 
 ## Advanced tools
 
-Some areas of Moodle few people use: BigBlueButton, competencies, external tools (LTI), the content bank, notes about participants and course blocks. Their tools are off by default, so every chat doesn't pay for them. `MOODLE_MCP_ADVANCED=true` turns them on, and the other limits still apply to them. `server_info` says whether they're on; the agent can't turn them on itself.
+Some areas of Moodle few people use: BigBlueButton, competencies, external tools (LTI), the content bank, notes about participants and course blocks. Their 30 tools are off by default, so every chat doesn't pay for them. `MOODLE_MCP_ADVANCED=true` turns them on, and the other limits still apply to them. `server_info` says whether they're on; the agent can't turn them on itself.
 
 ## Examples
 

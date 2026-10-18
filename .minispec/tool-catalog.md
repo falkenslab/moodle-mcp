@@ -132,6 +132,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | Question categories | Categories, moving questions, GIFT and XML export; every question type | R/W | Bank pages and forms | #30, #43; sandbox, seven types | Done |
 | Wikis | A subwiki's pages, a page with its history, created and edited (a section too) | R/W | Pages and the editor | #32; sandbox, teacher and student | Done |
 | Feedback questions | A feedback's items and templates | R/W | Its questions page, export and forms | #35; sandbox, every kind and a dependency | Done |
+| Advanced (ADR-022) | Course blocks, the content bank, BigBlueButton, notes, competencies, external tools (LTI): 30 tools off by default | R/W | Pages, forms and services | #37–#42; sandbox, but uploading H5P and rating competencies (no package, no framework there) | Done |
 | SCORM package | Replace a SCORM's package in place | W | Form (`update_activity`'s `package`) | #23; sandbox | Done |
 
 ## Teacher: assignments and grading

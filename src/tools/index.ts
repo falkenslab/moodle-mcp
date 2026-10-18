@@ -18,6 +18,12 @@ import { registerGetSiteInfo } from "./getSiteInfo.js";
 import { registerGetMyGrades } from "./getMyGrades.js";
 import { registerGetRubric, registerSetRubric } from "./getRubric.js";
 import { registerValidateGift, registerValidateHtml } from "./validate.js";
+import { registerAddBlock, registerConfigureBlock, registerDeleteBlock, registerListCourseBlocks, registerMoveBlock } from "./blocks.js";
+import { registerDeleteContent, registerDownloadContent, registerListContentBank, registerRenameContent, registerUploadToContentBank } from "./contentBank.js";
+import { registerDeleteRecording, registerGetBigBlueButton, registerGetBigBlueButtonJoinUrl, registerSetRecordingPublished } from "./bigBlueButton.js";
+import { registerAddNote, registerDeleteNote, registerEditNote, registerListNotes } from "./notes.js";
+import { registerAddCourseCompetency, registerGetCompetencyRating, registerListCompetencyFrameworks, registerListCourseCompetencies, registerRateCompetency, registerRemoveCourseCompetency, registerSetActivityCompetencies } from "./competencies.js";
+import { registerAddExternalTool, registerDeleteExternalTool, registerGetExternalToolLaunchUrl, registerListExternalTools, registerSetExternalToolInChooser } from "./externalTools.js";
 import { registerCreateWikiPage, registerEditWikiPage, registerGetWikiPage, registerListWikiPages } from "./wikis.js";
 import { registerAddScale, registerEditScale, registerGetGradeLetters, registerImportGrades, registerListScales, registerSetGradeLetters } from "./gradeImport.js";
 import { registerAutoCreateGroups, registerImportGroups } from "./autoGroups.js";
@@ -236,6 +242,36 @@ export const TOOLS: RegisterTool[] = [
   registerSetBadgeCriteria,
   registerSetBadgeEnabled,
   registerAwardBadge,
+  registerListCourseBlocks,
+  registerAddBlock,
+  registerConfigureBlock,
+  registerMoveBlock,
+  registerDeleteBlock,
+  registerListContentBank,
+  registerUploadToContentBank,
+  registerRenameContent,
+  registerDownloadContent,
+  registerDeleteContent,
+  registerGetBigBlueButton,
+  registerGetBigBlueButtonJoinUrl,
+  registerSetRecordingPublished,
+  registerDeleteRecording,
+  registerListNotes,
+  registerAddNote,
+  registerEditNote,
+  registerDeleteNote,
+  registerListCompetencyFrameworks,
+  registerListCourseCompetencies,
+  registerAddCourseCompetency,
+  registerRemoveCourseCompetency,
+  registerSetActivityCompetencies,
+  registerGetCompetencyRating,
+  registerRateCompetency,
+  registerListExternalTools,
+  registerAddExternalTool,
+  registerSetExternalToolInChooser,
+  registerDeleteExternalTool,
+  registerGetExternalToolLaunchUrl,
   registerAddSection,
   registerEditSection,
   registerDeleteSection,

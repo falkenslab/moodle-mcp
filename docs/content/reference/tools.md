@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **234 tools**, 233 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **264 tools**, 263 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -293,6 +293,7 @@ Create an activity or resource of any type (page, label, url, resource, folder, 
 | `type` | ✅ | string | Moodle's module name: page, label, url, resource, folder, assign, quiz, forum, book… |
 | `name` |  | string | Required except for labels |
 | `files` |  | string list | Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip) |
+| `toolId` |  | integer | type lti: the external tool it's made from, as list_external_tools gives it (Moodle 5 makes LTI activities only from a tool) |
 | `description` |  | string | The description (HTML), shown on the activity's page |
 | `content` |  | string | A page's content, or a label's text (HTML) |
 | `url` |  | string | A URL resource's target |
@@ -2720,6 +2721,543 @@ Award a badge by hand to a participant (an alias when the server pseudonymizes),
 | `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
 | `userId` |  | integer | The participant's user id, when the server shows names |
 | `roleId` |  | integer | The role to award it as |
+
+</details>
+
+## Advanced tools (MOODLE_MCP_ADVANCED) {#advanced}
+
+These are off by default, for areas few people use: `MOODLE_MCP_ADVANCED=true` turns them on, and the other limits still apply. See [Limiting the agent](../limits.md#advanced-tools).
+
+| Tool | Description | Read only | Teacher | Student |
+| --- | --- | :-: | :-: | :-: |
+| [`list_course_blocks`](#list-course-blocks) | List a course page's blocks | ✓ | ✓ |  |
+| [`add_block`](#add-block) | Add a block to a course page |  | ✓ |  |
+| [`configure_block`](#configure-block) | Configure a course page's block |  | ✓ |  |
+| [`move_block`](#move-block) | Move a course page's block |  | ✓ |  |
+| [`delete_block`](#delete-block) | Delete a course page's block |  | ✓ |  |
+| [`list_content_bank`](#list-content-bank) | List a course's content bank | ✓ | ✓ |  |
+| [`upload_to_content_bank`](#upload-to-content-bank) | Upload H5P content to a course's content bank |  | ✓ |  |
+| [`rename_content`](#rename-content) | Rename content in a content bank |  | ✓ |  |
+| [`download_content`](#download-content) | Download content from a content bank |  | ✓ |  |
+| [`delete_content`](#delete-content) | Delete content from a content bank |  | ✓ |  |
+| [`get_bigbluebutton`](#get-bigbluebutton) | Read a BigBlueButton activity | ✓ | ✓ | ✓ |
+| [`get_bigbluebutton_join_url`](#get-bigbluebutton-join-url) | Get the link to join a BigBlueButton meeting | ✓ | ✓ | ✓ |
+| [`set_recording_published`](#set-recording-published) | Publish or hide a BigBlueButton recording |  | ✓ |  |
+| [`delete_recording`](#delete-recording) | Delete a BigBlueButton recording |  | ✓ |  |
+| [`list_notes`](#list-notes) | Read notes about a course's participants | ✓ | ✓ |  |
+| [`add_note`](#add-note) | Write a note about a participant |  | ✓ |  |
+| [`edit_note`](#edit-note) | Change a note about a participant |  | ✓ |  |
+| [`delete_note`](#delete-note) | Delete a note about a participant |  | ✓ |  |
+| [`list_competency_frameworks`](#list-competency-frameworks) | List the competency frameworks a course can use | ✓ | ✓ |  |
+| [`list_course_competencies`](#list-course-competencies) | List a course's competencies | ✓ | ✓ |  |
+| [`add_course_competency`](#add-course-competency) | Add a competency to a course |  | ✓ |  |
+| [`remove_course_competency`](#remove-course-competency) | Remove a competency from a course |  | ✓ |  |
+| [`set_activity_competencies`](#set-activity-competencies) | Link competencies to an activity |  | ✓ |  |
+| [`get_competency_rating`](#get-competency-rating) | Read a participant's rating in a competency | ✓ | ✓ | ✓ |
+| [`rate_competency`](#rate-competency) | Rate a participant in a competency |  | ✓ |  |
+| [`list_external_tools`](#list-external-tools) | List a course's external tools | ✓ | ✓ |  |
+| [`add_external_tool`](#add-external-tool) | Add an external tool to a course |  | ✓ |  |
+| [`set_external_tool_in_chooser`](#set-external-tool-in-chooser) | Show an external tool in the activity chooser |  | ✓ |  |
+| [`delete_external_tool`](#delete-external-tool) | Delete a course's external tool |  | ✓ |  |
+| [`get_external_tool_launch_url`](#get-external-tool-launch-url) | Get the link that launches an LTI activity | ✓ | ✓ | ✓ |
+
+### `list_course_blocks` {#list-course-blocks}
+
+**List a course page's blocks**
+
+List the blocks on a course's page: type, title, region, order and visibility, and a text block's content.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `add_block` {#add-block}
+
+**Add a block to a course page**
+
+Add a block to a course's page: a text block (type html) with its title and HTML content (local images embedded), or another core block by its type (calendar_upcoming, recent_activity…), in a region or the page's default. Returns the block. Everyone in the course sees it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `type` | ✅ | string | html for a text block, or another block's plugin name |
+| `region` |  | string |  |
+| `title` |  | string |  |
+| `content` |  | string | A text block's HTML |
+| `embed` |  | string list | Absolute local files the content names, which go in it: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `configure_block` {#configure-block}
+
+**Configure a course page's block**
+
+Change a block: a text block's title and content, or any field of its configure form by name in settings (bui_visible, config_…). Returns the block. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `blockId` | ✅ | integer | The block's id, as list_course_blocks gives it |
+| `title` |  | string |  |
+| `content` |  | string |  |
+| `embed` |  | string list | Absolute local files the content names, which go in it: &#60;img src="shot.png"&#62; |
+| `settings` |  | object | Other fields of the block's configure form, by name |
+
+</details>
+
+### `move_block` {#move-block}
+
+**Move a course page's block**
+
+Move a block to another region or place in it (weight: lower comes first). Returns the block. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `blockId` | ✅ | integer | The block's id, as list_course_blocks gives it |
+| `region` |  | string |  |
+| `weight` |  | integer |  |
+
+</details>
+
+### `delete_block` {#delete-block}
+
+**Delete a course page's block**
+
+Delete a block from a course's page, with its configuration. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `blockId` | ✅ | integer | The block's id, as list_course_blocks gives it |
+
+</details>
+
+### `list_content_bank` {#list-content-bank}
+
+**List a course's content bank**
+
+List a course's content bank: each content's name, H5P library, author, date, size, how many activities use it and whether it's unlisted.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `upload_to_content_bank` {#upload-to-content-bank}
+
+**Upload H5P content to a course's content bank**
+
+Upload a local .h5p file to a course's content bank, where H5P activities can use it. Returns the content. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `file` | ✅ | string | An absolute local path to the .h5p file |
+
+</details>
+
+### `rename_content` {#rename-content}
+
+**Rename content in a content bank**
+
+Rename a content of a content bank. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `contentId` | ✅ | integer | The content's id, as list_content_bank gives it |
+| `name` | ✅ | string |  |
+
+</details>
+
+### `download_content` {#download-content}
+
+**Download content from a content bank**
+
+Save a content bank's content (its .h5p file) into a local folder.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `contentId` | ✅ | integer | The content's id, as list_content_bank gives it |
+| `destDir` | ✅ | string | An absolute local folder |
+
+</details>
+
+### `delete_content` {#delete-content}
+
+**Delete content from a content bank**
+
+Delete a content of a content bank. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `contentId` | ✅ | integer | The content's id, as list_content_bank gives it |
+
+</details>
+
+### `get_bigbluebutton` {#get-bigbluebutton}
+
+**Read a BigBlueButton activity**
+
+Read a BigBlueButton activity: whether it's not open yet, open, running or closed, its schedule, who's in it while running (counts), whether the person can join and as moderator, and its recordings (all for who manages them, the published ones for the rest). Fails with a clear error where the site's BigBlueButton server isn't set up.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | integer | The BigBlueButton activity's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `get_bigbluebutton_join_url` {#get-bigbluebutton-join-url}
+
+**Get the link to join a BigBlueButton meeting**
+
+Give the link that joins the person to a BigBlueButton meeting, for them to open; nothing is joined here. The link is the person's own: give it to them, not to anyone else.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | integer | The BigBlueButton activity's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `set_recording_published` {#set-recording-published}
+
+**Publish or hide a BigBlueButton recording**
+
+Publish a BigBlueButton recording to students, or hide it from them. Returns the recording. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | integer | The BigBlueButton activity's id (course module id), as get_course_structure gives it |
+| `recordingId` | ✅ | integer | The recording's id, as get_bigbluebutton gives it |
+| `published` | ✅ | boolean |  |
+
+</details>
+
+### `delete_recording` {#delete-recording}
+
+**Delete a BigBlueButton recording**
+
+Delete a BigBlueButton recording. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | integer | The BigBlueButton activity's id (course module id), as get_course_structure gives it |
+| `recordingId` | ✅ | integer | The recording's id, as get_bigbluebutton gives it |
+
+</details>
+
+### `list_notes` {#list-notes}
+
+**Read notes about a course's participants**
+
+Read the notes about a course's participants, or one participant's: who it's about and who wrote it (aliases when the server pseudonymizes), its content, whether it's personal, course or site, and whether the person may change it. A page at a time: limit notes (50 by default) after skipping offset; more says whether there are others.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
+| `userId` |  | integer | The participant's user id, when the server shows names |
+| `limit` |  | integer | How many notes (50 by default, up to 200) |
+| `offset` |  | integer | How many notes to skip first (0 by default) |
+
+</details>
+
+### `add_note` {#add-note}
+
+**Write a note about a participant**
+
+Write a note about a participant (an alias when the server pseudonymizes): its content (HTML, no aliases in it) and who sees it. Returns the note. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
+| `userId` |  | integer | The participant's user id, when the server shows names |
+| `content` | ✅ | string |  |
+| `context` |  | `personal`, `course`, `site` | personal: only its author sees it; course: the course's teachers; site: teachers in any course |
+
+</details>
+
+### `edit_note` {#edit-note}
+
+**Change a note about a participant**
+
+Change a note's content (no aliases in it) or who sees it. Returns the note. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `noteId` | ✅ | integer | The note's id, as list_notes gives it |
+| `content` |  | string |  |
+| `context` |  | `personal`, `course`, `site` | personal: only its author sees it; course: the course's teachers; site: teachers in any course |
+
+</details>
+
+### `delete_note` {#delete-note}
+
+**Delete a note about a participant**
+
+Delete a note. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `noteId` | ✅ | integer | The note's id, as list_notes gives it |
+
+</details>
+
+### `list_competency_frameworks` {#list-competency-frameworks}
+
+**List the competency frameworks a course can use**
+
+List the competency frameworks a course can draw its competencies from, each with its competencies (id, short name, ID number, description, parent). Fails with a clear error where the site has competencies turned off.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `list_course_competencies` {#list-course-competencies}
+
+**List a course's competencies**
+
+List a course's competencies, each with its framework and the course's activities linked to it.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `add_course_competency` {#add-course-competency}
+
+**Add a competency to a course**
+
+Add a framework's competency to a course. Returns the course's competencies. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `competencyId` | ✅ | integer | The competency's id, as list_competency_frameworks or list_course_competencies gives it |
+
+</details>
+
+### `remove_course_competency` {#remove-course-competency}
+
+**Remove a competency from a course**
+
+Remove a competency from a course, and its links to the course's activities. Returns the course's competencies. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `competencyId` | ✅ | integer | The competency's id, as list_competency_frameworks or list_course_competencies gives it |
+
+</details>
+
+### `set_activity_competencies` {#set-activity-competencies}
+
+**Link competencies to an activity**
+
+Set the course competencies linked to an activity: the list given replaces its links ([] removes them). Returns the activity's competencies. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | integer | As get_course_structure gives it |
+| `competencyIds` | ✅ | integer list | The course's competencies, as list_course_competencies gives them |
+
+</details>
+
+### `get_competency_rating` {#get-competency-rating}
+
+**Read a participant's rating in a competency**
+
+Read a participant's rating in a course competency (an alias when the server pseudonymizes; the person's own without one): the rating, whether proficient, the scale, the evidence in the course (latest first) and whether the person may rate them.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `competencyId` | ✅ | integer | The competency's id, as list_competency_frameworks or list_course_competencies gives it |
+| `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
+| `userId` |  | integer | The participant's user id, when the server shows names |
+
+</details>
+
+### `rate_competency` {#rate-competency}
+
+**Rate a participant in a competency**
+
+Rate a participant (an alias when the server pseudonymizes) in a course competency: a value of its scale (1 for the first) or the item's name, with a note kept as evidence (no aliases in it). Returns the rating. The participant sees it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `competencyId` | ✅ | integer | The competency's id, as list_competency_frameworks or list_course_competencies gives it |
+| `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
+| `userId` |  | integer | The participant's user id, when the server shows names |
+| `rating` | ✅ | string | The scale item's value ("2") or name |
+| `note` |  | string |  |
+
+</details>
+
+### `list_external_tools` {#list-external-tools}
+
+**List a course's external tools**
+
+List the external tools (LTI) a course may use: those an administrator set up for the site and the course's own, each with whether teachers find it in the activity chooser. create_activity makes an LTI activity from one by its id (type lti, toolId).
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `add_external_tool` {#add-external-tool}
+
+**Add an external tool to a course**
+
+Add an external tool (LTI 1.0/1.1) to a course by its launch URL, with the consumer key and shared secret its provider gave (Moodle stores the secret; nothing gives it back), and any other field of Moodle's course tool form by name. Returns the tool. A tool sends the course's people to another site: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `name` | ✅ | string |  |
+| `url` | ✅ | string | The tool's launch URL, or a cartridge's |
+| `description` |  | string |  |
+| `key` |  | string | The consumer key |
+| `secret` |  | string | The shared secret |
+| `settings` |  | object | Other fields of the course tool form, by name (lti_launchcontainer, lti_sendname…) |
+
+</details>
+
+### `set_external_tool_in_chooser` {#set-external-tool-in-chooser}
+
+**Show an external tool in the activity chooser**
+
+Show a course's external tool in the activity chooser, or keep it out. Returns the tool. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `toolId` | ✅ | integer | The tool's id, as list_external_tools gives it |
+| `shown` | ✅ | boolean |  |
+
+</details>
+
+### `delete_external_tool` {#delete-external-tool}
+
+**Delete a course's external tool**
+
+Delete one of the course's own external tools. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `toolId` | ✅ | integer | The tool's id, as list_external_tools gives it |
+
+</details>
+
+### `get_external_tool_launch_url` {#get-external-tool-launch-url}
+
+**Get the link that launches an LTI activity**
+
+Give the link that launches an LTI activity for the person, for them to open; nothing is launched here. The link is the person's own: give it to them, not to anyone else.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | integer | The LTI activity's id (course module id), as get_course_structure gives it |
 
 </details>
 

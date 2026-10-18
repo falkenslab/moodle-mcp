@@ -29,6 +29,7 @@ const AREAS = [
   { id: "quizzes", en: "Quizzes and questions", es: "Cuestionarios y preguntas", tools: ["list_question_banks", "list_questions", "validate_gift", "import_questions", "create_question", "update_question", "delete_questions", "set_question_status", "list_question_categories", "add_question_category", "edit_question_category", "delete_question_category", "move_questions", "export_questions", "get_quiz_structure", "add_questions_to_quiz", "edit_quiz_slot", "remove_quiz_slot", "set_quiz_pages", "add_quiz_section", "get_quiz_results", "get_quiz_statistics", "set_quiz_override", "list_questions_to_grade", "grade_quiz_question"] },
   { id: "gradebook", en: "Gradebook and progress", es: "Calificador y progreso", tools: ["get_grader_report", "set_grade", "export_grades", "get_gradebook_setup", "add_grade_item", "update_grade_item", "delete_grade_item", "add_grade_category", "update_grade_category", "delete_grade_category", "import_grades", "list_scales", "add_scale", "edit_scale", "get_grade_letters", "set_grade_letters", "get_completion_report", "override_completion", "get_course_completion_criteria", "set_course_completion_criteria", "get_course_completion_status", "mark_course_complete"] },
   { id: "badges", en: "Badges", es: "Insignias", tools: ["list_badges", "create_badge", "set_badge_criteria", "set_badge_enabled", "award_badge"] },
+  { id: "advanced", en: "Advanced tools (MOODLE_MCP_ADVANCED)", es: "Herramientas avanzadas (MOODLE_MCP_ADVANCED)", tools: ["list_course_blocks", "add_block", "configure_block", "move_block", "delete_block", "list_content_bank", "upload_to_content_bank", "rename_content", "download_content", "delete_content", "get_bigbluebutton", "get_bigbluebutton_join_url", "set_recording_published", "delete_recording", "list_notes", "add_note", "edit_note", "delete_note", "list_competency_frameworks", "list_course_competencies", "add_course_competency", "remove_course_competency", "set_activity_competencies", "get_competency_rating", "rate_competency", "list_external_tools", "add_external_tool", "set_external_tool_in_chooser", "delete_external_tool", "get_external_tool_launch_url"] },
   { id: "reports", en: "Reports", es: "Informes", tools: ["get_activity_report", "get_participation_report", "get_course_logs", "get_choice_results", "get_survey_results"] },
   { id: "participants", en: "Participants and groups", es: "Participantes y grupos", tools: ["list_participants", "list_potential_users", "enrol_users", "unenrol_user", "set_user_roles", "list_enrolment_methods", "set_enrolment_method", "list_groups", "create_group", "update_group", "delete_group", "set_group_members", "list_groupings", "create_grouping", "delete_grouping", "set_grouping_groups", "auto_create_groups", "import_groups"] },
   { id: "communication", en: "Forums, workshops and messages", es: "Foros, talleres y mensajes", tools: ["list_discussions", "get_discussion", "reply_to_post", "create_discussion", "edit_post", "delete_post", "set_discussion_state", "set_discussion_subscription", "get_forum_grades", "grade_forum_user", "rate", "get_workshop", "set_workshop_phase", "assess_workshop_submission", "get_workshop_submission", "save_workshop_submission", "list_workshop_examples", "add_workshop_example", "edit_workshop_example", "delete_workshop_example", "assess_workshop_example", "calculate_workshop_grades", "override_workshop_grade", "get_workshop_allocation", "allocate_workshop_reviewer", "remove_workshop_reviewer", "allocate_workshop_randomly", "schedule_workshop_allocation", "list_notifications", "mark_notifications_read", "list_conversations", "get_conversation", "send_message", "message_participants"] },
@@ -55,6 +56,7 @@ const TEXT = {
     clearOnly: "Only with `MOODLE_MCP_STUDENT_DATA=clear`: what it returns can't be pseudonymized. See [Students' privacy](../privacy.md).",
     browser:
       "These are for what no other tool covers: a plugin, a rare setting, the inside of a SCORM package. The agent uses them on your site only, never types passwords, and says which task needed them. With `pseudonymize`, they never open pages about people (participants, grades, reports, forums, messages).",
+    advanced: "These are off by default, for areas few people use: `MOODLE_MCP_ADVANCED=true` turns them on, and the other limits still apply. See [Limiting the agent](../limits.md#advanced-tools).",
   },
   es: {
     title: "Herramientas",
@@ -73,12 +75,14 @@ const TEXT = {
     clearOnly: "Solo con `MOODLE_MCP_STUDENT_DATA=clear`: lo que devuelve no se puede seudonimizar. Consulta [Privacidad del alumnado](../privacy.md).",
     browser:
       "Son para lo que no cubre ninguna otra herramienta: un plugin, un ajuste poco común, el interior de un paquete SCORM. El agente las usa solo en tu sitio, nunca escribe contraseñas y dice qué tarea las necesitó. Con `pseudonymize`, nunca abren páginas sobre personas (participantes, calificaciones, informes, foros, mensajes).",
+    advanced: "Están desactivadas por defecto, por ser de áreas que usa poca gente: `MOODLE_MCP_ADVANCED=true` las activa, y los demás límites siguen aplicándose. Consulta [Limitar al agente](../limits.md#herramientas-avanzadas).",
   },
 };
 
 async function listTools(env = {}) {
   const client = new Client({ name: "tools-reference", version: "0" });
-  await client.connect(new StdioClientTransport({ command: process.execPath, args: [SERVER], env: { ...process.env, ...env }, stderr: "ignore" }));
+  // Advanced tools on (ADR-022): the reference lists every tool, and its area says they need the setting.
+  await client.connect(new StdioClientTransport({ command: process.execPath, args: [SERVER], env: { ...process.env, MOODLE_MCP_ADVANCED: "true", ...env }, stderr: "ignore" }));
   const { tools } = await client.listTools();
   await client.close();
   return tools;
@@ -147,6 +151,7 @@ for (const [lang, t] of Object.entries(TEXT)) {
   for (const area of AREAS) {
     lines.push(`## ${area[lang]} {#${area.id}}`, "");
     if (area.id === "browser") lines.push(t.browser, "");
+    if (area.id === "advanced") lines.push(t.advanced, "");
     lines.push(`| ${t.area} | ${t.params[3]} | ${t.changes} | ${t.teacher} | ${t.student} |`, "| --- | --- | :-: | :-: | :-: |");
     for (const name of area.tools) {
       const tool = tools.find((x) => x.name === name);

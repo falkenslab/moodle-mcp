@@ -893,7 +893,7 @@
     }
   },
   "create_activity": {
-    "source": "5eabe7d0f335",
+    "source": "047ffccc73c5",
     "title": "Crear una actividad o un recurso",
     "description": "Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, folder, assign, quiz, forum…) al final de una sección, mediante el propio formulario de Moodle, oculto a los estudiantes por defecto. Los campos comunes tienen sus propias entradas, incluidas las restricciones de acceso y la finalización; cualquier otro ajuste va en settings por el nombre de su campo del formulario. files son rutas locales que se suben a un recurso de archivo o a una carpeta, o el paquete de un SCORM (type scorm, el primer archivo). Devuelve el id de la nueva actividad y la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
     "inputs": {
@@ -902,6 +902,7 @@
       "type": "El nombre del módulo en Moodle: page, label, url, resource, folder, assign, quiz, forum, book…",
       "name": "Obligatorio salvo para las etiquetas",
       "files": "Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip)",
+      "toolId": "type lti: la herramienta externa a partir de la que se crea, tal como la da list_external_tools (Moodle 5 solo crea actividades LTI a partir de una herramienta)",
       "description": "La descripción (HTML), que se muestra en la página de la actividad",
       "content": "El contenido de una página, o el texto de una etiqueta (HTML)",
       "url": "El destino de un recurso URL",
@@ -2528,6 +2529,296 @@
       "attempts": "El método de calificación del cuestionario por defecto",
       "recalculate": "Calcularlo de nuevo ahora, para los intentos terminados desde entonces",
       "responses": "También el análisis de respuestas de cada pregunta"
+    }
+  },
+  "list_course_blocks": {
+    "source": "8d2b4fc4c5f2",
+    "title": "Listar los bloques de la página de un curso",
+    "description": "Lista los bloques de la página de un curso: tipo, título, región, orden y visibilidad, y el contenido de un bloque de texto.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "add_block": {
+    "source": "b396d30e5c6a",
+    "title": "Añadir un bloque a la página de un curso",
+    "description": "Añade un bloque a la página de un curso: un bloque de texto (type html) con su título y su contenido HTML (con imágenes locales incrustadas), u otro bloque del núcleo por su tipo (calendar_upcoming, recent_activity…), en una región o en la predeterminada de la página. Devuelve el bloque. Lo ve todo el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "type": "html para un bloque de texto, o el nombre del plugin de otro bloque",
+      "region": "",
+      "title": "",
+      "content": "El HTML de un bloque de texto",
+      "embed": "Archivos locales absolutos que nombra el contenido, que van en él: <img src=\"shot.png\">"
+    }
+  },
+  "configure_block": {
+    "source": "1999d6475414",
+    "title": "Configurar un bloque de la página de un curso",
+    "description": "Cambia un bloque: el título y el contenido de un bloque de texto, o cualquier campo de su formulario de configuración por nombre en settings (bui_visible, config_…). Devuelve el bloque. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "blockId": "El id del bloque, tal como lo da list_course_blocks",
+      "title": "",
+      "content": "",
+      "embed": "Archivos locales absolutos que nombra el contenido, que van en él: <img src=\"shot.png\">",
+      "settings": "Otros campos del formulario de configuración del bloque, por nombre"
+    }
+  },
+  "move_block": {
+    "source": "e40b6e986753",
+    "title": "Mover un bloque de la página de un curso",
+    "description": "Mueve un bloque a otra región o a otro sitio dentro de ella (weight: el menor va primero). Devuelve el bloque. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "blockId": "El id del bloque, tal como lo da list_course_blocks",
+      "region": "",
+      "weight": ""
+    }
+  },
+  "delete_block": {
+    "source": "fc8a0437493e",
+    "title": "Eliminar un bloque de la página de un curso",
+    "description": "Elimina un bloque de la página de un curso, con su configuración. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "blockId": "El id del bloque, tal como lo da list_course_blocks"
+    }
+  },
+  "list_content_bank": {
+    "source": "fc5d4bf38bdc",
+    "title": "Listar el banco de contenido de un curso",
+    "description": "Lista el banco de contenido de un curso: el nombre de cada contenido, su biblioteca H5P, autor, fecha, tamaño, cuántas actividades lo usan y si está oculto en la lista.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "upload_to_content_bank": {
+    "source": "4e0cfb9c77ec",
+    "title": "Subir contenido H5P al banco de contenido de un curso",
+    "description": "Sube un archivo .h5p local al banco de contenido de un curso, donde pueden usarlo las actividades H5P. Devuelve el contenido. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "file": "Una ruta local absoluta al archivo .h5p"
+    }
+  },
+  "rename_content": {
+    "source": "e8c6d591d960",
+    "title": "Renombrar un contenido del banco de contenido",
+    "description": "Renombra un contenido de un banco de contenido. Confírmalo antes con la persona.",
+    "inputs": {
+      "contentId": "El id del contenido, tal como lo da list_content_bank",
+      "name": ""
+    }
+  },
+  "download_content": {
+    "source": "72cc6320d26f",
+    "title": "Descargar un contenido del banco de contenido",
+    "description": "Guarda un contenido del banco de contenido (su archivo .h5p) en una carpeta local.",
+    "inputs": {
+      "contentId": "El id del contenido, tal como lo da list_content_bank",
+      "destDir": "Una carpeta local absoluta"
+    }
+  },
+  "delete_content": {
+    "source": "bf7acf1fd6d6",
+    "title": "Eliminar un contenido del banco de contenido",
+    "description": "Elimina un contenido de un banco de contenido. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "contentId": "El id del contenido, tal como lo da list_content_bank"
+    }
+  },
+  "get_bigbluebutton": {
+    "source": "1db9b0ba2c4c",
+    "title": "Leer una actividad BigBlueButton",
+    "description": "Lee una actividad BigBlueButton: si aún no está abierta, abierta, en curso o cerrada, su horario, cuántos hay dentro mientras está en curso, si la persona puede entrar y como moderadora, y sus grabaciones (todas para quien las gestiona, las publicadas para los demás). Falla con un error claro donde el servidor BigBlueButton del sitio no está configurado.",
+    "inputs": {
+      "activityId": "El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "get_bigbluebutton_join_url": {
+    "source": "3d1d0b4c139a",
+    "title": "Obtener el enlace para entrar a una reunión BigBlueButton",
+    "description": "Da el enlace con el que la persona entra a una reunión BigBlueButton, para que lo abra ella; aquí no se entra a nada. El enlace es de la propia persona: dáselo a ella y a nadie más.",
+    "inputs": {
+      "activityId": "El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "set_recording_published": {
+    "source": "2d95f29d4f49",
+    "title": "Publicar u ocultar una grabación de BigBlueButton",
+    "description": "Publica una grabación de BigBlueButton para los estudiantes, o se la oculta. Devuelve la grabación. Confírmalo antes con la persona.",
+    "inputs": {
+      "activityId": "El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure",
+      "recordingId": "El id de la grabación, tal como lo da get_bigbluebutton",
+      "published": ""
+    }
+  },
+  "delete_recording": {
+    "source": "dbe756239036",
+    "title": "Eliminar una grabación de BigBlueButton",
+    "description": "Elimina una grabación de BigBlueButton. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "activityId": "El id de la actividad BigBlueButton (id del módulo del curso), tal como lo da get_course_structure",
+      "recordingId": "El id de la grabación, tal como lo da get_bigbluebutton"
+    }
+  },
+  "list_notes": {
+    "source": "9e4de63ead84",
+    "title": "Leer las notas sobre los participantes de un curso",
+    "description": "Lee las notas sobre los participantes de un curso, o sobre uno: sobre quién es y quién la escribió (alias cuando el servidor seudonimiza), su contenido, si es personal, del curso o del sitio, y si la persona puede cambiarla. Una página cada vez: limit notas (50 por defecto) tras saltar offset; more dice si hay más.",
+    "inputs": {
+      "courseId": "",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "limit": "Cuántas notas (50 por defecto, hasta 200)",
+      "offset": "Cuántas notas saltar antes (0 por defecto)"
+    }
+  },
+  "add_note": {
+    "source": "b9dacc6289bd",
+    "title": "Escribir una nota sobre un participante",
+    "description": "Escribe una nota sobre un participante (un alias cuando el servidor seudonimiza): su contenido (HTML, sin alias) y quién la ve. Devuelve la nota. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "content": "",
+      "context": "personal: solo la ve su autor; course: los profesores del curso; site: los profesores de cualquier curso"
+    }
+  },
+  "edit_note": {
+    "source": "e2f18b7939e4",
+    "title": "Cambiar una nota sobre un participante",
+    "description": "Cambia el contenido de una nota (sin alias) o quién la ve. Devuelve la nota. Confírmalo antes con la persona.",
+    "inputs": {
+      "noteId": "El id de la nota, tal como lo da list_notes",
+      "content": "",
+      "context": "personal: solo la ve su autor; course: los profesores del curso; site: los profesores de cualquier curso"
+    }
+  },
+  "delete_note": {
+    "source": "f35f1cd23401",
+    "title": "Eliminar una nota sobre un participante",
+    "description": "Elimina una nota. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "noteId": "El id de la nota, tal como lo da list_notes"
+    }
+  },
+  "list_competency_frameworks": {
+    "source": "860b8052956a",
+    "title": "Listar los marcos de competencias que puede usar un curso",
+    "description": "Lista los marcos de competencias de los que un curso puede tomar sus competencias, cada uno con sus competencias (id, nombre corto, número de ID, descripción, madre). Falla con un error claro donde el sitio tiene las competencias desactivadas.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "list_course_competencies": {
+    "source": "63ebf552b9cc",
+    "title": "Listar las competencias de un curso",
+    "description": "Lista las competencias de un curso, cada una con su marco y las actividades del curso vinculadas a ella.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "add_course_competency": {
+    "source": "bf7bf62e3b0f",
+    "title": "Añadir una competencia a un curso",
+    "description": "Añade a un curso una competencia de un marco. Devuelve las competencias del curso. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "competencyId": "El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies"
+    }
+  },
+  "remove_course_competency": {
+    "source": "809f13372936",
+    "title": "Quitar una competencia de un curso",
+    "description": "Quita una competencia de un curso, y sus vínculos con las actividades del curso. Devuelve las competencias del curso. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "competencyId": "El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies"
+    }
+  },
+  "set_activity_competencies": {
+    "source": "94fa3934fa50",
+    "title": "Vincular competencias a una actividad",
+    "description": "Fija las competencias del curso vinculadas a una actividad: la lista dada sustituye sus vínculos ([] los quita). Devuelve las competencias de la actividad. Confírmalo antes con la persona.",
+    "inputs": {
+      "activityId": "Tal como lo da get_course_structure",
+      "competencyIds": "Las competencias del curso, tal como las da list_course_competencies"
+    }
+  },
+  "get_competency_rating": {
+    "source": "11a75be0a628",
+    "title": "Leer la valoración de un participante en una competencia",
+    "description": "Lee la valoración de un participante en una competencia del curso (un alias cuando el servidor seudonimiza; la de la propia persona si falta): la valoración, si es competente, la escala, las evidencias en el curso (la más reciente primero) y si la persona puede valorarle.",
+    "inputs": {
+      "courseId": "",
+      "competencyId": "El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres"
+    }
+  },
+  "rate_competency": {
+    "source": "2bbef197d25b",
+    "title": "Valorar a un participante en una competencia",
+    "description": "Valora a un participante (un alias cuando el servidor seudonimiza) en una competencia del curso: un valor de su escala (1 el primero) o el nombre del elemento, con una nota que se guarda como evidencia (sin alias). Devuelve la valoración. El participante la ve: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "competencyId": "El id de la competencia, tal como lo da list_competency_frameworks o list_course_competencies",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "rating": "El valor del elemento de la escala (\"2\") o su nombre",
+      "note": ""
+    }
+  },
+  "list_external_tools": {
+    "source": "5561a5aea8c2",
+    "title": "Listar las herramientas externas de un curso",
+    "description": "Lista las herramientas externas (LTI) que puede usar un curso: las que un administrador configuró para el sitio y las del propio curso, cada una con si los profesores la encuentran en el selector de actividades. create_activity crea una actividad LTI a partir de una por su id (type lti, toolId).",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "add_external_tool": {
+    "source": "f8ee123f1670",
+    "title": "Añadir una herramienta externa a un curso",
+    "description": "Añade una herramienta externa (LTI 1.0/1.1) a un curso por su URL de lanzamiento, con la clave de consumidor y el secreto compartido que dio su proveedor (Moodle guarda el secreto; nada lo devuelve), y cualquier otro campo del formulario de herramienta del curso por nombre. Devuelve la herramienta. Una herramienta lleva a la gente del curso a otro sitio: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "url": "La URL de lanzamiento de la herramienta, o la de un cartucho",
+      "description": "",
+      "key": "La clave de consumidor",
+      "secret": "El secreto compartido",
+      "settings": "Otros campos del formulario de herramienta del curso, por nombre (lti_launchcontainer, lti_sendname…)"
+    }
+  },
+  "set_external_tool_in_chooser": {
+    "source": "40f890c054e4",
+    "title": "Mostrar una herramienta externa en el selector de actividades",
+    "description": "Muestra una herramienta externa del curso en el selector de actividades, o la deja fuera. Devuelve la herramienta. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "toolId": "El id de la herramienta, tal como lo da list_external_tools",
+      "shown": ""
+    }
+  },
+  "delete_external_tool": {
+    "source": "0d1502f1a8d2",
+    "title": "Eliminar una herramienta externa de un curso",
+    "description": "Elimina una de las herramientas externas propias del curso. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "toolId": "El id de la herramienta, tal como lo da list_external_tools"
+    }
+  },
+  "get_external_tool_launch_url": {
+    "source": "0863b86956b8",
+    "title": "Obtener el enlace que lanza una actividad LTI",
+    "description": "Da el enlace que lanza una actividad LTI para la persona, para que lo abra ella; aquí no se lanza nada. El enlace es de la propia persona: dáselo a ella y a nadie más.",
+    "inputs": {
+      "activityId": "El id de la actividad LTI (id del módulo del curso), tal como lo da get_course_structure"
     }
   }
 }

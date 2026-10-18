@@ -62,7 +62,7 @@ O una lista de ámbitos, separados por comas: `content`, `student-data`, `gradin
 
 ## Herramientas avanzadas
 
-Algunas áreas de Moodle las usa poca gente: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenido, las notas sobre participantes y los bloques del curso. Sus herramientas están desactivadas por defecto, para que no las pague cada chat. `MOODLE_MCP_ADVANCED=true` las activa, y los demás límites siguen aplicándose. `server_info` dice si están activas; el agente no puede activarlas por su cuenta.
+Algunas áreas de Moodle las usa poca gente: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenido, las notas sobre participantes y los bloques del curso. Sus 30 herramientas están desactivadas por defecto, para que no las pague cada chat. `MOODLE_MCP_ADVANCED=true` las activa, y los demás límites siguen aplicándose. `server_info` dice si están activas; el agente no puede activarlas por su cuenta.
 
 ## Ejemplos
 
