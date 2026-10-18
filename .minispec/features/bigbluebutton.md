@@ -9,7 +9,7 @@ A teacher reads a BigBlueButton activity's state and manages its recordings.
 ## Context
 
 - A BigBlueButton activity can be created, nothing else.
-- Waits on moodle-driver [#81](https://github.com/falkenslab/moodle-driver/issues/81): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#81](https://github.com/falkenslab/moodle-driver/issues/81): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

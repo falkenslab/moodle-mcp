@@ -10,11 +10,11 @@ Follow mode keeps working the same for the person, with the page each AJAX tool 
 
 - `src/tools/follow.ts` maps 41 AJAX tools to the Moodle page that shows their work, and wraps `registerTool` to bring it to the front while the browser is visible (ADR-011).
 - That map is Moodle knowledge: the driver's shell shows nothing for AJAX functions without it.
-- Waits on moodle-driver [#88](https://github.com/falkenslab/moodle-driver/issues/88): not started. A release, then a version bump here (`upgrade-deps`).
+- moodle-driver 0.10.0 has it (#88): `FOLLOWED_PAGES` maps each AJAX function to its page, `([args], result) => path`, and its client (`createMoodle`) follows them while the browser is visible. moodle-mcp calls the functions directly, not through that client, so nothing follows by itself here.
 
 ## Changes
 
-- Remove `follow.ts` and `followTools` once the driver follows its AJAX functions itself; or, if it only exports the map, read the driver's map instead of ours.
+- Keep `followTools` (it knows which tool ran and when), but take each page from the driver's `FOLLOWED_PAGES` by the tool's driver function (`TOOL_FUNCTIONS`) and its arguments in the driver's order, instead of our own paths; new AJAX tools then follow with no line here. Or call the functions through the driver's client: a larger change, its own ADR.
 - ADR-011 updated: the driver knows and follows the pages, moodle-mcp keeps `show_browser` and when to use it.
 - The follow tests moved to what moodle-mcp still owns.
 

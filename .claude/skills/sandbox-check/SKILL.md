@@ -41,6 +41,10 @@ MOODLE_MCP_DOCKER_MOUNT="$(cygpath -w "$S"):/scratch" MSYS_NO_PATHCONV=1 node sc
 - `profile-teacher` (`profesor`) and `profile-student` (`alumno`) in the scratchpad's `docker/` keep their sessions between checks; reuse them.
 - To log one in (or a seeded student, `lucia.martin`…, for checks that end a session, such as `logout`): get the accounts with `npm run --silent info -- --json` in `../moodle-sandbox`, write only the one needed to `<scratchpad>/docker/creds.json`, run the scratch login script on its own profile, and **delete `creds.json` right after** (check it's gone). Never print credentials, never put them in the repo, tests, docs or commit messages.
 
+## 4b. The Moodle 4.5 site
+
+The sandbox also runs Moodle 4.5 (Classic theme) at `http://localhost:8081`, project `moodle-sandbox-45` (`docker ps` shows `moodle-sandbox-45-webserver-1`). Point the runner at it with `MOODLE_MCP_DOCKER_NETWORK=moodle-sandbox-45_default MOODLE_SANDBOX_PORT=8081`, give the server `--url http://localhost:8081`, and keep its profiles apart (`profile-teacher-45`, `profile-student-45`); its accounts come from `npm run --silent info -- --moodle 4.5 --json`, through `creds.json` as above. It has no `mcp-content`: course 2 (`sandbox-course`) is read-only for us there too, and writes go only to something the check creates and deletes. Check 4.5 when a change touches what differs between versions (question banks, the activities overview, anything a tool reads from a page's markup).
+
 ## 5. Report
 
 What ran, per call ✓/✗ with the gist of the result, which failures are data (an activity outside the course's state, a course without a grade report) and which are code, and that nothing was left running. Data you created in course 3 stays (note it); undo it only if the owner asks.

@@ -9,7 +9,7 @@ A teacher lists and adds a course's external tools and creates LTI activities fr
 ## Context
 
 - An LTI activity can be created with its form's fields only.
-- Waits on moodle-driver [#84](https://github.com/falkenslab/moodle-driver/issues/84): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#84](https://github.com/falkenslab/moodle-driver/issues/84): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

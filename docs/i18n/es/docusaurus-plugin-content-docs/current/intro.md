@@ -54,10 +54,10 @@ Los [casos de uso](./use-cases/index.md) muestran cada uno de estos ejemplos con
 - Un ordenador con **Windows, macOS o Linux**, y **Node.js 20** o posterior.
 - **Microsoft Edge** o **Google Chrome** (o nada: descarga su propio navegador la primera vez).
 - Una aplicación de IA compatible con MCP: **[Claude Code](./getting-started/claude-code.md)**, **[Claude Desktop](./getting-started/claude-desktop.md)**, **[Codex](./getting-started/codex.md)** u otra.
-- Tu usuario de Moodle de siempre, en un sitio Moodle 5.x.
+- Tu usuario de Moodle de siempre, en un sitio Moodle 4.5 o 5.x.
 
 ¿Listo? Empieza por los [requisitos](./getting-started/requirements.md).
 
 :::note Primeros pasos
-moodle-mcp es joven (versión 0.x). Está probado con Moodle 5.x, y las herramientas aún pueden cambiar entre versiones. Si algo no funciona en tu sitio, [abre una incidencia](https://github.com/falkenslab/moodle-mcp/issues).
+moodle-mcp es joven (versión 0.x). Está probado con Moodle 4.5 y 5.x, con los temas Boost y Classic, y las herramientas aún pueden cambiar entre versiones. Si algo no funciona en tu sitio, [abre una incidencia](https://github.com/falkenslab/moodle-mcp/issues).
 :::

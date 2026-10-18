@@ -10,7 +10,7 @@ A teacher exports a bank's questions and organises them in categories.
 
 - Questions are imported, created and edited, not exported nor organised.
 - Driver functions: `exportQuestions`, `questionCategories`, `addQuestionCategory`, `editQuestionCategory`, `deleteQuestionCategory`, `moveQuestions`.
-- Waits on moodle-driver [#72](https://github.com/falkenslab/moodle-driver/issues/72): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#72](https://github.com/falkenslab/moodle-driver/issues/72): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

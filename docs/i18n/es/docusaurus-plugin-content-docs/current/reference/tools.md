@@ -1166,7 +1166,7 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 
 **Listar los bancos de preguntas de un curso**
 
-Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables por cualquier cuestionario del curso) y los bancos propios de las actividades (el de un cuestionario, utilizable solo en él). Devuelve sus ids, que reciben list_questions, import_questions y create_question.
+Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables por cualquier cuestionario del curso) y los bancos propios de las actividades (el de un cuestionario, utilizable solo en él). Devuelve sus ids, que reciben list_questions, import_questions y create_question. En Moodle 4.x un curso tiene un solo banco, el suyo, cuyo id es el del curso.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1241,7 +1241,7 @@ Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: mu
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
-| `type` | ✅ | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay` |  |
+| `type` | ✅ | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay`, `calculated`, `calculatedsimple`, `calculatedmulti`, `match`, `randomsamatch`, `ddwtos`, `ddimageortext`, `ddmarker`, `gapselect`, `multianswer`, `ordering`, `description`, `coderunner`, `formulas`, `gapfill`, `ddmatch` |  |
 | `name` | ✅ | texto |  |
 | `text` | ✅ | texto | El texto de la pregunta (HTML) |
 | `answers` |  | lista de objeto | Respuestas de multichoice, shortanswer y numerical |

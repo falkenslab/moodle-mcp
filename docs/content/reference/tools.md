@@ -1166,7 +1166,7 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 
 **List a course's question banks**
 
-List the question banks of a course: its shared banks (usable by any quiz in the course) and the activities' own banks (a quiz's, usable only there). Returns their ids, which list_questions, import_questions and create_question take.
+List the question banks of a course: its shared banks (usable by any quiz in the course) and the activities' own banks (a quiz's, usable only there). Returns their ids, which list_questions, import_questions and create_question take. On Moodle 4.x a course has one bank, its own, whose id is the course's.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1241,7 +1241,7 @@ Create one question in a question bank through its type's form: multichoice, tru
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `bankId` | ✅ | integer | The bank's id (a course module id), as list_question_banks gives it |
-| `type` | ✅ | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay` |  |
+| `type` | ✅ | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay`, `calculated`, `calculatedsimple`, `calculatedmulti`, `match`, `randomsamatch`, `ddwtos`, `ddimageortext`, `ddmarker`, `gapselect`, `multianswer`, `ordering`, `description`, `coderunner`, `formulas`, `gapfill`, `ddmatch` |  |
 | `name` | ✅ | string |  |
 | `text` | ✅ | string | The question text (HTML) |
 | `answers` |  | object list | Multichoice, shortanswer and numerical answers |

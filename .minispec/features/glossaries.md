@@ -10,7 +10,7 @@ Teachers and students read and write a glossary's entries, and teachers approve 
 
 - Nothing in moodle-mcp touches a glossary, one of the most used activities.
 - Driver functions: `glossaryEntries`, `addGlossaryEntry`, `editGlossaryEntry`, `deleteGlossaryEntry`, `setGlossaryEntryApproved`, `glossaryCategories`, `addGlossaryCategory`, `exportGlossaryEntries`, `importGlossaryEntries`.
-- Waits on moodle-driver [#68](https://github.com/falkenslab/moodle-driver/issues/68): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#68](https://github.com/falkenslab/moodle-driver/issues/68): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

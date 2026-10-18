@@ -10,7 +10,7 @@ A teacher sets course completion's criteria and follows each participant's statu
 
 - Activity completion is read and overridden; course completion isn't, and a badge's course completion criterion depends on it.
 - Driver functions: `courseCompletionCriteria`, `setCourseCompletionCriteria`, `courseCompletionStatus`, `markCourseComplete`.
-- Waits on moodle-driver [#73](https://github.com/falkenslab/moodle-driver/issues/73): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#73](https://github.com/falkenslab/moodle-driver/issues/73): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

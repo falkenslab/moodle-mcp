@@ -54,10 +54,10 @@ The [use cases](./use-cases/index.md) show each of these with real sessions, ste
 - A computer with **Windows, macOS or Linux**, and **Node.js 20** or later.
 - **Microsoft Edge** or **Google Chrome** (or nothing: it downloads its own browser the first time).
 - An AI app that supports MCP: **[Claude Code](./getting-started/claude-code.md)**, **[Claude Desktop](./getting-started/claude-desktop.md)**, **[Codex](./getting-started/codex.md)** or another.
-- Your usual Moodle login, on a Moodle 5.x site.
+- Your usual Moodle login, on a Moodle 4.5 or 5.x site.
 
 Ready? Start with the [requirements](./getting-started/requirements.md).
 
 :::note Early days
-moodle-mcp is young (version 0.x). It's tested against Moodle 5.x, and the tools may still change between versions. If something doesn't work on your site, please [open an issue](https://github.com/falkenslab/moodle-mcp/issues).
+moodle-mcp is young (version 0.x). It's tested against Moodle 4.5 and 5.x, with the Boost and Classic themes, and the tools may still change between versions. If something doesn't work on your site, please [open an issue](https://github.com/falkenslab/moodle-mcp/issues).
 :::

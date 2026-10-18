@@ -9,7 +9,7 @@ A teacher manages a course's content bank: uploads, renames, downloads and delet
 ## Context
 
 - H5P activities are created from a package; the content bank isn't reachable.
-- Waits on moodle-driver [#80](https://github.com/falkenslab/moodle-driver/issues/80): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#80](https://github.com/falkenslab/moodle-driver/issues/80): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

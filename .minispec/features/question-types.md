@@ -9,7 +9,7 @@ Issue: [#43](https://github.com/falkenslab/moodle-mcp/issues/43)
 ## Context
 
 - They take multiple choice, true/false, short answer, numerical and essay; any other type goes through GIFT or XML import, and some (drag and drop, ordering, CodeRunner) can't be written in GIFT.
-- Waits on moodle-driver [#85](https://github.com/falkenslab/moodle-driver/issues/85): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#85](https://github.com/falkenslab/moodle-driver/issues/85): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

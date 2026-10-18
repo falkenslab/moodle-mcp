@@ -10,7 +10,7 @@ A database activity can be filled, reviewed and moderated through the tools, not
 
 - Its fields, templates and presets are tools since 0.3.0; its entries aren't.
 - Driver functions: `databaseEntries`, `addDatabaseEntry`, `editDatabaseEntry`, `deleteDatabaseEntry`, `setDatabaseEntryApproved`, `exportDatabaseEntries`, `importDatabaseEntries`.
-- Waits on moodle-driver [#69](https://github.com/falkenslab/moodle-driver/issues/69): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#69](https://github.com/falkenslab/moodle-driver/issues/69): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

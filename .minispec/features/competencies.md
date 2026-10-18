@@ -9,7 +9,7 @@ A teacher links competencies to a course and its activities and rates participan
 ## Context
 
 - Nothing touches competencies.
-- Waits on moodle-driver [#82](https://github.com/falkenslab/moodle-driver/issues/82): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#82](https://github.com/falkenslab/moodle-driver/issues/82): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

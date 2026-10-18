@@ -9,7 +9,7 @@ A teacher splits a course's students into groups at once, as Moodle's auto-creat
 ## Context
 
 - Groups are created one by one.
-- Waits on moodle-driver [#76](https://github.com/falkenslab/moodle-driver/issues/76): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#76](https://github.com/falkenslab/moodle-driver/issues/76): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

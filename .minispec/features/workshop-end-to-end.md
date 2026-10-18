@@ -10,7 +10,7 @@ A workshop runs through the tools from submission to grades: students submit, te
 
 - Since 0.3.0 reviewers are allocated, but nobody can submit, so allocation couldn't be checked with real submissions.
 - Driver functions: `workshopSubmission`, `saveWorkshopSubmission`, `workshopExamples`, `addWorkshopExample`, `editWorkshopExample`, `deleteWorkshopExample`, `assessWorkshopExample`, `calculateWorkshopGrades`, `overrideWorkshopGrade`.
-- Waits on moodle-driver [#71](https://github.com/falkenslab/moodle-driver/issues/71): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#71](https://github.com/falkenslab/moodle-driver/issues/71): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

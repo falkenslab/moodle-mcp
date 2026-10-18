@@ -10,7 +10,7 @@ A teacher adds and arranges a course's blocks, such as a text block with its wel
 
 - Nothing reads or changes blocks.
 - Driver functions: `courseBlocks`, `addBlock`, `configureBlock`, `moveBlock`, `deleteBlock`.
-- Waits on moodle-driver [#79](https://github.com/falkenslab/moodle-driver/issues/79): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#79](https://github.com/falkenslab/moodle-driver/issues/79): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

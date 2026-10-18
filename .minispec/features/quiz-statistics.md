@@ -10,7 +10,7 @@ A teacher sees which questions of a quiz work: facility, discrimination and how 
 
 - `get_quiz_results` gives attempts and marks, not Moodle's statistics report.
 - Driver function: `quizStatistics`.
-- Waits on moodle-driver [#78](https://github.com/falkenslab/moodle-driver/issues/78): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#78](https://github.com/falkenslab/moodle-driver/issues/78): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

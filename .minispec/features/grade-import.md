@@ -10,7 +10,7 @@ A teacher imports a CSV of grades and manages scales and grade letters.
 
 - Grades are set one by one and exported; nothing imports them or manages scales and letters.
 - Driver functions: `importGrades` (with Moodle's preview), `courseScales`, `addScale`, `editScale`, `gradeLetters`, `setGradeLetters`.
-- Waits on moodle-driver [#75](https://github.com/falkenslab/moodle-driver/issues/75): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#75](https://github.com/falkenslab/moodle-driver/issues/75): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

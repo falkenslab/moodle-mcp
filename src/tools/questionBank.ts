@@ -43,7 +43,7 @@ export const registerListQuestionBanks: RegisterTool = (server, { config, browse
     {
       title: "List a course's question banks",
       description:
-        "List the question banks of a course: its shared banks (usable by any quiz in the course) and the activities' own banks (a quiz's, usable only there). Returns their ids, which list_questions, import_questions and create_question take.",
+        "List the question banks of a course: its shared banks (usable by any quiz in the course) and the activities' own banks (a quiz's, usable only there). Returns their ids, which list_questions, import_questions and create_question take. On Moodle 4.x a course has one bank, its own, whose id is the course's.",
       inputSchema: { courseId: z.number().int().positive() },
       outputSchema: { banks: z.array(z.object({ id: z.number().int(), name: z.string(), type: z.string().describe('"qbank" for a shared bank, "quiz"… for an activity\'s own'), shared: z.boolean() })) },
       annotations: { readOnlyHint: true, openWorldHint: true },

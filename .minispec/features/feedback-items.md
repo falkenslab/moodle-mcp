@@ -10,7 +10,7 @@ A teacher builds a feedback activity's questions, not only reads its answers.
 
 - A feedback is created with `create_activity` and answered with `submit_survey`; its questions are added by hand.
 - Driver functions: `feedbackItems`, `addFeedbackItem`, `editFeedbackItem`, `moveFeedbackItem`, `deleteFeedbackItem`, `feedbackTemplates`, `useFeedbackTemplate`, `saveFeedbackTemplate`, `deleteFeedbackTemplate`, `FEEDBACK_ITEM_TYPES`.
-- Waits on moodle-driver [#77](https://github.com/falkenslab/moodle-driver/issues/77): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#77](https://github.com/falkenslab/moodle-driver/issues/77): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

@@ -1087,9 +1087,9 @@
     }
   },
   "list_question_banks": {
-    "source": "4640eb6c8bfc",
+    "source": "64739deba6c4",
     "title": "Listar los bancos de preguntas de un curso",
-    "description": "Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables por cualquier cuestionario del curso) y los bancos propios de las actividades (el de un cuestionario, utilizable solo en él). Devuelve sus ids, que reciben list_questions, import_questions y create_question.",
+    "description": "Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables por cualquier cuestionario del curso) y los bancos propios de las actividades (el de un cuestionario, utilizable solo en él). Devuelve sus ids, que reciben list_questions, import_questions y create_question. En Moodle 4.x un curso tiene un solo banco, el suyo, cuyo id es el del curso.",
     "inputs": {
       "courseId": ""
     }

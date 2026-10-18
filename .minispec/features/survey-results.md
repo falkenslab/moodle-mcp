@@ -10,7 +10,7 @@ A teacher reads what people answered in a choice, a feedback or a questionnaire.
 
 - Students answer them (`answer_choice`, `submit_survey`); nothing reads the results.
 - Driver functions: `choiceResults`, `surveyResults`.
-- Waits on moodle-driver [#70](https://github.com/falkenslab/moodle-driver/issues/70): done in `../moodle-driver`'s main, not released yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#70](https://github.com/falkenslab/moodle-driver/issues/70): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

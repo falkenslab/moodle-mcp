@@ -9,7 +9,7 @@ A teacher reads and writes Moodle's notes about participants.
 ## Context
 
 - Notes can't be read or written.
-- Waits on moodle-driver [#83](https://github.com/falkenslab/moodle-driver/issues/83): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#83](https://github.com/falkenslab/moodle-driver/issues/83): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

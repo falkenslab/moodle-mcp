@@ -9,7 +9,7 @@ Teachers and students read and edit a wiki's pages.
 ## Context
 
 - Nothing reads or writes a wiki.
-- Waits on moodle-driver [#74](https://github.com/falkenslab/moodle-driver/issues/74): not started in moodle-driver yet. A release, then a version bump here (`upgrade-deps`), then the tools (`add-tool`).
+- Waits on moodle-driver [#74](https://github.com/falkenslab/moodle-driver/issues/74): released in moodle-driver 0.10.0, which moodle-mcp uses; the tools come with `add-tool`.
 
 ## Changes
 

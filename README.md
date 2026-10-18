@@ -10,14 +10,14 @@ Your students stay anonymous to the AI, and you decide what it can do.
 [![npm](https://img.shields.io/npm/v/@falkenslab/moodle-mcp?color=cb3837&logo=npm)](https://www.npmjs.com/package/@falkenslab/moodle-mcp)
 ![MCP server](https://img.shields.io/badge/MCP-server-0b0b0b)
 ![Node.js 20+](https://img.shields.io/badge/node-20%2B-339933?logo=node.js&logoColor=white)
-![Moodle 5.x](https://img.shields.io/badge/Moodle-5.x-f98012?logo=moodle&logoColor=white)
+![Moodle 4.5 and 5.x](https://img.shields.io/badge/Moodle-4.5%20%7C%205.x-f98012?logo=moodle&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-16a34a)](LICENSE)
 
 **[📖 Documentation](https://falkenslab.github.io/moodle-mcp/)** · [📖 Documentación en español](https://falkenslab.github.io/moodle-mcp/es/)
 
 </div>
 
-moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 170 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 5 site.
+moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 170 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 4.5 or 5.x site.
 
 ## ✨ Why moodle-mcp
 
