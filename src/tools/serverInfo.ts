@@ -24,8 +24,9 @@ export const serverInfoSchema = {
   studentData: z.enum(STUDENT_DATA_LEVELS).describe("How others' data reaches the agent: block (no tools on it), pseudonymize or clear (ADR-016)"),
   role: z.enum(ROLES).describe("The role whose tools the agent gets: teacher, student or all (ADR-018)"),
   access: z.enum(ACCESS_LEVELS).describe("read: only the tools that change nothing in Moodle; write: all (ADR-020)"),
+  advanced: z.boolean().describe("Whether the advanced tools are on: BigBlueButton, competencies, external tools, the content bank, notes, course blocks (ADR-022)"),
   sources: z
-    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source })
+    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source, advanced: source.optional() })
     .describe("Where each setting came from: configure, argument, environment or default"),
   unexpanded: z.array(z.string()).optional().describe("Settings the client passed as unexpanded ${…} placeholders (its plugin settings missing), taken as not set: their defaults apply"),
   visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
@@ -57,6 +58,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     studentData: config.studentData,
     role: config.role,
     access: config.access,
+    advanced: config.advanced ?? false,
     sources: { ...config.sources },
     ...(config.unexpanded && { unexpanded: config.unexpanded }),
     visible: browser.visible(),

@@ -60,6 +60,10 @@ This is how a read-only assistant answers a request to grade:
 
 Or a list of scopes, separated by commas: `content`, `student-data`, `grading`, `communication`, `as-student`, `browser`. For example, `content,communication` builds courses and posts announcements, but doesn't read submissions.
 
+## Advanced tools
+
+Some areas of Moodle few people use: BigBlueButton, competencies, external tools (LTI), the content bank, notes about participants and course blocks. Their tools are off by default, so every chat doesn't pay for them. `MOODLE_MCP_ADVANCED=true` turns them on, and the other limits still apply to them. `server_info` says whether they're on; the agent can't turn them on itself.
+
 ## Examples
 
 A teacher who wants help building courses, and nothing else:

@@ -4,6 +4,7 @@
 import type { McpServer, RegisteredTool } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { DATA_CATEGORIES, moduleCategories, type DataCategory } from "@falkenslab/moodle-driver";
 import type { Config } from "../config.js";
+import { ADVANCED_TOOLS } from "./advanced.js";
 import { roleAllows } from "./roles.js";
 
 export const SCOPES = ["content", "student-data", "grading", "communication", "as-student", "browser"] as const;
@@ -242,8 +243,9 @@ export function activeScopes(config: Pick<Config, "scopes" | "studentData">): Se
 }
 
 /** Whether a tool exists for the agent under this configuration. */
-export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role" | "access">): boolean {
+export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role" | "access" | "advanced">): boolean {
   if (SESSION_TOOLS.has(tool)) return true;
+  if (ADVANCED_TOOLS.has(tool) && !config.advanced) return false;
   if (!roleAllows(tool, config.role)) return false;
   if (config.access === "read" && !readOnlyTools.has(tool) && !LOCAL_FILE_TOOLS.has(tool)) return false;
   // A picture can't be redacted (ADR-017).

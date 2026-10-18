@@ -34,11 +34,12 @@ describe("loadConfig", () => {
       studentData: "pseudonymize",
       role: "all",
       access: "write",
+      advanced: false,
       dataDir: path.join(homedir(), ".moodle-mcp"),
       sites: [{ name: "moodle.example.org", url: "https://moodle.example.org/campus/", origin: "configuration", profileDir: PROFILE }],
       activeSite: "moodle.example.org",
       limits: { scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"], studentData: "pseudonymize", role: "all", access: "write" },
-      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment", scopes: "default", studentData: "default", role: "default", access: "default" },
+      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment", scopes: "default", studentData: "default", role: "default", access: "default", advanced: "default" },
     });
   });
 
@@ -52,7 +53,7 @@ describe("loadConfig", () => {
     assert.equal(config.channel, "chromium");
     assert.equal(config.headless, false);
     assert.equal(config.downloadBrowser, false);
-    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument", trail: "default", scopes: "default", studentData: "default", role: "default", access: "default" });
+    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument", trail: "default", scopes: "default", studentData: "default", role: "default", access: "default", advanced: "default" });
   });
 
   it("starts without a site, and treats empty variables as unset", () => {
@@ -82,6 +83,15 @@ describe("loadConfig", () => {
     // A value that only holds a placeholder somewhere is the person's: it's read, and refused if wrong.
     assert.throws(() => load([], { MOODLE_MCP_TRAIL: "fast ${user_config.trail}" }), /trail must be/);
     assert.equal(load([], {}).unexpanded, undefined);
+  });
+
+  it("keeps the advanced tools off unless the person turns them on", () => {
+    assert.equal(load([], {}).advanced, false);
+    assert.equal(load([], {}).sources.advanced, "default");
+    assert.equal(load([], { MOODLE_MCP_ADVANCED: "true" }).advanced, true);
+    assert.equal(load(["--advanced"], { MOODLE_MCP_ADVANCED: "false" }).advanced, true);
+    assert.equal(load([], { MOODLE_MCP_ADVANCED: "${user_config.advanced}" }).advanced, false);
+    assert.throws(() => load([], { MOODLE_MCP_ADVANCED: "maybe" }), /MOODLE_MCP_ADVANCED must be true or false/);
   });
 
   it("defaults to a profile under the home folder, any channel and headless", () => {

@@ -49,6 +49,8 @@ export interface Config {
   role: Role;
   /** Whether the agent may change Moodle, or only read it (ADR-020). */
   access: AccessLevel;
+  /** Whether the advanced tools exist (ADR-022); off unless the person turns them on. */
+  advanced?: boolean;
   /** The server's own folder: the plugin's data folder (CLAUDE_PLUGIN_DATA) or ~/.moodle-mcp (ADR-021). */
   dataDir: string;
   /** The sites it knows; the active one's URL and profile are `moodleUrl` and `profileDir` (ADR-021). */
@@ -68,6 +70,7 @@ export interface Config {
     studentData: SettingSource;
     role: SettingSource;
     access: SettingSource;
+    advanced?: SettingSource;
   };
   /** Settings the client passed as an unexpanded `${…}` placeholder, taken as not set (a client without the plugin's settings). */
   unexpanded?: string[];
@@ -108,6 +111,8 @@ Options (each overrides its environment variable):
                         all (every tool)
   --access <level>      read (only tools that change nothing)   MOODLE_MCP_ACCESS (default: write)
                         or write
+  --advanced            Also the advanced tools (BigBlueButton,  MOODLE_MCP_ADVANCED (default: false)
+                        competencies, LTI, content bank, notes, blocks)
   --help                Show this help
   --version             Show the version`;
 
@@ -151,10 +156,10 @@ function pick(argument: string | undefined, variable: string, env: NodeJS.Proces
 }
 
 /** A boolean setting, true by default: the argument's value, else the variable's. */
-function pickBoolean(argument: boolean | undefined, variable: string, env: NodeJS.ProcessEnv, unexpanded: string[]): { value: boolean; source: SettingSource } {
+function pickBoolean(argument: boolean | undefined, variable: string, env: NodeJS.ProcessEnv, unexpanded: string[], byDefault = true): { value: boolean; source: SettingSource } {
   if (argument !== undefined) return { value: argument, source: "argument" };
   const text = given(env[variable], variable, unexpanded);
-  if (!text) return { value: true, source: "default" };
+  if (!text) return { value: byDefault, source: "default" };
   const parsed = booleanText.safeParse(text);
   if (!parsed.success) throw new ConfigError(`${variable} must be true or false, not "${text}".`);
   return { value: parsed.data, source: "environment" };
@@ -185,6 +190,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         "student-data": { type: "string" },
         role: { type: "string" },
         access: { type: "string" },
+        advanced: { type: "boolean" },
         help: { type: "boolean" },
         version: { type: "boolean" },
       },
@@ -212,6 +218,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
 
   const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env, unexpanded);
   const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env, unexpanded);
+  const advanced = pickBoolean(values.advanced ? true : undefined, "MOODLE_MCP_ADVANCED", env, unexpanded, false);
 
   // The data folder is the plugin's when the server runs as one: each plugin its own sessions, gone with it (ADR-021).
   const dataDir = path.resolve(given(env.CLAUDE_PLUGIN_DATA, "CLAUDE_PLUGIN_DATA", unexpanded)?.trim() || path.join(homedir(), ".moodle-mcp"));
@@ -230,6 +237,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     studentData: level,
     role,
     access,
+    advanced: advanced.value,
     dataDir,
     sites,
     activeSite: sites[0]?.name,
@@ -245,6 +253,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       studentData: studentData?.source ?? "default",
       role: roleSetting?.source ?? "default",
       access: accessSetting?.source ?? "default",
+      advanced: advanced.source,
     },
     ...(unexpanded.length > 0 && { unexpanded: [...new Set(unexpanded)] }),
   };

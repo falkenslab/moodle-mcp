@@ -62,6 +62,7 @@ Cada ajuste también puede ser un argumento de línea de comandos después del n
 | `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | Lo que ve la IA de otras personas: `block`, `pseudonymize` o `clear`. Consulta [Privacidad del alumnado](./privacy.md). |
 | `MOODLE_MCP_ROLE` | `--role` | `all` | Solo las herramientas de un rol: `teacher`, `student` o `all`. Consulta [Limitar al agente](./limits.md#tu-rol). |
 | `MOODLE_MCP_ACCESS` | `--access` | `write` | `read` deja solo las herramientas que no cambian nada. Consulta [Limitar al agente](./limits.md#solo-lectura). |
+| `MOODLE_MCP_ADVANCED` | `--advanced` | `false` | `true` añade las herramientas avanzadas: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenido, notas y bloques del curso. Consulta [Limitar al agente](./limits.md#herramientas-avanzadas). |
 | `MOODLE_MCP_SCOPES` | `--scopes` | `all` | Los tipos de herramientas: un perfil o una lista de ámbitos. Consulta [Limitar al agente](./limits.md#ámbitos). |
 | `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | La carpeta del perfil del navegador que guarda tu sesión (la del primer sitio, si hay varios). Dentro de un plugin de Claude Code, la guarda en su lugar la carpeta de datos del plugin. |
 | `MOODLE_MCP_CHANNEL` | `--channel` | Edge, después Chrome, después Chromium | Qué navegador usar: `msedge`, `chrome` o `chromium`. |

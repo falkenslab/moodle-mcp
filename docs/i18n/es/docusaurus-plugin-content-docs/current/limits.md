@@ -60,6 +60,10 @@ Así responde un asistente de solo lectura cuando le pides que califique:
 
 O una lista de ámbitos, separados por comas: `content`, `student-data`, `grading`, `communication`, `as-student`, `browser`. Por ejemplo, `content,communication` crea cursos y publica avisos, pero no lee entregas.
 
+## Herramientas avanzadas
+
+Algunas áreas de Moodle las usa poca gente: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenido, las notas sobre participantes y los bloques del curso. Sus herramientas están desactivadas por defecto, para que no las pague cada chat. `MOODLE_MCP_ADVANCED=true` las activa, y los demás límites siguen aplicándose. `server_info` dice si están activas; el agente no puede activarlas por su cuenta.
+
 ## Ejemplos
 
 Un docente que quiere ayuda para crear cursos, y nada más:
