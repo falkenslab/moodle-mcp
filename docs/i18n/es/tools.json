@@ -1117,32 +1117,56 @@
     }
   },
   "create_question": {
-    "source": "2740fd3ba3c0",
+    "source": "808dabd53152",
     "title": "Crear una pregunta en un banco",
-    "description": "Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: multichoice, truefalse, shortanswer, numerical o essay. Para varias, import_questions es más rápido. Devuelve el id de la nueva pregunta. Cambia el banco: confírmalo antes con la persona.",
+    "description": "Crea una pregunta en un banco de preguntas con el formulario de su tipo, de cualquier tipo: multichoice, truefalse, shortanswer, numerical, essay, calculadas (también simple y de opción múltiple), match, randomsamatch, arrastrar y soltar sobre texto (ddwtos), sobre una imagen (ddimageortext), marcadores (ddmarker), seleccionar palabras perdidas (gapselect), Cloze (multianswer, con sus respuestas en el texto), ordering, description, y los plugins coderunner, formulas, gapfill y ddmatch donde el sitio los tiene. Cada tipo admite sus propias entradas, comprobadas antes de Moodle. El texto lleva los huecos del tipo: [[1]] en ddwtos y gapselect, {1:SHORTANSWER:=Paris} en Cloze, [huecos] en gapfill, {comodines} en las calculadas. Para varias, import_questions es más rápido. Devuelve el id de la nueva pregunta. Cambia el banco: confírmalo antes con la persona.",
     "inputs": {
       "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks",
       "type": "",
       "name": "",
       "text": "El texto de la pregunta (HTML)",
-      "answers": "Respuestas de multichoice, shortanswer y numerical",
+      "answers": "Respuestas de multichoice, shortanswer y numerical; las de los tipos calculados son fórmulas de los comodines ({a} + {b})",
       "correct": "Truefalse: la respuesta correcta",
+      "pairs": "match, ddmatch: cada pregunta y su respuesta; una respuesta sin pregunta es un distractor",
+      "choose": "randomsamatch: cuántas preguntas de respuesta corta de la categoría toma",
+      "choices": "ddwtos, gapselect: las opciones que nombran [[1]], [[2]]… del texto, por posición",
+      "image": "ddimageortext, ddmarker: la imagen de fondo, una ruta local absoluta",
+      "drags": "ddimageortext: los elementos que se arrastran",
+      "markers": "ddmarker: los marcadores",
+      "drops": "ddimageortext, ddmarker: dónde van los elementos o marcadores",
+      "items": "ordering: los elementos, en el orden correcto",
+      "wildcards": "calculated, calculatedsimple, calculatedmulti: los valores de cada {comodín}; los de Moodle, de 1 a 10, si faltan",
+      "sets": "Tipos calculados: cuántos juegos de valores (10 por defecto)",
+      "coderunner": "coderunner (un plugin)",
+      "formulas": "formulas (un plugin)",
       "categoryId": "La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta",
       "defaultMark": "",
       "fields": "Cualquier otro campo del formulario del tipo, por su nombre"
     }
   },
   "update_question": {
-    "source": "32b1e96a65a9",
+    "source": "df8fe4f2ba8f",
     "title": "Cambiar una pregunta de un banco",
-    "description": "Cambia una pregunta de un banco mediante el formulario de su tipo: solo cambia lo que se indica (answers las sustituye todas). Al guardar se crea una nueva versión con su propio id, el que se devuelve, que a partir de entonces reciben los cuestionarios que usan la última versión. Cambia el banco: confírmalo antes con la persona.",
+    "description": "Cambia una pregunta de un banco con el formulario de su tipo, con las entradas de create_question: solo cambia lo que se indica (una lista dada, como answers, pairs, choices, items, drags, markers, drops o los valores de un comodín, sustituye a la de la pregunta). Guardar crea una versión nueva con su propio id, el que se devuelve, que reciben desde entonces los cuestionarios que usan la última versión. Cambia el banco: confírmalo antes con la persona.",
     "inputs": {
       "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks",
       "questionId": "Tal como lo da list_questions",
       "name": "",
       "text": "El texto de la pregunta (HTML)",
-      "answers": "Respuestas de multichoice, shortanswer y numerical",
+      "answers": "Respuestas de multichoice, shortanswer y numerical; las de los tipos calculados son fórmulas de los comodines ({a} + {b})",
       "correct": "Truefalse: la respuesta correcta",
+      "pairs": "match, ddmatch: cada pregunta y su respuesta; una respuesta sin pregunta es un distractor",
+      "choose": "randomsamatch: cuántas preguntas de respuesta corta de la categoría toma",
+      "choices": "ddwtos, gapselect: las opciones que nombran [[1]], [[2]]… del texto, por posición",
+      "image": "ddimageortext, ddmarker: la imagen de fondo, una ruta local absoluta",
+      "drags": "ddimageortext: los elementos que se arrastran",
+      "markers": "ddmarker: los marcadores",
+      "drops": "ddimageortext, ddmarker: dónde van los elementos o marcadores",
+      "items": "ordering: los elementos, en el orden correcto",
+      "wildcards": "calculated, calculatedsimple, calculatedmulti: los valores de cada {comodín}; los de Moodle, de 1 a 10, si faltan",
+      "sets": "Tipos calculados: cuántos juegos de valores (10 por defecto)",
+      "coderunner": "coderunner (un plugin)",
+      "formulas": "formulas (un plugin)",
       "categoryId": "La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta",
       "defaultMark": "",
       "fields": "Cualquier otro campo del formulario del tipo, por su nombre"
@@ -1833,12 +1857,410 @@
     }
   },
   "validate_gift": {
-    "source": "65af44dda3dc",
+    "source": "69d6dba57124",
     "title": "Comprobar preguntas GIFT antes de importarlas",
-    "description": "Comprueba preguntas en GIFT antes de import_questions, sin Moodle: cada pregunta, separada por líneas en blanco como hace el importador de Moodle, con su tipo en los nombres de Moodle, título, texto y respuestas, y cada problema con su línea (una pregunta que Moodle no puede leer, un peso que no admite, una opción múltiple sin respuesta correcta, una pregunta de emparejamiento con menos de dos parejas). Corrige lo que indique y vuelve a comprobar; valid significa que Moodle debería importar todas las preguntas.",
+    "description": "Comprueba preguntas en GIFT antes de import_questions, sin Moodle: cada pregunta, separada por líneas en blanco como hace el importador de Moodle, con su tipo en los nombres de Moodle, título, texto y respuestas, y cada problema con su línea (una pregunta que Moodle no puede leer, un peso que no admite, una opción múltiple sin respuesta correcta, una pregunta de emparejamiento con menos de dos parejas); también las preguntas de ordenación en su propio GIFT ({>…}), como las exporta Moodle. Corrige lo que indique y vuelve a comprobar; valid significa que Moodle debería importar todas las preguntas.",
     "inputs": {
       "text": "Las preguntas en GIFT",
       "file": "O una ruta local absoluta a un archivo GIFT"
+    }
+  },
+  "get_course_completion_criteria": {
+    "source": "bc10b36a3dd2",
+    "title": "Leer los criterios de finalización de un curso",
+    "description": "Lee qué completa un curso, desde sus ajustes de «Finalización del curso»: actividades, otros cursos, una fecha, días de matrícula, la baja, una calificación del curso, la autofinalización, los roles que la marcan, cómo se combinan, qué ofrece el formulario, si la finalización está activa y si los criterios están bloqueados. Es la finalización del curso, no la de las actividades (get_completion_report).",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "set_course_completion_criteria": {
+    "source": "785992656c6c",
+    "title": "Fijar qué completa un curso",
+    "description": "Fija los criterios de finalización de un curso: un criterio dado sustituye los ajustes de ese tipo, uno en remove se quita y uno que no se da se queda; overall dice si completan el curso todos los criterios o cualquiera. Las actividades necesitan seguimiento de finalización, y los roles, permiso para marcar la finalización (offered de get_course_completion_criteria lista ambos). En cuanto alguien cumple un criterio, Moodle los bloquea: unlock borra antes los datos de finalización del curso de todos los participantes (no la finalización de sus actividades). Devuelve los criterios. Confírmalo antes con la persona, y dos veces con unlock.",
+    "inputs": {
+      "courseId": "",
+      "overall": "",
+      "activities": "",
+      "courses": "",
+      "date": "Completar en este día",
+      "enrolmentDays": "1 a 30, 40 a 180 de diez en diez, o 365",
+      "unenrolment": "",
+      "grade": "En puntos del total del curso",
+      "self": "",
+      "roles": "",
+      "remove": "Criterios que quitar",
+      "unlock": "Desbloquear antes los criterios bloqueados, borrando los datos de finalización del curso de todos"
+    }
+  },
+  "get_course_completion_status": {
+    "source": "fb1f8955fa9c",
+    "title": "Leer quién ha completado un curso",
+    "description": "Lee la finalización del curso de cada participante desde el informe de finalización del curso: si lo ha completado y cuándo, y cada criterio cumplido y cuándo; los participantes como alias cuando el servidor seudonimiza. Algunos criterios (una calificación, una fecha, días de matrícula) los calculan las tareas programadas de Moodle, así que un criterio recién cumplido puede no aparecer todavía. Una página cada vez: limit participantes (50 por defecto) tras saltar offset; more dice si hay más.",
+    "inputs": {
+      "courseId": "",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",
+      "groupId": "Solo los participantes de este grupo",
+      "limit": "Cuántos participantes (50 por defecto, hasta 200)",
+      "offset": "Cuántos participantes saltar antes (0 por defecto)"
+    }
+  },
+  "mark_course_complete": {
+    "source": "266e9db50e26",
+    "title": "Marcar la finalización del curso de un participante",
+    "description": "Marca a mano la finalización del curso de un participante (un alias cuando el servidor seudonimiza), como el enlace del informe de finalización del curso: el criterio «Finalización manual por otros» del curso para un rol que tiene la persona. Moodle completa el curso cuando el resto de criterios lo permiten. Devuelve su finalización. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
+      "userId": "El id de usuario del participante, cuando el servidor muestra los nombres"
+    }
+  },
+  "get_choice_results": {
+    "source": "fec204b6c0f3",
+    "title": "Leer los resultados de una consulta",
+    "description": "Lee las respuestas de una consulta tal como las muestra su informe a un profesor: cada opción con cuántos la eligieron y quiénes (alias cuando el servidor seudonimiza), y quién no ha respondido donde la consulta lo muestra. El informe nombra a las personas sea cual sea lo que la consulta publica para los estudiantes.",
+    "inputs": {
+      "choiceId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "get_survey_results": {
+    "source": "1a9884290870",
+    "title": "Leer los resultados de una encuesta",
+    "description": "Lee lo que respondieron las personas en un feedback o un cuestionario de encuesta, tal como lo muestran sus informes a un profesor: cada respuesta (quién la dio, un alias cuando el servidor seudonimiza, nadie si es anónima) y, por pregunta, la respuesta de cada uno (el texto, redactado al seudonimizar), los recuentos de las opciones de una pregunta de elección y la media de las numéricas y valoradas. Un cuestionario de encuesta solo lista sus respuestas cuando alguien ha respondido.",
+    "inputs": {
+      "activityId": "El id de la actividad (id del módulo del curso), tal como lo da get_course_structure",
+      "type": "El tipo de la actividad, tal como lo da get_course_structure; se averigua si falta"
+    }
+  },
+  "get_workshop_submission": {
+    "source": "4ed3769ca31b",
+    "title": "Leer una entrega de un taller",
+    "description": "Lee una entrega de un taller tal como la muestra su página: título, texto (HTML), archivos adjuntos, autor (un alias cuando el servidor seudonimiza, donde Moodle muestra los autores) y si la persona puede editarla ahora. Sin submissionId ni autor, la de la propia persona (ninguna si no ha entregado); un profesor lee cualquiera, un revisor las que tiene asignadas.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "submissionId": "Tal como lo da get_workshop",
+      "author": "O el alias de su autor, cuando el servidor seudonimiza",
+      "authorId": "O el id de usuario de su autor, cuando el servidor muestra los nombres"
+    }
+  },
+  "save_workshop_submission": {
+    "source": "88294e7bbc22",
+    "title": "Entregar en un taller",
+    "description": "Añade la entrega de la persona a un taller, o cambia la que tiene, con su formulario de entrega: título, texto (HTML, con imágenes locales incrustadas) y archivos locales adjuntos; solo cambia lo que se indica (una nueva necesita título). Moodle la acepta en la fase de envío, dentro de sus fechas. Devuelve la entrega. La leerán los revisores: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "title": "Su título; uno nuevo lo necesita",
+      "content": "Su texto (HTML), donde el taller acepta texto en línea; sin alias",
+      "attachments": "Rutas locales absolutas: sustituyen a los archivos adjuntos antes",
+      "embed": "Archivos locales absolutos que incrustar en el texto, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "list_workshop_examples": {
+    "source": "c719c20d43f9",
+    "title": "Listar las entregas de ejemplo de un taller",
+    "description": "Lista las entregas de ejemplo de un taller tal como las muestra su página a un profesor: título, y si su evaluación de referencia está hecha, con su calificación. Moodle las lista en la fase de configuración, donde el taller usa ejemplos.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)"
+    }
+  },
+  "add_workshop_example": {
+    "source": "d555512aaff8",
+    "title": "Añadir una entrega de ejemplo a un taller",
+    "description": "Añade una entrega de ejemplo a un taller, para que los participantes practiquen la evaluación: título, texto (HTML, con imágenes locales incrustadas) y archivos adjuntos. Después assess_workshop_example hace su evaluación de referencia. Solo donde el taller usa ejemplos. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "title": "",
+      "content": "Su texto (HTML), donde el taller acepta texto en línea; sin alias",
+      "attachments": "Rutas locales absolutas: sustituyen a los archivos adjuntos antes",
+      "embed": "Archivos locales absolutos que incrustar en el texto, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "edit_workshop_example": {
+    "source": "211a4d398075",
+    "title": "Cambiar una entrega de ejemplo de un taller",
+    "description": "Cambia una entrega de ejemplo: solo lo que se indica (attachments sustituye los que hay). Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "exampleId": "Tal como lo da list_workshop_examples",
+      "title": "Su título; uno nuevo lo necesita",
+      "content": "Su texto (HTML), donde el taller acepta texto en línea; sin alias",
+      "attachments": "Rutas locales absolutas: sustituyen a los archivos adjuntos antes",
+      "embed": "Archivos locales absolutos que incrustar en el texto, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "delete_workshop_example": {
+    "source": "bc5b22abc4de",
+    "title": "Eliminar una entrega de ejemplo de un taller",
+    "description": "Elimina una entrega de ejemplo con sus evaluaciones (la de referencia y las de práctica de los participantes). No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "exampleId": "Tal como lo da list_workshop_examples"
+    }
+  },
+  "assess_workshop_example": {
+    "source": "35a2bc039704",
+    "title": "Evaluar una entrega de ejemplo de un taller",
+    "description": "Evalúa una entrega de ejemplo con el formulario de evaluación del taller, como assess_workshop_submission evalúa una entrega: la evaluación de un profesor es la de referencia con la que se comparan las de los participantes; la de un participante es su práctica, donde el taller le deja evaluar ejemplos ahora. Devuelve la calificación que da.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "exampleId": "Tal como lo da list_workshop_examples",
+      "criteria": "En el orden del formulario",
+      "feedback": "Retroalimentación general para el autor (HTML); sin alias",
+      "fields": "Cualquier otro campo del formulario, por nombre"
+    }
+  },
+  "calculate_workshop_grades": {
+    "source": "49f8f8a7d74e",
+    "title": "Calcular las calificaciones de un taller",
+    "description": "Calcula las calificaciones de un taller en la fase de evaluación, como «Recalcular calificaciones»: la de cada entrega a partir de sus evaluaciones, y la de cada evaluación por evaluar según el método del taller, con comparison como su rigor. Las calificaciones modificadas a mano se quedan. Devuelve las entregas y evaluaciones con sus calificaciones (las personas como alias cuando el servidor seudonimiza). Los estudiantes verán las calificaciones cuando se cierre el taller: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "comparison": "Con qué rigor se comparan las evaluaciones con la mejor; el formulario guarda la última usada"
+    }
+  },
+  "override_workshop_grade": {
+    "source": "a54026a2049d",
+    "title": "Modificar a mano una calificación de un taller",
+    "description": "Modifica a mano una calificación que Moodle calculó en un taller: la de una entrega o la calificación por evaluar de una evaluación (da uno de los dos ids, de get_workshop), con retroalimentación para el autor o el revisor; remove: true quita la modificación y vuelve a contar la calculada. Devuelve la entrega o la evaluación. Los estudiantes lo ven: confírmalo antes con la persona.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "submissionId": "",
+      "assessmentId": "",
+      "grade": "Un número entero hasta la calificación del taller por entrega (o por evaluación)",
+      "remove": "Quitar la modificación en su lugar",
+      "feedback": "HTML; sin alias"
+    }
+  },
+  "list_database_entries": {
+    "source": "ea674a00e8cb",
+    "title": "Leer las entradas de una base de datos",
+    "description": "Lee las entradas de una actividad de base de datos en el orden de su lista: autor (un alias cuando el servidor seudonimiza), cuándo se añadió y cambió, si está aprobada, y el valor de cada campo en las entradas que la persona puede editar (todas para un profesor; las suyas para un estudiante). search es la búsqueda simple de Moodle. Una página cada vez: limit entradas (25 por defecto) tras saltar offset; more dice si hay más.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "search": "",
+      "limit": "Cuántas entradas (25 por defecto, hasta 100)",
+      "offset": "Cuántas entradas saltar antes (0 por defecto)"
+    }
+  },
+  "add_database_entry": {
+    "source": "8324422afd3d",
+    "title": "Añadir una entrada a una base de datos",
+    "description": "Añade una entrada a una actividad de base de datos como la persona, con su formulario «Añadir entrada»: un valor por campo, por id o nombre (get_database_fields los nombra), archivos locales para los campos de archivo e imagen; los campos que faltan se quedan como los tiene el formulario (una fecha empieza en hoy). Devuelve el id de la entrada. Otros del curso pueden leerla: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "values": "Por id o nombre de campo: texto o un número; \"AAAA-MM-DD\" para una fecha; las opciones para casillas o una lista de selección múltiple; [latitud, longitud]; la ruta local absoluta de un archivo para un campo de archivo o imagen. Sin alias."
+    }
+  },
+  "edit_database_entry": {
+    "source": "e430227800a7",
+    "title": "Cambiar una entrada de una base de datos",
+    "description": "Cambia una entrada de una base de datos con su formulario de edición: los campos dados (archivos incluidos), el resto como están; removeFiles quita el archivo de un campo de archivo o imagen. Un estudiante cambia las suyas mientras Moodle le deja; un profesor, las de cualquiera. Confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "entryId": "El id de la entrada, tal como lo da list_database_entries",
+      "values": "Por id o nombre de campo: texto o un número; \"AAAA-MM-DD\" para una fecha; las opciones para casillas o una lista de selección múltiple; [latitud, longitud]; la ruta local absoluta de un archivo para un campo de archivo o imagen. Sin alias.",
+      "removeFiles": "Campos de archivo o imagen (por id o nombre) cuyo archivo quitar"
+    }
+  },
+  "delete_database_entry": {
+    "source": "cef5c0980dbf",
+    "title": "Eliminar una entrada de una base de datos",
+    "description": "Elimina una entrada de una base de datos con sus valores y archivos. Un estudiante elimina las suyas mientras Moodle le deja cambiarlas; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "entryId": "El id de la entrada, tal como lo da list_database_entries"
+    }
+  },
+  "set_database_entry_approved": {
+    "source": "61c754e00f0e",
+    "title": "Aprobar una entrada de una base de datos",
+    "description": "Aprueba una entrada de una base de datos que espera aprobación, o le quita la aprobación: una que espera solo la ven su autor y quien aprueba. Su autor lo ve: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "entryId": "El id de la entrada, tal como lo da list_database_entries",
+      "approved": ""
+    }
+  },
+  "export_database_entries": {
+    "source": "cc1d3d6f3467",
+    "title": "Exportar las entradas de una base de datos a CSV",
+    "description": "Guarda las entradas de una actividad de base de datos en un archivo CSV local, como su «Exportar entradas»: una columna por campo (sin imágenes ni archivos), con los datos de los autores, las fechas y la aprobación si se piden. Todas las entradas del grupo de la persona. El archivo contiene lo que escribieron los participantes tal cual: solo con los nombres visibles (el nivel de datos de estudiantes del servidor).",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "file": "Una ruta local absoluta para el CSV (se sustituye si existe)",
+      "userDetails": "El nombre completo, el usuario y el correo de los autores",
+      "times": "",
+      "approval": ""
+    }
+  },
+  "import_database_entries": {
+    "source": "b695c76238aa",
+    "title": "Importar entradas a una base de datos desde CSV",
+    "description": "Añade entradas a una actividad de base de datos desde un archivo CSV local, como su «Importar entradas»: una fila de cabecera con los nombres de los campos (como la escribe export_database_entries; una columna Username hace autor a ese usuario), en UTF-8. Devuelve cuántas añadió Moodle. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "databaseId": "El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure",
+      "file": "Una ruta local absoluta al CSV",
+      "delimiter": ""
+    }
+  },
+  "list_glossary_entries": {
+    "source": "0799982ee245",
+    "title": "Leer las entradas de un glosario",
+    "description": "Lee las entradas de un glosario en su orden: concepto, definición (HTML), alias de búsqueda, categorías, autor (un alias cuando el servidor seudonimiza), si está aprobada y adjuntos. Lo que ve la persona: las entradas aprobadas y las suyas pendientes; pending da las que esperan aprobación, para un profesor. Por letra, o con una búsqueda en conceptos, alias y definiciones. Una página cada vez: limit entradas (30 por defecto) tras saltar offset; more dice si hay más.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "letter": "Solo los conceptos que empiezan por esta letra",
+      "search": "Palabras en conceptos, alias o definiciones",
+      "pending": "Las entradas que esperan aprobación en su lugar (las de un profesor)",
+      "limit": "Cuántas entradas (30 por defecto, hasta 200)",
+      "offset": "Cuántas entradas saltar antes (0 por defecto)"
+    }
+  },
+  "add_glossary_entry": {
+    "source": "6c842afa6cc9",
+    "title": "Añadir una entrada a un glosario",
+    "description": "Añade una entrada a un glosario como la persona: su concepto, definición (HTML, con imágenes locales incrustadas), palabras clave, categorías y archivos locales adjuntos. La entrada de un estudiante espera la aprobación de un profesor donde el glosario lo pide. Devuelve la entrada. Otros del curso la leen: confírmalo antes con la persona.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "concept": "",
+      "definition": "HTML; sin alias",
+      "aliases": "Otras palabras por las que se encuentra y se enlaza",
+      "categoryIds": "Tal como las da list_glossary_categories",
+      "attachments": "Rutas locales absolutas de archivos que adjuntar",
+      "embed": "Archivos locales absolutos que incrustar en la definición, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "edit_glossary_entry": {
+    "source": "0ccd3cafa2fa",
+    "title": "Cambiar una entrada de un glosario",
+    "description": "Cambia una entrada de un glosario: solo lo que se indica (attachments sustituye sus archivos, [] los quita). Un estudiante cambia las suyas mientras dura el tiempo de edición del sitio; un profesor, las de cualquiera. Devuelve la entrada. Confírmalo antes con la persona.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "entryId": "El id de la entrada, tal como lo da list_glossary_entries",
+      "concept": "",
+      "definition": "HTML; sin alias",
+      "aliases": "Otras palabras por las que se encuentra y se enlaza",
+      "categoryIds": "Tal como las da list_glossary_categories",
+      "attachments": "Rutas locales absolutas de archivos que adjuntar",
+      "embed": "Archivos locales absolutos que incrustar en la definición, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "delete_glossary_entry": {
+    "source": "5ca64358674d",
+    "title": "Eliminar una entrada de un glosario",
+    "description": "Elimina una entrada de un glosario con sus archivos. Un estudiante elimina las suyas mientras dura el tiempo de edición del sitio; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "entryId": "El id de la entrada, tal como lo da list_glossary_entries"
+    }
+  },
+  "set_glossary_entry_approved": {
+    "source": "65e44d724473",
+    "title": "Aprobar una entrada de un glosario",
+    "description": "Aprueba una entrada que espera aprobación (list_glossary_entries con pending las lista), o le quita la aprobación: la entrada vuelve a esperar, oculta para todos salvo su autor y quien aprueba. Su autor lo ve: confírmalo antes con la persona.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "entryId": "El id de la entrada, tal como lo da list_glossary_entries",
+      "approved": ""
+    }
+  },
+  "list_glossary_categories": {
+    "source": "63c1ddba4346",
+    "title": "Listar las categorías de un glosario",
+    "description": "Lista las categorías de un glosario, por id y nombre, que toman add_glossary_entry y edit_glossary_entry.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_glossary_category": {
+    "source": "4a9f7aaaf0f1",
+    "title": "Añadir una categoría a un glosario",
+    "description": "Añade una categoría a un glosario; con autoLink, Moodle enlaza su nombre allí donde aparezca en el curso. Devuelve su id y las categorías. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "name": "",
+      "autoLink": ""
+    }
+  },
+  "export_glossary": {
+    "source": "3c574b309077",
+    "title": "Exportar las entradas de un glosario a un archivo",
+    "description": "Guarda las entradas aprobadas de un glosario en una carpeta local en el XML de Moodle (con alias de búsqueda, categorías y archivos), como su «Exportar entradas»; import_glossary las lleva a otro glosario. El archivo contiene lo que escribieron los participantes tal cual: solo con los nombres visibles (el nivel de datos de estudiantes del servidor).",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "destDir": "Una carpeta local absoluta"
+    }
+  },
+  "import_glossary": {
+    "source": "e8d8190695d2",
+    "title": "Importar entradas a un glosario",
+    "description": "Importa las entradas de un archivo XML de glosario (como lo guarda export_glossary) a este glosario, como entradas de la persona, aprobadas; con categories, también sus categorías. Moodle rechaza duplicados donde el glosario no los admite, y entradas sin concepto o definición. Devuelve cuántas entraron. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "glossaryId": "El id del glosario (id del módulo del curso), tal como lo da get_course_structure",
+      "file": "Una ruta local absoluta al archivo XML",
+      "categories": "Traer las categorías de las entradas, añadiendo las que falten"
+    }
+  },
+  "list_question_categories": {
+    "source": "6a7990c557e0",
+    "title": "Listar las categorías de un banco de preguntas",
+    "description": "Lista las categorías de un banco de preguntas tal como las muestra su página de categorías, las madres antes que sus subcategorías: id, nombre, categoría madre, descripción y cuántas preguntas hay directamente en cada una. La categoría oculta Top del banco es la madre de las de primer nivel. Requiere gestionar las categorías del banco (lo hace un profesor).",
+    "inputs": {
+      "bankId": "El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso)"
+    }
+  },
+  "add_question_category": {
+    "source": "04c5a7ffa3b2",
+    "title": "Añadir una categoría a un banco de preguntas",
+    "description": "Añade una categoría a un banco de preguntas, en el primer nivel o dentro de parentId, con una descripción opcional (HTML). Devuelve la categoría. Cambia el banco: confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso)",
+      "name": "",
+      "parentId": "",
+      "description": ""
+    }
+  },
+  "edit_question_category": {
+    "source": "24f9a878a111",
+    "title": "Renombrar o mover una categoría de preguntas",
+    "description": "Cambia una categoría de un banco de preguntas: su nombre, su descripción (HTML) o su categoría madre (la mueve con sus subcategorías y preguntas; la Top del banco la lleva al primer nivel). Solo cambia lo que se indica. Cambia el banco: confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso)",
+      "categoryId": "El id de la categoría, tal como lo da list_question_categories",
+      "name": "",
+      "description": "",
+      "parentId": ""
+    }
+  },
+  "delete_question_category": {
+    "source": "426884ca509a",
+    "title": "Eliminar una categoría de preguntas",
+    "description": "Elimina una categoría de un banco de preguntas: sus subcategorías suben a su categoría madre; una con preguntas necesita moveTo, la categoría a la que van sus preguntas. Moodle conserva la última categoría de primer nivel de un banco. Confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso)",
+      "categoryId": "El id de la categoría, tal como lo da list_question_categories",
+      "moveTo": "A dónde van sus preguntas, si tiene"
+    }
+  },
+  "move_questions": {
+    "source": "46f49084b465",
+    "title": "Mover preguntas a otra categoría",
+    "description": "Mueve preguntas de un banco a una de sus categorías, varias a la vez; cada una conserva su id y sus versiones. Cambia el banco: confírmalo antes con la persona.",
+    "inputs": {
+      "bankId": "El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso)",
+      "questionIds": "Tal como las da list_questions",
+      "categoryId": "El id de la categoría, tal como lo da list_question_categories"
+    }
+  },
+  "export_questions": {
+    "source": "2df4b73ef4f0",
+    "title": "Exportar las preguntas de un banco a un archivo",
+    "description": "Guarda las preguntas de un banco, o las de una categoría con sus subcategorías, en un archivo local GIFT o Moodle XML: la última versión de cada pregunta, sin las ocultas, con sus categorías, para que import_questions las vuelva a crear. validate_gift lee de vuelta una exportación GIFT.",
+    "inputs": {
+      "bankId": "El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso)",
+      "format": "",
+      "categoryId": "Solo esta categoría; todo el banco si falta",
+      "file": "Una ruta local absoluta (se sustituye si existe)"
     }
   }
 }

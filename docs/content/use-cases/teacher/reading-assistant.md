@@ -17,7 +17,7 @@ Add moodle-mcp a second time, as a read-only teacher's assistant:
 $ claude mcp add moodle-read -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_ACCESS=read -- npx -y @falkenslab/moodle-mcp
 `}</Terminal>
 
-It gets 64 tools instead of 174. See [Limiting the agent](../../limits.md).
+It gets 77 tools instead of 211. See [Limiting the agent](../../limits.md).
 
 ## What you ask
 

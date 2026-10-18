@@ -246,6 +246,26 @@ ${people.slice(1).map((p) => `<tr class="userrow" data-uid="${p.id}"><th><a clas
     await context.close();
   });
 
+  it("gives who chose each option of a choice as aliases", async () => {
+    const { state } = moodle();
+    const toggle = (id: number) => `<div><div class="form-check p-0"><input id="select-response-option-${id}" type="checkbox"><label class="accesshide">Select all</label></div></div>`;
+    const person = (userId: number, option: number, name: string, unanswered = false) =>
+      `<div class="mb-1"><input id="attempt-user${userId}-option${option}" name="${unanswered ? "userid[]" : "attemptid[]"}" type="checkbox"><label class="accesshide">${name}</label><a href="${SITE}user/view.php?id=${userId}&amp;course=5"><span class="userinitials" title="${name}">XX</span>${name}</a></div>`;
+    // Moodle's responses report, reduced: Ada chose "while", Alan hasn't answered.
+    state.bodies!["/mod/choice/report.php"] = `<div id="region-main"><div role="main"><h2>Responses</h2><form id="attemptsform"><table class="results names table">
+<thead><tr><th class="header c0">Choice options</th><th class="data header c1"><div class="text-center">Not answered yet${toggle(0)}</div></th><th class="data header c2"><div class="text-center">while${toggle(2)}</div></th></tr></thead>
+<tbody><tr><th>Number of responses</th><td class="data"><div class="text-center">1</div></td><td class="data"><div class="text-center">1</div></td></tr>
+<tr class="lastrow"><th>Users who chose this option</th><td class="data">${person(8, 0, "Alan Turing", true)}</td><td class="data">${person(7, 2, "Ada Lovelace")}</td></tr></tbody></table></form></div></div>`;
+    const { client, context } = await connect(pseudonymous(), state);
+    const result = await client.callTool({ name: "get_choice_results", arguments: { choiceId: 40 } });
+    assert.equal(result.isError, undefined, text(result));
+    const { options, notAnswered } = result.structuredContent as { options: { users: { user?: string }[] }[]; notAnswered: { user?: string }[] };
+    assert.match(options[0]!.users[0]!.user ?? "", ALIAS);
+    assert.match(notAnswered[0]!.user ?? "", ALIAS);
+    assert.doesNotMatch(text(result), /Lovelace|Turing|"userId"|"fullName"/);
+    await context.close();
+  });
+
   it("gives senders and conversation members as aliases, and sends by alias", async () => {
     const { state } = moodle();
     const sent: Record<string, unknown>[] = [];

@@ -105,6 +105,14 @@ export function validateGift(text: string): { questions: GiftQuestion[]; problem
     const block = blockLines.filter((l) => !l.trim().startsWith("//")).join("\n").trim();
     start = end + 1;
     if (!block) return;
+    // The ordering question type's own GIFT ({>2 ALL VERTICAL … items one per line}), which Moodle exports and imports and the grammar doesn't know.
+    const ordering = /^(?:::(.*?)::)?(?:\[\w+\])?([\s\S]*?)\{\s*>([^\n]*)\n([\s\S]*)\}\s*$/.exec(block);
+    if (ordering) {
+      const items = ordering[4]!.split("\n").map((l) => l.trim()).filter(Boolean);
+      questions.push({ line: firstLine, type: "ordering", ...(ordering[1] && { title: ordering[1].trim() }), text: ordering[2]!.trim(), answers: items.map((text) => ({ text })) });
+      if (items.length < 2) problems.push({ line: firstLine, message: "An ordering question needs two items at least." });
+      return;
+    }
     try {
       for (const parsed of parseGift(`${escapeOutsideBraces(block)}\n`)) {
         const { question, problems: found } = describe(parsed, firstLine);

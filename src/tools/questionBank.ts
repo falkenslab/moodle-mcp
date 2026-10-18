@@ -23,6 +23,64 @@ const questionFields = {
     .optional()
     .describe("Multichoice, shortanswer and numerical answers"),
   correct: z.boolean().optional().describe("Truefalse: the right answer"),
+  pairs: z.array(z.object({ question: z.string(), answer: z.string() })).optional().describe("match, ddmatch: each question and its answer; an answer without a question is a distractor"),
+  choose: z.number().int().positive().optional().describe("randomsamatch: how many short-answer questions of the category it draws"),
+  choices: z
+    .array(z.object({ text: z.string(), group: z.number().int().positive().optional().describe("Choices of one group go in the same places (1 by default)"), unlimited: z.boolean().optional().describe("ddwtos: usable more than once") }))
+    .optional()
+    .describe("ddwtos, gapselect: the choices [[1]], [[2]]… in the text name, by position"),
+  image: z.string().optional().describe("ddimageortext, ddmarker: the background image, an absolute local path"),
+  drags: z
+    .array(z.object({ text: z.string().optional().describe("A word, or an image's alternative text"), image: z.string().optional().describe("Or an absolute local image"), group: z.number().int().positive().optional(), unlimited: z.boolean().optional() }))
+    .optional()
+    .describe("ddimageortext: the draggable items"),
+  markers: z.array(z.object({ text: z.string(), count: z.number().int().positive().optional().describe("How many times it can be placed; unlimited by default") })).optional().describe("ddmarker: the markers"),
+  drops: z
+    .array(
+      z.object({
+        choice: z.number().int().positive().describe("The item or marker that goes there, from 1, in the order given"),
+        left: z.number().optional().describe("ddimageortext: the zone's left, in the image's pixels"),
+        top: z.number().optional(),
+        label: z.string().optional().describe("ddimageortext: the zone's label, for screen readers"),
+        shape: z.enum(["circle", "rectangle", "polygon"]).optional().describe("ddmarker"),
+        coords: z.string().optional().describe('ddmarker: a circle "x,y;r", a rectangle "x,y;width,height", a polygon "x1,y1;x2,y2;…"'),
+      }),
+    )
+    .optional()
+    .describe("ddimageortext, ddmarker: where the items or markers go"),
+  items: z.array(z.string()).optional().describe("ordering: the items, in the right order"),
+  wildcards: z
+    .array(
+      z.object({
+        name: z.string(),
+        min: z.number().optional(),
+        max: z.number().optional(),
+        decimals: z.number().int().min(0).optional(),
+        distribution: z.enum(["uniform", "loguniform"]).optional(),
+        values: z.array(z.number()).optional().describe("Given values, one per set, instead of a range"),
+      }),
+    )
+    .optional()
+    .describe("calculated, calculatedsimple, calculatedmulti: each {wildcard}'s values; Moodle's 1 to 10 without them"),
+  sets: z.number().int().positive().optional().describe("Calculated types: how many sets of values (10 by default)"),
+  coderunner: z
+    .object({
+      type: z.string().describe('Its CodeRunner type: the language and how it runs ("python3"…)'),
+      answer: z.string().optional().describe("A sample answer it's checked with when saved"),
+      testCases: z.array(z.object({ code: z.string(), expected: z.string(), stdin: z.string().optional(), extra: z.string().optional(), useAsExample: z.boolean().optional(), mark: z.number().optional() })).min(1),
+    })
+    .optional()
+    .describe("coderunner (a plugin)"),
+  formulas: z
+    .object({
+      randomVariables: z.string().optional(),
+      globalVariables: z.string().optional(),
+      parts: z
+        .array(z.object({ answer: z.string(), text: z.string().optional(), mark: z.number().optional(), unit: z.string().optional(), localVariables: z.string().optional(), gradingVariables: z.string().optional(), gradingCriterion: z.string().optional(), feedback: z.string().optional() }))
+        .min(1),
+    })
+    .optional()
+    .describe("formulas (a plugin)"),
   categoryId,
   defaultMark: z.number().positive().optional(),
   fields: formSettings.describe("Any other field of the type's form, by name"),
@@ -99,7 +157,7 @@ export const registerCreateQuestion: RegisterTool = (server, { config, browser }
     {
       title: "Create a question in a bank",
       description:
-        "Create one question in a question bank through its type's form: multichoice, truefalse, shortanswer, numerical or essay. For several, import_questions is faster. Returns the new question's id. Changes the bank: confirm with the person first.",
+        "Create one question in a question bank through its type's form, of any type: multichoice, truefalse, shortanswer, numerical, essay, calculated (simple and multichoice too), match, randomsamatch, drag and drop into text (ddwtos), onto an image (ddimageortext), markers (ddmarker), select missing words (gapselect), Cloze (multianswer, its answers in the text), ordering, description, and the plugins coderunner, formulas, gapfill and ddmatch where the site has them. Each type takes its own inputs, checked before Moodle. The text holds the type's places: [[1]] for ddwtos and gapselect, {1:SHORTANSWER:=Paris} for Cloze, [gaps] for gapfill, {wildcards} for calculated. For several, import_questions is faster. Returns the new question's id. Changes the bank: confirm with the person first.",
       inputSchema: {
         bankId,
         type: z.enum(QUESTION_TYPES),
@@ -120,7 +178,7 @@ export const registerUpdateQuestion: RegisterTool = (server, { config, browser }
     {
       title: "Change a question in a bank",
       description:
-        "Change a question of a bank through its type's form: only what's given changes (answers replaces them all). Saving makes a new version with its own id, the one returned, which quizzes using the latest version get from then on. Changes the bank: confirm with the person first.",
+        "Change a question of a bank through its type's form, with create_question's inputs: only what's given changes (a list given, such as answers, pairs, choices, items, drags, markers, drops or a wildcard's values, replaces the question's). Saving makes a new version with its own id, the one returned, which quizzes using the latest version get from then on. Changes the bank: confirm with the person first.",
       inputSchema: {
         bankId,
         questionId: z.number().int().positive().describe("As list_questions gives it"),

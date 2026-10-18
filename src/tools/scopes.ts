@@ -26,7 +26,7 @@ export type AccessLevel = (typeof ACCESS_LEVELS)[number];
 const readOnlyTools = new Set<string>();
 // Tools that only read Moodle but save a file on the person's computer: not read-only to MCP, which
 // counts the disk as the environment (so a client may ask before each), yet they change nothing in Moodle.
-const LOCAL_FILE_TOOLS = new Set(["download_file", "export_grades"]);
+const LOCAL_FILE_TOOLS = new Set(["download_file", "export_grades", "export_glossary", "export_database_entries", "export_questions"]);
 
 /** How others' data reaches the agent, strictest first (ADR-016). */
 export const STUDENT_DATA_LEVELS = ["block", "pseudonymize", "clear"] as const;
@@ -170,6 +170,44 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   set_rubric: ["setGradingDefinition"],
   // Checked here, without Moodle: what they read is what the agent gives them.
   validate_gift: ["category:course-content"],
+  list_glossary_entries: ["glossaryEntries"],
+  add_glossary_entry: ["addGlossaryEntry"],
+  edit_glossary_entry: ["editGlossaryEntry"],
+  delete_glossary_entry: ["deleteGlossaryEntry"],
+  set_glossary_entry_approved: ["setGlossaryEntryApproved"],
+  list_glossary_categories: ["glossaryCategories"],
+  add_glossary_category: ["addGlossaryCategory"],
+  export_glossary: ["exportGlossaryEntries"],
+  import_glossary: ["importGlossaryEntries"],
+  list_database_entries: ["databaseEntries"],
+  add_database_entry: ["addDatabaseEntry"],
+  edit_database_entry: ["editDatabaseEntry"],
+  delete_database_entry: ["deleteDatabaseEntry"],
+  set_database_entry_approved: ["setDatabaseEntryApproved"],
+  export_database_entries: ["exportDatabaseEntries"],
+  import_database_entries: ["importDatabaseEntries"],
+  get_choice_results: ["choiceResults"],
+  get_survey_results: ["surveyResults"],
+  save_workshop_submission: ["saveWorkshopSubmission"],
+  list_workshop_examples: ["workshopExamples"],
+  add_workshop_example: ["addWorkshopExample"],
+  edit_workshop_example: ["editWorkshopExample"],
+  delete_workshop_example: ["deleteWorkshopExample"],
+  assess_workshop_example: ["assessWorkshopExample"],
+  calculate_workshop_grades: ["calculateWorkshopGrades"],
+  override_workshop_grade: ["overrideWorkshopGrade"],
+  get_course_completion_criteria: ["courseCompletionCriteria"],
+  set_course_completion_criteria: ["setCourseCompletionCriteria"],
+  get_course_completion_status: ["courseCompletionStatus"],
+  mark_course_complete: ["markCourseComplete"],
+  list_question_categories: ["questionCategories"],
+  add_question_category: ["addQuestionCategory"],
+  edit_question_category: ["editQuestionCategory"],
+  delete_question_category: ["deleteQuestionCategory"],
+  move_questions: ["moveQuestions"],
+  export_questions: ["exportQuestions"],
+  // A participant's own submission, or (for a teacher or a reviewer) someone else's: the stricter of the two.
+  get_workshop_submission: ["category:others-personal"],
   validate_html: ["category:course-content"],
   list_book_chapters: ["bookChapters"],
   add_book_chapter: ["addBookChapter"],

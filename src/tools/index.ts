@@ -44,7 +44,12 @@ import { registerEnrolUsers, registerListPotentialUsers, registerSetGroupMembers
 import { registerAllocateMarker, registerExportGrades, registerGetForumGrades, registerGradeForumUser, registerGradeQuizQuestion, registerListQuestionsToGrade, registerRate, registerSetGrade, registerSetWorkflowState } from "./gradingWork.js";
 import { registerCreateGroup, registerCreateGrouping, registerDeleteGroup, registerDeleteGrouping, registerListGroupings, registerSetGroupingGroups, registerUpdateGroup } from "./groups.js";
 import { registerGetActivityReport, registerGetCourseLogs, registerGetParticipationReport } from "./reports.js";
-import { registerAssessWorkshopSubmission, registerGetWorkshop, registerSetWorkshopPhase } from "./workshops.js";
+import { registerAddWorkshopExample, registerAssessWorkshopExample, registerAssessWorkshopSubmission, registerCalculateWorkshopGrades, registerDeleteWorkshopExample, registerEditWorkshopExample, registerGetWorkshop, registerGetWorkshopSubmission, registerListWorkshopExamples, registerOverrideWorkshopGrade, registerSaveWorkshopSubmission, registerSetWorkshopPhase } from "./workshops.js";
+import { registerAddGlossaryCategory, registerAddGlossaryEntry, registerDeleteGlossaryEntry, registerEditGlossaryEntry, registerExportGlossary, registerImportGlossary, registerListGlossaryCategories, registerListGlossaryEntries, registerSetGlossaryEntryApproved } from "./glossaries.js";
+import { registerAddDatabaseEntry, registerDeleteDatabaseEntry, registerEditDatabaseEntry, registerExportDatabaseEntries, registerImportDatabaseEntries, registerListDatabaseEntries, registerSetDatabaseEntryApproved } from "./databaseEntries.js";
+import { registerGetChoiceResults, registerGetSurveyResults } from "./surveyResults.js";
+import { registerGetCourseCompletionCriteria, registerGetCourseCompletionStatus, registerMarkCourseComplete, registerSetCourseCompletionCriteria } from "./courseCompletion.js";
+import { registerAddQuestionCategory, registerDeleteQuestionCategory, registerEditQuestionCategory, registerExportQuestions, registerListQuestionCategories, registerMoveQuestions } from "./questionCategories.js";
 import { registerAllocateWorkshopRandomly, registerAllocateWorkshopReviewer, registerGetWorkshopAllocation, registerRemoveWorkshopReviewer, registerScheduleWorkshopAllocation } from "./workshopAllocation.js";
 import { registerAddBookChapter, registerDeleteBookChapter, registerEditBookChapter, registerListBookChapters, registerMoveBookChapter, registerSetBookChapterVisibility } from "./books.js";
 import { registerAddLessonPage, registerDeleteLessonPage, registerEditLessonPage, registerGetLessonPages, registerMoveLessonPage } from "./lessonPages.js";
@@ -86,6 +91,12 @@ export const TOOLS: RegisterTool[] = [
   registerSetGrade,
   registerExportGrades,
   registerOverrideCompletion,
+  registerGetCourseCompletionCriteria,
+  registerSetCourseCompletionCriteria,
+  registerGetCourseCompletionStatus,
+  registerMarkCourseComplete,
+  registerGetChoiceResults,
+  registerGetSurveyResults,
   registerListAssignments,
   registerGetSubmissions,
   registerListDiscussions,
@@ -137,6 +148,15 @@ export const TOOLS: RegisterTool[] = [
   registerGetWorkshop,
   registerSetWorkshopPhase,
   registerAssessWorkshopSubmission,
+  registerGetWorkshopSubmission,
+  registerSaveWorkshopSubmission,
+  registerListWorkshopExamples,
+  registerAddWorkshopExample,
+  registerEditWorkshopExample,
+  registerDeleteWorkshopExample,
+  registerAssessWorkshopExample,
+  registerCalculateWorkshopGrades,
+  registerOverrideWorkshopGrade,
   registerGetWorkshopAllocation,
   registerAllocateWorkshopReviewer,
   registerRemoveWorkshopReviewer,
@@ -174,6 +194,22 @@ export const TOOLS: RegisterTool[] = [
   registerSetDatabaseTemplate,
   registerListDatabasePresets,
   registerApplyDatabasePreset,
+  registerListDatabaseEntries,
+  registerAddDatabaseEntry,
+  registerEditDatabaseEntry,
+  registerDeleteDatabaseEntry,
+  registerSetDatabaseEntryApproved,
+  registerExportDatabaseEntries,
+  registerImportDatabaseEntries,
+  registerListGlossaryEntries,
+  registerAddGlossaryEntry,
+  registerEditGlossaryEntry,
+  registerDeleteGlossaryEntry,
+  registerSetGlossaryEntryApproved,
+  registerListGlossaryCategories,
+  registerAddGlossaryCategory,
+  registerExportGlossary,
+  registerImportGlossary,
   registerListBadges,
   registerCreateBadge,
   registerSetBadgeCriteria,
@@ -196,6 +232,12 @@ export const TOOLS: RegisterTool[] = [
   registerUpdateQuestion,
   registerDeleteQuestions,
   registerSetQuestionStatus,
+  registerListQuestionCategories,
+  registerAddQuestionCategory,
+  registerEditQuestionCategory,
+  registerDeleteQuestionCategory,
+  registerMoveQuestions,
+  registerExportQuestions,
   registerGetQuizStructure,
   registerAddQuestionsToQuiz,
   registerEditQuizSlot,

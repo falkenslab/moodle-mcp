@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **175 herramientas**, 174 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **212 herramientas**, 211 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -476,7 +476,7 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 
 </details>
 
-## Libros, lecciones y bases de datos {#activities}
+## Libros, lecciones, glosarios y bases de datos {#activities}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
 | --- | --- | :-: | :-: | :-: |
@@ -499,6 +499,22 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 | [`set_database_template`](#set-database-template) | Guardar una plantilla de una base de datos |  | ✓ |  |
 | [`list_database_presets`](#list-database-presets) | Listar los preajustes de una base de datos | ✓ | ✓ |  |
 | [`apply_database_preset`](#apply-database-preset) | Dar un preajuste a una base de datos |  | ✓ |  |
+| [`list_database_entries`](#list-database-entries) | Leer las entradas de una base de datos | ✓ | ✓ | ✓ |
+| [`add_database_entry`](#add-database-entry) | Añadir una entrada a una base de datos |  | ✓ | ✓ |
+| [`edit_database_entry`](#edit-database-entry) | Cambiar una entrada de una base de datos |  | ✓ | ✓ |
+| [`delete_database_entry`](#delete-database-entry) | Eliminar una entrada de una base de datos |  | ✓ | ✓ |
+| [`set_database_entry_approved`](#set-database-entry-approved) | Aprobar una entrada de una base de datos |  | ✓ |  |
+| [`export_database_entries`](#export-database-entries) | Exportar las entradas de una base de datos a CSV | ✓ | ✓ |  |
+| [`import_database_entries`](#import-database-entries) | Importar entradas a una base de datos desde CSV |  | ✓ |  |
+| [`list_glossary_entries`](#list-glossary-entries) | Leer las entradas de un glosario | ✓ | ✓ | ✓ |
+| [`add_glossary_entry`](#add-glossary-entry) | Añadir una entrada a un glosario |  | ✓ | ✓ |
+| [`edit_glossary_entry`](#edit-glossary-entry) | Cambiar una entrada de un glosario |  | ✓ | ✓ |
+| [`delete_glossary_entry`](#delete-glossary-entry) | Eliminar una entrada de un glosario |  | ✓ | ✓ |
+| [`set_glossary_entry_approved`](#set-glossary-entry-approved) | Aprobar una entrada de un glosario |  | ✓ |  |
+| [`list_glossary_categories`](#list-glossary-categories) | Listar las categorías de un glosario | ✓ | ✓ | ✓ |
+| [`add_glossary_category`](#add-glossary-category) | Añadir una categoría a un glosario |  | ✓ |  |
+| [`export_glossary`](#export-glossary) | Exportar las entradas de un glosario a un archivo | ✓ | ✓ |  |
+| [`import_glossary`](#import-glossary) | Importar entradas a un glosario |  | ✓ |  |
 
 ### `list_book_chapters` {#list-book-chapters}
 
@@ -839,6 +855,288 @@ Da un preajuste a una actividad de base de datos, como «Usar este preajuste» d
 
 </details>
 
+### `list_database_entries` {#list-database-entries}
+
+**Leer las entradas de una base de datos**
+
+Lee las entradas de una actividad de base de datos en el orden de su lista: autor (un alias cuando el servidor seudonimiza), cuándo se añadió y cambió, si está aprobada, y el valor de cada campo en las entradas que la persona puede editar (todas para un profesor; las suyas para un estudiante). search es la búsqueda simple de Moodle. Una página cada vez: limit entradas (25 por defecto) tras saltar offset; more dice si hay más.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `search` |  | texto |  |
+| `limit` |  | entero | Cuántas entradas (25 por defecto, hasta 100) |
+| `offset` |  | entero | Cuántas entradas saltar antes (0 por defecto) |
+
+</details>
+
+### `add_database_entry` {#add-database-entry}
+
+**Añadir una entrada a una base de datos**
+
+Añade una entrada a una actividad de base de datos como la persona, con su formulario «Añadir entrada»: un valor por campo, por id o nombre (get_database_fields los nombra), archivos locales para los campos de archivo e imagen; los campos que faltan se quedan como los tiene el formulario (una fecha empieza en hoy). Devuelve el id de la entrada. Otros del curso pueden leerla: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `values` | ✅ | objeto | Por id o nombre de campo: texto o un número; "AAAA-MM-DD" para una fecha; las opciones para casillas o una lista de selección múltiple; [latitud, longitud]; la ruta local absoluta de un archivo para un campo de archivo o imagen. Sin alias. |
+
+</details>
+
+### `edit_database_entry` {#edit-database-entry}
+
+**Cambiar una entrada de una base de datos**
+
+Cambia una entrada de una base de datos con su formulario de edición: los campos dados (archivos incluidos), el resto como están; removeFiles quita el archivo de un campo de archivo o imagen. Un estudiante cambia las suyas mientras Moodle le deja; un profesor, las de cualquiera. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `entryId` | ✅ | entero | El id de la entrada, tal como lo da list_database_entries |
+| `values` |  | objeto | Por id o nombre de campo: texto o un número; "AAAA-MM-DD" para una fecha; las opciones para casillas o una lista de selección múltiple; [latitud, longitud]; la ruta local absoluta de un archivo para un campo de archivo o imagen. Sin alias. |
+| `removeFiles` |  | lista de texto | Campos de archivo o imagen (por id o nombre) cuyo archivo quitar |
+
+</details>
+
+### `delete_database_entry` {#delete-database-entry}
+
+**Eliminar una entrada de una base de datos**
+
+Elimina una entrada de una base de datos con sus valores y archivos. Un estudiante elimina las suyas mientras Moodle le deja cambiarlas; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `entryId` | ✅ | entero | El id de la entrada, tal como lo da list_database_entries |
+
+</details>
+
+### `set_database_entry_approved` {#set-database-entry-approved}
+
+**Aprobar una entrada de una base de datos**
+
+Aprueba una entrada de una base de datos que espera aprobación, o le quita la aprobación: una que espera solo la ven su autor y quien aprueba. Su autor lo ve: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `entryId` | ✅ | entero | El id de la entrada, tal como lo da list_database_entries |
+| `approved` | ✅ | sí o no |  |
+
+</details>
+
+### `export_database_entries` {#export-database-entries}
+
+**Exportar las entradas de una base de datos a CSV**
+
+Guarda las entradas de una actividad de base de datos en un archivo CSV local, como su «Exportar entradas»: una columna por campo (sin imágenes ni archivos), con los datos de los autores, las fechas y la aprobación si se piden. Todas las entradas del grupo de la persona. El archivo contiene lo que escribieron los participantes tal cual: solo con los nombres visibles (el nivel de datos de estudiantes del servidor).
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `file` | ✅ | texto | Una ruta local absoluta para el CSV (se sustituye si existe) |
+| `userDetails` |  | sí o no | El nombre completo, el usuario y el correo de los autores |
+| `times` |  | sí o no |  |
+| `approval` |  | sí o no |  |
+
+</details>
+
+### `import_database_entries` {#import-database-entries}
+
+**Importar entradas a una base de datos desde CSV**
+
+Añade entradas a una actividad de base de datos desde un archivo CSV local, como su «Importar entradas»: una fila de cabecera con los nombres de los campos (como la escribe export_database_entries; una columna Username hace autor a ese usuario), en UTF-8. Devuelve cuántas añadió Moodle. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | entero | El id de la base de datos (id del módulo del curso), tal como lo da get_course_structure |
+| `file` | ✅ | texto | Una ruta local absoluta al CSV |
+| `delimiter` |  | `comma`, `semicolon`, `tab`, `colon` |  |
+
+</details>
+
+### `list_glossary_entries` {#list-glossary-entries}
+
+**Leer las entradas de un glosario**
+
+Lee las entradas de un glosario en su orden: concepto, definición (HTML), alias de búsqueda, categorías, autor (un alias cuando el servidor seudonimiza), si está aprobada y adjuntos. Lo que ve la persona: las entradas aprobadas y las suyas pendientes; pending da las que esperan aprobación, para un profesor. Por letra, o con una búsqueda en conceptos, alias y definiciones. Una página cada vez: limit entradas (30 por defecto) tras saltar offset; more dice si hay más.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `letter` |  | texto | Solo los conceptos que empiezan por esta letra |
+| `search` |  | texto | Palabras en conceptos, alias o definiciones |
+| `pending` |  | sí o no | Las entradas que esperan aprobación en su lugar (las de un profesor) |
+| `limit` |  | entero | Cuántas entradas (30 por defecto, hasta 200) |
+| `offset` |  | entero | Cuántas entradas saltar antes (0 por defecto) |
+
+</details>
+
+### `add_glossary_entry` {#add-glossary-entry}
+
+**Añadir una entrada a un glosario**
+
+Añade una entrada a un glosario como la persona: su concepto, definición (HTML, con imágenes locales incrustadas), palabras clave, categorías y archivos locales adjuntos. La entrada de un estudiante espera la aprobación de un profesor donde el glosario lo pide. Devuelve la entrada. Otros del curso la leen: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `concept` | ✅ | texto |  |
+| `definition` | ✅ | texto | HTML; sin alias |
+| `aliases` |  | lista de texto | Otras palabras por las que se encuentra y se enlaza |
+| `categoryIds` |  | lista de entero | Tal como las da list_glossary_categories |
+| `attachments` |  | lista de texto | Rutas locales absolutas de archivos que adjuntar |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en la definición, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `edit_glossary_entry` {#edit-glossary-entry}
+
+**Cambiar una entrada de un glosario**
+
+Cambia una entrada de un glosario: solo lo que se indica (attachments sustituye sus archivos, [] los quita). Un estudiante cambia las suyas mientras dura el tiempo de edición del sitio; un profesor, las de cualquiera. Devuelve la entrada. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `entryId` | ✅ | entero | El id de la entrada, tal como lo da list_glossary_entries |
+| `concept` |  | texto |  |
+| `definition` |  | texto | HTML; sin alias |
+| `aliases` |  | lista de texto | Otras palabras por las que se encuentra y se enlaza |
+| `categoryIds` |  | lista de entero | Tal como las da list_glossary_categories |
+| `attachments` |  | lista de texto | Rutas locales absolutas de archivos que adjuntar |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en la definición, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `delete_glossary_entry` {#delete-glossary-entry}
+
+**Eliminar una entrada de un glosario**
+
+Elimina una entrada de un glosario con sus archivos. Un estudiante elimina las suyas mientras dura el tiempo de edición del sitio; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `entryId` | ✅ | entero | El id de la entrada, tal como lo da list_glossary_entries |
+
+</details>
+
+### `set_glossary_entry_approved` {#set-glossary-entry-approved}
+
+**Aprobar una entrada de un glosario**
+
+Aprueba una entrada que espera aprobación (list_glossary_entries con pending las lista), o le quita la aprobación: la entrada vuelve a esperar, oculta para todos salvo su autor y quien aprueba. Su autor lo ve: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `entryId` | ✅ | entero | El id de la entrada, tal como lo da list_glossary_entries |
+| `approved` | ✅ | sí o no |  |
+
+</details>
+
+### `list_glossary_categories` {#list-glossary-categories}
+
+**Listar las categorías de un glosario**
+
+Lista las categorías de un glosario, por id y nombre, que toman add_glossary_entry y edit_glossary_entry.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `add_glossary_category` {#add-glossary-category}
+
+**Añadir una categoría a un glosario**
+
+Añade una categoría a un glosario; con autoLink, Moodle enlaza su nombre allí donde aparezca en el curso. Devuelve su id y las categorías. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `name` | ✅ | texto |  |
+| `autoLink` |  | sí o no |  |
+
+</details>
+
+### `export_glossary` {#export-glossary}
+
+**Exportar las entradas de un glosario a un archivo**
+
+Guarda las entradas aprobadas de un glosario en una carpeta local en el XML de Moodle (con alias de búsqueda, categorías y archivos), como su «Exportar entradas»; import_glossary las lleva a otro glosario. El archivo contiene lo que escribieron los participantes tal cual: solo con los nombres visibles (el nivel de datos de estudiantes del servidor).
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `destDir` | ✅ | texto | Una carpeta local absoluta |
+
+</details>
+
+### `import_glossary` {#import-glossary}
+
+**Importar entradas a un glosario**
+
+Importa las entradas de un archivo XML de glosario (como lo guarda export_glossary) a este glosario, como entradas de la persona, aprobadas; con categories, también sus categorías. Moodle rechaza duplicados donde el glosario no los admite, y entradas sin concepto o definición. Devuelve cuántas entraron. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | entero | El id del glosario (id del módulo del curso), tal como lo da get_course_structure |
+| `file` | ✅ | texto | Una ruta local absoluta al archivo XML |
+| `categories` |  | sí o no | Traer las categorías de las entradas, añadiendo las que falten |
+
+</details>
+
 ## Ciclo de vida del curso {#lifecycle}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
@@ -1151,6 +1449,12 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 | [`update_question`](#update-question) | Cambiar una pregunta de un banco |  | ✓ |  |
 | [`delete_questions`](#delete-questions) | Eliminar preguntas de un banco |  | ✓ |  |
 | [`set_question_status`](#set-question-status) | Marcar una pregunta como lista o borrador |  | ✓ |  |
+| [`list_question_categories`](#list-question-categories) | Listar las categorías de un banco de preguntas | ✓ | ✓ |  |
+| [`add_question_category`](#add-question-category) | Añadir una categoría a un banco de preguntas |  | ✓ |  |
+| [`edit_question_category`](#edit-question-category) | Renombrar o mover una categoría de preguntas |  | ✓ |  |
+| [`delete_question_category`](#delete-question-category) | Eliminar una categoría de preguntas |  | ✓ |  |
+| [`move_questions`](#move-questions) | Mover preguntas a otra categoría |  | ✓ |  |
+| [`export_questions`](#export-questions) | Exportar las preguntas de un banco a un archivo | ✓ | ✓ |  |
 | [`get_quiz_structure`](#get-quiz-structure) | Obtener las preguntas de un cuestionario | ✓ | ✓ |  |
 | [`add_questions_to_quiz`](#add-questions-to-quiz) | Añadir preguntas a un cuestionario |  | ✓ |  |
 | [`edit_quiz_slot`](#edit-quiz-slot) | Cambiar la puntuación o la posición de una pregunta de un cuestionario |  | ✓ |  |
@@ -1198,7 +1502,7 @@ Lista las categorías de un banco de preguntas y las preguntas que contienen, ca
 
 **Comprobar preguntas GIFT antes de importarlas**
 
-Comprueba preguntas en GIFT antes de import_questions, sin Moodle: cada pregunta, separada por líneas en blanco como hace el importador de Moodle, con su tipo en los nombres de Moodle, título, texto y respuestas, y cada problema con su línea (una pregunta que Moodle no puede leer, un peso que no admite, una opción múltiple sin respuesta correcta, una pregunta de emparejamiento con menos de dos parejas). Corrige lo que indique y vuelve a comprobar; valid significa que Moodle debería importar todas las preguntas.
+Comprueba preguntas en GIFT antes de import_questions, sin Moodle: cada pregunta, separada por líneas en blanco como hace el importador de Moodle, con su tipo en los nombres de Moodle, título, texto y respuestas, y cada problema con su línea (una pregunta que Moodle no puede leer, un peso que no admite, una opción múltiple sin respuesta correcta, una pregunta de emparejamiento con menos de dos parejas); también las preguntas de ordenación en su propio GIFT (&#123;&#62;…&#125;), como las exporta Moodle. Corrige lo que indique y vuelve a comprobar; valid significa que Moodle debería importar todas las preguntas.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1233,7 +1537,7 @@ Importa preguntas a un banco de preguntas desde GIFT o Moodle XML, dadas como te
 
 **Crear una pregunta en un banco**
 
-Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: multichoice, truefalse, shortanswer, numerical o essay. Para varias, import_questions es más rápido. Devuelve el id de la nueva pregunta. Cambia el banco: confírmalo antes con la persona.
+Crea una pregunta en un banco de preguntas con el formulario de su tipo, de cualquier tipo: multichoice, truefalse, shortanswer, numerical, essay, calculadas (también simple y de opción múltiple), match, randomsamatch, arrastrar y soltar sobre texto (ddwtos), sobre una imagen (ddimageortext), marcadores (ddmarker), seleccionar palabras perdidas (gapselect), Cloze (multianswer, con sus respuestas en el texto), ordering, description, y los plugins coderunner, formulas, gapfill y ddmatch donde el sitio los tiene. Cada tipo admite sus propias entradas, comprobadas antes de Moodle. El texto lleva los huecos del tipo: [[1]] en ddwtos y gapselect, &#123;1:SHORTANSWER:=Paris&#125; en Cloze, [huecos] en gapfill, &#123;comodines&#125; en las calculadas. Para varias, import_questions es más rápido. Devuelve el id de la nueva pregunta. Cambia el banco: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1244,8 +1548,20 @@ Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: mu
 | `type` | ✅ | `multichoice`, `truefalse`, `shortanswer`, `numerical`, `essay`, `calculated`, `calculatedsimple`, `calculatedmulti`, `match`, `randomsamatch`, `ddwtos`, `ddimageortext`, `ddmarker`, `gapselect`, `multianswer`, `ordering`, `description`, `coderunner`, `formulas`, `gapfill`, `ddmatch` |  |
 | `name` | ✅ | texto |  |
 | `text` | ✅ | texto | El texto de la pregunta (HTML) |
-| `answers` |  | lista de objeto | Respuestas de multichoice, shortanswer y numerical |
+| `answers` |  | lista de objeto | Respuestas de multichoice, shortanswer y numerical; las de los tipos calculados son fórmulas de los comodines (&#123;a&#125; + &#123;b&#125;) |
 | `correct` |  | sí o no | Truefalse: la respuesta correcta |
+| `pairs` |  | lista de objeto | match, ddmatch: cada pregunta y su respuesta; una respuesta sin pregunta es un distractor |
+| `choose` |  | entero | randomsamatch: cuántas preguntas de respuesta corta de la categoría toma |
+| `choices` |  | lista de objeto | ddwtos, gapselect: las opciones que nombran [[1]], [[2]]… del texto, por posición |
+| `image` |  | texto | ddimageortext, ddmarker: la imagen de fondo, una ruta local absoluta |
+| `drags` |  | lista de objeto | ddimageortext: los elementos que se arrastran |
+| `markers` |  | lista de objeto | ddmarker: los marcadores |
+| `drops` |  | lista de objeto | ddimageortext, ddmarker: dónde van los elementos o marcadores |
+| `items` |  | lista de texto | ordering: los elementos, en el orden correcto |
+| `wildcards` |  | lista de objeto | calculated, calculatedsimple, calculatedmulti: los valores de cada &#123;comodín&#125;; los de Moodle, de 1 a 10, si faltan |
+| `sets` |  | entero | Tipos calculados: cuántos juegos de valores (10 por defecto) |
+| `coderunner` |  | objeto | coderunner (un plugin) |
+| `formulas` |  | objeto | formulas (un plugin) |
 | `categoryId` |  | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
 | `defaultMark` |  | número |  |
 | `fields` |  | objeto | Cualquier otro campo del formulario del tipo, por su nombre |
@@ -1256,7 +1572,7 @@ Crea una pregunta en un banco de preguntas mediante el formulario de su tipo: mu
 
 **Cambiar una pregunta de un banco**
 
-Cambia una pregunta de un banco mediante el formulario de su tipo: solo cambia lo que se indica (answers las sustituye todas). Al guardar se crea una nueva versión con su propio id, el que se devuelve, que a partir de entonces reciben los cuestionarios que usan la última versión. Cambia el banco: confírmalo antes con la persona.
+Cambia una pregunta de un banco con el formulario de su tipo, con las entradas de create_question: solo cambia lo que se indica (una lista dada, como answers, pairs, choices, items, drags, markers, drops o los valores de un comodín, sustituye a la de la pregunta). Guardar crea una versión nueva con su propio id, el que se devuelve, que reciben desde entonces los cuestionarios que usan la última versión. Cambia el banco: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1267,8 +1583,20 @@ Cambia una pregunta de un banco mediante el formulario de su tipo: solo cambia l
 | `questionId` | ✅ | entero | Tal como lo da list_questions |
 | `name` |  | texto |  |
 | `text` |  | texto | El texto de la pregunta (HTML) |
-| `answers` |  | lista de objeto | Respuestas de multichoice, shortanswer y numerical |
+| `answers` |  | lista de objeto | Respuestas de multichoice, shortanswer y numerical; las de los tipos calculados son fórmulas de los comodines (&#123;a&#125; + &#123;b&#125;) |
 | `correct` |  | sí o no | Truefalse: la respuesta correcta |
+| `pairs` |  | lista de objeto | match, ddmatch: cada pregunta y su respuesta; una respuesta sin pregunta es un distractor |
+| `choose` |  | entero | randomsamatch: cuántas preguntas de respuesta corta de la categoría toma |
+| `choices` |  | lista de objeto | ddwtos, gapselect: las opciones que nombran [[1]], [[2]]… del texto, por posición |
+| `image` |  | texto | ddimageortext, ddmarker: la imagen de fondo, una ruta local absoluta |
+| `drags` |  | lista de objeto | ddimageortext: los elementos que se arrastran |
+| `markers` |  | lista de objeto | ddmarker: los marcadores |
+| `drops` |  | lista de objeto | ddimageortext, ddmarker: dónde van los elementos o marcadores |
+| `items` |  | lista de texto | ordering: los elementos, en el orden correcto |
+| `wildcards` |  | lista de objeto | calculated, calculatedsimple, calculatedmulti: los valores de cada &#123;comodín&#125;; los de Moodle, de 1 a 10, si faltan |
+| `sets` |  | entero | Tipos calculados: cuántos juegos de valores (10 por defecto) |
+| `coderunner` |  | objeto | coderunner (un plugin) |
+| `formulas` |  | objeto | formulas (un plugin) |
 | `categoryId` |  | entero | La categoría del banco, tal como la da list_questions; la predeterminada del banco si falta |
 | `defaultMark` |  | número |  |
 | `fields` |  | objeto | Cualquier otro campo del formulario del tipo, por su nombre |
@@ -1304,6 +1632,110 @@ Marca una pregunta del banco como lista (los cuestionarios pueden usarla) o como
 | --- | :-: | --- | --- |
 | `questionId` | ✅ | entero | Tal como lo da list_questions |
 | `status` | ✅ | `ready`, `draft` |  |
+
+</details>
+
+### `list_question_categories` {#list-question-categories}
+
+**Listar las categorías de un banco de preguntas**
+
+Lista las categorías de un banco de preguntas tal como las muestra su página de categorías, las madres antes que sus subcategorías: id, nombre, categoría madre, descripción y cuántas preguntas hay directamente en cada una. La categoría oculta Top del banco es la madre de las de primer nivel. Requiere gestionar las categorías del banco (lo hace un profesor).
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso) |
+
+</details>
+
+### `add_question_category` {#add-question-category}
+
+**Añadir una categoría a un banco de preguntas**
+
+Añade una categoría a un banco de preguntas, en el primer nivel o dentro de parentId, con una descripción opcional (HTML). Devuelve la categoría. Cambia el banco: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso) |
+| `name` | ✅ | texto |  |
+| `parentId` |  | entero |  |
+| `description` |  | texto |  |
+
+</details>
+
+### `edit_question_category` {#edit-question-category}
+
+**Renombrar o mover una categoría de preguntas**
+
+Cambia una categoría de un banco de preguntas: su nombre, su descripción (HTML) o su categoría madre (la mueve con sus subcategorías y preguntas; la Top del banco la lleva al primer nivel). Solo cambia lo que se indica. Cambia el banco: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso) |
+| `categoryId` | ✅ | entero | El id de la categoría, tal como lo da list_question_categories |
+| `name` |  | texto |  |
+| `description` |  | texto |  |
+| `parentId` |  | entero |  |
+
+</details>
+
+### `delete_question_category` {#delete-question-category}
+
+**Eliminar una categoría de preguntas**
+
+Elimina una categoría de un banco de preguntas: sus subcategorías suben a su categoría madre; una con preguntas necesita moveTo, la categoría a la que van sus preguntas. Moodle conserva la última categoría de primer nivel de un banco. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso) |
+| `categoryId` | ✅ | entero | El id de la categoría, tal como lo da list_question_categories |
+| `moveTo` |  | entero | A dónde van sus preguntas, si tiene |
+
+</details>
+
+### `move_questions` {#move-questions}
+
+**Mover preguntas a otra categoría**
+
+Mueve preguntas de un banco a una de sus categorías, varias a la vez; cada una conserva su id y sus versiones. Cambia el banco: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso) |
+| `questionIds` | ✅ | lista de entero | Tal como las da list_questions |
+| `categoryId` | ✅ | entero | El id de la categoría, tal como lo da list_question_categories |
+
+</details>
+
+### `export_questions` {#export-questions}
+
+**Exportar las preguntas de un banco a un archivo**
+
+Guarda las preguntas de un banco, o las de una categoría con sus subcategorías, en un archivo local GIFT o Moodle XML: la última versión de cada pregunta, sin las ocultas, con sus categorías, para que import_questions las vuelva a crear. validate_gift lee de vuelta una exportación GIFT.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco, tal como lo da list_question_banks (en Moodle 4.x, el id del curso) |
+| `format` | ✅ | `gift`, `xml` |  |
+| `categoryId` |  | entero | Solo esta categoría; todo el banco si falta |
+| `file` | ✅ | texto | Una ruta local absoluta (se sustituye si existe) |
 
 </details>
 
@@ -1498,6 +1930,10 @@ Califica a mano una pregunta de un intento terminado, con un comentario, como ha
 | [`delete_grade_category`](#delete-grade-category) | Eliminar una categoría de calificación |  | ✓ |  |
 | [`get_completion_report`](#get-completion-report) | Obtener la finalización de actividades de un curso | ✓ | ✓ |  |
 | [`override_completion`](#override-completion) | Establecer la finalización de una actividad de un participante |  | ✓ |  |
+| [`get_course_completion_criteria`](#get-course-completion-criteria) | Leer los criterios de finalización de un curso | ✓ | ✓ |  |
+| [`set_course_completion_criteria`](#set-course-completion-criteria) | Fijar qué completa un curso |  | ✓ |  |
+| [`get_course_completion_status`](#get-course-completion-status) | Leer quién ha completado un curso | ✓ | ✓ |  |
+| [`mark_course_complete`](#mark-course-complete) | Marcar la finalización del curso de un participante |  | ✓ |  |
 
 ### `get_grader_report` {#get-grader-report}
 
@@ -1716,6 +2152,84 @@ Establece la finalización de una actividad de un participante como hace un prof
 
 </details>
 
+### `get_course_completion_criteria` {#get-course-completion-criteria}
+
+**Leer los criterios de finalización de un curso**
+
+Lee qué completa un curso, desde sus ajustes de «Finalización del curso»: actividades, otros cursos, una fecha, días de matrícula, la baja, una calificación del curso, la autofinalización, los roles que la marcan, cómo se combinan, qué ofrece el formulario, si la finalización está activa y si los criterios están bloqueados. Es la finalización del curso, no la de las actividades (get_completion_report).
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `set_course_completion_criteria` {#set-course-completion-criteria}
+
+**Fijar qué completa un curso**
+
+Fija los criterios de finalización de un curso: un criterio dado sustituye los ajustes de ese tipo, uno en remove se quita y uno que no se da se queda; overall dice si completan el curso todos los criterios o cualquiera. Las actividades necesitan seguimiento de finalización, y los roles, permiso para marcar la finalización (offered de get_course_completion_criteria lista ambos). En cuanto alguien cumple un criterio, Moodle los bloquea: unlock borra antes los datos de finalización del curso de todos los participantes (no la finalización de sus actividades). Devuelve los criterios. Confírmalo antes con la persona, y dos veces con unlock.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `overall` |  | `all`, `any` |  |
+| `activities` |  | objeto |  |
+| `courses` |  | objeto |  |
+| `date` |  | texto | Completar en este día |
+| `enrolmentDays` |  | entero | 1 a 30, 40 a 180 de diez en diez, o 365 |
+| `unenrolment` |  | sí o no |  |
+| `grade` |  | número | En puntos del total del curso |
+| `self` |  | sí o no |  |
+| `roles` |  | objeto |  |
+| `remove` |  | lista de `activities`, `courses`, `date`, `enrolmentDays`, `grade`, `roles` | Criterios que quitar |
+| `unlock` |  | sí o no | Desbloquear antes los criterios bloqueados, borrando los datos de finalización del curso de todos |
+
+</details>
+
+### `get_course_completion_status` {#get-course-completion-status}
+
+**Leer quién ha completado un curso**
+
+Lee la finalización del curso de cada participante desde el informe de finalización del curso: si lo ha completado y cuándo, y cada criterio cumplido y cuándo; los participantes como alias cuando el servidor seudonimiza. Algunos criterios (una calificación, una fecha, días de matrícula) los calculan las tareas programadas de Moodle, así que un criterio recién cumplido puede no aparecer todavía. Una página cada vez: limit participantes (50 por defecto) tras saltar offset; more dice si hay más.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+| `groupId` |  | entero | Solo los participantes de este grupo |
+| `limit` |  | entero | Cuántos participantes (50 por defecto, hasta 200) |
+| `offset` |  | entero | Cuántos participantes saltar antes (0 por defecto) |
+
+</details>
+
+### `mark_course_complete` {#mark-course-complete}
+
+**Marcar la finalización del curso de un participante**
+
+Marca a mano la finalización del curso de un participante (un alias cuando el servidor seudonimiza), como el enlace del informe de finalización del curso: el criterio «Finalización manual por otros» del curso para un rol que tiene la persona. Moodle completa el curso cuando el resto de criterios lo permiten. Devuelve su finalización. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `user` |  | texto | El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza |
+| `userId` |  | entero | El id de usuario del participante, cuando el servidor muestra los nombres |
+
+</details>
+
 ## Insignias {#badges}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
@@ -1821,6 +2335,8 @@ Concede a mano una insignia a un participante (un alias cuando el servidor seudo
 | [`get_activity_report`](#get-activity-report) | Obtener las visualizaciones de actividades de un curso | ✓ | ✓ |  |
 | [`get_participation_report`](#get-participation-report) | Obtener quién ha participado en una actividad | ✓ | ✓ |  |
 | [`get_course_logs`](#get-course-logs) | Obtener los registros de un curso | ✓ | ✓ |  |
+| [`get_choice_results`](#get-choice-results) | Leer los resultados de una consulta | ✓ | ✓ |  |
+| [`get_survey_results`](#get-survey-results) | Leer los resultados de una encuesta | ✓ | ✓ |  |
 
 ### `get_activity_report` {#get-activity-report}
 
@@ -1879,6 +2395,37 @@ Lee los registros de un curso, los más recientes primero, tal como los lista su
 | `limit` |  | entero | Cuántas entradas (50 por defecto) |
 | `offset` |  | entero | Cuántas entradas saltar primero, las más recientes primero (0 por defecto) |
 | `includeDescriptions` |  | sí o no | Incluir también la descripción de cada entrada, la frase de Moodle sobre ella (más largo; false por defecto) |
+
+</details>
+
+### `get_choice_results` {#get-choice-results}
+
+**Leer los resultados de una consulta**
+
+Lee las respuestas de una consulta tal como las muestra su informe a un profesor: cada opción con cuántos la eligieron y quiénes (alias cuando el servidor seudonimiza), y quién no ha respondido donde la consulta lo muestra. El informe nombra a las personas sea cual sea lo que la consulta publica para los estudiantes.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `choiceId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `get_survey_results` {#get-survey-results}
+
+**Leer los resultados de una encuesta**
+
+Lee lo que respondieron las personas en un feedback o un cuestionario de encuesta, tal como lo muestran sus informes a un profesor: cada respuesta (quién la dio, un alias cuando el servidor seudonimiza, nadie si es anónima) y, por pregunta, la respuesta de cada uno (el texto, redactado al seudonimizar), los recuentos de las opciones de una pregunta de elección y la media de las numéricas y valoradas. Un cuestionario de encuesta solo lista sus respuestas cuando alguien ha respondido.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | entero | El id de la actividad (id del módulo del curso), tal como lo da get_course_structure |
+| `type` |  | `questionnaire`, `feedback` | El tipo de la actividad, tal como lo da get_course_structure; se averigua si falta |
 
 </details>
 
@@ -2204,6 +2751,15 @@ Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y q
 | [`get_workshop`](#get-workshop) | Leer un taller | ✓ | ✓ |  |
 | [`set_workshop_phase`](#set-workshop-phase) | Cambiar la fase de un taller |  | ✓ |  |
 | [`assess_workshop_submission`](#assess-workshop-submission) | Evaluar una entrega de un taller |  | ✓ | ✓ |
+| [`get_workshop_submission`](#get-workshop-submission) | Leer una entrega de un taller | ✓ | ✓ | ✓ |
+| [`save_workshop_submission`](#save-workshop-submission) | Entregar en un taller |  | ✓ | ✓ |
+| [`list_workshop_examples`](#list-workshop-examples) | Listar las entregas de ejemplo de un taller | ✓ | ✓ |  |
+| [`add_workshop_example`](#add-workshop-example) | Añadir una entrega de ejemplo a un taller |  | ✓ |  |
+| [`edit_workshop_example`](#edit-workshop-example) | Cambiar una entrega de ejemplo de un taller |  | ✓ |  |
+| [`delete_workshop_example`](#delete-workshop-example) | Eliminar una entrega de ejemplo de un taller |  | ✓ |  |
+| [`assess_workshop_example`](#assess-workshop-example) | Evaluar una entrega de ejemplo de un taller |  | ✓ | ✓ |
+| [`calculate_workshop_grades`](#calculate-workshop-grades) | Calcular las calificaciones de un taller |  | ✓ |  |
+| [`override_workshop_grade`](#override-workshop-grade) | Modificar a mano una calificación de un taller |  | ✓ |  |
 | [`get_workshop_allocation`](#get-workshop-allocation) | Leer quién evalúa a quién en un taller | ✓ | ✓ |  |
 | [`allocate_workshop_reviewer`](#allocate-workshop-reviewer) | Asignar un revisor a una entrega de un taller |  | ✓ |  |
 | [`remove_workshop_reviewer`](#remove-workshop-reviewer) | Quitar un revisor de una entrega de un taller |  | ✓ |  |
@@ -2462,6 +3018,168 @@ Evalúa una entrega de un taller como la persona, mediante el formulario de eval
 | `criteria` |  | lista de objeto | En el orden del formulario |
 | `feedback` |  | texto | Comentarios de retroalimentación generales para el autor (HTML); sin alias |
 | `fields` |  | objeto | Cualquier otro campo del formulario, por nombre |
+
+</details>
+
+### `get_workshop_submission` {#get-workshop-submission}
+
+**Leer una entrega de un taller**
+
+Lee una entrega de un taller tal como la muestra su página: título, texto (HTML), archivos adjuntos, autor (un alias cuando el servidor seudonimiza, donde Moodle muestra los autores) y si la persona puede editarla ahora. Sin submissionId ni autor, la de la propia persona (ninguna si no ha entregado); un profesor lee cualquiera, un revisor las que tiene asignadas.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `submissionId` |  | entero | Tal como lo da get_workshop |
+| `author` |  | texto | O el alias de su autor, cuando el servidor seudonimiza |
+| `authorId` |  | entero | O el id de usuario de su autor, cuando el servidor muestra los nombres |
+
+</details>
+
+### `save_workshop_submission` {#save-workshop-submission}
+
+**Entregar en un taller**
+
+Añade la entrega de la persona a un taller, o cambia la que tiene, con su formulario de entrega: título, texto (HTML, con imágenes locales incrustadas) y archivos locales adjuntos; solo cambia lo que se indica (una nueva necesita título). Moodle la acepta en la fase de envío, dentro de sus fechas. Devuelve la entrega. La leerán los revisores: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `title` |  | texto | Su título; uno nuevo lo necesita |
+| `content` |  | texto | Su texto (HTML), donde el taller acepta texto en línea; sin alias |
+| `attachments` |  | lista de texto | Rutas locales absolutas: sustituyen a los archivos adjuntos antes |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en el texto, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `list_workshop_examples` {#list-workshop-examples}
+
+**Listar las entregas de ejemplo de un taller**
+
+Lista las entregas de ejemplo de un taller tal como las muestra su página a un profesor: título, y si su evaluación de referencia está hecha, con su calificación. Moodle las lista en la fase de configuración, donde el taller usa ejemplos.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+
+</details>
+
+### `add_workshop_example` {#add-workshop-example}
+
+**Añadir una entrega de ejemplo a un taller**
+
+Añade una entrega de ejemplo a un taller, para que los participantes practiquen la evaluación: título, texto (HTML, con imágenes locales incrustadas) y archivos adjuntos. Después assess_workshop_example hace su evaluación de referencia. Solo donde el taller usa ejemplos. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `title` | ✅ | texto |  |
+| `content` |  | texto | Su texto (HTML), donde el taller acepta texto en línea; sin alias |
+| `attachments` |  | lista de texto | Rutas locales absolutas: sustituyen a los archivos adjuntos antes |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en el texto, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `edit_workshop_example` {#edit-workshop-example}
+
+**Cambiar una entrega de ejemplo de un taller**
+
+Cambia una entrega de ejemplo: solo lo que se indica (attachments sustituye los que hay). Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `exampleId` | ✅ | entero | Tal como lo da list_workshop_examples |
+| `title` |  | texto | Su título; uno nuevo lo necesita |
+| `content` |  | texto | Su texto (HTML), donde el taller acepta texto en línea; sin alias |
+| `attachments` |  | lista de texto | Rutas locales absolutas: sustituyen a los archivos adjuntos antes |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en el texto, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `delete_workshop_example` {#delete-workshop-example}
+
+**Eliminar una entrega de ejemplo de un taller**
+
+Elimina una entrega de ejemplo con sus evaluaciones (la de referencia y las de práctica de los participantes). No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `exampleId` | ✅ | entero | Tal como lo da list_workshop_examples |
+
+</details>
+
+### `assess_workshop_example` {#assess-workshop-example}
+
+**Evaluar una entrega de ejemplo de un taller**
+
+Evalúa una entrega de ejemplo con el formulario de evaluación del taller, como assess_workshop_submission evalúa una entrega: la evaluación de un profesor es la de referencia con la que se comparan las de los participantes; la de un participante es su práctica, donde el taller le deja evaluar ejemplos ahora. Devuelve la calificación que da.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `exampleId` | ✅ | entero | Tal como lo da list_workshop_examples |
+| `criteria` |  | lista de objeto | En el orden del formulario |
+| `feedback` |  | texto | Retroalimentación general para el autor (HTML); sin alias |
+| `fields` |  | objeto | Cualquier otro campo del formulario, por nombre |
+
+</details>
+
+### `calculate_workshop_grades` {#calculate-workshop-grades}
+
+**Calcular las calificaciones de un taller**
+
+Calcula las calificaciones de un taller en la fase de evaluación, como «Recalcular calificaciones»: la de cada entrega a partir de sus evaluaciones, y la de cada evaluación por evaluar según el método del taller, con comparison como su rigor. Las calificaciones modificadas a mano se quedan. Devuelve las entregas y evaluaciones con sus calificaciones (las personas como alias cuando el servidor seudonimiza). Los estudiantes verán las calificaciones cuando se cierre el taller: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `comparison` |  | `very strict`, `strict`, `fair`, `lax`, `very lax` | Con qué rigor se comparan las evaluaciones con la mejor; el formulario guarda la última usada |
+
+</details>
+
+### `override_workshop_grade` {#override-workshop-grade}
+
+**Modificar a mano una calificación de un taller**
+
+Modifica a mano una calificación que Moodle calculó en un taller: la de una entrega o la calificación por evaluar de una evaluación (da uno de los dos ids, de get_workshop), con retroalimentación para el autor o el revisor; remove: true quita la modificación y vuelve a contar la calculada. Devuelve la entrega o la evaluación. Los estudiantes lo ven: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `submissionId` |  | entero |  |
+| `assessmentId` |  | entero |  |
+| `grade` |  | entero | Un número entero hasta la calificación del taller por entrega (o por evaluación) |
+| `remove` |  | sí o no | Quitar la modificación en su lugar |
+| `feedback` |  | texto | HTML; sin alias |
 
 </details>
 

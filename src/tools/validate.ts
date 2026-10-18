@@ -20,7 +20,7 @@ export const registerValidateGift: RegisterTool = (server) => {
     {
       title: "Check GIFT questions before importing them",
       description:
-        "Check questions in GIFT before import_questions, without Moodle: each question split at blank lines as Moodle's importer does, with its type in Moodle's names, title, text and answers, and each problem with its line (a question Moodle can't read, a weight it doesn't take, a multiple choice with no right answer, a matching question with fewer than two pairs). Fix what it reports and check again; valid means Moodle should import every question.",
+        "Check questions in GIFT before import_questions, without Moodle: each question split at blank lines as Moodle's importer does, with its type in Moodle's names, title, text and answers, and each problem with its line (a question Moodle can't read, a weight it doesn't take, a multiple choice with no right answer, a matching question with fewer than two pairs); ordering questions in their own GIFT ({>…}) too, as Moodle exports them. Fix what it reports and check again; valid means Moodle should import every question.",
       inputSchema: { text: z.string().min(1).optional().describe("The questions in GIFT"), file: z.string().optional().describe("Or an absolute path to a local GIFT file") },
       outputSchema: {
         valid: z.boolean(),

@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **175 tools**, 174 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **212 tools**, 211 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -476,7 +476,7 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 
 </details>
 
-## Books, lessons and databases {#activities}
+## Books, lessons, glossaries and databases {#activities}
 
 | Tool | Description | Read only | Teacher | Student |
 | --- | --- | :-: | :-: | :-: |
@@ -499,6 +499,22 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 | [`set_database_template`](#set-database-template) | Set a database's template |  | ✓ |  |
 | [`list_database_presets`](#list-database-presets) | List the presets for a database | ✓ | ✓ |  |
 | [`apply_database_preset`](#apply-database-preset) | Give a database a preset |  | ✓ |  |
+| [`list_database_entries`](#list-database-entries) | Read a database's entries | ✓ | ✓ | ✓ |
+| [`add_database_entry`](#add-database-entry) | Add an entry to a database |  | ✓ | ✓ |
+| [`edit_database_entry`](#edit-database-entry) | Change a database entry |  | ✓ | ✓ |
+| [`delete_database_entry`](#delete-database-entry) | Delete a database entry |  | ✓ | ✓ |
+| [`set_database_entry_approved`](#set-database-entry-approved) | Approve a database entry |  | ✓ |  |
+| [`export_database_entries`](#export-database-entries) | Export a database's entries to CSV | ✓ | ✓ |  |
+| [`import_database_entries`](#import-database-entries) | Import entries into a database from CSV |  | ✓ |  |
+| [`list_glossary_entries`](#list-glossary-entries) | Read a glossary's entries | ✓ | ✓ | ✓ |
+| [`add_glossary_entry`](#add-glossary-entry) | Add an entry to a glossary |  | ✓ | ✓ |
+| [`edit_glossary_entry`](#edit-glossary-entry) | Change a glossary entry |  | ✓ | ✓ |
+| [`delete_glossary_entry`](#delete-glossary-entry) | Delete a glossary entry |  | ✓ | ✓ |
+| [`set_glossary_entry_approved`](#set-glossary-entry-approved) | Approve a glossary entry |  | ✓ |  |
+| [`list_glossary_categories`](#list-glossary-categories) | List a glossary's categories | ✓ | ✓ | ✓ |
+| [`add_glossary_category`](#add-glossary-category) | Add a category to a glossary |  | ✓ |  |
+| [`export_glossary`](#export-glossary) | Export a glossary's entries to a file | ✓ | ✓ |  |
+| [`import_glossary`](#import-glossary) | Import entries into a glossary |  | ✓ |  |
 
 ### `list_book_chapters` {#list-book-chapters}
 
@@ -839,6 +855,288 @@ Give a database activity a preset, as Moodle's "Use this preset" does: its field
 
 </details>
 
+### `list_database_entries` {#list-database-entries}
+
+**Read a database's entries**
+
+Read a database activity's entries in its list's order: author (an alias when the server pseudonymizes), when added and changed, whether approved, and each field's value for the entries the person can edit (all of them for a teacher; their own for a student). search is Moodle's simple search. A page at a time: limit entries (25 by default) after skipping offset; more says whether there are others.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `search` |  | string |  |
+| `limit` |  | integer | How many entries (25 by default, up to 100) |
+| `offset` |  | integer | How many entries to skip first (0 by default) |
+
+</details>
+
+### `add_database_entry` {#add-database-entry}
+
+**Add an entry to a database**
+
+Add an entry to a database activity as the person, through its "Add entry" form: a value per field, by id or name (get_database_fields names them), local files for file and picture fields; fields left out stay as the form has them (a date starts at today). Returns the entry's id. Others in the course may read it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `values` | ✅ | object | By field id or name: text or a number; "YYYY-MM-DD" for a date; the choices for checkboxes or a multi-select list; [latitude, longitude]; a local file's absolute path for a file or picture field. No aliases in them. |
+
+</details>
+
+### `edit_database_entry` {#edit-database-entry}
+
+**Change a database entry**
+
+Change a database entry through its edit form: the fields given (files too), the rest as they are; removeFiles takes a file or picture field's file away. A student changes their own while Moodle lets them; a teacher, anyone's. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `entryId` | ✅ | integer | The entry's id, as list_database_entries gives it |
+| `values` |  | object | By field id or name: text or a number; "YYYY-MM-DD" for a date; the choices for checkboxes or a multi-select list; [latitude, longitude]; a local file's absolute path for a file or picture field. No aliases in them. |
+| `removeFiles` |  | string list | File or picture fields (by id or name) whose file to remove |
+
+</details>
+
+### `delete_database_entry` {#delete-database-entry}
+
+**Delete a database entry**
+
+Delete a database entry with its values and files. A student deletes their own while Moodle lets them change it; a teacher, anyone's. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `entryId` | ✅ | integer | The entry's id, as list_database_entries gives it |
+
+</details>
+
+### `set_database_entry_approved` {#set-database-entry-approved}
+
+**Approve a database entry**
+
+Approve a database entry waiting for approval, or take its approval back: one waiting shows only to its author and to who approves. Its author sees it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `entryId` | ✅ | integer | The entry's id, as list_database_entries gives it |
+| `approved` | ✅ | boolean |  |
+
+</details>
+
+### `export_database_entries` {#export-database-entries}
+
+**Export a database's entries to CSV**
+
+Save a database activity's entries to a local CSV file, as its "Export entries" does: a column per field (images and files aren't in it), with the authors' details, times and approval if asked. Every entry of the person's group. The file holds what participants wrote as is: only with names in clear (the server's student data level).
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `file` | ✅ | string | An absolute local path for the CSV (replaced if it's there) |
+| `userDetails` |  | boolean | The authors' full name, username and email |
+| `times` |  | boolean |  |
+| `approval` |  | boolean |  |
+
+</details>
+
+### `import_database_entries` {#import-database-entries}
+
+**Import entries into a database from CSV**
+
+Add entries to a database activity from a local CSV file, as its "Import entries" does: a header row with the fields' names (as export_database_entries writes it; a Username column makes that user the author), UTF-8. Returns how many Moodle added. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `databaseId` | ✅ | integer | The database's id (course module id), as get_course_structure gives it |
+| `file` | ✅ | string | An absolute local path to the CSV |
+| `delimiter` |  | `comma`, `semicolon`, `tab`, `colon` |  |
+
+</details>
+
+### `list_glossary_entries` {#list-glossary-entries}
+
+**Read a glossary's entries**
+
+Read a glossary's entries in its order: concept, definition (HTML), aliases, categories, author (an alias when the server pseudonymizes), whether approved, attachments. What the person sees: approved entries and their own waiting; pending gives those waiting for approval, for a teacher. By letter, or a search of concepts, aliases and definitions. A page at a time: limit entries (30 by default) after skipping offset; more says whether there are others.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `letter` |  | string | Only concepts starting with this letter |
+| `search` |  | string | Words in concepts, aliases or definitions |
+| `pending` |  | boolean | The entries waiting for approval instead (a teacher's) |
+| `limit` |  | integer | How many entries (30 by default, up to 200) |
+| `offset` |  | integer | How many entries to skip first (0 by default) |
+
+</details>
+
+### `add_glossary_entry` {#add-glossary-entry}
+
+**Add an entry to a glossary**
+
+Add an entry to a glossary as the person: its concept, definition (HTML, with local images embedded), aliases, categories and attached local files. A student's entry waits for a teacher's approval where the glossary asks for it. Returns the entry. Others in the course read it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `concept` | ✅ | string |  |
+| `definition` | ✅ | string | HTML; no aliases in it |
+| `aliases` |  | string list | Other words it's found and linked by |
+| `categoryIds` |  | integer list | As list_glossary_categories gives them |
+| `attachments` |  | string list | Absolute local paths of files to attach |
+| `embed` |  | string list | Absolute local files to embed in the definition, which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `edit_glossary_entry` {#edit-glossary-entry}
+
+**Change a glossary entry**
+
+Change a glossary entry: only what is given (attachments replaces its files, [] removes them). A student changes their own while the site's editing time lasts; a teacher, anyone's. Returns the entry. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `entryId` | ✅ | integer | The entry's id, as list_glossary_entries gives it |
+| `concept` |  | string |  |
+| `definition` |  | string | HTML; no aliases in it |
+| `aliases` |  | string list | Other words it's found and linked by |
+| `categoryIds` |  | integer list | As list_glossary_categories gives them |
+| `attachments` |  | string list | Absolute local paths of files to attach |
+| `embed` |  | string list | Absolute local files to embed in the definition, which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `delete_glossary_entry` {#delete-glossary-entry}
+
+**Delete a glossary entry**
+
+Delete a glossary entry with its files. A student deletes their own while the site's editing time lasts; a teacher, anyone's. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `entryId` | ✅ | integer | The entry's id, as list_glossary_entries gives it |
+
+</details>
+
+### `set_glossary_entry_approved` {#set-glossary-entry-approved}
+
+**Approve a glossary entry**
+
+Approve an entry waiting for approval (list_glossary_entries with pending lists them), or take an approval back: the entry then waits again, hidden from all but its author and who approves. Its author sees it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `entryId` | ✅ | integer | The entry's id, as list_glossary_entries gives it |
+| `approved` | ✅ | boolean |  |
+
+</details>
+
+### `list_glossary_categories` {#list-glossary-categories}
+
+**List a glossary's categories**
+
+List a glossary's categories, by id and name, which add_glossary_entry and edit_glossary_entry take.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `add_glossary_category` {#add-glossary-category}
+
+**Add a category to a glossary**
+
+Add a category to a glossary; with autoLink, Moodle links its name wherever it appears in the course. Returns its id and the categories. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `name` | ✅ | string |  |
+| `autoLink` |  | boolean |  |
+
+</details>
+
+### `export_glossary` {#export-glossary}
+
+**Export a glossary's entries to a file**
+
+Save a glossary's approved entries into a local folder as Moodle's XML (with aliases, categories and files), as its "Export entries" does; import_glossary brings them into another glossary. The file holds what participants wrote as is: only with names in clear (the server's student data level).
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `destDir` | ✅ | string | An absolute local folder |
+
+</details>
+
+### `import_glossary` {#import-glossary}
+
+**Import entries into a glossary**
+
+Import the entries of a glossary's XML file (as export_glossary saves it) into this glossary, as the person's own entries, approved; with categories, their categories too. Moodle rejects duplicates where the glossary takes none, and entries without concept or definition. Returns how many came in. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `glossaryId` | ✅ | integer | The glossary's id (course module id), as get_course_structure gives it |
+| `file` | ✅ | string | An absolute local path to the XML file |
+| `categories` |  | boolean | Bring the entries' categories, adding missing ones |
+
+</details>
+
 ## Course life cycle {#lifecycle}
 
 | Tool | Description | Read only | Teacher | Student |
@@ -1151,6 +1449,12 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 | [`update_question`](#update-question) | Change a question in a bank |  | ✓ |  |
 | [`delete_questions`](#delete-questions) | Delete questions from a bank |  | ✓ |  |
 | [`set_question_status`](#set-question-status) | Set a question ready or draft |  | ✓ |  |
+| [`list_question_categories`](#list-question-categories) | List a question bank's categories | ✓ | ✓ |  |
+| [`add_question_category`](#add-question-category) | Add a category to a question bank |  | ✓ |  |
+| [`edit_question_category`](#edit-question-category) | Rename or move a question category |  | ✓ |  |
+| [`delete_question_category`](#delete-question-category) | Delete a question category |  | ✓ |  |
+| [`move_questions`](#move-questions) | Move questions to another category |  | ✓ |  |
+| [`export_questions`](#export-questions) | Export a bank's questions to a file | ✓ | ✓ |  |
 | [`get_quiz_structure`](#get-quiz-structure) | Get a quiz's questions | ✓ | ✓ |  |
 | [`add_questions_to_quiz`](#add-questions-to-quiz) | Add questions to a quiz |  | ✓ |  |
 | [`edit_quiz_slot`](#edit-quiz-slot) | Change a quiz question's mark or place |  | ✓ |  |
@@ -1198,7 +1502,7 @@ List a question bank's categories and the questions in them, category by categor
 
 **Check GIFT questions before importing them**
 
-Check questions in GIFT before import_questions, without Moodle: each question split at blank lines as Moodle's importer does, with its type in Moodle's names, title, text and answers, and each problem with its line (a question Moodle can't read, a weight it doesn't take, a multiple choice with no right answer, a matching question with fewer than two pairs). Fix what it reports and check again; valid means Moodle should import every question.
+Check questions in GIFT before import_questions, without Moodle: each question split at blank lines as Moodle's importer does, with its type in Moodle's names, title, text and answers, and each problem with its line (a question Moodle can't read, a weight it doesn't take, a multiple choice with no right answer, a matching question with fewer than two pairs); ordering questions in their own GIFT (&#123;&#62;…&#125;) too, as Moodle exports them. Fix what it reports and check again; valid means Moodle should import every question.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1233,7 +1537,7 @@ Import questions into a question bank from GIFT or Moodle XML, given as text or 
 
 **Create a question in a bank**
 
-Create one question in a question bank through its type's form: multichoice, truefalse, shortanswer, numerical or essay. For several, import_questions is faster. Returns the new question's id. Changes the bank: confirm with the person first.
+Create one question in a question bank through its type's form, of any type: multichoice, truefalse, shortanswer, numerical, essay, calculated (simple and multichoice too), match, randomsamatch, drag and drop into text (ddwtos), onto an image (ddimageortext), markers (ddmarker), select missing words (gapselect), Cloze (multianswer, its answers in the text), ordering, description, and the plugins coderunner, formulas, gapfill and ddmatch where the site has them. Each type takes its own inputs, checked before Moodle. The text holds the type's places: [[1]] for ddwtos and gapselect, &#123;1:SHORTANSWER:=Paris&#125; for Cloze, [gaps] for gapfill, &#123;wildcards&#125; for calculated. For several, import_questions is faster. Returns the new question's id. Changes the bank: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1246,6 +1550,18 @@ Create one question in a question bank through its type's form: multichoice, tru
 | `text` | ✅ | string | The question text (HTML) |
 | `answers` |  | object list | Multichoice, shortanswer and numerical answers |
 | `correct` |  | boolean | Truefalse: the right answer |
+| `pairs` |  | object list | match, ddmatch: each question and its answer; an answer without a question is a distractor |
+| `choose` |  | integer | randomsamatch: how many short-answer questions of the category it draws |
+| `choices` |  | object list | ddwtos, gapselect: the choices [[1]], [[2]]… in the text name, by position |
+| `image` |  | string | ddimageortext, ddmarker: the background image, an absolute local path |
+| `drags` |  | object list | ddimageortext: the draggable items |
+| `markers` |  | object list | ddmarker: the markers |
+| `drops` |  | object list | ddimageortext, ddmarker: where the items or markers go |
+| `items` |  | string list | ordering: the items, in the right order |
+| `wildcards` |  | object list | calculated, calculatedsimple, calculatedmulti: each &#123;wildcard&#125;'s values; Moodle's 1 to 10 without them |
+| `sets` |  | integer | Calculated types: how many sets of values (10 by default) |
+| `coderunner` |  | object | coderunner (a plugin) |
+| `formulas` |  | object | formulas (a plugin) |
 | `categoryId` |  | integer | The bank category, as list_questions gives it; the bank's default when missing |
 | `defaultMark` |  | number |  |
 | `fields` |  | object | Any other field of the type's form, by name |
@@ -1256,7 +1572,7 @@ Create one question in a question bank through its type's form: multichoice, tru
 
 **Change a question in a bank**
 
-Change a question of a bank through its type's form: only what's given changes (answers replaces them all). Saving makes a new version with its own id, the one returned, which quizzes using the latest version get from then on. Changes the bank: confirm with the person first.
+Change a question of a bank through its type's form, with create_question's inputs: only what's given changes (a list given, such as answers, pairs, choices, items, drags, markers, drops or a wildcard's values, replaces the question's). Saving makes a new version with its own id, the one returned, which quizzes using the latest version get from then on. Changes the bank: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1269,6 +1585,18 @@ Change a question of a bank through its type's form: only what's given changes (
 | `text` |  | string | The question text (HTML) |
 | `answers` |  | object list | Multichoice, shortanswer and numerical answers |
 | `correct` |  | boolean | Truefalse: the right answer |
+| `pairs` |  | object list | match, ddmatch: each question and its answer; an answer without a question is a distractor |
+| `choose` |  | integer | randomsamatch: how many short-answer questions of the category it draws |
+| `choices` |  | object list | ddwtos, gapselect: the choices [[1]], [[2]]… in the text name, by position |
+| `image` |  | string | ddimageortext, ddmarker: the background image, an absolute local path |
+| `drags` |  | object list | ddimageortext: the draggable items |
+| `markers` |  | object list | ddmarker: the markers |
+| `drops` |  | object list | ddimageortext, ddmarker: where the items or markers go |
+| `items` |  | string list | ordering: the items, in the right order |
+| `wildcards` |  | object list | calculated, calculatedsimple, calculatedmulti: each &#123;wildcard&#125;'s values; Moodle's 1 to 10 without them |
+| `sets` |  | integer | Calculated types: how many sets of values (10 by default) |
+| `coderunner` |  | object | coderunner (a plugin) |
+| `formulas` |  | object | formulas (a plugin) |
 | `categoryId` |  | integer | The bank category, as list_questions gives it; the bank's default when missing |
 | `defaultMark` |  | number |  |
 | `fields` |  | object | Any other field of the type's form, by name |
@@ -1304,6 +1632,110 @@ Set a bank question ready (quizzes can use it) or draft, as the bank's status me
 | --- | :-: | --- | --- |
 | `questionId` | ✅ | integer | As list_questions gives it |
 | `status` | ✅ | `ready`, `draft` |  |
+
+</details>
+
+### `list_question_categories` {#list-question-categories}
+
+**List a question bank's categories**
+
+List a question bank's categories as its categories page shows them, parents before their subcategories: id, name, parent, description and how many questions are directly in each. The bank's hidden Top is the top-level ones' parentId. Takes managing the bank's categories (a teacher's).
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | integer | The bank's id, as list_question_banks gives it (on Moodle 4.x, the course's id) |
+
+</details>
+
+### `add_question_category` {#add-question-category}
+
+**Add a category to a question bank**
+
+Add a category to a question bank, at the top level or inside parentId, with an optional description (HTML). Returns the category. Changes the bank: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | integer | The bank's id, as list_question_banks gives it (on Moodle 4.x, the course's id) |
+| `name` | ✅ | string |  |
+| `parentId` |  | integer |  |
+| `description` |  | string |  |
+
+</details>
+
+### `edit_question_category` {#edit-question-category}
+
+**Rename or move a question category**
+
+Change a question bank's category: its name, description (HTML) or parent (moving it with its subcategories and questions; the bank's Top moves it to the top level). Only what is given changes. Changes the bank: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | integer | The bank's id, as list_question_banks gives it (on Moodle 4.x, the course's id) |
+| `categoryId` | ✅ | integer | The category's id, as list_question_categories gives it |
+| `name` |  | string |  |
+| `description` |  | string |  |
+| `parentId` |  | integer |  |
+
+</details>
+
+### `delete_question_category` {#delete-question-category}
+
+**Delete a question category**
+
+Delete a question bank's category: its subcategories move up to its parent; one with questions needs moveTo, the category its questions go to. Moodle keeps a bank's last top-level category. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | integer | The bank's id, as list_question_banks gives it (on Moodle 4.x, the course's id) |
+| `categoryId` | ✅ | integer | The category's id, as list_question_categories gives it |
+| `moveTo` |  | integer | Where its questions go, when it has any |
+
+</details>
+
+### `move_questions` {#move-questions}
+
+**Move questions to another category**
+
+Move questions of a bank into one of its categories, several at once; each keeps its id and versions. Changes the bank: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | integer | The bank's id, as list_question_banks gives it (on Moodle 4.x, the course's id) |
+| `questionIds` | ✅ | integer list | As list_questions gives them |
+| `categoryId` | ✅ | integer | The category's id, as list_question_categories gives it |
+
+</details>
+
+### `export_questions` {#export-questions}
+
+**Export a bank's questions to a file**
+
+Save a bank's questions, or a category's with its subcategories, to a local GIFT or Moodle XML file: each question's latest version, hidden ones left out, with their categories, so import_questions recreates them. validate_gift reads a GIFT export back.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | integer | The bank's id, as list_question_banks gives it (on Moodle 4.x, the course's id) |
+| `format` | ✅ | `gift`, `xml` |  |
+| `categoryId` |  | integer | Only this category; the whole bank when missing |
+| `file` | ✅ | string | An absolute local path (replaced if it's there) |
 
 </details>
 
@@ -1498,6 +1930,10 @@ Grade one question of a finished attempt by hand, with a comment, as the review'
 | [`delete_grade_category`](#delete-grade-category) | Delete a grade category |  | ✓ |  |
 | [`get_completion_report`](#get-completion-report) | Get a course's activity completion | ✓ | ✓ |  |
 | [`override_completion`](#override-completion) | Set a participant's activity completion |  | ✓ |  |
+| [`get_course_completion_criteria`](#get-course-completion-criteria) | Read a course's completion criteria | ✓ | ✓ |  |
+| [`set_course_completion_criteria`](#set-course-completion-criteria) | Set what completes a course |  | ✓ |  |
+| [`get_course_completion_status`](#get-course-completion-status) | Read who has completed a course | ✓ | ✓ |  |
+| [`mark_course_complete`](#mark-course-complete) | Mark a participant's course completion |  | ✓ |  |
 
 ### `get_grader_report` {#get-grader-report}
 
@@ -1716,6 +2152,84 @@ Set a participant's completion of an activity as a teacher does from the progres
 
 </details>
 
+### `get_course_completion_criteria` {#get-course-completion-criteria}
+
+**Read a course's completion criteria**
+
+Read what completes a course, from its "Course completion" settings: activities, other courses, a date, days enrolled, unenrolment, a course grade, self completion, roles that mark it, how they combine, what the form offers, whether completion is on and whether the criteria are locked. Course completion, not activity completion (get_completion_report).
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `set_course_completion_criteria` {#set-course-completion-criteria}
+
+**Set what completes a course**
+
+Set a course's completion criteria: a criterion given replaces that kind's settings, one in remove goes, one not given stays; overall says whether all criteria or any one complete the course. Activities need completion tracking, roles the right to mark completion (get_course_completion_criteria's offered lists both). Once someone has met a criterion Moodle locks them: unlock deletes every participant's course completion data first (not their activity completion). Returns the criteria. Confirm with the person first, and twice with unlock.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `overall` |  | `all`, `any` |  |
+| `activities` |  | object |  |
+| `courses` |  | object |  |
+| `date` |  | string | Complete on this day |
+| `enrolmentDays` |  | integer | 1 to 30, 40 to 180 by tens, or 365 |
+| `unenrolment` |  | boolean |  |
+| `grade` |  | number | In the course total's points |
+| `self` |  | boolean |  |
+| `roles` |  | object |  |
+| `remove` |  | `activities`, `courses`, `date`, `enrolmentDays`, `grade`, `roles` list | Criteria to take away |
+| `unlock` |  | boolean | Unlock locked criteria first, deleting everyone's course completion data |
+
+</details>
+
+### `get_course_completion_status` {#get-course-completion-status}
+
+**Read who has completed a course**
+
+Read each participant's course completion from the course completion report: whether and when they completed the course, and each criterion met and when; participants as aliases when the server pseudonymizes. Some criteria (a grade, a date, days enrolled) are worked out by Moodle's scheduled tasks, so a criterion just met may not show yet. A page at a time: limit participants (50 by default) after skipping offset; more says whether there are others.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
+| `userId` |  | integer | The participant's user id, when the server shows names |
+| `groupId` |  | integer | Only this group's participants |
+| `limit` |  | integer | How many participants (50 by default, up to 200) |
+| `offset` |  | integer | How many participants to skip first (0 by default) |
+
+</details>
+
+### `mark_course_complete` {#mark-course-complete}
+
+**Mark a participant's course completion**
+
+Mark a participant's course completion by hand (an alias when the server pseudonymizes), as the course completion report's link does: the course's "Manual completion by others" criterion for a role the person holds. Moodle completes the course when the rest of the criteria allow it. Returns their completion afterwards. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `user` |  | string | The participant's alias, as the reading tools give it when the server pseudonymizes |
+| `userId` |  | integer | The participant's user id, when the server shows names |
+
+</details>
+
 ## Badges {#badges}
 
 | Tool | Description | Read only | Teacher | Student |
@@ -1821,6 +2335,8 @@ Award a badge by hand to a participant (an alias when the server pseudonymizes),
 | [`get_activity_report`](#get-activity-report) | Get a course's activity views | ✓ | ✓ |  |
 | [`get_participation_report`](#get-participation-report) | Get who took part in an activity | ✓ | ✓ |  |
 | [`get_course_logs`](#get-course-logs) | Get a course's logs | ✓ | ✓ |  |
+| [`get_choice_results`](#get-choice-results) | Read a choice's results | ✓ | ✓ |  |
+| [`get_survey_results`](#get-survey-results) | Read a survey's results | ✓ | ✓ |  |
 
 ### `get_activity_report` {#get-activity-report}
 
@@ -1879,6 +2395,37 @@ Read a course's logs, newest first, as its logs report lists them: by a user (an
 | `limit` |  | integer | How many entries (50 by default) |
 | `offset` |  | integer | How many entries to skip first, newest first (0 by default) |
 | `includeDescriptions` |  | boolean | Also each entry's description, Moodle's sentence about it (longer; default false) |
+
+</details>
+
+### `get_choice_results` {#get-choice-results}
+
+**Read a choice's results**
+
+Read a choice's responses as its report shows a teacher: each option with how many chose it and who (aliases when the server pseudonymizes), and who hasn't answered where the choice shows that. The report names people whatever the choice publishes to students.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `choiceId` | ✅ | integer | The activity's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `get_survey_results` {#get-survey-results}
+
+**Read a survey's results**
+
+Read what people answered in a feedback or a questionnaire, as its reports show a teacher: every response (who gave it, an alias when the server pseudonymizes, none when anonymous) and, per question, each response's answer (text redacted when pseudonymizing), the counts of a choice question's options and the average of numeric and rated ones. A questionnaire lists its responses only once someone has answered.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `activityId` | ✅ | integer | The activity's id (course module id), as get_course_structure gives it |
+| `type` |  | `questionnaire`, `feedback` | The activity's type, as get_course_structure gives it; found when missing |
 
 </details>
 
@@ -2204,6 +2751,15 @@ Make a grouping's groups exactly groupIds, adding and removing as its page does;
 | [`get_workshop`](#get-workshop) | Read a workshop | ✓ | ✓ |  |
 | [`set_workshop_phase`](#set-workshop-phase) | Switch a workshop's phase |  | ✓ |  |
 | [`assess_workshop_submission`](#assess-workshop-submission) | Assess a workshop submission |  | ✓ | ✓ |
+| [`get_workshop_submission`](#get-workshop-submission) | Read a workshop submission | ✓ | ✓ | ✓ |
+| [`save_workshop_submission`](#save-workshop-submission) | Submit to a workshop |  | ✓ | ✓ |
+| [`list_workshop_examples`](#list-workshop-examples) | List a workshop's example submissions | ✓ | ✓ |  |
+| [`add_workshop_example`](#add-workshop-example) | Add an example submission to a workshop |  | ✓ |  |
+| [`edit_workshop_example`](#edit-workshop-example) | Change a workshop's example submission |  | ✓ |  |
+| [`delete_workshop_example`](#delete-workshop-example) | Delete a workshop's example submission |  | ✓ |  |
+| [`assess_workshop_example`](#assess-workshop-example) | Assess a workshop's example submission |  | ✓ | ✓ |
+| [`calculate_workshop_grades`](#calculate-workshop-grades) | Calculate a workshop's grades |  | ✓ |  |
+| [`override_workshop_grade`](#override-workshop-grade) | Override a workshop grade |  | ✓ |  |
 | [`get_workshop_allocation`](#get-workshop-allocation) | Read who assesses whom in a workshop | ✓ | ✓ |  |
 | [`allocate_workshop_reviewer`](#allocate-workshop-reviewer) | Allocate a reviewer to a workshop submission |  | ✓ |  |
 | [`remove_workshop_reviewer`](#remove-workshop-reviewer) | Remove a reviewer from a workshop submission |  | ✓ |  |
@@ -2462,6 +3018,168 @@ Assess a workshop submission as the person, through the workshop's assessment fo
 | `criteria` |  | object list | In the form's order |
 | `feedback` |  | string | Overall feedback for the author (HTML); no aliases in it |
 | `fields` |  | object | Any other field of the form, by name |
+
+</details>
+
+### `get_workshop_submission` {#get-workshop-submission}
+
+**Read a workshop submission**
+
+Read a workshop submission as its page shows it: title, text (HTML), attached files, author (an alias when the server pseudonymizes, where Moodle shows authors) and whether the person can edit it now. Without submissionId or author, the person's own (none when they haven't submitted); a teacher reads anyone's, a reviewer those allocated to them.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `submissionId` |  | integer | As get_workshop gives it |
+| `author` |  | string | Or its author's alias, when the server pseudonymizes |
+| `authorId` |  | integer | Or its author's user id, when the server shows names |
+
+</details>
+
+### `save_workshop_submission` {#save-workshop-submission}
+
+**Submit to a workshop**
+
+Add the person's submission to a workshop, or change the one they have, through its submission form: title, text (HTML, with local images embedded), attached local files; only what is given changes (a new one needs a title). Moodle takes it in the submission phase, within its dates. Returns the submission. Reviewers will read it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `title` |  | string | Its title; a new one needs it |
+| `content` |  | string | Its text (HTML), where the workshop takes online text; no aliases in it |
+| `attachments` |  | string list | Absolute local paths: they replace the files attached before |
+| `embed` |  | string list | Absolute local files to embed in the text, which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `list_workshop_examples` {#list-workshop-examples}
+
+**List a workshop's example submissions**
+
+List a workshop's example submissions as its page shows a teacher: title, and whether its reference assessment is made, with its grade. Moodle lists them in the setup phase, where the workshop uses examples.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+
+</details>
+
+### `add_workshop_example` {#add-workshop-example}
+
+**Add an example submission to a workshop**
+
+Add an example submission to a workshop, for participants to practise assessing: title, text (HTML, with local images embedded) and attached files. Then assess_workshop_example makes its reference assessment. Only where the workshop uses examples. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `title` | ✅ | string |  |
+| `content` |  | string | Its text (HTML), where the workshop takes online text; no aliases in it |
+| `attachments` |  | string list | Absolute local paths: they replace the files attached before |
+| `embed` |  | string list | Absolute local files to embed in the text, which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `edit_workshop_example` {#edit-workshop-example}
+
+**Change a workshop's example submission**
+
+Change an example submission: only what is given (attachments replace those there). Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `exampleId` | ✅ | integer | As list_workshop_examples gives it |
+| `title` |  | string | Its title; a new one needs it |
+| `content` |  | string | Its text (HTML), where the workshop takes online text; no aliases in it |
+| `attachments` |  | string list | Absolute local paths: they replace the files attached before |
+| `embed` |  | string list | Absolute local files to embed in the text, which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `delete_workshop_example` {#delete-workshop-example}
+
+**Delete a workshop's example submission**
+
+Delete an example submission with its assessments (the reference one and participants' practice ones). Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `exampleId` | ✅ | integer | As list_workshop_examples gives it |
+
+</details>
+
+### `assess_workshop_example` {#assess-workshop-example}
+
+**Assess a workshop's example submission**
+
+Assess an example submission through the workshop's assessment form, as assess_workshop_submission does a submission: a teacher's assessment is the reference participants' are compared with; a participant's is their practice, where the workshop lets them assess examples now. Returns the grade it gives.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `exampleId` | ✅ | integer | As list_workshop_examples gives it |
+| `criteria` |  | object list | In the form's order |
+| `feedback` |  | string | Overall feedback for the author (HTML); no aliases in it |
+| `fields` |  | object | Any other field of the form, by name |
+
+</details>
+
+### `calculate_workshop_grades` {#calculate-workshop-grades}
+
+**Calculate a workshop's grades**
+
+Calculate a workshop's grades in the evaluation phase, as "Re-calculate grades" does: each submission's grade from its assessments, each assessment's grade for assessing by the workshop's evaluation method, comparison its strictness. Overridden grades stay. Returns the submissions and assessments with their grades (people as aliases when the server pseudonymizes). Students will see the grades once the workshop is closed: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `comparison` |  | `very strict`, `strict`, `fair`, `lax`, `very lax` | How strictly assessments are compared with the best one; the form keeps the last one used |
+
+</details>
+
+### `override_workshop_grade` {#override-workshop-grade}
+
+**Override a workshop grade**
+
+Override a grade Moodle calculated in a workshop: a submission's grade, or an assessment's grade for assessing (give one of the two ids, from get_workshop), with feedback for the author or the reviewer; remove: true takes the override away, so the calculated grade counts again. Returns the submission or assessment afterwards. Students see it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `submissionId` |  | integer |  |
+| `assessmentId` |  | integer |  |
+| `grade` |  | integer | A whole number up to the workshop's grade for submission (or for assessment) |
+| `remove` |  | boolean | Take the override away instead |
+| `feedback` |  | string | HTML; no aliases in it |
 
 </details>
 

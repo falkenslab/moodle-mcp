@@ -5,7 +5,7 @@ sidebar_label: Limiting the agent
 
 # Limiting what the agent can do
 
-By default the agent gets every tool: about 170, for teachers and students, to read and to change. Three settings narrow that down. They add up: a tool is there only if every setting allows it.
+By default the agent gets every tool: about 210, for teachers and students, to read and to change. Three settings narrow that down. They add up: a tool is there only if every setting allows it.
 
 | Setting | Question it answers | Values |
 | --- | --- | --- |
@@ -25,9 +25,9 @@ To see the limits in force, ask the agent:
 
 | Role | Tools | What's in it | Size of the tools' descriptions |
 | --- | --- | --- | --- |
-| `all` (default) | 174 | Everything | about 40,000 tokens |
-| `teacher` | 158 | Building and running courses, grading, people, reports, forums and messages | about 37,600 tokens |
-| `student` | 67 | Reading courses, doing activities, your grades and to-dos, forums and messages | about 11,800 tokens |
+| `all` (default) | 211 | Everything | about 49,000 tokens |
+| `teacher` | 195 | Building and running courses, grading, people, reports, forums and messages | about 47,000 tokens |
+| `student` | 79 | Reading courses, doing activities, your grades and to-dos, forums and messages | about 14,200 tokens |
 
 Claude Code loads tools as it needs them, so the size matters less there. Claude Desktop, Codex and most other apps load them all at the start of each chat.
 
@@ -37,9 +37,9 @@ Claude Code loads tools as it needs them, so the size matters less there. Claude
 
 | With role | Tools left |
 | --- | --- |
-| `all` | 69 |
-| `teacher` | 64 |
-| `student` | 42 |
+| `all` | 82 |
+| `teacher` | 77 |
+| `student` | 46 |
 
 Tools that look like reading but start something in Moodle (a lesson, a quiz attempt, a SCORM attempt) are left out too. Downloading a course's files or exporting its grades stays: it changes nothing in Moodle, only saves a file on your computer, and your AI app may still ask you before each.
 
@@ -72,7 +72,7 @@ A teacher who wants help building courses, and nothing else:
 claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp
 ```
 
-That's 95 tools, about 22,500 tokens.
+That's 113 tools, about 26,800 tokens.
 
 A student's study assistant that can't submit or post anything:
 

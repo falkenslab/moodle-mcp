@@ -125,6 +125,11 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | Lesson pages | A lesson's pages, answers and jumps, as its editor has them (`get_lesson_pages`…) | R/W | Lesson editor forms | #19; sandbox, a branching lesson built | Done |
 | Database fields and templates | Fields, templates and presets of a database activity (`get_database_fields`…) | R/W | Pages and forms (`mod/data/field.php`, `templates.php`, `preset.php`) | #20; sandbox | Done |
 | Badges | List, create, set criteria, enable and award course badges (`list_badges`…) | R/W | Pages, forms and `core_badges_enable_badges` | #21; sandbox, one badge in course 3 | Done |
+| Glossaries | Entries (read, add, edit, delete, approve), categories, XML export and import | R/W | Pages and forms | #26; sandbox, teacher and student entries | Done |
+| Database entries | Read, add, edit, delete, approve, CSV export and import | R/W | Pages and forms | #27; sandbox | Done |
+| Course completion | Its criteria, each participant's status, marked by hand | R/W | Settings form, `report/completion` | #31; sandbox, course 3 put back | Done |
+| Choice and survey results | Who chose what; feedback and questionnaire responses | R | Report pages | #28; sandbox | Done |
+| Question categories | Categories, moving questions, GIFT and XML export; every question type | R/W | Bank pages and forms | #30, #43; sandbox, seven types | Done |
 | SCORM package | Replace a SCORM's package in place | W | Form (`update_activity`'s `package`) | #23; sandbox | Done |
 
 ## Teacher: assignments and grading
@@ -165,6 +170,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `create_event` | Course calendar event | W | AJAX (`core_calendar_submit_create_update_form`) | none | Done |
 | `list_events` | Upcoming calendar events, in a course or all | R | AJAX (`core_calendar_get_calendar_upcoming_view`) | none | Done |
 | `delete_event` | Delete a course or user event | W | AJAX (`core_calendar_delete_calendar_events`) | none | Done |
+| Workshop end to end | A student's submission, examples, grade calculation and overrides | R/W | Pages and forms | #29; sandbox, submission to override | Done |
 | Workshop allocation | Who assesses whom: read, by hand, at random, scheduled (`get_workshop_allocation`…) | R/W | Page and forms (`mod/workshop/allocation.php`) | #22; sandbox without submissions | Done |
 
 ## Teacher: participants, progress and gradebook

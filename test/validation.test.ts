@@ -55,6 +55,12 @@ describe("validateGift", () => {
     assert.equal(problems.length, 5, JSON.stringify(problems));
   });
 
+  it("reads an ordering question in its own GIFT, as Moodle exports it", () => {
+    const { questions, problems } = validateGift("::Order a loop::[html]<p>Put in order</p>{>2 ALL VERTICAL ABSOLUTE_POSITION SHOW none\nfor i in range(3):\nprint(i)\n}\n");
+    assert.deepEqual(problems, []);
+    assert.deepEqual([questions[0]!.type, questions[0]!.title, questions[0]!.answers?.length], ["ordering", "Order a loop", 2]);
+  });
+
   it("says when there's nothing to import", () => {
     assert.match(validateGift("// only a comment\n").problems[0]!.message, /No question found/);
   });
