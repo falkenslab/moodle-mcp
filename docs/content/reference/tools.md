@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **212 tools**, 211 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **234 tools**, 233 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -476,7 +476,7 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 
 </details>
 
-## Books, lessons, glossaries and databases {#activities}
+## Books, lessons, wikis, glossaries, databases and feedback {#activities}
 
 | Tool | Description | Read only | Teacher | Student |
 | --- | --- | :-: | :-: | :-: |
@@ -515,6 +515,19 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 | [`add_glossary_category`](#add-glossary-category) | Add a category to a glossary |  | ✓ |  |
 | [`export_glossary`](#export-glossary) | Export a glossary's entries to a file | ✓ | ✓ |  |
 | [`import_glossary`](#import-glossary) | Import entries into a glossary |  | ✓ |  |
+| [`list_wiki_pages`](#list-wiki-pages) | List a wiki's pages | ✓ | ✓ | ✓ |
+| [`get_wiki_page`](#get-wiki-page) | Read a wiki page | ✓ | ✓ | ✓ |
+| [`create_wiki_page`](#create-wiki-page) | Create a wiki page |  | ✓ | ✓ |
+| [`edit_wiki_page`](#edit-wiki-page) | Edit a wiki page |  | ✓ | ✓ |
+| [`get_feedback_items`](#get-feedback-items) | Read a feedback's questions | ✓ | ✓ |  |
+| [`add_feedback_item`](#add-feedback-item) | Add a question to a feedback |  | ✓ |  |
+| [`edit_feedback_item`](#edit-feedback-item) | Change a feedback's question |  | ✓ |  |
+| [`move_feedback_item`](#move-feedback-item) | Move a feedback's question |  | ✓ |  |
+| [`delete_feedback_item`](#delete-feedback-item) | Delete a feedback's question |  | ✓ |  |
+| [`list_feedback_templates`](#list-feedback-templates) | List feedback templates | ✓ | ✓ |  |
+| [`use_feedback_template`](#use-feedback-template) | Use a template in a feedback |  | ✓ |  |
+| [`save_feedback_template`](#save-feedback-template) | Save a feedback as a template |  | ✓ |  |
+| [`delete_feedback_template`](#delete-feedback-template) | Delete a feedback template |  | ✓ |  |
 
 ### `list_book_chapters` {#list-book-chapters}
 
@@ -1137,6 +1150,256 @@ Import the entries of a glossary's XML file (as export_glossary saves it) into t
 
 </details>
 
+### `list_wiki_pages` {#list-wiki-pages}
+
+**List a wiki's pages**
+
+List the pages of a wiki's subwiki by title: each one's id, the pages it links to (those not created yet without an id) and its latest version (number, date, author as an alias when the server pseudonymizes). The person's subwiki unless groupId or participant choose another. Empty while it has no pages. A page at a time: limit pages (50 by default) after skipping offset; more says whether there are others.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | integer | The wiki's id (course module id), as get_course_structure gives it |
+| `groupId` |  | integer | A group's subwiki, in a wiki with groups; the person's own when missing |
+| `participant` |  | string | A participant's subwiki in an individual wiki, by alias when the server pseudonymizes |
+| `participantId` |  | integer | Or by user id, when the server shows names |
+| `limit` |  | integer | How many pages (50 by default, up to 200) |
+| `offset` |  | integer | How many pages to skip first (0 by default) |
+
+</details>
+
+### `get_wiki_page` {#get-wiki-page}
+
+**Read a wiki page**
+
+Read a wiki page: its content (HTML as Moodle renders it, its text, images and media), its sections, the pages it links to and its latest version; with history, every version, newest first. Authors as aliases, and pages others wrote redacted, when the server pseudonymizes.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | integer | The wiki's id (course module id), as get_course_structure gives it |
+| `pageId` | ✅ | integer | The page's id, as list_wiki_pages gives it |
+| `history` |  | boolean | Every version too |
+
+</details>
+
+### `create_wiki_page` {#create-wiki-page}
+
+**Create a wiki page**
+
+Create a page in a wiki's subwiki as the person, with its content (HTML in an HTML wiki, Moodle's default, or the wiki's markup; [[Title]] links to another page): the person's subwiki unless groupId or participant choose another. A subwiki's first page must have the wiki's first page title. Returns the page. Others in the course read it: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | integer | The wiki's id (course module id), as get_course_structure gives it |
+| `title` | ✅ | string |  |
+| `content` | ✅ | string | No aliases in it |
+| `embed` |  | string list | Absolute local files to embed in the content (HTML pages), which names each by its file name: &#60;img src="shot.png"&#62; |
+| `groupId` |  | integer | A group's subwiki, in a wiki with groups; the person's own when missing |
+| `participant` |  | string | A participant's subwiki in an individual wiki, by alias when the server pseudonymizes |
+| `participantId` |  | integer | Or by user id, when the server shows names |
+
+</details>
+
+### `edit_wiki_page` {#edit-wiki-page}
+
+**Edit a wiki page**
+
+Change a wiki page's content, the whole page or one section (a heading, as get_wiki_page's sections lists them), as its editor does: a new version, by the person. Refused while someone else has the page open in its editor: try again later. Returns the page. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | integer | The wiki's id (course module id), as get_course_structure gives it |
+| `pageId` | ✅ | integer | The page's id, as list_wiki_pages gives it |
+| `content` | ✅ | string | Replaces the page's, or the section's; no aliases in it |
+| `section` |  | string |  |
+| `embed` |  | string list | Absolute local files to embed in the content (HTML pages), which names each by its file name: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `get_feedback_items` {#get-feedback-items}
+
+**Read a feedback's questions**
+
+Read a feedback activity's items as its teacher builds them, in order: type (multichoice, multichoicerated, textfield, textarea, numeric, info, label, captcha, pagebreak), position, question, whether required, a choice's options (with weights where rated) and display, a numeric range, a label's contents and the item it depends on.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `add_feedback_item` {#add-feedback-item}
+
+**Add a question to a feedback**
+
+Add an item to a feedback activity, after item after (0: first; last without it): a question of any type with its options and settings, a label with its contents, or a page break or a CAPTCHA. Returns its id and the items in order. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+| `type` | ✅ | `multichoice`, `multichoicerated`, `textfield`, `textarea`, `numeric`, `info`, `label`, `captcha`, `pagebreak` |  |
+| `question` |  | string | Every type but a label and a page break needs one |
+| `label` |  | string |  |
+| `required` |  | boolean |  |
+| `options` |  | object list | Choice items' options, in order; given, they replace them all |
+| `display` |  | `radio`, `checkbox`, `dropdown` | checkbox (several answers) for multichoice only |
+| `horizontal` |  | boolean |  |
+| `hideNotSelected` |  | boolean |  |
+| `ignoreEmpty` |  | boolean |  |
+| `range` |  | object | A numeric item's; a bound left out is none |
+| `info` |  | `response-time`, `course`, `category` |  |
+| `contents` |  | string | A label's (HTML) |
+| `dependsOn` |  | object | Show it only when another item was answered with this value: an item with a label, on an earlier page (a page break between them) |
+| `fields` |  | object | Any other field of the item's form, by name (itemsize, itemmaxlength…) |
+| `after` |  | integer | The item it goes after (0: first) |
+
+</details>
+
+### `edit_feedback_item` {#edit-feedback-item}
+
+**Change a feedback's question**
+
+Change a feedback item with what is given: question, label, required, a choice's options (given, they replace them all) and settings, a numeric range, a label's contents, its dependency (removeDependency takes it away) and other fields. It keeps its type and place. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+| `itemId` | ✅ | integer | The item's id, as get_feedback_items gives it |
+| `question` |  | string | Every type but a label and a page break needs one |
+| `label` |  | string |  |
+| `required` |  | boolean |  |
+| `options` |  | object list | Choice items' options, in order; given, they replace them all |
+| `display` |  | `radio`, `checkbox`, `dropdown` | checkbox (several answers) for multichoice only |
+| `horizontal` |  | boolean |  |
+| `hideNotSelected` |  | boolean |  |
+| `ignoreEmpty` |  | boolean |  |
+| `range` |  | object | A numeric item's; a bound left out is none |
+| `info` |  | `response-time`, `course`, `category` |  |
+| `contents` |  | string | A label's (HTML) |
+| `dependsOn` |  | object | Show it only when another item was answered with this value: an item with a label, on an earlier page (a page break between them) |
+| `fields` |  | object | Any other field of the item's form, by name (itemsize, itemmaxlength…) |
+| `removeDependency` |  | boolean |  |
+
+</details>
+
+### `move_feedback_item` {#move-feedback-item}
+
+**Move a feedback's question**
+
+Move a feedback item to a position (from 1). Returns the items in order. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+| `itemId` | ✅ | integer | The item's id, as get_feedback_items gives it |
+| `position` | ✅ | integer |  |
+
+</details>
+
+### `delete_feedback_item` {#delete-feedback-item}
+
+**Delete a feedback's question**
+
+Delete a feedback item; the answers people gave to it go with it. Returns the items left. Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+| `itemId` | ✅ | integer | The item's id, as get_feedback_items gives it |
+
+</details>
+
+### `list_feedback_templates` {#list-feedback-templates}
+
+**List feedback templates**
+
+List the templates a feedback activity can use: the course's own and the site's public ones.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `use_feedback_template` {#use-feedback-template}
+
+**Use a template in a feedback**
+
+Add a template's items to a feedback activity, after the items it has, or in their place with replace (their answers go with them). Returns the items. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+| `templateId` | ✅ | integer | As list_feedback_templates gives it |
+| `replace` |  | boolean |  |
+
+</details>
+
+### `save_feedback_template` {#save-feedback-template}
+
+**Save a feedback as a template**
+
+Save a feedback activity's items as a new template: the course's own, or public (every course's, a manager's) with public. Returns its id. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+| `name` | ✅ | string |  |
+| `public` |  | boolean |  |
+
+</details>
+
+### `delete_feedback_template` {#delete-feedback-template}
+
+**Delete a feedback template**
+
+Delete a feedback template (a public one takes a manager's rights). Can't be undone: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | integer | The feedback's id (course module id), as get_course_structure gives it |
+| `templateId` | ✅ | integer | As list_feedback_templates gives it |
+
+</details>
+
 ## Course life cycle {#lifecycle}
 
 | Tool | Description | Read only | Teacher | Student |
@@ -1462,6 +1725,7 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 | [`set_quiz_pages`](#set-quiz-pages) | Set a quiz's pages |  | ✓ |  |
 | [`add_quiz_section`](#add-quiz-section) | Add a section to a quiz |  | ✓ |  |
 | [`get_quiz_results`](#get-quiz-results) | Get a quiz's results | ✓ | ✓ |  |
+| [`get_quiz_statistics`](#get-quiz-statistics) | Read a quiz's statistics | ✓ | ✓ |  |
 | [`set_quiz_override`](#set-quiz-override) | Set a quiz override for a participant |  | ✓ |  |
 | [`list_questions_to_grade`](#list-questions-to-grade) | List a quiz's questions to grade by hand | ✓ | ✓ |  |
 | [`grade_quiz_question`](#grade-quiz-question) | Grade a quiz question by hand |  | ✓ |  |
@@ -1860,6 +2124,24 @@ Read a quiz's attempts as its grades report shows them: per attempt the particip
 
 </details>
 
+### `get_quiz_statistics` {#get-quiz-statistics}
+
+**Read a quiz's statistics**
+
+Read a quiz's statistics report, which tells which questions work: the quiz's figures (attempts, averages, median, standard deviation, skewness, kurtosis, internal consistency, error ratio, standard error) and per question its facility index, standard deviation, weights, discrimination index and efficiency, dubious ones marked; a random slot's questions and variants each with their own; with responses, how often each response was given (one page read per question). Figures as the report shows them. attempts chooses which attempts count; recalculate clears what Moodle stored. Aggregates only: no person.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | integer | The quiz's id (course module id), as get_course_structure gives it |
+| `attempts` |  | `highest`, `all`, `first`, `last` | The quiz's grading method by default |
+| `recalculate` |  | boolean | Calculate again now, for attempts finished since |
+| `responses` |  | boolean | Also each question's analysis of responses |
+
+</details>
+
 ### `set_quiz_override` {#set-quiz-override}
 
 **Set a quiz override for a participant**
@@ -1928,6 +2210,12 @@ Grade one question of a finished attempt by hand, with a comment, as the review'
 | [`add_grade_category`](#add-grade-category) | Add a grade category |  | ✓ |  |
 | [`update_grade_category`](#update-grade-category) | Update a grade category |  | ✓ |  |
 | [`delete_grade_category`](#delete-grade-category) | Delete a grade category |  | ✓ |  |
+| [`import_grades`](#import-grades) | Import grades from a CSV file |  | ✓ |  |
+| [`list_scales`](#list-scales) | List a course's scales | ✓ | ✓ |  |
+| [`add_scale`](#add-scale) | Add a scale to a course |  | ✓ |  |
+| [`edit_scale`](#edit-scale) | Change a course's scale |  | ✓ |  |
+| [`get_grade_letters`](#get-grade-letters) | Read a course's grade letters | ✓ | ✓ |  |
+| [`set_grade_letters`](#set-grade-letters) | Set a course's grade letters |  | ✓ |  |
 | [`get_completion_report`](#get-completion-report) | Get a course's activity completion | ✓ | ✓ |  |
 | [`override_completion`](#override-completion) | Set a participant's activity completion |  | ✓ |  |
 | [`get_course_completion_criteria`](#get-course-completion-criteria) | Read a course's completion criteria | ✓ | ✓ |  |
@@ -2115,6 +2403,113 @@ Delete a grade category: Moodle moves what it held into its parent and deletes i
 | --- | :-: | --- | --- |
 | `courseId` | ✅ | integer |  |
 | `categoryId` | ✅ | integer |  |
+
+</details>
+
+### `import_grades` {#import-grades}
+
+**Import grades from a CSV file**
+
+Import grades into a course's gradebook from a local CSV file, as Moodle's CSV import does: mapFrom is the column that identifies each person and mapTo what it holds (user id, username, ID number or email); items says which grade item (an id from get_gradebook_setup) each other column goes into, feedback which item's feedback. preview: true only shows how Moodle reads the file, importing nothing: do that first. Moodle imports all or nothing. The file identifies people: only with names in clear (the server's student data level). Changes grades students see: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `file` | ✅ | string | An absolute local path to the CSV |
+| `mapFrom` | ✅ | string | The column (its header) that identifies each person |
+| `mapTo` | ✅ | `id`, `username`, `idnumber`, `email` |  |
+| `items` |  | object | Column header → grade item id |
+| `feedback` |  | object | Column header → the grade item whose feedback it is |
+| `preview` |  | boolean | Only show how Moodle reads the file |
+| `separator` |  | `comma`, `semicolon`, `tab`, `colon` |  |
+| `encoding` |  | string | One Moodle offers; UTF-8 by default |
+
+</details>
+
+### `list_scales` {#list-scales}
+
+**List a course's scales**
+
+List the scales a course's grades can use: its own and the site's standard ones, with their values and whether something grades with them.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `add_scale` {#add-scale}
+
+**Add a scale to a course**
+
+Add a scale to a course: its name and values from the lowest to the highest (no commas in them), and a description. Returns it. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `name` | ✅ | string |  |
+| `items` | ✅ | string list |  |
+| `description` |  | string |  |
+
+</details>
+
+### `edit_scale` {#edit-scale}
+
+**Change a course's scale**
+
+Change a course's scale: its name, values or description. A scale something grades with keeps its values. Returns it. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `scaleId` | ✅ | integer | As list_scales gives it |
+| `name` |  | string |  |
+| `items` |  | string list |  |
+| `description` |  | string |  |
+
+</details>
+
+### `get_grade_letters` {#get-grade-letters}
+
+**Read a course's grade letters**
+
+Read a course's grade letters, from the highest boundary to the lowest: its own when overridden, the site's defaults otherwise.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+
+</details>
+
+### `set_grade_letters` {#set-grade-letters}
+
+**Set a course's grade letters**
+
+Set a course's own grade letters, each from its minGrade percent, overriding the site's; useDefaults goes back to the site's. Changes how grades show to students: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `letters` |  | object list |  |
+| `useDefaults` |  | boolean | The site's default letters instead |
 
 </details>
 
@@ -2449,6 +2844,8 @@ Read what people answered in a feedback or a questionnaire, as its reports show 
 | [`create_grouping`](#create-grouping) | Create a grouping |  | ✓ |  |
 | [`delete_grouping`](#delete-grouping) | Delete a grouping |  | ✓ |  |
 | [`set_grouping_groups`](#set-grouping-groups) | Set a grouping's groups |  | ✓ |  |
+| [`auto_create_groups`](#auto-create-groups) | Create groups automatically |  | ✓ |  |
+| [`import_groups`](#import-groups) | Import groups from a CSV file |  | ✓ |  |
 
 ### `list_participants` {#list-participants}
 
@@ -2730,6 +3127,52 @@ Make a grouping's groups exactly groupIds, adding and removing as its page does;
 | --- | :-: | --- | --- |
 | `groupingId` | ✅ | integer | The grouping's id, as list_groupings gives it |
 | `groupIds` | ✅ | integer list |  |
+
+</details>
+
+### `auto_create_groups` {#auto-create-groups}
+
+**Create groups automatically**
+
+Split a course's participants into groups at once, as Moodle's "Auto-create groups" does: count groups, or groups of count members, named by naming (# a number, @ a letter), filled at random or by name or ID number (or left empty), from a role (students by default), a cohort, a grouping or a group, optionally into an existing or new grouping. preview: true shows the groups and members Moodle would make and creates nothing: do that first, then give its seed back to create those same groups. Members as aliases when the server pseudonymizes. Confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `by` | ✅ | `groups`, `members` | groups: count groups; members: groups of count members |
+| `count` | ✅ | integer |  |
+| `naming` | ✅ | string | The groups' names: # becomes their number, @ a letter ("Group @") |
+| `allocation` |  | `random`, `firstname`, `lastname`, `idnumber`, `none` | random by default; none leaves them empty |
+| `roleId` |  | integer | Only this role (0: every role); students by default |
+| `cohortId` |  | integer |  |
+| `fromGroupingId` |  | integer |  |
+| `fromGroupId` |  | integer |  |
+| `notInGroup` |  | boolean | Only participants in no group yet |
+| `noSmallGroups` |  | boolean | With members: spread a last group that would be too small over the others |
+| `groupingId` |  | integer | Put them in this grouping |
+| `newGrouping` |  | string | Or in a new grouping of this name |
+| `preview` |  | boolean |  |
+| `seed` |  | integer | A preview's seed, to create those same groups |
+
+</details>
+
+### `import_groups` {#import-groups}
+
+**Import groups from a CSV file**
+
+Create groups from a local CSV file, as Moodle's "Import groups" does: a groupname column, and optionally description, enrolmentkey, groupidnumber, groupingname (made when missing) and enablemessaging. Moodle creates the groups without members. Returns the new groups and Moodle's messages for the rows it skipped. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer |  |
+| `file` | ✅ | string | An absolute local path to the CSV |
+| `delimiter` |  | `comma`, `semicolon`, `colon`, `tab` |  |
 
 </details>
 

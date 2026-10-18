@@ -130,6 +130,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | Course completion | Its criteria, each participant's status, marked by hand | R/W | Settings form, `report/completion` | #31; sandbox, course 3 put back | Done |
 | Choice and survey results | Who chose what; feedback and questionnaire responses | R | Report pages | #28; sandbox | Done |
 | Question categories | Categories, moving questions, GIFT and XML export; every question type | R/W | Bank pages and forms | #30, #43; sandbox, seven types | Done |
+| Wikis | A subwiki's pages, a page with its history, created and edited (a section too) | R/W | Pages and the editor | #32; sandbox, teacher and student | Done |
+| Feedback questions | A feedback's items and templates | R/W | Its questions page, export and forms | #35; sandbox, every kind and a dependency | Done |
 | SCORM package | Replace a SCORM's package in place | W | Form (`update_activity`'s `package`) | #23; sandbox | Done |
 
 ## Teacher: assignments and grading
@@ -149,6 +151,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 
 | Tool | Use case | R/W | How | Evidence | Status |
 | --- | --- | --- | --- | --- | --- |
+| `get_quiz_statistics` | Facility, discrimination and responses per question | R | Page (`report.php?mode=statistics`) | #36; sandbox | Done |
 | `get_quiz_results` | Attempts, grades and per-question marks | R | Page (`report.php?mode=overview`) | T quiz overview read | Done |
 | `get_quiz_structure` | A quiz's slots, pages and questions | R | Page (`mod/quiz/edit.php`) | T 13 quiz editor loads | Done |
 | `list_question_banks` | Banks of a course (per quiz and shared, 5.x) | R | Page (`question/banks.php`) | T bank navigation | Done |
@@ -169,6 +172,8 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `set_discussion_state` | Pin, lock | W | AJAX (`mod_forum_set_pin_state`, `set_lock_state`) | none | Done |
 | `create_event` | Course calendar event | W | AJAX (`core_calendar_submit_create_update_form`) | none | Done |
 | `list_events` | Upcoming calendar events, in a course or all | R | AJAX (`core_calendar_get_calendar_upcoming_view`) | none | Done |
+| Grades from CSV, scales, letters | `import_grades` (previewed), `list_scales`, `add_scale`, `edit_scale`, grade letters | R/W | Import, scales and letters pages | #33; sandbox, names in clear | Done |
+| Groups made at once | `auto_create_groups` (previewed, its seed kept), `import_groups` | W | Auto-create and import forms | #34; sandbox | Done |
 | `delete_event` | Delete a course or user event | W | AJAX (`core_calendar_delete_calendar_events`) | none | Done |
 | Workshop end to end | A student's submission, examples, grade calculation and overrides | R/W | Pages and forms | #29; sandbox, submission to override | Done |
 | Workshop allocation | Who assesses whom: read, by hand, at random, scheduled (`get_workshop_allocation`…) | R/W | Page and forms (`mod/workshop/allocation.php`) | #22; sandbox without submissions | Done |

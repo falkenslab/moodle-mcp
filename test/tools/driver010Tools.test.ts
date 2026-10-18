@@ -51,6 +51,29 @@ describe("the tools of moodle-driver 0.10, first batch", () => {
     assert.match(await call("override_workshop_grade", { workshopId: 9, submissionId: 1 }), /or remove: true/);
   });
 
+  it("declare and scope the second batch", async () => {
+    const tools = new Map((await (await connect(testConfig({ moodleUrl: site }))).listTools()).tools.map((t) => [t.name, t.annotations]));
+    for (const name of ["list_wiki_pages", "get_wiki_page", "list_scales", "get_grade_letters", "get_feedback_items", "list_feedback_templates", "get_quiz_statistics"]) assert.equal(tools.get(name)?.readOnlyHint, true, name);
+    for (const name of ["delete_feedback_item", "delete_feedback_template"]) assert.equal(tools.get(name)?.destructiveHint, true, name);
+    const scopes = (tool: string) => [...requiredScopes(tool)].sort();
+    for (const tool of ["create_wiki_page", "add_scale", "set_grade_letters", "add_feedback_item", "import_groups", "get_quiz_statistics"]) assert.deepEqual(scopes(tool), ["content"], tool);
+    assert.deepEqual(scopes("get_wiki_page"), ["content", "student-data"]);
+    assert.deepEqual(scopes("import_grades"), ["grading", "student-data"]);
+    assert.deepEqual(scopes("auto_create_groups"), ["grading", "student-data"]);
+    const student = (await (await connect(testConfig({ moodleUrl: site, role: "student" }))).listTools()).tools.map((t) => t.name);
+    assert.ok(student.includes("edit_wiki_page") && !student.includes("get_quiz_statistics") && !student.includes("add_feedback_item"));
+
+    const client = await connect(testConfig({ moodleUrl: site }));
+    const call = async (name: string, args: Record<string, unknown>) => text(await client.callTool({ name, arguments: args }));
+    assert.match(await call("set_grade_letters", { courseId: 3 }), /useDefaults: true/);
+    assert.match(await call("edit_feedback_item", { feedbackId: 9, itemId: 1, dependsOn: { itemId: 2, value: "Yes" }, removeDependency: true }), /both given and removed/);
+    assert.match(await call("import_grades", { courseId: 3, file: "/tmp/g.csv", mapFrom: "Email", mapTo: "email" }), /Say which columns/);
+    assert.match(await call("import_grades", { courseId: 3, file: "/tmp/g.csv", mapFrom: "Email", mapTo: "email", items: { Quiz: 5 }, feedback: { Quiz: 5 } }), /both a grade and feedback/);
+    const pseudonymous = await connect(testConfig({ moodleUrl: site, studentData: "pseudonymize" }));
+    assert.match(text(await pseudonymous.callTool({ name: "import_grades", arguments: { courseId: 3, file: "/tmp/g.csv", mapFrom: "Email", mapTo: "email", items: { Quiz: 5 } } })), /this server pseudonymizes/);
+    assert.match(text(await pseudonymous.callTool({ name: "list_wiki_pages", arguments: { wikiId: 9, participantId: 7 } })), /give the participant as user/);
+  });
+
   it("keep others' files and texts out under pseudonymize, and take people as aliases", async () => {
     const client = await connect(testConfig({ moodleUrl: site, studentData: "pseudonymize" }));
     const call = async (name: string, args: Record<string, unknown>) => text(await client.callTool({ name, arguments: args }));

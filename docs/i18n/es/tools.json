@@ -2262,5 +2262,272 @@
       "categoryId": "Solo esta categoría; todo el banco si falta",
       "file": "Una ruta local absoluta (se sustituye si existe)"
     }
+  },
+  "list_wiki_pages": {
+    "source": "e9e8d9763ac8",
+    "title": "Listar las páginas de una wiki",
+    "description": "Lista las páginas de una subwiki por título: el id de cada una, las páginas a las que enlaza (las que aún no existen, sin id) y su última versión (número, fecha y autor, un alias cuando el servidor seudonimiza). La subwiki de la persona salvo que groupId o participant elijan otra. Vacía mientras no tiene páginas. Una página cada vez: limit páginas (50 por defecto) tras saltar offset; more dice si hay más.",
+    "inputs": {
+      "wikiId": "El id de la wiki (id del módulo del curso), tal como lo da get_course_structure",
+      "groupId": "La subwiki de un grupo, en una wiki con grupos; la de la propia persona si falta",
+      "participant": "La subwiki de un participante en una wiki individual, por su alias cuando el servidor seudonimiza",
+      "participantId": "O por su id de usuario, cuando el servidor muestra los nombres",
+      "limit": "Cuántas páginas (50 por defecto, hasta 200)",
+      "offset": "Cuántas páginas saltar antes (0 por defecto)"
+    }
+  },
+  "get_wiki_page": {
+    "source": "f85fc93498f9",
+    "title": "Leer una página de una wiki",
+    "description": "Lee una página de una wiki: su contenido (HTML como lo muestra Moodle, su texto, imágenes y multimedia), sus secciones, las páginas a las que enlaza y su última versión; con history, todas las versiones, de la más nueva a la más antigua. Los autores como alias, y las páginas que escribieron otros redactadas, cuando el servidor seudonimiza.",
+    "inputs": {
+      "wikiId": "El id de la wiki (id del módulo del curso), tal como lo da get_course_structure",
+      "pageId": "El id de la página, tal como lo da list_wiki_pages",
+      "history": "También todas las versiones"
+    }
+  },
+  "create_wiki_page": {
+    "source": "b0c2ffe6ca11",
+    "title": "Crear una página en una wiki",
+    "description": "Crea una página en una subwiki como la persona, con su contenido (HTML en una wiki HTML, la de Moodle por defecto, o el marcado de la wiki; [[Título]] enlaza otra página): la subwiki de la persona salvo que groupId o participant elijan otra. La primera página de una subwiki debe llevar el título de primera página de la wiki. Devuelve la página. Otros del curso la leen: confírmalo antes con la persona.",
+    "inputs": {
+      "wikiId": "El id de la wiki (id del módulo del curso), tal como lo da get_course_structure",
+      "title": "",
+      "content": "Sin alias",
+      "embed": "Archivos locales absolutos que incrustar en el contenido (páginas HTML), que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
+      "groupId": "La subwiki de un grupo, en una wiki con grupos; la de la propia persona si falta",
+      "participant": "La subwiki de un participante en una wiki individual, por su alias cuando el servidor seudonimiza",
+      "participantId": "O por su id de usuario, cuando el servidor muestra los nombres"
+    }
+  },
+  "edit_wiki_page": {
+    "source": "70176ba69e66",
+    "title": "Editar una página de una wiki",
+    "description": "Cambia el contenido de una página de una wiki, entera o una sección (un encabezado, tal como lo lista sections de get_wiki_page), como su editor: una versión nueva, de la persona. Se rechaza mientras otro tiene la página abierta en su editor: vuelve a intentarlo más tarde. Devuelve la página. Confírmalo antes con la persona.",
+    "inputs": {
+      "wikiId": "El id de la wiki (id del módulo del curso), tal como lo da get_course_structure",
+      "pageId": "El id de la página, tal como lo da list_wiki_pages",
+      "content": "Sustituye el de la página o el de la sección; sin alias",
+      "section": "",
+      "embed": "Archivos locales absolutos que incrustar en el contenido (páginas HTML), que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">"
+    }
+  },
+  "import_grades": {
+    "source": "53ca45a162cd",
+    "title": "Importar calificaciones desde un archivo CSV",
+    "description": "Importa calificaciones al calificador de un curso desde un archivo CSV local, como la importación CSV de Moodle: mapFrom es la columna que identifica a cada persona y mapTo lo que contiene (id de usuario, nombre de usuario, número de ID o correo); items dice en qué elemento de calificación (un id de get_gradebook_setup) va cada otra columna, y feedback, de qué elemento es la retroalimentación. preview: true solo muestra cómo lee Moodle el archivo, sin importar nada: hazlo primero. Moodle importa todo o nada. El archivo identifica a las personas: solo con los nombres visibles (el nivel de datos de estudiantes del servidor). Cambia calificaciones que ven los estudiantes: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "file": "Una ruta local absoluta al CSV",
+      "mapFrom": "La columna (su cabecera) que identifica a cada persona",
+      "mapTo": "",
+      "items": "Cabecera de columna → id del elemento de calificación",
+      "feedback": "Cabecera de columna → el elemento de calificación del que es la retroalimentación",
+      "preview": "Solo mostrar cómo lee Moodle el archivo",
+      "separator": "",
+      "encoding": "Una de las que ofrece Moodle; UTF-8 por defecto"
+    }
+  },
+  "list_scales": {
+    "source": "5305c1d503e2",
+    "title": "Listar las escalas de un curso",
+    "description": "Lista las escalas que pueden usar las calificaciones de un curso: las suyas y las estándar del sitio, con sus valores y si algo califica con ellas.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "add_scale": {
+    "source": "56cca3c5e242",
+    "title": "Añadir una escala a un curso",
+    "description": "Añade una escala a un curso: su nombre y sus valores de menor a mayor (sin comas), y una descripción. Devuelve la escala. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "name": "",
+      "items": "",
+      "description": ""
+    }
+  },
+  "edit_scale": {
+    "source": "21f0419ac5f8",
+    "title": "Cambiar una escala de un curso",
+    "description": "Cambia una escala de un curso: su nombre, sus valores o su descripción. Una escala con la que algo califica conserva sus valores. Devuelve la escala. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "scaleId": "Tal como lo da list_scales",
+      "name": "",
+      "items": "",
+      "description": ""
+    }
+  },
+  "get_grade_letters": {
+    "source": "dd02279afc89",
+    "title": "Leer las letras de calificación de un curso",
+    "description": "Lee las letras de calificación de un curso, del límite más alto al más bajo: las suyas cuando están personalizadas, las del sitio por defecto en otro caso.",
+    "inputs": {
+      "courseId": ""
+    }
+  },
+  "set_grade_letters": {
+    "source": "a3fedec1a5b7",
+    "title": "Fijar las letras de calificación de un curso",
+    "description": "Fija letras de calificación propias de un curso, cada una desde su porcentaje minGrade, en lugar de las del sitio; useDefaults vuelve a las del sitio. Cambia cómo ven las notas los estudiantes: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "letters": "",
+      "useDefaults": "Las letras del sitio por defecto en su lugar"
+    }
+  },
+  "auto_create_groups": {
+    "source": "dbe49b3cf6fb",
+    "title": "Crear grupos automáticamente",
+    "description": "Reparte a los participantes de un curso en grupos de una vez, como «Crear grupos automáticamente» de Moodle: count grupos, o grupos de count miembros, con el nombre de naming (# un número, @ una letra), llenados al azar o por nombre o número de ID (o vacíos), a partir de un rol (estudiantes por defecto), una cohorte, una agrupación o un grupo, y opcionalmente en una agrupación existente o nueva. preview: true muestra los grupos y miembros que haría Moodle sin crear nada: hazlo primero y luego devuelve su seed para crear esos mismos grupos. Los miembros como alias cuando el servidor seudonimiza. Confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "by": "groups: count grupos; members: grupos de count miembros",
+      "count": "",
+      "naming": "Los nombres de los grupos: # pasa a ser su número y @ una letra (\"Grupo @\")",
+      "allocation": "random por defecto; none los deja vacíos",
+      "roleId": "Solo este rol (0: todos los roles); estudiantes por defecto",
+      "cohortId": "",
+      "fromGroupingId": "",
+      "fromGroupId": "",
+      "notInGroup": "Solo participantes que aún no están en ningún grupo",
+      "noSmallGroups": "Con members: repartir entre los demás un último grupo demasiado pequeño",
+      "groupingId": "Ponerlos en esta agrupación",
+      "newGrouping": "O en una agrupación nueva con este nombre",
+      "preview": "",
+      "seed": "La seed de una vista previa, para crear esos mismos grupos"
+    }
+  },
+  "import_groups": {
+    "source": "bd7dab8db3af",
+    "title": "Importar grupos desde un archivo CSV",
+    "description": "Crea grupos desde un archivo CSV local, como «Importar grupos» de Moodle: una columna groupname, y opcionalmente description, enrolmentkey, groupidnumber, groupingname (se crea si falta) y enablemessaging. Moodle crea los grupos sin miembros. Devuelve los grupos nuevos y los mensajes de Moodle sobre las filas que se saltó. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "courseId": "",
+      "file": "Una ruta local absoluta al CSV",
+      "delimiter": ""
+    }
+  },
+  "get_feedback_items": {
+    "source": "c9ebaadb8157",
+    "title": "Leer las preguntas de un feedback",
+    "description": "Lee los elementos de una actividad feedback tal como los monta su profesor, en orden: tipo (multichoice, multichoicerated, textfield, textarea, numeric, info, label, captcha, pagebreak), posición, pregunta, si es obligatorio, las opciones de una elección (con pesos si es valorada) y cómo se muestran, un rango numérico, el contenido de una etiqueta y el elemento del que depende.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_feedback_item": {
+    "source": "9f14bef5c264",
+    "title": "Añadir una pregunta a un feedback",
+    "description": "Añade un elemento a una actividad feedback, tras el elemento after (0: el primero; al final si falta): una pregunta de cualquier tipo con sus opciones y ajustes, una etiqueta con su contenido, o un salto de página o un CAPTCHA. Devuelve su id y los elementos en orden. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure",
+      "type": "",
+      "question": "Todos los tipos salvo una etiqueta y un salto de página necesitan una",
+      "label": "",
+      "required": "",
+      "options": "Las opciones de los elementos de elección, en orden; si se dan, sustituyen a todas",
+      "display": "checkbox (varias respuestas) solo para multichoice",
+      "horizontal": "",
+      "hideNotSelected": "",
+      "ignoreEmpty": "",
+      "range": "El de un elemento numérico; un límite que falta es ninguno",
+      "info": "",
+      "contents": "El de una etiqueta (HTML)",
+      "dependsOn": "Mostrarlo solo cuando otro elemento se respondió con este valor: un elemento con etiqueta, en una página anterior (con un salto de página entre ambos)",
+      "fields": "Cualquier otro campo del formulario del elemento, por nombre (itemsize, itemmaxlength…)",
+      "after": "El elemento tras el que va (0: el primero)"
+    }
+  },
+  "edit_feedback_item": {
+    "source": "9dfe7edea26f",
+    "title": "Cambiar una pregunta de un feedback",
+    "description": "Cambia un elemento de un feedback con lo que se indica: la pregunta, la etiqueta, si es obligatorio, las opciones de una elección (si se dan, sustituyen a todas) y sus ajustes, un rango numérico, el contenido de una etiqueta, su dependencia (removeDependency la quita) y otros campos. Conserva su tipo y su sitio. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure",
+      "itemId": "El id del elemento, tal como lo da get_feedback_items",
+      "question": "Todos los tipos salvo una etiqueta y un salto de página necesitan una",
+      "label": "",
+      "required": "",
+      "options": "Las opciones de los elementos de elección, en orden; si se dan, sustituyen a todas",
+      "display": "checkbox (varias respuestas) solo para multichoice",
+      "horizontal": "",
+      "hideNotSelected": "",
+      "ignoreEmpty": "",
+      "range": "El de un elemento numérico; un límite que falta es ninguno",
+      "info": "",
+      "contents": "El de una etiqueta (HTML)",
+      "dependsOn": "Mostrarlo solo cuando otro elemento se respondió con este valor: un elemento con etiqueta, en una página anterior (con un salto de página entre ambos)",
+      "fields": "Cualquier otro campo del formulario del elemento, por nombre (itemsize, itemmaxlength…)",
+      "removeDependency": ""
+    }
+  },
+  "move_feedback_item": {
+    "source": "8767bfe3b229",
+    "title": "Mover una pregunta de un feedback",
+    "description": "Mueve un elemento de un feedback a una posición (desde 1). Devuelve los elementos en orden. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure",
+      "itemId": "El id del elemento, tal como lo da get_feedback_items",
+      "position": ""
+    }
+  },
+  "delete_feedback_item": {
+    "source": "eaa5af0f0efa",
+    "title": "Eliminar una pregunta de un feedback",
+    "description": "Elimina un elemento de un feedback; las respuestas que dio la gente se van con él. Devuelve los elementos que quedan. No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure",
+      "itemId": "El id del elemento, tal como lo da get_feedback_items"
+    }
+  },
+  "list_feedback_templates": {
+    "source": "6000dc23bbcd",
+    "title": "Listar las plantillas de feedback",
+    "description": "Lista las plantillas que puede usar una actividad feedback: las del curso y las públicas del sitio.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "use_feedback_template": {
+    "source": "c2d3e2177bdf",
+    "title": "Usar una plantilla en un feedback",
+    "description": "Añade los elementos de una plantilla a una actividad feedback, tras los que tiene, o en su lugar con replace (sus respuestas se van con ellos). Devuelve los elementos. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure",
+      "templateId": "Tal como lo da list_feedback_templates",
+      "replace": ""
+    }
+  },
+  "save_feedback_template": {
+    "source": "5601ba37f7c2",
+    "title": "Guardar un feedback como plantilla",
+    "description": "Guarda los elementos de una actividad feedback como plantilla nueva: del curso, o pública (de todos los cursos, la de un gestor) con public. Devuelve su id. Confírmalo antes con la persona.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure",
+      "name": "",
+      "public": ""
+    }
+  },
+  "delete_feedback_template": {
+    "source": "66897f61b6e7",
+    "title": "Eliminar una plantilla de feedback",
+    "description": "Elimina una plantilla de feedback (una pública requiere permisos de gestor). No se puede deshacer: confírmalo antes con la persona.",
+    "inputs": {
+      "feedbackId": "El id del feedback (id del módulo del curso), tal como lo da get_course_structure",
+      "templateId": "Tal como lo da list_feedback_templates"
+    }
+  },
+  "get_quiz_statistics": {
+    "source": "8d1d95e7dc7f",
+    "title": "Leer las estadísticas de un cuestionario",
+    "description": "Lee el informe de estadísticas de un cuestionario, que dice qué preguntas funcionan: las cifras del cuestionario (intentos, medias, mediana, desviación típica, asimetría, curtosis, consistencia interna, ratio de error, error típico) y, por pregunta, su índice de facilidad, desviación típica, pesos, índice y eficiencia de discriminación, con las dudosas marcadas; las preguntas de un hueco aleatorio y las variantes, cada una con las suyas; con responses, cuántas veces se dio cada respuesta (se lee una página por pregunta). Las cifras como las muestra el informe. attempts elige qué intentos cuentan; recalculate borra lo que tenía Moodle guardado. Solo datos agregados: ninguna persona.",
+    "inputs": {
+      "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure",
+      "attempts": "El método de calificación del cuestionario por defecto",
+      "recalculate": "Calcularlo de nuevo ahora, para los intentos terminados desde entonces",
+      "responses": "También el análisis de respuestas de cada pregunta"
+    }
   }
 }

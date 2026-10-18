@@ -18,6 +18,11 @@ import { registerGetSiteInfo } from "./getSiteInfo.js";
 import { registerGetMyGrades } from "./getMyGrades.js";
 import { registerGetRubric, registerSetRubric } from "./getRubric.js";
 import { registerValidateGift, registerValidateHtml } from "./validate.js";
+import { registerCreateWikiPage, registerEditWikiPage, registerGetWikiPage, registerListWikiPages } from "./wikis.js";
+import { registerAddScale, registerEditScale, registerGetGradeLetters, registerImportGrades, registerListScales, registerSetGradeLetters } from "./gradeImport.js";
+import { registerAutoCreateGroups, registerImportGroups } from "./autoGroups.js";
+import { registerAddFeedbackItem, registerDeleteFeedbackItem, registerDeleteFeedbackTemplate, registerEditFeedbackItem, registerGetFeedbackItems, registerListFeedbackTemplates, registerMoveFeedbackItem, registerSaveFeedbackTemplate, registerUseFeedbackTemplate } from "./feedbackItems.js";
+import { registerGetQuizStatistics } from "./quizStatistics.js";
 import { registerGetSubmissions } from "./getSubmissions.js";
 import { registerAddGradeCategory, registerAddGradeItem, registerDeleteGradeCategory, registerDeleteGradeItem, registerGetGradebookSetup, registerUpdateGradeCategory, registerUpdateGradeItem } from "./gradebook.js";
 import { registerGradeSubmission } from "./gradeSubmission.js";
@@ -81,6 +86,8 @@ export const TOOLS: RegisterTool[] = [
   registerCreateGrouping,
   registerDeleteGrouping,
   registerSetGroupingGroups,
+  registerAutoCreateGroups,
+  registerImportGroups,
   registerListEnrolmentMethods,
   registerSetEnrolmentMethod,
   registerGetGraderReport,
@@ -124,6 +131,7 @@ export const TOOLS: RegisterTool[] = [
   registerFinishQuizAttempt,
   registerGetAttemptReview,
   registerGetQuizResults,
+  registerGetQuizStatistics,
   registerSetQuizOverride,
   registerListQuestionsToGrade,
   registerGradeQuizQuestion,
@@ -210,6 +218,19 @@ export const TOOLS: RegisterTool[] = [
   registerAddGlossaryCategory,
   registerExportGlossary,
   registerImportGlossary,
+  registerListWikiPages,
+  registerGetWikiPage,
+  registerCreateWikiPage,
+  registerEditWikiPage,
+  registerGetFeedbackItems,
+  registerAddFeedbackItem,
+  registerEditFeedbackItem,
+  registerMoveFeedbackItem,
+  registerDeleteFeedbackItem,
+  registerListFeedbackTemplates,
+  registerUseFeedbackTemplate,
+  registerSaveFeedbackTemplate,
+  registerDeleteFeedbackTemplate,
   registerListBadges,
   registerCreateBadge,
   registerSetBadgeCriteria,
@@ -251,6 +272,12 @@ export const TOOLS: RegisterTool[] = [
   registerUpdateGradeCategory,
   registerDeleteGradeCategory,
   registerDeleteGradeItem,
+  registerImportGrades,
+  registerListScales,
+  registerAddScale,
+  registerEditScale,
+  registerGetGradeLetters,
+  registerSetGradeLetters,
   registerListEvents,
   registerCreateEvent,
   registerDeleteEvent,

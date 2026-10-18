@@ -17,7 +17,7 @@ Your students stay anonymous to the AI, and you decide what it can do.
 
 </div>
 
-moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 210 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 4.5 or 5.x site.
+moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 230 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 4.5 or 5.x site.
 
 ## ✨ Why moodle-mcp
 
@@ -96,11 +96,11 @@ More sessions with Claude Code and Codex, and what they changed in Moodle, are i
 
 | Area | For example |
 | --- | --- |
-| 📚 Courses and content | Pages, files, folders, labels and links with your images; books, lessons, glossaries and databases with their entries; sections; restrictions and completion |
+| 📚 Courses and content | Pages, files, folders, labels and links with your images; books, lessons, wikis, glossaries and databases with their entries, feedback questions; sections; restrictions and completion |
 | 📝 Assignments and grading | Submissions, rubrics and marking guides (read and defined), extensions, the marking workflow |
-| ❓ Quizzes and questions | Question banks and their categories, every question type, GIFT and Moodle XML import (GIFT checked first) and export, quiz layout, results, manual grading |
-| 📊 Gradebook and reports | The grader report, grade items and categories, course and activity completion, choice and survey results, activity and participation reports, logs |
-| 👥 Participants and groups | Enrolments, roles, groups and groupings |
+| ❓ Quizzes and questions | Question banks and their categories, every question type, GIFT and Moodle XML import (GIFT checked first) and export, quiz statistics, quiz layout, results, manual grading |
+| 📊 Gradebook and reports | The grader report, grade items and categories, CSV import, scales and letters, course and activity completion, choice and survey results, activity and participation reports, logs |
+| 👥 Participants and groups | Enrolments, roles, groups and groupings, made automatically or from CSV |
 | 💬 Forums and messages | Discussions, replies, ratings, workshops from submission to grades, notifications and private messages |
 | 🏅 Badges | Create them, set what earns them, award them by hand |
 | 📅 Calendar and to-dos | Events, deadlines, what's pending and what changed |

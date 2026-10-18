@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **212 herramientas**, 211 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **234 herramientas**, 233 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -476,7 +476,7 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 
 </details>
 
-## Libros, lecciones, glosarios y bases de datos {#activities}
+## Libros, lecciones, wikis, glosarios, bases de datos y feedback {#activities}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
 | --- | --- | :-: | :-: | :-: |
@@ -515,6 +515,19 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 | [`add_glossary_category`](#add-glossary-category) | Añadir una categoría a un glosario |  | ✓ |  |
 | [`export_glossary`](#export-glossary) | Exportar las entradas de un glosario a un archivo | ✓ | ✓ |  |
 | [`import_glossary`](#import-glossary) | Importar entradas a un glosario |  | ✓ |  |
+| [`list_wiki_pages`](#list-wiki-pages) | Listar las páginas de una wiki | ✓ | ✓ | ✓ |
+| [`get_wiki_page`](#get-wiki-page) | Leer una página de una wiki | ✓ | ✓ | ✓ |
+| [`create_wiki_page`](#create-wiki-page) | Crear una página en una wiki |  | ✓ | ✓ |
+| [`edit_wiki_page`](#edit-wiki-page) | Editar una página de una wiki |  | ✓ | ✓ |
+| [`get_feedback_items`](#get-feedback-items) | Leer las preguntas de un feedback | ✓ | ✓ |  |
+| [`add_feedback_item`](#add-feedback-item) | Añadir una pregunta a un feedback |  | ✓ |  |
+| [`edit_feedback_item`](#edit-feedback-item) | Cambiar una pregunta de un feedback |  | ✓ |  |
+| [`move_feedback_item`](#move-feedback-item) | Mover una pregunta de un feedback |  | ✓ |  |
+| [`delete_feedback_item`](#delete-feedback-item) | Eliminar una pregunta de un feedback |  | ✓ |  |
+| [`list_feedback_templates`](#list-feedback-templates) | Listar las plantillas de feedback | ✓ | ✓ |  |
+| [`use_feedback_template`](#use-feedback-template) | Usar una plantilla en un feedback |  | ✓ |  |
+| [`save_feedback_template`](#save-feedback-template) | Guardar un feedback como plantilla |  | ✓ |  |
+| [`delete_feedback_template`](#delete-feedback-template) | Eliminar una plantilla de feedback |  | ✓ |  |
 
 ### `list_book_chapters` {#list-book-chapters}
 
@@ -1137,6 +1150,256 @@ Importa las entradas de un archivo XML de glosario (como lo guarda export_glossa
 
 </details>
 
+### `list_wiki_pages` {#list-wiki-pages}
+
+**Listar las páginas de una wiki**
+
+Lista las páginas de una subwiki por título: el id de cada una, las páginas a las que enlaza (las que aún no existen, sin id) y su última versión (número, fecha y autor, un alias cuando el servidor seudonimiza). La subwiki de la persona salvo que groupId o participant elijan otra. Vacía mientras no tiene páginas. Una página cada vez: limit páginas (50 por defecto) tras saltar offset; more dice si hay más.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | entero | El id de la wiki (id del módulo del curso), tal como lo da get_course_structure |
+| `groupId` |  | entero | La subwiki de un grupo, en una wiki con grupos; la de la propia persona si falta |
+| `participant` |  | texto | La subwiki de un participante en una wiki individual, por su alias cuando el servidor seudonimiza |
+| `participantId` |  | entero | O por su id de usuario, cuando el servidor muestra los nombres |
+| `limit` |  | entero | Cuántas páginas (50 por defecto, hasta 200) |
+| `offset` |  | entero | Cuántas páginas saltar antes (0 por defecto) |
+
+</details>
+
+### `get_wiki_page` {#get-wiki-page}
+
+**Leer una página de una wiki**
+
+Lee una página de una wiki: su contenido (HTML como lo muestra Moodle, su texto, imágenes y multimedia), sus secciones, las páginas a las que enlaza y su última versión; con history, todas las versiones, de la más nueva a la más antigua. Los autores como alias, y las páginas que escribieron otros redactadas, cuando el servidor seudonimiza.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | entero | El id de la wiki (id del módulo del curso), tal como lo da get_course_structure |
+| `pageId` | ✅ | entero | El id de la página, tal como lo da list_wiki_pages |
+| `history` |  | sí o no | También todas las versiones |
+
+</details>
+
+### `create_wiki_page` {#create-wiki-page}
+
+**Crear una página en una wiki**
+
+Crea una página en una subwiki como la persona, con su contenido (HTML en una wiki HTML, la de Moodle por defecto, o el marcado de la wiki; [[Título]] enlaza otra página): la subwiki de la persona salvo que groupId o participant elijan otra. La primera página de una subwiki debe llevar el título de primera página de la wiki. Devuelve la página. Otros del curso la leen: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | entero | El id de la wiki (id del módulo del curso), tal como lo da get_course_structure |
+| `title` | ✅ | texto |  |
+| `content` | ✅ | texto | Sin alias |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en el contenido (páginas HTML), que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+| `groupId` |  | entero | La subwiki de un grupo, en una wiki con grupos; la de la propia persona si falta |
+| `participant` |  | texto | La subwiki de un participante en una wiki individual, por su alias cuando el servidor seudonimiza |
+| `participantId` |  | entero | O por su id de usuario, cuando el servidor muestra los nombres |
+
+</details>
+
+### `edit_wiki_page` {#edit-wiki-page}
+
+**Editar una página de una wiki**
+
+Cambia el contenido de una página de una wiki, entera o una sección (un encabezado, tal como lo lista sections de get_wiki_page), como su editor: una versión nueva, de la persona. Se rechaza mientras otro tiene la página abierta en su editor: vuelve a intentarlo más tarde. Devuelve la página. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `wikiId` | ✅ | entero | El id de la wiki (id del módulo del curso), tal como lo da get_course_structure |
+| `pageId` | ✅ | entero | El id de la página, tal como lo da list_wiki_pages |
+| `content` | ✅ | texto | Sustituye el de la página o el de la sección; sin alias |
+| `section` |  | texto |  |
+| `embed` |  | lista de texto | Archivos locales absolutos que incrustar en el contenido (páginas HTML), que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
+
+</details>
+
+### `get_feedback_items` {#get-feedback-items}
+
+**Leer las preguntas de un feedback**
+
+Lee los elementos de una actividad feedback tal como los monta su profesor, en orden: tipo (multichoice, multichoicerated, textfield, textarea, numeric, info, label, captcha, pagebreak), posición, pregunta, si es obligatorio, las opciones de una elección (con pesos si es valorada) y cómo se muestran, un rango numérico, el contenido de una etiqueta y el elemento del que depende.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `add_feedback_item` {#add-feedback-item}
+
+**Añadir una pregunta a un feedback**
+
+Añade un elemento a una actividad feedback, tras el elemento after (0: el primero; al final si falta): una pregunta de cualquier tipo con sus opciones y ajustes, una etiqueta con su contenido, o un salto de página o un CAPTCHA. Devuelve su id y los elementos en orden. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+| `type` | ✅ | `multichoice`, `multichoicerated`, `textfield`, `textarea`, `numeric`, `info`, `label`, `captcha`, `pagebreak` |  |
+| `question` |  | texto | Todos los tipos salvo una etiqueta y un salto de página necesitan una |
+| `label` |  | texto |  |
+| `required` |  | sí o no |  |
+| `options` |  | lista de objeto | Las opciones de los elementos de elección, en orden; si se dan, sustituyen a todas |
+| `display` |  | `radio`, `checkbox`, `dropdown` | checkbox (varias respuestas) solo para multichoice |
+| `horizontal` |  | sí o no |  |
+| `hideNotSelected` |  | sí o no |  |
+| `ignoreEmpty` |  | sí o no |  |
+| `range` |  | objeto | El de un elemento numérico; un límite que falta es ninguno |
+| `info` |  | `response-time`, `course`, `category` |  |
+| `contents` |  | texto | El de una etiqueta (HTML) |
+| `dependsOn` |  | objeto | Mostrarlo solo cuando otro elemento se respondió con este valor: un elemento con etiqueta, en una página anterior (con un salto de página entre ambos) |
+| `fields` |  | objeto | Cualquier otro campo del formulario del elemento, por nombre (itemsize, itemmaxlength…) |
+| `after` |  | entero | El elemento tras el que va (0: el primero) |
+
+</details>
+
+### `edit_feedback_item` {#edit-feedback-item}
+
+**Cambiar una pregunta de un feedback**
+
+Cambia un elemento de un feedback con lo que se indica: la pregunta, la etiqueta, si es obligatorio, las opciones de una elección (si se dan, sustituyen a todas) y sus ajustes, un rango numérico, el contenido de una etiqueta, su dependencia (removeDependency la quita) y otros campos. Conserva su tipo y su sitio. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+| `itemId` | ✅ | entero | El id del elemento, tal como lo da get_feedback_items |
+| `question` |  | texto | Todos los tipos salvo una etiqueta y un salto de página necesitan una |
+| `label` |  | texto |  |
+| `required` |  | sí o no |  |
+| `options` |  | lista de objeto | Las opciones de los elementos de elección, en orden; si se dan, sustituyen a todas |
+| `display` |  | `radio`, `checkbox`, `dropdown` | checkbox (varias respuestas) solo para multichoice |
+| `horizontal` |  | sí o no |  |
+| `hideNotSelected` |  | sí o no |  |
+| `ignoreEmpty` |  | sí o no |  |
+| `range` |  | objeto | El de un elemento numérico; un límite que falta es ninguno |
+| `info` |  | `response-time`, `course`, `category` |  |
+| `contents` |  | texto | El de una etiqueta (HTML) |
+| `dependsOn` |  | objeto | Mostrarlo solo cuando otro elemento se respondió con este valor: un elemento con etiqueta, en una página anterior (con un salto de página entre ambos) |
+| `fields` |  | objeto | Cualquier otro campo del formulario del elemento, por nombre (itemsize, itemmaxlength…) |
+| `removeDependency` |  | sí o no |  |
+
+</details>
+
+### `move_feedback_item` {#move-feedback-item}
+
+**Mover una pregunta de un feedback**
+
+Mueve un elemento de un feedback a una posición (desde 1). Devuelve los elementos en orden. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+| `itemId` | ✅ | entero | El id del elemento, tal como lo da get_feedback_items |
+| `position` | ✅ | entero |  |
+
+</details>
+
+### `delete_feedback_item` {#delete-feedback-item}
+
+**Eliminar una pregunta de un feedback**
+
+Elimina un elemento de un feedback; las respuestas que dio la gente se van con él. Devuelve los elementos que quedan. No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+| `itemId` | ✅ | entero | El id del elemento, tal como lo da get_feedback_items |
+
+</details>
+
+### `list_feedback_templates` {#list-feedback-templates}
+
+**Listar las plantillas de feedback**
+
+Lista las plantillas que puede usar una actividad feedback: las del curso y las públicas del sitio.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `use_feedback_template` {#use-feedback-template}
+
+**Usar una plantilla en un feedback**
+
+Añade los elementos de una plantilla a una actividad feedback, tras los que tiene, o en su lugar con replace (sus respuestas se van con ellos). Devuelve los elementos. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+| `templateId` | ✅ | entero | Tal como lo da list_feedback_templates |
+| `replace` |  | sí o no |  |
+
+</details>
+
+### `save_feedback_template` {#save-feedback-template}
+
+**Guardar un feedback como plantilla**
+
+Guarda los elementos de una actividad feedback como plantilla nueva: del curso, o pública (de todos los cursos, la de un gestor) con public. Devuelve su id. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+| `name` | ✅ | texto |  |
+| `public` |  | sí o no |  |
+
+</details>
+
+### `delete_feedback_template` {#delete-feedback-template}
+
+**Eliminar una plantilla de feedback**
+
+Elimina una plantilla de feedback (una pública requiere permisos de gestor). No se puede deshacer: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `feedbackId` | ✅ | entero | El id del feedback (id del módulo del curso), tal como lo da get_course_structure |
+| `templateId` | ✅ | entero | Tal como lo da list_feedback_templates |
+
+</details>
+
 ## Ciclo de vida del curso {#lifecycle}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
@@ -1462,6 +1725,7 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 | [`set_quiz_pages`](#set-quiz-pages) | Establecer las páginas de un cuestionario |  | ✓ |  |
 | [`add_quiz_section`](#add-quiz-section) | Añadir una sección a un cuestionario |  | ✓ |  |
 | [`get_quiz_results`](#get-quiz-results) | Obtener los resultados de un cuestionario | ✓ | ✓ |  |
+| [`get_quiz_statistics`](#get-quiz-statistics) | Leer las estadísticas de un cuestionario | ✓ | ✓ |  |
 | [`set_quiz_override`](#set-quiz-override) | Establecer una excepción de cuestionario para un participante |  | ✓ |  |
 | [`list_questions_to_grade`](#list-questions-to-grade) | Listar las preguntas de un cuestionario por calificar a mano | ✓ | ✓ |  |
 | [`grade_quiz_question`](#grade-quiz-question) | Calificar a mano una pregunta de cuestionario |  | ✓ |  |
@@ -1860,6 +2124,24 @@ Lee los intentos de un cuestionario tal como los muestra su informe de calificac
 
 </details>
 
+### `get_quiz_statistics` {#get-quiz-statistics}
+
+**Leer las estadísticas de un cuestionario**
+
+Lee el informe de estadísticas de un cuestionario, que dice qué preguntas funcionan: las cifras del cuestionario (intentos, medias, mediana, desviación típica, asimetría, curtosis, consistencia interna, ratio de error, error típico) y, por pregunta, su índice de facilidad, desviación típica, pesos, índice y eficiencia de discriminación, con las dudosas marcadas; las preguntas de un hueco aleatorio y las variantes, cada una con las suyas; con responses, cuántas veces se dio cada respuesta (se lee una página por pregunta). Las cifras como las muestra el informe. attempts elige qué intentos cuentan; recalculate borra lo que tenía Moodle guardado. Solo datos agregados: ninguna persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `quizId` | ✅ | entero | El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure |
+| `attempts` |  | `highest`, `all`, `first`, `last` | El método de calificación del cuestionario por defecto |
+| `recalculate` |  | sí o no | Calcularlo de nuevo ahora, para los intentos terminados desde entonces |
+| `responses` |  | sí o no | También el análisis de respuestas de cada pregunta |
+
+</details>
+
 ### `set_quiz_override` {#set-quiz-override}
 
 **Establecer una excepción de cuestionario para un participante**
@@ -1928,6 +2210,12 @@ Califica a mano una pregunta de un intento terminado, con un comentario, como ha
 | [`add_grade_category`](#add-grade-category) | Añadir una categoría de calificación |  | ✓ |  |
 | [`update_grade_category`](#update-grade-category) | Actualizar una categoría de calificación |  | ✓ |  |
 | [`delete_grade_category`](#delete-grade-category) | Eliminar una categoría de calificación |  | ✓ |  |
+| [`import_grades`](#import-grades) | Importar calificaciones desde un archivo CSV |  | ✓ |  |
+| [`list_scales`](#list-scales) | Listar las escalas de un curso | ✓ | ✓ |  |
+| [`add_scale`](#add-scale) | Añadir una escala a un curso |  | ✓ |  |
+| [`edit_scale`](#edit-scale) | Cambiar una escala de un curso |  | ✓ |  |
+| [`get_grade_letters`](#get-grade-letters) | Leer las letras de calificación de un curso | ✓ | ✓ |  |
+| [`set_grade_letters`](#set-grade-letters) | Fijar las letras de calificación de un curso |  | ✓ |  |
 | [`get_completion_report`](#get-completion-report) | Obtener la finalización de actividades de un curso | ✓ | ✓ |  |
 | [`override_completion`](#override-completion) | Establecer la finalización de una actividad de un participante |  | ✓ |  |
 | [`get_course_completion_criteria`](#get-course-completion-criteria) | Leer los criterios de finalización de un curso | ✓ | ✓ |  |
@@ -2115,6 +2403,113 @@ Elimina una categoría de calificación: Moodle mueve lo que contenía a su cate
 | --- | :-: | --- | --- |
 | `courseId` | ✅ | entero |  |
 | `categoryId` | ✅ | entero |  |
+
+</details>
+
+### `import_grades` {#import-grades}
+
+**Importar calificaciones desde un archivo CSV**
+
+Importa calificaciones al calificador de un curso desde un archivo CSV local, como la importación CSV de Moodle: mapFrom es la columna que identifica a cada persona y mapTo lo que contiene (id de usuario, nombre de usuario, número de ID o correo); items dice en qué elemento de calificación (un id de get_gradebook_setup) va cada otra columna, y feedback, de qué elemento es la retroalimentación. preview: true solo muestra cómo lee Moodle el archivo, sin importar nada: hazlo primero. Moodle importa todo o nada. El archivo identifica a las personas: solo con los nombres visibles (el nivel de datos de estudiantes del servidor). Cambia calificaciones que ven los estudiantes: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `file` | ✅ | texto | Una ruta local absoluta al CSV |
+| `mapFrom` | ✅ | texto | La columna (su cabecera) que identifica a cada persona |
+| `mapTo` | ✅ | `id`, `username`, `idnumber`, `email` |  |
+| `items` |  | objeto | Cabecera de columna → id del elemento de calificación |
+| `feedback` |  | objeto | Cabecera de columna → el elemento de calificación del que es la retroalimentación |
+| `preview` |  | sí o no | Solo mostrar cómo lee Moodle el archivo |
+| `separator` |  | `comma`, `semicolon`, `tab`, `colon` |  |
+| `encoding` |  | texto | Una de las que ofrece Moodle; UTF-8 por defecto |
+
+</details>
+
+### `list_scales` {#list-scales}
+
+**Listar las escalas de un curso**
+
+Lista las escalas que pueden usar las calificaciones de un curso: las suyas y las estándar del sitio, con sus valores y si algo califica con ellas.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `add_scale` {#add-scale}
+
+**Añadir una escala a un curso**
+
+Añade una escala a un curso: su nombre y sus valores de menor a mayor (sin comas), y una descripción. Devuelve la escala. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `name` | ✅ | texto |  |
+| `items` | ✅ | lista de texto |  |
+| `description` |  | texto |  |
+
+</details>
+
+### `edit_scale` {#edit-scale}
+
+**Cambiar una escala de un curso**
+
+Cambia una escala de un curso: su nombre, sus valores o su descripción. Una escala con la que algo califica conserva sus valores. Devuelve la escala. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `scaleId` | ✅ | entero | Tal como lo da list_scales |
+| `name` |  | texto |  |
+| `items` |  | lista de texto |  |
+| `description` |  | texto |  |
+
+</details>
+
+### `get_grade_letters` {#get-grade-letters}
+
+**Leer las letras de calificación de un curso**
+
+Lee las letras de calificación de un curso, del límite más alto al más bajo: las suyas cuando están personalizadas, las del sitio por defecto en otro caso.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+
+</details>
+
+### `set_grade_letters` {#set-grade-letters}
+
+**Fijar las letras de calificación de un curso**
+
+Fija letras de calificación propias de un curso, cada una desde su porcentaje minGrade, en lugar de las del sitio; useDefaults vuelve a las del sitio. Cambia cómo ven las notas los estudiantes: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `letters` |  | lista de objeto |  |
+| `useDefaults` |  | sí o no | Las letras del sitio por defecto en su lugar |
 
 </details>
 
@@ -2449,6 +2844,8 @@ Lee lo que respondieron las personas en un feedback o un cuestionario de encuest
 | [`create_grouping`](#create-grouping) | Crear un agrupamiento |  | ✓ |  |
 | [`delete_grouping`](#delete-grouping) | Eliminar un agrupamiento |  | ✓ |  |
 | [`set_grouping_groups`](#set-grouping-groups) | Establecer los grupos de un agrupamiento |  | ✓ |  |
+| [`auto_create_groups`](#auto-create-groups) | Crear grupos automáticamente |  | ✓ |  |
+| [`import_groups`](#import-groups) | Importar grupos desde un archivo CSV |  | ✓ |  |
 
 ### `list_participants` {#list-participants}
 
@@ -2730,6 +3127,52 @@ Hace que los grupos de un agrupamiento sean exactamente groupIds, añadiendo y q
 | --- | :-: | --- | --- |
 | `groupingId` | ✅ | entero | El id del agrupamiento, tal como lo da list_groupings |
 | `groupIds` | ✅ | lista de entero |  |
+
+</details>
+
+### `auto_create_groups` {#auto-create-groups}
+
+**Crear grupos automáticamente**
+
+Reparte a los participantes de un curso en grupos de una vez, como «Crear grupos automáticamente» de Moodle: count grupos, o grupos de count miembros, con el nombre de naming (# un número, @ una letra), llenados al azar o por nombre o número de ID (o vacíos), a partir de un rol (estudiantes por defecto), una cohorte, una agrupación o un grupo, y opcionalmente en una agrupación existente o nueva. preview: true muestra los grupos y miembros que haría Moodle sin crear nada: hazlo primero y luego devuelve su seed para crear esos mismos grupos. Los miembros como alias cuando el servidor seudonimiza. Confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `by` | ✅ | `groups`, `members` | groups: count grupos; members: grupos de count miembros |
+| `count` | ✅ | entero |  |
+| `naming` | ✅ | texto | Los nombres de los grupos: # pasa a ser su número y @ una letra ("Grupo @") |
+| `allocation` |  | `random`, `firstname`, `lastname`, `idnumber`, `none` | random por defecto; none los deja vacíos |
+| `roleId` |  | entero | Solo este rol (0: todos los roles); estudiantes por defecto |
+| `cohortId` |  | entero |  |
+| `fromGroupingId` |  | entero |  |
+| `fromGroupId` |  | entero |  |
+| `notInGroup` |  | sí o no | Solo participantes que aún no están en ningún grupo |
+| `noSmallGroups` |  | sí o no | Con members: repartir entre los demás un último grupo demasiado pequeño |
+| `groupingId` |  | entero | Ponerlos en esta agrupación |
+| `newGrouping` |  | texto | O en una agrupación nueva con este nombre |
+| `preview` |  | sí o no |  |
+| `seed` |  | entero | La seed de una vista previa, para crear esos mismos grupos |
+
+</details>
+
+### `import_groups` {#import-groups}
+
+**Importar grupos desde un archivo CSV**
+
+Crea grupos desde un archivo CSV local, como «Importar grupos» de Moodle: una columna groupname, y opcionalmente description, enrolmentkey, groupidnumber, groupingname (se crea si falta) y enablemessaging. Moodle crea los grupos sin miembros. Devuelve los grupos nuevos y los mensajes de Moodle sobre las filas que se saltó. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero |  |
+| `file` | ✅ | texto | Una ruta local absoluta al CSV |
+| `delimiter` |  | `comma`, `semicolon`, `colon`, `tab` |  |
 
 </details>
 
