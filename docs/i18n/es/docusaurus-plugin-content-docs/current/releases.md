@@ -5,9 +5,14 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.4.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.4.1`.
 
 La documentación de cada versión se conserva: elígela en el menú de versiones de la parte de arriba de la página. Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.4.1 (19 de octubre de 2026)
+
+- **Vuelve a instalarse con agent-kit.** La 0.4.0 declaraba como dependencias dos paquetes que ya lleva dentro, así que agent-kit la rechazaba (y npx los descargaba para nada).
+- **Copias de seguridad en tu ordenador.** `read_backup` dice qué contiene un `.mbz` sin restaurarlo, incluido lo que una restauración en otro sitio dejaría roto y lo que todavía nombra a alguien; `anonymize_backup` escribe una copia que no nombra a nadie ni a ningún sitio, para compartir una unidad.
 
 ## 0.4.0 (18 de octubre de 2026)
 

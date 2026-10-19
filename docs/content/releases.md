@@ -5,9 +5,14 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.4.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.4.1`.
 
 Each release's documentation is kept: pick it in the version menu at the top of the page. The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.4.1 (19 October 2026)
+
+- **Installs through agent-kit again.** 0.4.0 listed two packages it already carries inside as dependencies, so agent-kit refused it (and npx downloaded them for nothing).
+- **Backups on your computer.** `read_backup` tells what a `.mbz` holds without restoring it, including what a restore elsewhere would leave broken and what still names someone; `anonymize_backup` writes a copy that names no one and no site, for sharing a unit.
 
 ## 0.4.0 (18 October 2026)
 
