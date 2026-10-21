@@ -24,6 +24,7 @@ En todas las sesiones, el alumnado llega a la IA como alias del tipo `A-8FT4A1`:
 | [Una lección a partir de tus apuntes](./teacher/lesson-from-notes.md) | "Convierte estos apuntes en una lección: una pregunta por página, y si falla, vuelve." | Claude Code |
 | [El glosario de la clase](./teacher/class-glossary.md) | "¿Qué entradas del glosario esperan aprobación? Revísalas." | Codex |
 | [Una encuesta de fin de unidad](./teacher/feedback-survey.md) | "Crea una encuesta anónima con estas tres preguntas." | Claude Code |
+| [Qué preguntas arreglar](./teacher/quiz-statistics.md) | "¿Qué preguntas de este cuestionario debería revisar y por qué?" | Codex |
 
 ## Como alumno
 

@@ -21,6 +21,7 @@ const scorm = byName("SCORM MCP (prueba)");
 const lesson = byName("Loops, step by step");
 const glossary = byName("Glosario de la clase");
 const feedback = byName("How was unit 1?");
+const review = byName("Repaso: bucles y funciones");
 const lastSection = (await t.call("get_course_structure", { courseId: 3 })).sections.at(-1)?.id;
 await t.close();
 const s = await open("profile-student");
@@ -39,6 +40,8 @@ const SHOTS = {
     lesson: `${SITE}/mod/lesson/edit.php?id=${lesson}&mode=full`,
     glossary: `${SITE}/mod/glossary/view.php?id=${glossary}`,
     feedback: `${SITE}/mod/feedback/edit.php?id=${feedback}`,
+    // The review quiz's statistics, as the session read them.
+    "quiz-statistics": `${SITE}/mod/quiz/report.php?id=${review}&mode=statistics`,
   },
   student: {
     // The conversation with the teacher (user 3), open: the reminder the falling-behind session sent.
@@ -49,7 +52,7 @@ const SHOTS = {
     "quiz-review": `${SITE}/mod/quiz/review.php?attempt=${attempt}`,
   },
 };
-const FULL_PAGE = ["page-with-image", "quiz-review", "study-page", "upcoming", "copied-page", "lesson", "glossary", "feedback"];
+const FULL_PAGE = ["page-with-image", "quiz-review", "study-page", "upcoming", "copied-page", "lesson", "glossary", "feedback", "quiz-statistics"];
 
 async function shoot(tab, name, url) {
   if (wanted.size && !wanted.has(name)) return;

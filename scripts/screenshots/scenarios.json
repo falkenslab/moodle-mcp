@@ -190,5 +190,17 @@
         "Sí, créala."
       ]
     }
+  },
+  "quiz-statistics": {
+    "client": "codex",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "Look at the statistics of the quiz \"Repaso: bucles y funciones\" in my course mcp-content: which questions should I review, and why? Don't change anything."
+      ],
+      "es": [
+        "Mira las estadísticas del cuestionario \"Repaso: bucles y funciones\" de mi curso mcp-content: ¿qué preguntas debería revisar y por qué? No cambies nada."
+      ]
+    }
   }
 }
