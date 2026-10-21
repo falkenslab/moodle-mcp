@@ -21,6 +21,15 @@ export interface Site {
   origin: "configuration" | "run-time";
 }
 
+/** A classroom (ADR-025): a course the agent may work in, on one of the server's sites. */
+export interface Classroom {
+  /** The site's name, as in `sites`. */
+  site: string;
+  courseId: number;
+  /** The course's URL, as the person gave it. */
+  url: string;
+}
+
 /** Where a setting's value came from: the `configure` tool wins over arguments, which win over the environment (ADR-009). */
 export type SettingSource = "configure" | "argument" | "environment" | "default";
 
@@ -59,8 +68,10 @@ export interface Config {
   sites: Site[];
   /** The active site's name; none until there's a site. */
   activeSite: string | undefined;
+  /** The courses the agent may work in (ADR-025); every course when undefined. */
+  classrooms?: Classroom[];
   /** What the person set at start-up: configure can narrow below it, never go past it. */
-  limits: { scopes: Scope[]; studentData: StudentDataLevel; role: Role; access: AccessLevel };
+  limits: { scopes: Scope[]; studentData: StudentDataLevel; role: Role; access: AccessLevel; classrooms?: Classroom[] };
   sources: {
     moodleUrl?: SettingSource;
     profileDir: SettingSource;
@@ -74,6 +85,7 @@ export interface Config {
     access: SettingSource;
     advanced?: SettingSource;
     confirm?: SettingSource;
+    classrooms?: SettingSource;
   };
   /** Settings the client passed as an unexpanded `${…}` placeholder, taken as not set (a client without the plugin's settings). */
   unexpanded?: string[];
@@ -99,6 +111,9 @@ Options (each overrides its environment variable):
   --url <url>           Moodle site URL                      MOODLE_URL
   --sites <list>        Several sites: name=url,url,… or JSON MOODLE_MCP_SITES
                         {"name": "url" | {"url": "…"}}; the first is active
+  --courses <urls>      The only courses it works in, by URL MOODLE_MCP_COURSES
+                        (…/course/view.php?id=N), on one site or several;
+                        their sites are added
   --profile-dir <dir>   Browser profile folder (first site)  MOODLE_MCP_PROFILE_DIR (default: profile in the data folder,
                         CLAUDE_PLUGIN_DATA or ~/.moodle-mcp)
   --channel <name>      Browser: msedge, chrome, chromium    MOODLE_MCP_CHANNEL (default: msedge, then chrome, then chromium)
@@ -187,6 +202,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       options: {
         url: { type: "string" },
         sites: { type: "string" },
+        courses: { type: "string" },
         "profile-dir": { type: "string" },
         channel: { type: "string" },
         headless: { type: "boolean" },
@@ -212,6 +228,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const unexpanded: string[] = [];
   const url = pick(values.url, "MOODLE_URL", env, unexpanded);
   const sitesSetting = pick(values.sites, "MOODLE_MCP_SITES", env, unexpanded);
+  const coursesSetting = pick(values.courses, "MOODLE_MCP_COURSES", env, unexpanded);
+  const courses = coursesSetting ? parseCoursesSetting(coursesSetting.value) : undefined;
   const profile = pick(values["profile-dir"], "MOODLE_MCP_PROFILE_DIR", env, unexpanded);
   const channel = pick(values.channel, "MOODLE_MCP_CHANNEL", env, unexpanded);
   const trail = pick(values.trail, "MOODLE_MCP_TRAIL", env, unexpanded);
@@ -233,8 +251,12 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   // The data folder is the plugin's when the server runs as one: each plugin its own sessions, gone with it (ADR-021).
   const dataDir = path.resolve(given(env.CLAUDE_PLUGIN_DATA, "CLAUDE_PLUGIN_DATA", unexpanded)?.trim() || path.join(homedir(), ".moodle-mcp"));
   const mainProfile = parseProfileDir(profile?.value ?? path.join(dataDir, "profile"), packageRoot);
-  const sites = configuredSites(url ? parseMoodleUrl(url.value) : undefined, sitesSetting ? parseSitesSetting(sitesSetting.value) : [], mainProfile, dataDir);
-  const urlSource = url ? url.source : sitesSetting?.source;
+  const listed = sitesSetting ? parseSitesSetting(sitesSetting.value) : [];
+  // A classroom's site is one of the server's sites: the one with its URL, else a new one named after its host.
+  for (const course of courses ?? []) if (!listed.some((site) => site.url === course.siteUrl) && (!url || parseMoodleUrl(url.value) !== course.siteUrl)) listed.push({ name: siteNameOf(course.siteUrl), url: course.siteUrl });
+  const sites = configuredSites(url ? parseMoodleUrl(url.value) : undefined, listed, mainProfile, dataDir);
+  const classrooms = courses?.map(({ siteUrl, courseId, url: courseUrl }) => ({ site: sites.find((site) => site.url === siteUrl)!.name, courseId, url: courseUrl }));
+  const urlSource = url ? url.source : (sitesSetting ?? coursesSetting)?.source;
 
   return {
     moodleUrl: sites[0]?.url,
@@ -252,7 +274,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     dataDir,
     sites,
     activeSite: sites[0]?.name,
-    limits: { scopes: scopeList, studentData: level, role, access },
+    ...(classrooms && { classrooms }),
+    limits: { scopes: scopeList, studentData: level, role, access, ...(classrooms && { classrooms }) },
     sources: {
       ...(urlSource ? { moodleUrl: urlSource } : {}),
       profileDir: profile?.source ?? "default",
@@ -266,6 +289,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       access: accessSetting?.source ?? "default",
       advanced: advanced.source,
       confirm: confirmSetting?.source ?? "default",
+      ...(coursesSetting && { classrooms: coursesSetting.source }),
     },
     ...(unexpanded.length > 0 && { unexpanded: [...new Set(unexpanded)] }),
   };
@@ -329,6 +353,33 @@ export function parseSitesSetting(value: string): { name: string; url: string }[
     const parsed = parseMoodleUrl(siteUrl);
     return { name: name === undefined ? siteNameOf(parsed) : parseSiteName(name), url: parsed };
   });
+}
+
+/**
+ * MOODLE_MCP_COURSES (ADR-025): course URLs (`<site>/course/view.php?id=N`), separated by commas or
+ * spaces; each gives its site (the URL before `course/`) and its course id.
+ */
+export function parseCoursesSetting(value: string): { siteUrl: string; courseId: number; url: string }[] {
+  const items = value.split(/[\s,]+/).filter(Boolean);
+  if (items.length === 0) throw new ConfigError("MOODLE_MCP_COURSES has no course.");
+  return items.map((item) => parseCourseUrl(item));
+}
+
+/** A course's URL: its site's base URL and the course id, or a ConfigError saying what's expected. */
+export function parseCourseUrl(value: string): { siteUrl: string; courseId: number; url: string } {
+  const expected = `A classroom is a course's URL, such as https://campus.example.org/course/view.php?id=12, not "${value}".`;
+  let parsed: URL;
+  try {
+    parsed = new URL(value.trim());
+  } catch {
+    throw new ConfigError(expected);
+  }
+  const at = parsed.pathname.lastIndexOf("/course/view.php");
+  const id = Number(parsed.searchParams.get("id"));
+  if (at < 0 || at + "/course/view.php".length !== parsed.pathname.length || !Number.isInteger(id) || id < 1) throw new ConfigError(expected);
+  const site = new URL(parsed.href);
+  site.pathname = parsed.pathname.slice(0, at + 1);
+  return { siteUrl: parseMoodleUrl(site.href), courseId: id, url: parsed.href };
 }
 
 /** A site's name: letters, digits, dots and hyphens, as its folder in the data folder is named. */

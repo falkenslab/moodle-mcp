@@ -74,3 +74,4 @@ Cada sitio tiene su propio perfil de navegador, y por tanto su propia sesión:
 
 - **El alumnado es anónimo en todos los sitios.** Cada sitio tiene sus propios alias: nadie de un sitio queda enlazado con nadie de otro.
 - **Tus límites valen igual para todos los sitios**: el rol, el acceso de solo lectura, los ámbitos y el nivel de datos del alumnado son del servidor, no de un sitio. Consulta [Limitar al agente](./limits.md).
+- **Las aulas traen sus sitios**: con `MOODLE_MCP_COURSES`, el agente solo trabaja en esos cursos, y sus sitios se añaden solos. Consulta [Aulas](./limits.md#aulas).

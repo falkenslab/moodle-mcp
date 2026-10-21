@@ -26,8 +26,9 @@ export const serverInfoSchema = {
   access: z.enum(ACCESS_LEVELS).describe("read: only the tools that change nothing in Moodle; write: all (ADR-020)"),
   confirm: z.enum(["elicit", "client"]).describe("Who confirms what can't be undone: the person through elicitation, or the client, trusted to have asked (ADR-023)"),
   advanced: z.boolean().describe("Whether the advanced tools are on: BigBlueButton, competencies, external tools, the content bank, notes, course blocks (ADR-022)"),
+  classrooms: z.array(z.string()).optional().describe("The only courses the agent works in, by URL (ADR-025); every course when missing"),
   sources: z
-    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source, advanced: source.optional(), confirm: source.optional() })
+    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source, advanced: source.optional(), confirm: source.optional(), classrooms: source.optional() })
     .describe("Where each setting came from: configure, argument, environment or default"),
   unexpanded: z.array(z.string()).optional().describe("Settings the client passed as unexpanded ${…} placeholders (its plugin settings missing), taken as not set: their defaults apply"),
   visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
@@ -61,6 +62,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     access: config.access,
     advanced: config.advanced ?? false,
     confirm: config.confirm ?? "elicit",
+    ...(config.classrooms && { classrooms: config.classrooms.map((c) => c.url) }),
     sources: { ...config.sources },
     ...(config.unexpanded && { unexpanded: config.unexpanded }),
     visible: browser.visible(),

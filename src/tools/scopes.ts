@@ -332,12 +332,20 @@ export function requiredScopes(tool: string): Set<Scope> {
 }
 
 /** The scopes in force: those set, without what the student data level blocks. */
-export function activeScopes(config: Pick<Config, "scopes" | "studentData">): Set<Scope> {
-  return new Set(config.scopes.filter((scope) => !(config.studentData === "block" && BLOCKED.includes(scope))));
+export function activeScopes(config: Pick<Config, "scopes" | "studentData" | "classrooms">): Set<Scope> {
+  // The browser reaches any page of the site, outside the classrooms too (ADR-025).
+  return new Set(config.scopes.filter((scope) => !(config.studentData === "block" && BLOCKED.includes(scope)) && !(config.classrooms && scope === "browser")));
 }
 
+/**
+ * What classrooms turn off (ADR-025), besides the browser: messages and notifications reach anyone on
+ * the site, and a site added at run time has no classrooms.
+ */
+export const CLASSROOMS_OFF = new Set(["send_message", "list_conversations", "get_conversation", "list_notifications", "mark_notifications_read", "add_site"]);
+
 /** Whether a tool exists for the agent under this configuration. */
-export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role" | "access" | "advanced">): boolean {
+export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role" | "access" | "advanced" | "classrooms">): boolean {
+  if (config.classrooms && CLASSROOMS_OFF.has(tool)) return false;
   if (SESSION_TOOLS.has(tool)) return true;
   if (ADVANCED_TOOLS.has(tool) && !config.advanced) return false;
   if (!roleAllows(tool, config.role)) return false;
@@ -398,8 +406,9 @@ export function applyScopes(server: McpServer, config: Config): void {
 }
 
 /** The limits in words, for messages and the instructions. */
-export function describeLimits(config: Pick<Config, "scopes" | "studentData" | "role" | "access">): string {
-  return `${config.access === "read" ? "read-only; " : ""}${config.role === "all" ? "" : `role ${config.role}; `}scopes ${[...activeScopes(config)].join(", ") || "none"}; student data ${config.studentData}`;
+export function describeLimits(config: Pick<Config, "scopes" | "studentData" | "role" | "access" | "classrooms">): string {
+  const classrooms = config.classrooms ? `; only the classrooms ${config.classrooms.map((c) => `${c.site}#${c.courseId}`).join(", ") || "(none)"}` : "";
+  return `${config.access === "read" ? "read-only; " : ""}${config.role === "all" ? "" : `role ${config.role}; `}scopes ${[...activeScopes(config)].join(", ") || "none"}; student data ${config.studentData}${classrooms}`;
 }
 
 /** A scope list or profile name, as the person writes it: `content`, `teacher`, `content,communication`… */

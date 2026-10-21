@@ -74,3 +74,4 @@ Each site has its own browser profile, so its own session:
 
 - **Students stay anonymous on every site.** Each site has its own aliases: nobody on one site is linked to anyone on another.
 - **Your limits apply to every site alike**: the role, read-only access, scopes and student data level are the server's, not a site's. See [Limiting the agent](./limits.md).
+- **Classrooms give their sites**: with `MOODLE_MCP_COURSES`, the agent works only in those courses, and their sites are added for you. See [Classrooms](./limits.md#classrooms).

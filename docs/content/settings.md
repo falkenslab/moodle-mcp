@@ -18,6 +18,8 @@ Each setting is an environment variable of the server, or a command-line argumen
   - Its address, such as `https://campus.example.org`. Any page of the site works.
 - **`MOODLE_MCP_SITES`** (`--sites`): Several sites, each with a name; the first is where it starts. See [Several sites](./several-sites.md).
   - `name=address,…`, such as `school=https://campus.myschool.org,uni=https://moodle.myuni.edu`, or JSON.
+- **`MOODLE_MCP_COURSES`** (`--courses`): The only courses the agent works in, your classrooms, on one site or several; their sites are added. See [Classrooms](./limits.md#classrooms).
+  - Their URLs, such as `https://campus.myschool.org/course/view.php?id=12,https://moodle.myuni.edu/course/view.php?id=7`. Not set: **every course** of yours.
 - **`MOODLE_MCP_ROLE`** (`--role`): Which tools the agent gets, by role. Fewer tools, better choices. See [Limiting the agent](./limits.md#your-role).
   - **`all`**: every tool.
   - `teacher`: a teacher's tools.

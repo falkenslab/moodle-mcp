@@ -5,13 +5,14 @@ sidebar_label: Limiting the agent
 
 # Limiting what the agent can do
 
-By default the agent gets every tool: about 230, for teachers and students, to read and to change. Three settings narrow that down. They add up: a tool is there only if every setting allows it.
+By default the agent gets every tool: about 230, for teachers and students, to read and to change, in every course of yours. Three settings narrow the tools down, and a fourth the courses. They add up: a tool is there only if every setting allows it.
 
 | Setting | Question it answers | Values |
 | --- | --- | --- |
 | [`MOODLE_MCP_ROLE`](#your-role) | Do you teach, study, or both? | `all`, `teacher`, `student` |
 | [`MOODLE_MCP_ACCESS`](#read-only) | May it change things in Moodle? | `write`, `read` |
 | [`MOODLE_MCP_SCOPES`](#scopes) | Which kinds of data may it touch? | `all`, `content`, `teacher`, `student`, or a list |
+| [`MOODLE_MCP_COURSES`](#classrooms) | In which of your courses may it work? | Their URLs; every course when not set |
 
 Like [students' privacy](./privacy.md), only you set them, in your AI app's configuration. The agent can narrow them further for a session, never widen them.
 
@@ -59,6 +60,25 @@ This is how a read-only assistant answers a request to grade:
 | `content` | Building and managing courses only |
 
 Or a list of scopes, separated by commas: `content`, `student-data`, `grading`, `communication`, `as-student`, `browser`. For example, `content,communication` builds courses and posts announcements, but doesn't read submissions.
+
+## Classrooms
+
+Your account sees every course you teach or take, last year's too. `MOODLE_MCP_COURSES` keeps the agent to the ones you give it, your classrooms, by their URLs, on one Moodle or several:
+
+```bash
+claude mcp add moodle -e MOODLE_MCP_COURSES=https://campus.myschool.org/course/view.php?id=12,https://moodle.myuni.edu/course/view.php?id=7 -- npx -y @falkenslab/moodle-mcp
+```
+
+Their sites come from the URLs, so you don't need `MOODLE_URL` or `MOODLE_MCP_SITES`; you log in to each the first time the agent works there.
+
+With classrooms:
+
+- **Lists show only them**: your courses, what's due, the calendar.
+- **Another course is refused**, whatever the agent asks.
+- **So is anything it hasn't read in a classroom.** In Moodle an activity's or a post's number is unique on the whole site, so a made-up or remembered one could belong to another course. moodle-mcp acts only on what the agent has read in a classroom during the session: it reads the course first, as it does anyway. Nothing extra is asked of Moodle, so nothing slows down.
+- **Some tools are off**: the [browser tools](./reference/tools.md#browser), which can open any page of the site, and messages and notifications, which reach anyone on it. People are acted on through a classroom's course or activity, as Moodle requires.
+
+The agent can narrow the classrooms for a session (`configure` with fewer courses), never add one.
 
 ## Confirming what can't be undone
 

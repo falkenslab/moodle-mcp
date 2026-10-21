@@ -84,7 +84,7 @@ Lo que el sitio Moodle dice de sí mismo: su nombre, URL, idioma, cómo se inici
 
 **Configurar el servidor**
 
-Establece la configuración de este servidor para esta sesión: el sitio Moodle (url; uno nuevo se añade a los sitios del servidor y se guarda, uno conocido pasa a ser el activo, consulta use_site), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role) o el acceso a solo lectura (access) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria, salvo un sitio nuevo, que se queda entre los sitios del servidor. Devuelve la configuración efectiva, como server_info.
+Establece la configuración de este servidor para esta sesión: el sitio Moodle (url; uno nuevo se añade a los sitios del servidor y se guarda, uno conocido pasa a ser el activo, consulta use_site), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role), el acceso a solo lectura (access) o los cursos en los que trabaja (courses) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria, salvo un sitio nuevo, que se queda entre los sitios del servidor. Devuelve la configuración efectiva, como server_info.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -99,6 +99,7 @@ Establece la configuración de este servidor para esta sesión: el sitio Moodle 
 | `studentData` |  | `block`, `pseudonymize`, `clear` | Endurecer cómo te llegan los datos de otras personas para esta sesión (block es el más estricto). Solo más estricto que ahora, nunca más laxo |
 | `role` |  | `all`, `teacher`, `student` | Conservar solo las herramientas de un rol para esta sesión (teacher o student), a partir de all; nunca de vuelta a all |
 | `access` |  | `read`, `write` | read: conservar solo las herramientas que no cambian nada en Moodle para esta sesión; nunca de vuelta a write |
+| `courses` |  | lista de texto | Limita al agente a estos cursos durante esta sesión, por URL (…/course/view.php?id=N), en los sitios del servidor: entre las aulas que puso la persona, si las hay (ADR-025) |
 
 </details>
 

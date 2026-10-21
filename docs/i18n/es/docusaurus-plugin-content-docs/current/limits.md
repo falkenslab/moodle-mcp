@@ -5,13 +5,14 @@ sidebar_label: Limitar al agente
 
 # Limitar lo que puede hacer el agente
 
-Por defecto, el agente recibe todas las herramientas: unas 230, para docentes y alumnos, para leer y para cambiar. Tres ajustes reducen esa lista. Se suman: una herramienta solo está si todos los ajustes la permiten.
+Por defecto, el agente recibe todas las herramientas: unas 230, para docentes y alumnos, para leer y para cambiar, en todos tus cursos. Tres ajustes reducen las herramientas, y un cuarto los cursos. Se suman: una herramienta solo está si todos los ajustes la permiten.
 
 | Ajuste | Pregunta que responde | Valores |
 | --- | --- | --- |
 | [`MOODLE_MCP_ROLE`](#tu-rol) | ¿Das clase, estudias o las dos cosas? | `all`, `teacher`, `student` |
 | [`MOODLE_MCP_ACCESS`](#solo-lectura) | ¿Puede cambiar cosas en Moodle? | `write`, `read` |
 | [`MOODLE_MCP_SCOPES`](#ámbitos) | ¿Qué tipos de datos puede tocar? | `all`, `content`, `teacher`, `student`, o una lista |
+| [`MOODLE_MCP_COURSES`](#aulas) | ¿En cuáles de tus cursos puede trabajar? | Sus URL; todos si no se pone |
 
 Como la [privacidad del alumnado](./privacy.md), solo los pones tú, en la configuración de tu aplicación de IA. El agente puede restringirlos más durante una sesión, nunca ampliarlos.
 
@@ -59,6 +60,25 @@ Así responde un asistente de solo lectura cuando le pides que califique:
 | `content` | Solo crear y gestionar cursos |
 
 O una lista de ámbitos, separados por comas: `content`, `student-data`, `grading`, `communication`, `as-student`, `browser`. Por ejemplo, `content,communication` crea cursos y publica avisos, pero no lee entregas.
+
+## Aulas
+
+Tu cuenta ve todos los cursos que impartes o cursas, también los del año pasado. `MOODLE_MCP_COURSES` limita al agente a los que le des, tus aulas, por su URL, en uno o varios Moodle:
+
+```bash
+claude mcp add moodle -e MOODLE_MCP_COURSES=https://campus.miinstituto.org/course/view.php?id=12,https://moodle.miuni.es/course/view.php?id=7 -- npx -y @falkenslab/moodle-mcp
+```
+
+Sus sitios salen de las URL, así que no necesitas `MOODLE_URL` ni `MOODLE_MCP_SITES`; inicias sesión en cada uno la primera vez que el agente trabaje en él.
+
+Con aulas:
+
+- **Las listas solo las muestran a ellas**: tus cursos, lo pendiente, el calendario.
+- **Otro curso se rechaza**, pida lo que pida el agente.
+- **También todo lo que no haya leído en un aula.** En Moodle el número de una actividad o de un mensaje es único en todo el sitio, así que uno inventado o recordado podría ser de otro curso. moodle-mcp solo actúa sobre lo que el agente ha leído en un aula durante la sesión: primero lee el curso, como hace siempre. A Moodle no se le pregunta nada más, así que nada va más lento.
+- **Algunas herramientas se apagan**: las [del navegador](./reference/tools.md#browser), que pueden abrir cualquier página del sitio, y los mensajes y notificaciones, que llegan a cualquiera. Sobre las personas se actúa a través del curso o la actividad de un aula, como exige Moodle.
+
+El agente puede reducir las aulas durante una sesión (`configure` con menos cursos), nunca añadir una.
 
 ## Confirmar lo que no se puede deshacer
 

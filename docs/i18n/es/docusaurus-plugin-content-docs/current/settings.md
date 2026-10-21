@@ -18,6 +18,8 @@ Cada ajuste es una variable de entorno del servidor, o un argumento de línea de
   - Su dirección, como `https://campus.example.org`. Vale cualquier página del sitio.
 - **`MOODLE_MCP_SITES`** (`--sites`): Varios sitios, cada uno con un nombre; el primero es donde empieza. Consulta [Varios sitios](./several-sites.md).
   - `nombre=dirección,…`, como `instituto=https://campus.miinstituto.org,uni=https://moodle.miuni.es`, o JSON.
+- **`MOODLE_MCP_COURSES`** (`--courses`): Los únicos cursos en los que trabaja el agente, tus aulas, en uno o varios sitios; sus sitios se añaden. Consulta [Aulas](./limits.md#aulas).
+  - Sus URL, como `https://campus.miinstituto.org/course/view.php?id=12,https://moodle.miuni.es/course/view.php?id=7`. Sin poner: **todos tus cursos**.
 - **`MOODLE_MCP_ROLE`** (`--role`): Qué herramientas recibe el agente, según el rol. Menos herramientas, mejor elegidas. Consulta [Limitar al agente](./limits.md#tu-rol).
   - **`all`**: todas.
   - `teacher`: las del profesorado.

@@ -84,7 +84,7 @@ What the Moodle site says about itself: its name, URL, language, how people log 
 
 **Configure the server**
 
-Set this server's configuration for this session: the Moodle site (url; a new one is added to the server's sites and kept, a known one becomes active, see use_site), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes), the role (role) or access to read only (access) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only, but for a new site, which stays among the server's sites. Returns the effective configuration, as server_info.
+Set this server's configuration for this session: the Moodle site (url; a new one is added to the server's sites and kept, a known one becomes active, see use_site), whether the browser runs without a window (headless), how student tools view and do things (trail) and the browser profile folder (profileDir). It can also narrow the kinds of tools (scopes), the role (role), access to read only (access) or the courses it works in (courses) and tighten how others' data reaches you (studentData), never the other way: widening is the person's, in the client's configuration. Each is optional; only those given change. The URL is checked to be a Moodle site. Kept in memory only, but for a new site, which stays among the server's sites. Returns the effective configuration, as server_info.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -99,6 +99,7 @@ Set this server's configuration for this session: the Moodle site (url; a new on
 | `studentData` |  | `block`, `pseudonymize`, `clear` | Tighten how others' data reaches you for this session (block is strictest). Only stricter than now, never looser |
 | `role` |  | `all`, `teacher`, `student` | Keep only one role's tools for this session (teacher or student), from all; never back to all |
 | `access` |  | `read`, `write` | read: keep only the tools that change nothing in Moodle for this session; never back to write |
+| `courses` |  | string list | Keep the agent to these courses for this session, by URL (…/course/view.php?id=N), on the server's sites: among the classrooms the person set, if any (ADR-025) |
 
 </details>
 
