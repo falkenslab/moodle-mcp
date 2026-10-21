@@ -24,10 +24,10 @@ moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI 
 - 🔐 **Your login, never your password.** You log in yourself, in a browser window it opens, with single sign-on and two-factor if your site uses them.
 - 🧩 **Nothing to install in Moodle.** No web service tokens, no administrator, no plugin: if you can log in, it works.
 - 🕶️ **Students stay anonymous to the AI.** The agent sees other people as aliases such as `A-7KQ2XM`; only you can turn one back into a name, on your computer.
-- 🎚️ **You set the limits.** Only a teacher's or a student's tools, read-only access, only course content: the agent can narrow them, never widen them.
-- ✋ **It asks before changing things.** Every tool that changes Moodle says so, and the agent is told to confirm with you first.
+- 🎚️ **You set the limits.** Only a teacher's or a student's tools, read-only access, only course content, only the courses you give it: the agent can narrow them, never widen them.
+- ✋ **It asks before changing things.** Every tool that changes Moodle says so, and the agent is told to confirm with you first; for what can't be undone, moodle-mcp asks you itself, in your app.
 - 🌐 **Several Moodle sites at once.** Your school's and your university's, one active at a time, and course content copied between them.
-- 🤖 **Any MCP app.** Claude Code, Claude Desktop, Codex and others, on Windows, macOS and Linux.
+- 🤖 **Any MCP app.** Claude Code, Claude Desktop, Codex, agents built on [agent-kit](https://github.com/falkenslab/agent-kit) and others, on Windows, macOS and Linux.
 
 ## 🚀 Quick start
 
@@ -41,7 +41,7 @@ claude mcp add moodle -e MOODLE_URL=https://campus.example.org -- npx -y @falken
 codex mcp add moodle --env MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
 ```
 
-On Windows, put `cmd /c` before `npx`. Then ask **"List my Moodle courses"**: the first time, a browser window opens for you to log in.
+Then ask **"List my Moodle courses"**: the first time, a browser window opens for you to log in.
 
 <details>
 <summary>Claude Desktop</summary>
@@ -60,8 +60,6 @@ In Settings → Developer → Edit Config, add it to `claude_desktop_config.json
 }
 ```
 
-On Windows, `"command": "cmd"` and `"args": ["/c", "npx", "-y", "@falkenslab/moodle-mcp"]`.
-
 </details>
 
 ## 💬 What you can ask
@@ -72,6 +70,8 @@ On Windows, `"command": "cmd"` and `"args": ["/c", "npx", "-y", "@falkenslab/moo
 - "Create a hidden quiz in section 2 with these GIFT questions, one per page."
 - "Are there questions in the forum nobody has answered? Draft a short answer for each."
 - "Who hasn't completed the unit 4 notes? Send them a friendly reminder."
+- "Turn the unit 1 notes into a lesson, a question per page; a wrong answer goes back."
+- "Which questions of the review quiz should I fix, judging by its statistics?"
 - "Copy the unit 2 quiz from my school's Moodle to my university's."
 
 **🧑‍🎓 As a student**
@@ -112,10 +112,10 @@ Every tool, with what it takes and what it gives, is in the [tools reference](ht
 
 ## 📚 Documentation
 
-- **[Getting started](https://falkenslab.github.io/moodle-mcp/getting-started/requirements)**: requirements, and step by step for Claude Code, Claude Desktop and Codex.
+- **[Getting started](https://falkenslab.github.io/moodle-mcp/getting-started/requirements)**: requirements, and step by step for Claude Code, Claude Desktop, Codex and agent-kit.
 - **[Use cases](https://falkenslab.github.io/moodle-mcp/use-cases)**: real sessions as a teacher and as a student, with screenshots.
 - **[Students' privacy](https://falkenslab.github.io/moodle-mcp/privacy)**: aliases, and what the AI does and doesn't see.
-- **[Limiting the agent](https://falkenslab.github.io/moodle-mcp/limits)**: roles, read-only access and scopes.
+- **[Limiting the agent](https://falkenslab.github.io/moodle-mcp/limits)**: roles, read-only access, scopes, classrooms and confirming what can't be undone.
 - **[Several sites](https://falkenslab.github.io/moodle-mcp/several-sites)** and **[settings](https://falkenslab.github.io/moodle-mcp/settings)**.
 
 ## 🛠️ Developing
