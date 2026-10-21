@@ -7,96 +7,6 @@
   margin-top: 30px;
 }
 
-/* The install card: a tab per app, how (command line, from the agent, by hand) and the system. */
-.install {
-  max-width: 820px;
-  margin: 48px auto 0;
-  padding: 8px 24px 20px;
-  text-align: left;
-  background: var(--fl-panel);
-  border: 1px solid var(--fl-line);
-  border-radius: 16px;
-  box-shadow: var(--fl-shadow-lift);
-}
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 4px 18px;
-  border-bottom: 1px solid var(--fl-line);
-}
-
-.tab {
-  padding: 12px 2px 10px;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  background: none;
-  color: var(--fl-text-2);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.tab[aria-selected="true"] {
-  color: var(--fl-accent);
-  border-bottom-color: var(--fl-accent);
-}
-
-.options {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 16px 0 4px;
-}
-
-.seg {
-  display: inline-flex;
-  padding: 3px;
-  gap: 2px;
-  background: var(--fl-bg-2);
-  border: 1px solid var(--fl-line);
-  border-radius: 10px;
-}
-
-.seg button {
-  padding: 5px 12px;
-  border: 0;
-  border-radius: 7px;
-  background: none;
-  color: var(--fl-text-2);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.seg button[aria-pressed="true"] {
-  background: var(--fl-panel);
-  color: var(--ifm-font-color-base);
-  box-shadow: var(--fl-shadow);
-}
-
-.way {
-  margin: 12px 0;
-  font-size: 15px;
-  color: var(--fl-text-2);
-}
-
-.next {
-  margin: 14px 0 0;
-  padding-top: 14px;
-  border-top: 1px solid var(--fl-line);
-  font-size: 15px;
-}
-
-.install :global(.theme-code-block) {
-  margin-bottom: 12px;
-}
-
 .main {
   padding: 0 20px 40px;
 }
@@ -118,81 +28,6 @@
   color: var(--fl-text-2);
 }
 
-/* The settings at a glance: one row each, the name in mono, its values, what it's for. */
-.settings {
-  border: 1px solid var(--fl-line);
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--fl-panel);
-}
-
-.setting {
-  display: grid;
-  grid-template-columns: minmax(0, 15rem) minmax(0, 15rem) minmax(0, 1fr);
-  gap: 6px 18px;
-  align-items: baseline;
-  padding: 10px 18px;
-  border-top: 1px solid var(--fl-line);
-  font-size: 14px;
-}
-
-.setting:first-child {
-  border-top: 0;
-}
-
-.setting code {
-  border: 0;
-  padding: 0;
-  background: none;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-
-.values {
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 13px;
-  color: var(--fl-accent);
-  overflow-wrap: anywhere;
-}
-
-.what {
-  color: var(--fl-text-2);
-}
-
-.badge {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: var(--fl-accent-soft);
-  color: var(--fl-accent);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.setWays {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  margin: 20px 0 24px;
-}
-
-.ways {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  font-size: 14px;
-}
-
-.ways dt {
-  font-weight: 700;
-}
-
-.ways dd {
-  margin: 0;
-  color: var(--fl-text-2);
-}
-
 .link,
 .link:hover {
   color: inherit;
@@ -207,12 +42,6 @@
   transform: translateY(-3px);
   box-shadow: var(--fl-shadow-lift);
   border-color: color-mix(in srgb, var(--fl-accent) 35%, var(--fl-line));
-}
-
-@media (max-width: 760px) {
-  .setting {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

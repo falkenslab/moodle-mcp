@@ -10,6 +10,56 @@ import TabItem from "@theme/TabItem";
 
 Nothing is required. Without a site, the agent asks you for one the first time. Everything else has a sensible default.
 
+## In short
+
+Each setting is an environment variable of the server, or a command-line argument after the package name (in brackets); if both are given, the argument wins. Where the values are a choice, the default is in bold.
+
+- **`MOODLE_URL`** (`--url`): Your Moodle site. Without it, the agent asks you for it.
+  - Its address, such as `https://campus.example.org`. Any page of the site works.
+- **`MOODLE_MCP_SITES`** (`--sites`): Several sites, each with a name; the first is where it starts. See [Several sites](./several-sites.md).
+  - `name=address,…`, such as `school=https://campus.myschool.org,uni=https://moodle.myuni.edu`, or JSON.
+- **`MOODLE_MCP_ROLE`** (`--role`): Which tools the agent gets, by role. Fewer tools, better choices. See [Limiting the agent](./limits.md#your-role).
+  - **`all`**: every tool.
+  - `teacher`: a teacher's tools.
+  - `student`: a student's tools.
+- **`MOODLE_MCP_ACCESS`** (`--access`): Whether the agent may change Moodle. See [Limiting the agent](./limits.md#read-only).
+  - **`write`**: it reads and changes.
+  - `read`: it only looks, never changes anything.
+- **`MOODLE_MCP_STUDENT_DATA`** (`--student-data`): What the AI sees of other people. See [Students' privacy](./privacy.md).
+  - **`pseudonymize`**: aliases such as `A-7KQ2XM`, never names.
+  - `block`: nothing about them.
+  - `clear`: their names (only for an AI on your own computer).
+- **`MOODLE_MCP_SCOPES`** (`--scopes`): The kinds of data its tools may touch. See [Limiting the agent](./limits.md#scopes).
+  - **`all`**: everything.
+  - `content`: building courses only, never students' work or grades.
+  - `teacher`, `student`: a role's kinds.
+  - Or a list, such as `content,communication`.
+- **`MOODLE_MCP_CONFIRM`** (`--confirm`): Who asks you before what can't be undone, such as deleting (next release). See [Limiting the agent](./limits.md#confirming-what-cant-be-undone).
+  - **`elicit`**: moodle-mcp asks you, in your app.
+  - `client`: your app already asks you before each tool.
+- **`MOODLE_MCP_ADVANCED`** (`--advanced`): The advanced tools. See [Limiting the agent](./limits.md#advanced-tools).
+  - **`false`**: left out.
+  - `true`: added: BigBlueButton, competencies, external tools (LTI), the content bank, notes and course blocks.
+- **`MOODLE_MCP_CHANNEL`** (`--channel`): Which browser it works in.
+  - Not set: **Edge, then Chrome, then Chromium**, the first it finds.
+  - `msedge`: Microsoft Edge.
+  - `chrome`: Google Chrome.
+  - `chromium`: Chromium, downloaded the first time if needed.
+  - `firefox`: Playwright's own Firefox, downloaded the first time, never the one you have installed (next release).
+- **`MOODLE_MCP_HEADLESS`** (`--headless` / `--headed`): Whether you see the browser.
+  - **`true`**: it works out of sight; a window opens only to log in, or when you ask to watch.
+  - `false`: a visible window all the time.
+- **`MOODLE_MCP_PROFILE_DIR`** (`--profile-dir`): The folder that keeps your login (the first site's, with several). Inside a Claude Code plugin, the plugin's data folder holds it instead.
+  - A folder; **`~/.moodle-mcp/profile`** by default.
+- **`MOODLE_MCP_DOWNLOAD_BROWSER`** (`--no-download-browser`): What to do when there's no Edge or Chrome.
+  - **`true`**: download Chromium.
+  - `false`: never download a browser.
+- **`MOODLE_MCP_TRAIL`** (`--trail`): How activities are done as a student.
+  - **`realistic`**: real pages at a reader's pace, so Moodle records views and completion.
+  - `fast`: straight to the result.
+
+A setting left empty, or that your app passes as an unexpanded `${…}`, counts as not set: its default applies, and `server_info` lists the ones that came so.
+
 ## Where settings go
 
 Settings are environment variables in your AI app's configuration for moodle-mcp:
@@ -58,40 +108,15 @@ The moodle-teacher and moodle-student extensions ask for theirs when installed: 
 </TabItem>
 </Tabs>
 
-The Claude Code plugins ask for the same four as agent-kit's extensions; the Codex plugins have none, so the agent asks for your site in the chat.
-
 ## Changing them later
 
 | Where you added it | How to change a setting |
 | --- | --- |
 | Claude Code, with `claude mcp add` | `claude mcp remove moodle` and add it again; or edit its `env` in `~/.claude.json` or `.mcp.json` and reconnect it in `/mcp` |
-| Claude Code, the plugin | `/plugin`, then the plugin's settings |
 | Claude Desktop | Edit `claude_desktop_config.json`, then quit and open Claude Desktop |
 | Codex | Edit `[mcp_servers.moodle.env]` in `~/.codex/config.toml`; a new session takes it |
 | agent-kit | `/extensions config moodle-teacher access=read` in the chat (it applies there and then), or `<agent> extension config moodle-teacher access=read` in a terminal |
 | Any of them, during a chat | Ask the agent: see [Changing settings during a chat](#changing-settings-during-a-chat) |
-
-Each setting can also be a command-line argument after the package name (such as `npx -y @falkenslab/moodle-mcp --role teacher`). If both are given, the argument wins.
-
-## All settings
-
-| Variable | Argument | Default | What it does |
-| --- | --- | --- | --- |
-| `MOODLE_URL` | `--url` | none | Your Moodle site, such as `https://campus.example.org`. Any page of the site works. |
-| `MOODLE_MCP_SITES` | `--sites` | none | Several sites, the first active: `name=url,…` or JSON. See [Several sites](./several-sites.md). |
-| `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | What the AI sees of other people: `block`, `pseudonymize` or `clear`. See [Students' privacy](./privacy.md). |
-| `MOODLE_MCP_ROLE` | `--role` | `all` | Only the tools for a role: `teacher`, `student` or `all`. See [Limiting the agent](./limits.md#your-role). |
-| `MOODLE_MCP_ACCESS` | `--access` | `write` | `read` keeps only the tools that change nothing. See [Limiting the agent](./limits.md#read-only). |
-| `MOODLE_MCP_CONFIRM` | `--confirm` | `elicit` | Who confirms what can't be undone: `elicit` (you, in your app) or `client` (your app asks you before each tool already). See [Limiting the agent](./limits.md#confirming-what-cant-be-undone). |
-| `MOODLE_MCP_ADVANCED` | `--advanced` | `false` | `true` adds the advanced tools: BigBlueButton, competencies, external tools (LTI), the content bank, notes and course blocks. See [Limiting the agent](./limits.md#advanced-tools). |
-| `MOODLE_MCP_SCOPES` | `--scopes` | `all` | The kinds of tools: a profile or a list of scopes. See [Limiting the agent](./limits.md#scopes). |
-| `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | The browser profile folder that keeps your session (the first site's, with several). Inside a Claude Code plugin, the plugin's data folder holds it instead. |
-| `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome, then Chromium | Which browser to use: `msedge`, `chrome`, `chromium` or `firefox` (Playwright's own Firefox, downloaded the first time, never the one you have installed). |
-| `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | `false` works with a visible window all the time. Logging in always shows one. |
-| `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | `false` never downloads Chromium when there's no Edge or Chrome. |
-| `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | Activities done as a student: `realistic` (real pages, at a reader's pace, so Moodle records views and completion) or `fast`. |
-
-A setting left empty, or that your app passes as an unexpanded `${…}` (as Codex does with a plugin's settings), counts as not set: its default applies, and `server_info` lists the ones that came so. Without a site, the agent asks you for your Moodle's address and adds it.
 
 ## Changing settings during a chat
 

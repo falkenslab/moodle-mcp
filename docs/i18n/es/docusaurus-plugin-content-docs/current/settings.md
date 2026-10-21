@@ -8,7 +8,57 @@ import TabItem from "@theme/TabItem";
 
 # Ajustes
 
-Nada es obligatorio. Sin un sitio, el agente te pide uno la primera vez. Todo lo demás tiene un valor por defecto razonable.
+Ninguno es obligatorio. Sin sitio, el agente te lo pide la primera vez. Todo lo demás tiene un valor por defecto razonable.
+
+## En corto {#in-short}
+
+Cada ajuste es una variable de entorno del servidor, o un argumento de línea de comandos después del nombre del paquete (entre paréntesis); si se dan los dos, gana el argumento. Cuando los valores son una elección, el valor por defecto va en negrita.
+
+- **`MOODLE_URL`** (`--url`): Tu sitio Moodle. Sin él, el agente te lo pide.
+  - Su dirección, como `https://campus.example.org`. Vale cualquier página del sitio.
+- **`MOODLE_MCP_SITES`** (`--sites`): Varios sitios, cada uno con un nombre; el primero es donde empieza. Consulta [Varios sitios](./several-sites.md).
+  - `nombre=dirección,…`, como `instituto=https://campus.miinstituto.org,uni=https://moodle.miuni.es`, o JSON.
+- **`MOODLE_MCP_ROLE`** (`--role`): Qué herramientas recibe el agente, según el rol. Menos herramientas, mejor elegidas. Consulta [Limitar al agente](./limits.md#tu-rol).
+  - **`all`**: todas.
+  - `teacher`: las del profesorado.
+  - `student`: las del alumnado.
+- **`MOODLE_MCP_ACCESS`** (`--access`): Si el agente puede cambiar Moodle. Consulta [Limitar al agente](./limits.md#solo-lectura).
+  - **`write`**: lee y cambia.
+  - `read`: solo mira, nunca cambia nada.
+- **`MOODLE_MCP_STUDENT_DATA`** (`--student-data`): Qué ve la IA de las demás personas. Consulta [Privacidad del alumnado](./privacy.md).
+  - **`pseudonymize`**: alias como `A-7KQ2XM`, nunca nombres.
+  - `block`: nada de ellas.
+  - `clear`: sus nombres (solo para una IA en tu propio ordenador).
+- **`MOODLE_MCP_SCOPES`** (`--scopes`): Los tipos de datos que pueden tocar sus herramientas. Consulta [Limitar al agente](./limits.md#ámbitos).
+  - **`all`**: todo.
+  - `content`: solo crear cursos, nunca el trabajo ni las notas del alumnado.
+  - `teacher`, `student`: los tipos de un rol.
+  - O una lista, como `content,communication`.
+- **`MOODLE_MCP_CONFIRM`** (`--confirm`): Quién te pregunta antes de lo que no se puede deshacer, como borrar (próxima versión). Consulta [Limitar al agente](./limits.md#confirmar-lo-que-no-se-puede-deshacer).
+  - **`elicit`**: te pregunta moodle-mcp, en tu app.
+  - `client`: tu app ya te pregunta antes de cada herramienta.
+- **`MOODLE_MCP_ADVANCED`** (`--advanced`): Las herramientas avanzadas. Consulta [Limitar al agente](./limits.md#herramientas-avanzadas).
+  - **`false`**: fuera.
+  - `true`: dentro: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenidos, notas y bloques del curso.
+- **`MOODLE_MCP_CHANNEL`** (`--channel`): En qué navegador trabaja.
+  - Sin poner: **Edge, luego Chrome, luego Chromium**, el primero que encuentre.
+  - `msedge`: Microsoft Edge.
+  - `chrome`: Google Chrome.
+  - `chromium`: Chromium, descargado la primera vez si hace falta.
+  - `firefox`: el Firefox propio de Playwright, descargado la primera vez, nunca el que tengas instalado (próxima versión).
+- **`MOODLE_MCP_HEADLESS`** (`--headless` / `--headed`): Si ves el navegador.
+  - **`true`**: trabaja sin verse; solo se abre una ventana para iniciar sesión, o cuando pides verlo.
+  - `false`: una ventana visible todo el tiempo.
+- **`MOODLE_MCP_PROFILE_DIR`** (`--profile-dir`): La carpeta que guarda tu sesión (la del primer sitio, si hay varios). Dentro de un plugin de Claude Code, la guarda en su lugar la carpeta de datos del plugin.
+  - Una carpeta; **`~/.moodle-mcp/profile`** por defecto.
+- **`MOODLE_MCP_DOWNLOAD_BROWSER`** (`--no-download-browser`): Qué hacer si no hay Edge ni Chrome.
+  - **`true`**: descargar Chromium.
+  - `false`: no descargar nunca un navegador.
+- **`MOODLE_MCP_TRAIL`** (`--trail`): Cómo se hacen las actividades como alumno.
+  - **`realistic`**: páginas reales a ritmo de lectura, para que Moodle registre las visitas y la finalización.
+  - `fast`: directo al resultado.
+
+Un ajuste vacío, o que tu app pasa como un `${…}` sin sustituir, cuenta como no puesto: se aplica su valor por defecto, y `server_info` lista los que llegaron así.
 
 ## Dónde van los ajustes
 
@@ -58,40 +108,15 @@ Las extensiones moodle-teacher y moodle-student piden los suyos al instalarlas: 
 </TabItem>
 </Tabs>
 
-Los plugins de Claude Code piden los mismos cuatro que las extensiones de agent-kit; los de Codex no tienen ninguno, así que el agente te pide tu sitio en el chat.
-
 ## Cambiarlos después
 
 | Dónde lo añadiste | Cómo cambiar un ajuste |
 | --- | --- |
 | Claude Code, con `claude mcp add` | `claude mcp remove moodle` y vuelve a añadirlo; o edita su `env` en `~/.claude.json` o `.mcp.json` y reconéctalo en `/mcp` |
-| Claude Code, el plugin | `/plugin` y los ajustes del plugin |
 | Claude Desktop | Edita `claude_desktop_config.json`, cierra Claude Desktop y vuelve a abrirlo |
 | Codex | Edita `[mcp_servers.moodle.env]` en `~/.codex/config.toml`; lo toma una sesión nueva |
 | agent-kit | `/extensions config moodle-teacher access=read` en el chat (se aplica en el momento), o `<agente> extension config moodle-teacher access=read` en un terminal |
 | Cualquiera, durante un chat | Pídeselo al agente: consulta [Cambiar ajustes durante un chat](#cambiar-ajustes-durante-un-chat) |
-
-Cada ajuste también puede ser un argumento de línea de comandos después del nombre del paquete (como `npx -y @falkenslab/moodle-mcp --role teacher`). Si se dan los dos, gana el argumento.
-
-## Todos los ajustes
-
-| Variable | Argumento | Por defecto | Qué hace |
-| --- | --- | --- | --- |
-| `MOODLE_URL` | `--url` | ninguno | Tu sitio Moodle, como `https://campus.example.org`. Vale cualquier página del sitio. |
-| `MOODLE_MCP_SITES` | `--sites` | ninguno | Varios sitios, el primero activo: `nombre=url,…` o JSON. Consulta [Varios sitios](./several-sites.md). |
-| `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | Lo que ve la IA de otras personas: `block`, `pseudonymize` o `clear`. Consulta [Privacidad del alumnado](./privacy.md). |
-| `MOODLE_MCP_ROLE` | `--role` | `all` | Solo las herramientas de un rol: `teacher`, `student` o `all`. Consulta [Limitar al agente](./limits.md#tu-rol). |
-| `MOODLE_MCP_ACCESS` | `--access` | `write` | `read` deja solo las herramientas que no cambian nada. Consulta [Limitar al agente](./limits.md#solo-lectura). |
-| `MOODLE_MCP_CONFIRM` | `--confirm` | `elicit` | Quién confirma lo que no se puede deshacer: `elicit` (tú, en tu aplicación) o `client` (tu aplicación ya te pregunta antes de cada herramienta). Consulta [Limitar al agente](./limits.md#confirmar-lo-que-no-se-puede-deshacer). |
-| `MOODLE_MCP_ADVANCED` | `--advanced` | `false` | `true` añade las herramientas avanzadas: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenido, notas y bloques del curso. Consulta [Limitar al agente](./limits.md#herramientas-avanzadas). |
-| `MOODLE_MCP_SCOPES` | `--scopes` | `all` | Los tipos de herramientas: un perfil o una lista de ámbitos. Consulta [Limitar al agente](./limits.md#ámbitos). |
-| `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | La carpeta del perfil del navegador que guarda tu sesión (la del primer sitio, si hay varios). Dentro de un plugin de Claude Code, la guarda en su lugar la carpeta de datos del plugin. |
-| `MOODLE_MCP_CHANNEL` | `--channel` | Edge, después Chrome, después Chromium | Qué navegador usar: `msedge`, `chrome`, `chromium` o `firefox` (el Firefox de Playwright, que se descarga la primera vez; nunca el que tengas instalado). |
-| `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | `false` trabaja siempre con una ventana visible. Para iniciar sesión siempre se muestra una. |
-| `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | `false` no descarga nunca Chromium cuando no hay Edge ni Chrome. |
-| `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | Las actividades hechas como alumno: `realistic` (páginas reales, al ritmo de un lector, para que Moodle registre las visitas y la finalización) o `fast`. |
-
-Un ajuste vacío, o que tu aplicación pasa como un `${…}` sin sustituir (como hace Codex con los ajustes de un plugin), cuenta como no puesto: se aplica su valor por defecto, y `server_info` lista los que llegaron así. Sin sitio, el agente te pide la dirección de tu Moodle y la añade.
 
 ## Cambiar ajustes durante un chat
 

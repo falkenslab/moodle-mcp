@@ -26,17 +26,6 @@ mi-agente extension marketplace add falkenslab/agent-extensions
 
 Para dar los ajustes en el mismo comando, sin que te los pregunte, añade un `--set` por cada uno: `--set access=read`.
 
-## Desde el chat del agente
-
-En el chat del agente, instálala y vuelve a abrir la conversación con ella, conservando lo que hayas dicho:
-
-```text
-/extensions install moodle-teacher@falkenslab
-/extensions reload
-```
-
-`/extensions` muestra con qué trabaja el agente, y qué está apagado y por qué.
-
 ## Sus ajustes {#its-settings}
 
 La extensión los pide al instalarla:

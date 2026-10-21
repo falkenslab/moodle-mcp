@@ -8,7 +8,6 @@ sidebar_label: Troubleshooting
 ## The AI app doesn't list moodle-mcp
 
 - **Check Node.js.** In a terminal, `node --version` must print `v20` or higher. If you just installed Node.js, restart the AI app (on Windows, sign out and in again if it still isn't found).
-- **On Windows, use `cmd /c`.** The command must be `cmd` with arguments `/c npx -y @falkenslab/moodle-mcp`, as in the [Claude Code](./getting-started/claude-code.md), [Claude Desktop](./getting-started/claude-desktop.md) and [Codex](./getting-started/codex.md) guides.
 - **Claude Desktop: check the file.** A missing comma or quote in `claude_desktop_config.json` stops every server from loading. Paste the file into a JSON checker, fix it, and restart Claude Desktop completely.
 - **Codex: give it time.** The first start downloads moodle-mcp. Set `startup_timeout_sec = 120` as in the [Codex guide](./getting-started/codex.md#3-give-it-time-to-start).
 - **Look at the logs.** In Claude Code, `claude mcp list` and the `/mcp` command show the error. Claude Desktop writes logs to `%APPDATA%\Claude\logs` (Windows) or `~/Library/Logs/Claude` (macOS), in `mcp-server-moodle.log`.

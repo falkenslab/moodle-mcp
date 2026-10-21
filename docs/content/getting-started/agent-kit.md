@@ -26,17 +26,6 @@ my-agent extension marketplace add falkenslab/agent-extensions
 
 To give the settings in the same command, without being asked, add a `--set` for each one: `--set access=read`.
 
-## From the agent's chat
-
-In the agent's chat, install it and open the conversation again with it, keeping what you said:
-
-```text
-/extensions install moodle-teacher@falkenslab
-/extensions reload
-```
-
-`/extensions` lists what the agent runs with, and what's off and why.
-
 ## Its settings {#its-settings}
 
 The extension asks for these when it's installed:

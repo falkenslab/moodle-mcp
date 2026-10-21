@@ -3,9 +3,6 @@ title: Set up Claude Desktop
 sidebar_label: Claude Desktop
 ---
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
 # Set up Claude Desktop
 
 [Claude Desktop](https://claude.ai/download) is the Claude app for Windows and macOS. You add moodle-mcp to its configuration file once.
@@ -25,9 +22,6 @@ This opens the folder with `claude_desktop_config.json`. Open that file with a t
 
 Paste this into the file, with **your Moodle site's address** instead of `https://campus.example.org`:
 
-<Tabs groupId="os">
-<TabItem value="mac-linux" label="macOS" default>
-
 ```json
 {
   "mcpServers": {
@@ -39,24 +33,6 @@ Paste this into the file, with **your Moodle site's address** instead of `https:
   }
 }
 ```
-
-</TabItem>
-<TabItem value="windows" label="Windows">
-
-```json
-{
-  "mcpServers": {
-    "moodle": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "@falkenslab/moodle-mcp"],
-      "env": { "MOODLE_URL": "https://campus.example.org" }
-    }
-  }
-}
-```
-
-</TabItem>
-</Tabs>
 
 If the file already has other servers under `mcpServers`, add the `"moodle": { … }` block next to them, with a comma between blocks.
 

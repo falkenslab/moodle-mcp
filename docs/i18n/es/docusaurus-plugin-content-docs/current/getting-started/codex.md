@@ -3,9 +3,6 @@ title: Configurar Codex
 sidebar_label: Codex
 ---
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
 # Configurar Codex
 
 [Codex](https://developers.openai.com/codex) es el agente de programación de OpenAI, en tu terminal (Codex CLI), en VS Code y en la aplicación de Codex. Todos comparten la misma configuración, así que añades moodle-mcp una sola vez.
@@ -14,47 +11,18 @@ import TabItem from "@theme/TabItem";
 
 Abre un terminal y ejecuta este comando, con **la dirección de tu sitio Moodle** en lugar de `https://campus.example.org`:
 
-<Tabs groupId="os">
-<TabItem value="mac-linux" label="macOS y Linux" default>
-
 <Terminal title="Terminal">{`
 $ codex mcp add moodle --env MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
 Added global MCP server 'moodle'.
 `}</Terminal>
 
-</TabItem>
-<TabItem value="windows" label="Windows">
-
-<Terminal title="PowerShell" prompt="PS>">{`
-PS> codex mcp add moodle --env MOODLE_URL=https://campus.example.org -- cmd /c npx -y @falkenslab/moodle-mcp
-Added global MCP server 'moodle'.
-`}</Terminal>
-
-</TabItem>
-</Tabs>
-
 ## 2. Comprueba que está
-
-<Tabs groupId="os">
-<TabItem value="mac-linux" label="macOS y Linux" default>
 
 <Terminal title="Terminal">{`
 $ codex mcp list
 Name    Command  Args                          Env               Cwd  Status   Auth
 moodle  npx      -y @falkenslab/moodle-mcp     MOODLE_URL=*****  -    enabled  Unsupported
 `}</Terminal>
-
-</TabItem>
-<TabItem value="windows" label="Windows">
-
-<Terminal title="PowerShell" prompt="PS>">{`
-PS> codex mcp list
-Name    Command  Args                              Env               Cwd  Status   Auth
-moodle  cmd      /c npx -y @falkenslab/moodle-mcp  MOODLE_URL=*****  -    enabled  Unsupported
-`}</Terminal>
-
-</TabItem>
-</Tabs>
 
 `enabled` significa que Codex lo arrancará. Lo arranca de verdad la primera vez que abres una sesión.
 
@@ -65,7 +33,7 @@ Codex espera 10 segundos a que arranque un servidor, y 60 segundos a que termine
 - **Windows**: `%USERPROFILE%\.codex\config.toml`
 - **macOS y Linux**: `~/.codex/config.toml`
 
-`codex mcp add` escribió ahí una sección `[mcp_servers.moodle]`. Añádele las dos líneas de tiempo de espera (en Windows, `command` es `"cmd"` y `args` empieza por `"/c", "npx"`):
+`codex mcp add` escribió ahí una sección `[mcp_servers.moodle]`. Añádele las dos líneas de tiempo de espera:
 
 ```toml
 [mcp_servers.moodle]
@@ -88,24 +56,9 @@ Arranca Codex (`codex` en un terminal) y pide:
 
 La primera vez se abre una ventana del navegador en la página de acceso de tu Moodle: inicia sesión como siempre. Consulta [Iniciar sesión la primera vez](./first-login.md). Dentro de Codex, `/mcp` lista los servidores y sus herramientas.
 
-## Otras formas de añadirlo
-
-### A mano
+## A mano
 
 En lugar de `codex mcp add`, escribe tú la sección `[mcp_servers.moodle]` del paso 3 en `config.toml`. Codex la lee en cada sesión nueva.
-
-### El plugin
-
-El marketplace de Falken's Lab tiene moodle-mcp como plugin de Codex, con skills que explican cómo hacer bien cada tarea: **moodle-teacher** para los cursos que impartes y **moodle-student** para los que cursas. Añade el marketplace una vez, desde un terminal:
-
-```bash
-codex plugin marketplace add falkenslab/agent-extensions
-```
-
-Luego instala uno dentro de Codex con `/plugins`, o desde el terminal con `codex plugin add moodle-teacher@falkenslab`.
-
-- Codex no tiene ajustes de plugins, así que la primera vez el agente te pide en el chat la dirección de tu Moodle.
-- Codex guarda un servidor por nombre, y los dos plugins llaman al suyo `moodle`: activa solo uno, y no junto con el servidor del paso 1.
 
 ## Aprobar las llamadas a herramientas
 
