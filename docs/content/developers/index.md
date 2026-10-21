@@ -73,6 +73,17 @@ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=htt
 
 The [tools reference](../reference/tools.md) is generated from the server, so it updates itself. The Claude Code skills in `.claude/skills/` (`add-tool`, `verify`, `update-docs`…) hold the full checklists.
 
+## Measuring the tools
+
+`scripts/tool-tokens.mjs` gives, for each row of [Limiting the agent](../limits.md), how many tools the agent gets and how many tokens their descriptions take. It starts the built server with each row's settings (`tools/list` opens no browser) and counts the tokens with Anthropic's [token counting](https://platform.claude.com/docs/en/build-with-claude/token-counting) when `ANTHROPIC_API_KEY` is set:
+
+```bash
+npm run build
+ANTHROPIC_API_KEY=… node scripts/tool-tokens.mjs
+```
+
+Without the key it gives the tools only. Run it again when a release changes the tools, and update the limits page with what it prints.
+
 ## This site
 
 The site is [Docusaurus](https://docusaurus.io), in `docs/`, in English (`docs/content/`) and Spanish (`docs/i18n/es/`):

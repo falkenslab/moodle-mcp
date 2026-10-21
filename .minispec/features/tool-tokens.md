@@ -14,7 +14,7 @@ The limits page gives how many tokens the tools' descriptions take, per role and
 
 ## Changes
 
-- A script in `scripts/` that lists the tools for each row of the limits page (all, teacher, student, the content profile, the advanced ones) and counts them with `count_tokens`, `ANTHROPIC_API_KEY` from the environment, never stored.
+- A script in `scripts/` that lists the tools for each row of the limits page (all, teacher, student, the content profile, the advanced ones) and counts them with `count_tokens`, `ANTHROPIC_API_KEY` from the environment, never stored. Written (`scripts/tool-tokens.mjs`, the developers' page, the tool counts on the limits page); left: running it with a key and putting the measured tokens on the limits page.
 - The limits page in both languages with the measured figures, and how to measure them again on the developers' page.
 
 ## Acceptance

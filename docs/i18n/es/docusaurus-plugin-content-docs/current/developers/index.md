@@ -73,6 +73,17 @@ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=htt
 
 La [referencia de herramientas](../reference/tools.md) se genera a partir del servidor, así que se actualiza sola. Las skills de Claude Code de `.claude/skills/` (`add-tool`, `verify`, `update-docs`…) contienen las listas de comprobación completas.
 
+## Medir las herramientas
+
+`scripts/tool-tokens.mjs` da, para cada fila de [Limitar al agente](../limits.md), cuántas herramientas recibe el agente y cuántos tokens ocupan sus descripciones. Arranca el servidor compilado con los ajustes de cada fila (`tools/list` no abre ningún navegador) y cuenta los tokens con el [conteo de tokens](https://platform.claude.com/docs/en/build-with-claude/token-counting) de Anthropic cuando `ANTHROPIC_API_KEY` está puesta:
+
+```bash
+npm run build
+ANTHROPIC_API_KEY=… node scripts/tool-tokens.mjs
+```
+
+Sin la clave da solo las herramientas. Vuelve a ejecutarlo cuando una versión cambie las herramientas, y actualiza la página de límites con lo que imprime.
+
 ## Este sitio
 
 El sitio es [Docusaurus](https://docusaurus.io), en `docs/`, en inglés (`docs/content/`) y en español (`docs/i18n/es/`):
