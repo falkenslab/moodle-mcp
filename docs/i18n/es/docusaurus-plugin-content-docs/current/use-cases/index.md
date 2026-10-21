@@ -21,6 +21,9 @@ En todas las sesiones, el alumnado llega a la IA como alias del tipo `A-8FT4A1`:
 | [Una página con una imagen](./teacher/page-with-image.md) | "Crea una página con una explicación y este diagrama." | Claude Code |
 | [Un asistente de solo lectura](./teacher/reading-assistant.md) | "¿Cómo va mi curso?", con un agente que no puede cambiar nada | Claude Code |
 | [Copiar entre sitios](./teacher/copy-between-sites.md) | "Copia esta página de mi curso en un Moodle al mismo curso en otro." | Claude Code |
+| [Una lección a partir de tus apuntes](./teacher/lesson-from-notes.md) | "Convierte estos apuntes en una lección: una pregunta por página, y si falla, vuelve." | Claude Code |
+| [El glosario de la clase](./teacher/class-glossary.md) | "¿Qué entradas del glosario esperan aprobación? Revísalas." | Codex |
+| [Una encuesta de fin de unidad](./teacher/feedback-survey.md) | "Crea una encuesta anónima con estas tres preguntas." | Claude Code |
 
 ## Como alumno
 

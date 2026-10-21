@@ -21,6 +21,9 @@ In every session, students reach the AI as aliases such as `A-8FT4A1`: that's [s
 | [A page with an image](./teacher/page-with-image.md) | "Create a page with an explanation and this diagram." | Claude Code |
 | [A read-only assistant](./teacher/reading-assistant.md) | "How's my course going?", with an agent that can't change anything | Claude Code |
 | [Copying between sites](./teacher/copy-between-sites.md) | "Copy this page from my course on one Moodle to the same course on another." | Claude Code |
+| [A lesson from your notes](./teacher/lesson-from-notes.md) | "Turn these notes into a lesson: a question per page, a wrong answer goes back." | Claude Code |
+| [The class glossary](./teacher/class-glossary.md) | "Which glossary entries are waiting for approval? Check them." | Codex |
+| [An end-of-unit survey](./teacher/feedback-survey.md) | "Create an anonymous survey with these three questions." | Claude Code |
 
 ## As a student
 

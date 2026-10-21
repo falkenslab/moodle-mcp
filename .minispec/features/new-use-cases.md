@@ -18,9 +18,8 @@ The documentation shows, with real sessions, what a teacher does with the areas 
 
 ## Progress
 
-- Chosen: `lesson-from-notes` (a branching lesson from "Apuntes: bucles"), `class-glossary` (the student's entries waiting for approval, one wrong) and `feedback-survey` (an anonymous end-of-unit feedback). The quiz's statistics and a workshop are left out: they need several students' attempts and submissions, and the sandbox has one student session. Course completion too: once a student has completed something Moodle locks its criteria.
-- Written: their scenarios, seeds (the glossary in `setup`, each language's lesson, feedback and entries in `reset`) and Moodle shots; the scripts' own client runs with `--confirm client` (ADR-023).
-- Left, with the sandbox: the sessions and screenshots, then each page in both languages from what the session did, and their rows in the use cases' index and sidebar.
+- Done: `lesson-from-notes`, `class-glossary` and `feedback-survey`, sessions and pages in both languages (21 October 2026).
+- Next: the quiz's statistics, with the sandbox's seeded students making the attempts (the owner allowed more students). A workshop and course completion stay out: several phases of several students, and criteria Moodle locks once someone completes.
 
 ## Acceptance
 
