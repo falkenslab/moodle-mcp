@@ -62,7 +62,7 @@ Instead of `codex mcp add`, write the `[mcp_servers.moodle]` section of step 3 i
 
 ## Approving tool calls
 
-Codex asks you before each moodle-mcp tool that changes something in Moodle. To let it run moodle-mcp's tools without asking, add this line to the `[mcp_servers.moodle]` section:
+Codex asks you before each moodle-mcp tool that changes something in Moodle. For what can't be undone, such as deleting an activity, moodle-mcp then asks you too, in Codex: what will happen, and True or False ([Confirming what can't be undone](../limits.md#confirming-what-cant-be-undone)). The 600-second `tool_timeout_sec` of step 3 gives you time to answer it. To let it run moodle-mcp's tools without asking, add this line to the `[mcp_servers.moodle]` section:
 
 ```toml
 default_tools_approval_mode = "approve"

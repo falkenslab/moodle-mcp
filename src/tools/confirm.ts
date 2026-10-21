@@ -1,6 +1,7 @@
 // What can't be undone, confirmed by the person (ADR-023): before such a tool runs, the server asks them
 // in their app through MCP elicitation, and the model never sees the question nor the answer.
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 import type { Config } from "../config.js";
 
 type Args = Record<string, unknown>;
@@ -44,6 +45,9 @@ export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; what: (a: 
   remove_site: { what: (a) => `Remove the site "${a.name}" from this server, with its browser session.` },
 };
 
+/** How long the person has to answer: ten minutes, as long as a tool may take in the clients' guides (Codex's tool_timeout_sec). */
+export const CONFIRM_TIMEOUT_MS = 10 * 60_000;
+
 /** What a confirmed tool's description adds, for the agent and the tools reference. */
 export const CONFIRM_SENTENCE = "The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.";
 
@@ -65,11 +69,20 @@ export function confirmTools(server: McpServer, config: Pick<Config, "confirm">)
         if (config.confirm === "client") return handler(args, extra);
         throw new Error(`${name} needs the person's confirmation, which this app can't ask for: it doesn't support MCP elicitation. Tell the person to do it in Moodle; or, if their app asks them itself before each tool, they can start this server with MOODLE_MCP_CONFIRM=client.`);
       }
-      const answer = await server.server.elicitInput({
-        mode: "form",
-        message: `${rule.what(args)} This can't be undone. Go ahead?`,
-        requestedSchema: { type: "object", properties: { confirm: { type: "boolean", title: "Yes, do it", description: "Leave it unticked, or decline, to change nothing" } }, required: ["confirm"] },
-      });
+      // A person takes longer than the SDK's minute: they may be away, or reading what it deletes.
+      const answer = await server.server
+        .elicitInput(
+          {
+            mode: "form",
+            message: `${rule.what(args)} This can't be undone. Go ahead?`,
+            requestedSchema: { type: "object", properties: { confirm: { type: "boolean", title: "Yes, do it", description: "Leave it unticked, or decline, to change nothing" } }, required: ["confirm"] },
+          },
+          { timeout: CONFIRM_TIMEOUT_MS },
+        )
+        .catch((error: unknown) => {
+          if (error instanceof McpError && error.code === ErrorCode.RequestTimeout) throw new Error(`The person didn't answer the confirmation for ${name} in ${CONFIRM_TIMEOUT_MS / 60_000} minutes: nothing was done. Ask them before trying again.`);
+          throw error;
+        });
       if (answer.action !== "accept" || (answer.content as { confirm?: unknown } | undefined)?.confirm !== true) throw new Error(`The person said no to ${name}: nothing was done. Don't try it again unless they ask.`);
       return handler(args, extra);
     });

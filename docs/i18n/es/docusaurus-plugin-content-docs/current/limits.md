@@ -84,7 +84,7 @@ El agente puede reducir las aulas durante una sesión (`configure` con menos cur
 
 Algunas herramientas no se pueden deshacer: eliminar una actividad, una sección, un mensaje o una pregunta, dar de baja a alguien, reiniciar un curso, restaurar una copia de seguridad sobre un curso. Antes de que se ejecute una de ellas, moodle-mcp te pregunta él mismo, en tu aplicación: qué va a pasar, y un sí o un no. La respuesta va a moodle-mcp, nunca a la IA, así que la IA no puede saltarse la pregunta. Si dices que no, no pasa nada. Calificar no está entre ellas: una nota se puede volver a cambiar.
 
-Tu aplicación tiene que admitir estas preguntas (elicitation MCP), como hace Claude Code. En una que no las admite, estas herramientas se rechazan, salvo que tu aplicación ya te pregunte antes de cada herramienta y arranques moodle-mcp con `MOODLE_MCP_CONFIRM=client`. La referencia de herramientas dice cuáles preguntan.
+Tienes diez minutos para contestar; pasado ese tiempo no se hace nada, y el agente lo dice. Tu aplicación tiene que admitir estas preguntas (elicitation MCP), como hacen Claude Code y Codex. En una que no las admite, estas herramientas se rechazan, salvo que tu aplicación ya te pregunte antes de cada herramienta y arranques moodle-mcp con `MOODLE_MCP_CONFIRM=client`. La referencia de herramientas dice cuáles preguntan.
 
 ## Herramientas avanzadas
 

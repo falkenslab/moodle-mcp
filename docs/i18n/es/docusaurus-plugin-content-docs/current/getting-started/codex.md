@@ -62,7 +62,7 @@ En lugar de `codex mcp add`, escribe tú la sección `[mcp_servers.moodle]` del 
 
 ## Aprobar las llamadas a herramientas
 
-Codex te pregunta antes de cada herramienta de moodle-mcp que cambia algo en Moodle. Para que ejecute las herramientas de moodle-mcp sin preguntar, añade esta línea a la sección `[mcp_servers.moodle]`:
+Codex te pregunta antes de cada herramienta de moodle-mcp que cambia algo en Moodle. Para lo que no se puede deshacer, como borrar una actividad, después te pregunta también moodle-mcp, en Codex: qué va a pasar, y True o False ([Confirmar lo que no se puede deshacer](../limits.md#confirmar-lo-que-no-se-puede-deshacer)). Los 600 segundos de `tool_timeout_sec` del paso 3 te dan tiempo para contestar. Para que ejecute las herramientas de moodle-mcp sin preguntar, añade esta línea a la sección `[mcp_servers.moodle]`:
 
 ```toml
 default_tools_approval_mode = "approve"
