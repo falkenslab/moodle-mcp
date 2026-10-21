@@ -359,7 +359,7 @@ export default function Home(): ReactNode {
       <header className="fl-hero">
         <span className="fl-eyebrow">Falken's Lab · MCP</span>
         <h1>
-          <Translate id="home.headline">Your AI agent in Moodle, as you</Translate>
+          <Translate id="home.headline">Your AI agent in Moodle</Translate>
         </h1>
         <p>
           <Translate id="home.tagline">Let an AI agent work in your Moodle courses as you, with your own login.</Translate>{" "}
