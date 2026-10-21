@@ -27,7 +27,7 @@ Node.js incluye `npx`, que tu aplicación de IA usa para descargar y arrancar mo
 
 moodle-mcp trabaja a través de un navegador real, con tu sesión iniciada. Usa **Microsoft Edge** o **Google Chrome** si tienes alguno. Windows ya incluye Edge.
 
-Si no tienes ninguno, descarga su propia copia de Chromium (unos 180 MB) la primera vez que necesita un navegador. No tienes que hacer nada.
+Si no tienes ninguno, descarga su propia copia de Chromium (unos 180 MB) la primera vez que necesita un navegador. No tienes que hacer nada. Si prefieres que use Firefox, pon `MOODLE_MCP_CHANNEL=firefox`: descarga el Firefox de Playwright, no el que puedas tener instalado.
 
 :::tip
 El navegador que usa tiene su propio perfil, separado de tu navegación de siempre: tus marcadores, tu historial y tus otras sesiones no se tocan nunca.

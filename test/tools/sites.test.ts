@@ -93,7 +93,8 @@ async function connect(config: Config) {
 
 function fresh(): Config {
   const dataDir = mkdtempSync(path.join(tmpdir(), "moodle-mcp-sites-"));
-  const config = testConfig({ moodleUrl: undefined, dataDir, profileDir: path.join(dataDir, "profile") });
+  // The client is trusted to have asked: these tests are about the sites, not about confirming (ADR-023).
+  const config = testConfig({ moodleUrl: undefined, dataDir, profileDir: path.join(dataDir, "profile"), confirm: "client" });
   delete config.sources.moodleUrl;
   return config;
 }

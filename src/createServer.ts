@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { instructionsFor } from "./instructions.js";
+import { confirmTools } from "./tools/confirm.js";
 import { explainErrors } from "./tools/errors.js";
 import { followTools } from "./tools/follow.js";
 import { pseudonymizeTools } from "./tools/pseudonymizeOutput.js";
@@ -18,6 +19,8 @@ export function createServer(context: ToolContext): McpServer {
   // Errors explained outside following, so a tool's own error is explained too.
   explainErrors(server);
   followTools(server, context);
+  // Inside the scopes' check: a tool outside them is refused before the person is asked (ADR-023).
+  confirmTools(server, config);
   // Installed last, so it wraps the others: a tool outside the scopes is refused before anything runs.
   scopeTools(server, config);
   for (const register of TOOLS) register(server, context);

@@ -16,6 +16,9 @@ export function testConfig(overrides: Partial<Config> = {}): Config {
     studentData: "clear",
     role: "all",
     access: "write",
+    // Tests are about each tool, not about confirming (ADR-023): the client is trusted to have asked,
+    // unless a test sets "elicit" (test/tools/confirm.test.ts).
+    confirm: "client",
     // Each test process its own data folder: run-time sites are saved there.
     dataDir: path.join(tmpdir(), `moodle-mcp-test-${process.pid}`),
     sites: [],

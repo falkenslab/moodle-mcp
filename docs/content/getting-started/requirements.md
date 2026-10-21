@@ -27,7 +27,7 @@ Node.js includes `npx`, which your AI app uses to download and start moodle-mcp.
 
 moodle-mcp works through a real browser, logged in as you. It uses **Microsoft Edge** or **Google Chrome** if you have one. Windows already includes Edge.
 
-If you have neither, it downloads its own copy of Chromium (about 180 MB) the first time it needs a browser. You don't have to do anything.
+If you have neither, it downloads its own copy of Chromium (about 180 MB) the first time it needs a browser. You don't have to do anything. If you'd rather it used Firefox, set `MOODLE_MCP_CHANNEL=firefox`: it downloads Playwright's own Firefox, not the one you may have installed.
 
 :::tip
 The browser it uses has its own profile, separate from your everyday browsing: your bookmarks, history and other sessions are never touched.

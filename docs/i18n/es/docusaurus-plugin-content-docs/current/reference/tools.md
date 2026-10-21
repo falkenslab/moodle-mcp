@@ -168,7 +168,7 @@ Hace activo otro sitio conocido, por su nombre (list_sites): desde ese momento t
 
 **Quitar un sitio Moodle**
 
-Olvida un sitio añadido durante el trabajo, por su nombre, y borra su perfil de navegador con su sesión. Ni el sitio activo (cambia antes de sitio) ni uno de la configuración de la persona (lo quita ella allí). No se puede deshacer: confírmalo antes con la persona.
+Olvida un sitio añadido durante el trabajo, por su nombre, y borra su perfil de navegador con su sesión. Ni el sitio activo (cambia antes de sitio) ni uno de la configuración de la persona (lo quita ella allí). No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -388,7 +388,7 @@ Duplica una actividad justo a continuación de sí misma, con su configuración 
 
 **Eliminar una actividad**
 
-Elimina una actividad de un curso, con los datos de sus participantes (entregas, intentos, mensajes, calificaciones). Destructivo: confírmalo antes con la persona, nombrando la actividad.
+Elimina una actividad de un curso, con los datos de sus participantes (entregas, intentos, mensajes, calificaciones). Destructivo: confírmalo antes con la persona, nombrando la actividad. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -445,7 +445,7 @@ Cambia una sección: renombrarla, describirla, mostrarla u ocultarla (con sus ac
 
 **Eliminar una sección**
 
-Elimina una sección y todas las actividades que contiene, con los datos de sus participantes. Destructivo: confírmalo antes con la persona, diciendo qué actividades se eliminan con ella.
+Elimina una sección y todas las actividades que contiene, con los datos de sus participantes. Destructivo: confírmalo antes con la persona, diciendo qué actividades se eliminan con ella. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -625,7 +625,7 @@ Muestra un capítulo a los estudiantes o se lo oculta, como el ojo de la tabla d
 
 **Eliminar un capítulo de un libro**
 
-Elimina un capítulo con sus archivos; eliminar un capítulo (no un subcapítulo) elimina también sus subcapítulos. Devuelve después los capítulos. No se puede deshacer: confírmalo antes con la persona.
+Elimina un capítulo con sus archivos; eliminar un capítulo (no un subcapítulo) elimina también sus subcapítulos. Devuelve después los capítulos. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -722,7 +722,7 @@ Mueve una página de una lección tras otra (0: la primera), como el enlace de m
 
 **Eliminar una página de una lección**
 
-Elimina una página de una lección. Las respuestas de otras páginas que saltaban a ella quedan como las deja Moodle: revísalas con get_lesson_pages. Devuelve los ids de las páginas que quedan, en orden. No se puede deshacer: confírmalo antes con la persona.
+Elimina una página de una lección. Las respuestas de otras páginas que saltaban a ella quedan como las deja Moodle: revísalas con get_lesson_pages. Devuelve los ids de las páginas que quedan, en orden. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -793,7 +793,7 @@ Cambia el nombre, la descripción, si es obligatorio o los ajustes de su tipo (u
 
 **Eliminar un campo de una base de datos**
 
-Elimina un campo de una base de datos: lo que cada entrada tiene en él se va también, y sus etiquetas salen de las plantillas. Devuelve los campos. No se puede deshacer: confírmalo antes con la persona.
+Elimina un campo de una base de datos: lo que cada entrada tiene en él se va también, y sus etiquetas salen de las plantillas. Devuelve los campos. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -857,7 +857,7 @@ Lista los preajustes que se pueden dar a una actividad de base de datos: los pro
 
 **Dar un preajuste a una base de datos**
 
-Da un preajuste a una actividad de base de datos, como «Usar este preajuste» de Moodle: se añaden sus campos, un campo con el mismo nombre y tipo se conserva con lo que tienen las entradas, todos los demás campos se eliminan con su contenido, y sus plantillas sustituyen a las de la base de datos. Devuelve los campos. Puede borrar contenido de las entradas: confírmalo antes con la persona.
+Da un preajuste a una actividad de base de datos, como «Usar este preajuste» de Moodle: se añaden sus campos, un campo con el mismo nombre y tipo se conserva con lo que tienen las entradas, todos los demás campos se eliminan con su contenido, y sus plantillas sustituyen a las de la base de datos. Devuelve los campos. Puede borrar contenido de las entradas: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -925,7 +925,7 @@ Cambia una entrada de una base de datos con su formulario de edición: los campo
 
 **Eliminar una entrada de una base de datos**
 
-Elimina una entrada de una base de datos con sus valores y archivos. Un estudiante elimina las suyas mientras Moodle le deja cambiarlas; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona.
+Elimina una entrada de una base de datos con sus valores y archivos. Un estudiante elimina las suyas mientras Moodle le deja cambiarlas; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1057,7 +1057,7 @@ Cambia una entrada de un glosario: solo lo que se indica (attachments sustituye 
 
 **Eliminar una entrada de un glosario**
 
-Elimina una entrada de un glosario con sus archivos. Un estudiante elimina las suyas mientras dura el tiempo de edición del sitio; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona.
+Elimina una entrada de un glosario con sus archivos. Un estudiante elimina las suyas mientras dura el tiempo de edición del sitio; un profesor, las de cualquiera. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1324,7 +1324,7 @@ Mueve un elemento de un feedback a una posición (desde 1). Devuelve los element
 
 **Eliminar una pregunta de un feedback**
 
-Elimina un elemento de un feedback; las respuestas que dio la gente se van con él. Devuelve los elementos que quedan. No se puede deshacer: confírmalo antes con la persona.
+Elimina un elemento de un feedback; las respuestas que dio la gente se van con él. Devuelve los elementos que quedan. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1389,7 +1389,7 @@ Guarda los elementos de una actividad feedback como plantilla nueva: del curso, 
 
 **Eliminar una plantilla de feedback**
 
-Elimina una plantilla de feedback (una pública requiere permisos de gestor). No se puede deshacer: confírmalo antes con la persona.
+Elimina una plantilla de feedback (una pública requiere permisos de gestor). No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1461,7 +1461,7 @@ Hace una copia de seguridad de un curso en un archivo .mbz en una carpeta local,
 
 **Restaurar una copia de seguridad de un curso**
 
-Restaura una copia de seguridad .mbz mediante el asistente de restauración de Moodle: en un curso nuevo en una categoría (sin intoCourseId), o en un curso existente, añadiendo a su contenido (modo merge, el predeterminado) o sustituyéndolo (replace elimina antes el contenido del curso). Añadida a un curso, sectionId pone todas las actividades restauradas al final de esa sección, y afterSectionId las secciones de la copia como secciones nuevas después de esa; el resultado nombra las secciones y actividades nuevas, y warnings lo que quedó roto (restricciones o enlaces a lo que no se restauró) para que la persona lo arregle. Un curso nuevo toma los nombres de la copia de seguridad salvo que se indiquen fullName y shortName. Se rechaza una copia de un Moodle más nuevo, o con tipos de actividad que este sitio no ofrece. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia Moodle, y replace no se puede deshacer: confírmalo antes con la persona.
+Restaura una copia de seguridad .mbz mediante el asistente de restauración de Moodle: en un curso nuevo en una categoría (sin intoCourseId), o en un curso existente, añadiendo a su contenido (modo merge, el predeterminado) o sustituyéndolo (replace elimina antes el contenido del curso). Añadida a un curso, sectionId pone todas las actividades restauradas al final de esa sección, y afterSectionId las secciones de la copia como secciones nuevas después de esa; el resultado nombra las secciones y actividades nuevas, y warnings lo que quedó roto (restricciones o enlaces a lo que no se restauró) para que la persona lo arregle. Un curso nuevo toma los nombres de la copia de seguridad salvo que se indiquen fullName y shortName. Se rechaza una copia de un Moodle más nuevo, o con tipos de actividad que este sitio no ofrece. Puede tardar minutos: Moodle lo hace por pasos, y espera hasta diez. Cambia Moodle, y replace no se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1532,7 +1532,7 @@ Importa actividades de otro curso a un curso, como hace "Importar" de Moodle: to
 
 **Reiniciar un curso para un nuevo año**
 
-Reinicia un curso como hace el formulario de reinicio de Moodle: elimina solo lo indicado en delete (entregas, intentos, mensajes, calificaciones… en cada actividad que los tenga), desmatricula a las personas con unenrolRoles, mueve la fecha de inicio (y con ella las fechas de las actividades) y establece cualquier otro campo del formulario por su nombre. No se elimina nada que no se indique. No se puede deshacer: confirma antes cada elemento con la persona. Devuelve el informe de Moodle.
+Reinicia un curso como hace el formulario de reinicio de Moodle: elimina solo lo indicado en delete (entregas, intentos, mensajes, calificaciones… en cada actividad que los tenga), desmatricula a las personas con unenrolRoles, mueve la fecha de inicio (y con ella las fechas de las actividades) y establece cualquier otro campo del formulario por su nombre. No se elimina nada que no se indique. No se puede deshacer: confirma antes cada elemento con la persona. Devuelve el informe de Moodle. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1905,7 +1905,7 @@ Cambia una pregunta de un banco con el formulario de su tipo, con las entradas d
 
 **Eliminar preguntas de un banco**
 
-Elimina preguntas de un banco, todas las versiones de cada una, como hace la acción de eliminar del banco. Moodle no elimina una pregunta que usa un cuestionario: la oculta, y hidden enumera esas. No se puede deshacer: confírmalo antes con la persona.
+Elimina preguntas de un banco, todas las versiones de cada una, como hace la acción de eliminar del banco. Moodle no elimina una pregunta que usa un cuestionario: la oculta, y hidden enumera esas. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1989,7 +1989,7 @@ Cambia una categoría de un banco de preguntas: su nombre, su descripción (HTML
 
 **Eliminar una categoría de preguntas**
 
-Elimina una categoría de un banco de preguntas: sus subcategorías suben a su categoría madre; una con preguntas necesita moveTo, la categoría a la que van sus preguntas. Moodle conserva la última categoría de primer nivel de un banco. Confírmalo antes con la persona.
+Elimina una categoría de un banco de preguntas: sus subcategorías suben a su categoría madre; una con preguntas necesita moveTo, la categoría a la que van sus preguntas. Moodle conserva la última categoría de primer nivel de un banco. Confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -2374,7 +2374,7 @@ Cambia un elemento de calificación de get_gradebook_setup: moverlo a una catego
 
 **Eliminar un elemento de calificación manual**
 
-Elimina un elemento de calificación manual y todas sus calificaciones. El elemento de una actividad va con su actividad, así que se rechaza. No se puede deshacer: confírmalo antes con la persona.
+Elimina un elemento de calificación manual y todas sus calificaciones. El elemento de una actividad va con su actividad, así que se rechaza. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -2428,7 +2428,7 @@ Cambia una categoría de calificación de get_gradebook_setup: su nombre, su agr
 
 **Eliminar una categoría de calificación**
 
-Elimina una categoría de calificación: Moodle mueve lo que contenía a su categoría padre y elimina las calificaciones de su total; la categoría propia del curso no se puede eliminar. No se puede deshacer: confírmalo antes con la persona.
+Elimina una categoría de calificación: Moodle mueve lo que contenía a su categoría padre y elimina las calificaciones de su total; la categoría propia del curso no se puede eliminar. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -2600,7 +2600,7 @@ Lee qué completa un curso, desde sus ajustes de «Finalización del curso»: ac
 
 **Fijar qué completa un curso**
 
-Fija los criterios de finalización de un curso: un criterio dado sustituye los ajustes de ese tipo, uno en remove se quita y uno que no se da se queda; overall dice si completan el curso todos los criterios o cualquiera. Las actividades necesitan seguimiento de finalización, y los roles, permiso para marcar la finalización (offered de get_course_completion_criteria lista ambos). En cuanto alguien cumple un criterio, Moodle los bloquea: unlock borra antes los datos de finalización del curso de todos los participantes (no la finalización de sus actividades). Devuelve los criterios. Confírmalo antes con la persona, y dos veces con unlock.
+Fija los criterios de finalización de un curso: un criterio dado sustituye los ajustes de ese tipo, uno en remove se quita y uno que no se da se queda; overall dice si completan el curso todos los criterios o cualquiera. Las actividades necesitan seguimiento de finalización, y los roles, permiso para marcar la finalización (offered de get_course_completion_criteria lista ambos). En cuanto alguien cumple un criterio, Moodle los bloquea: unlock borra antes los datos de finalización del curso de todos los participantes (no la finalización de sus actividades). Devuelve los criterios. Confírmalo antes con la persona, y dos veces con unlock. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -2871,7 +2871,7 @@ Mueve un bloque a otra región o a otro sitio dentro de ella (weight: el menor v
 
 **Eliminar un bloque de la página de un curso**
 
-Elimina un bloque de la página de un curso, con su configuración. No se puede deshacer: confírmalo antes con la persona.
+Elimina un bloque de la página de un curso, con su configuración. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -2950,7 +2950,7 @@ Guarda un contenido del banco de contenido (su archivo .h5p) en una carpeta loca
 
 **Eliminar un contenido del banco de contenido**
 
-Elimina un contenido de un banco de contenido. No se puede deshacer: confírmalo antes con la persona.
+Elimina un contenido de un banco de contenido. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -3012,7 +3012,7 @@ Publica una grabación de BigBlueButton para los estudiantes, o se la oculta. De
 
 **Eliminar una grabación de BigBlueButton**
 
-Elimina una grabación de BigBlueButton. No se puede deshacer: confírmalo antes con la persona.
+Elimina una grabación de BigBlueButton. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -3083,7 +3083,7 @@ Cambia el contenido de una nota (sin alias) o quién la ve. Devuelve la nota. Co
 
 **Eliminar una nota sobre un participante**
 
-Elimina una nota. No se puede deshacer: confírmalo antes con la persona.
+Elimina una nota. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -3267,7 +3267,7 @@ Muestra una herramienta externa del curso en el selector de actividades, o la de
 
 **Eliminar una herramienta externa de un curso**
 
-Elimina una de las herramientas externas propias del curso. No se puede deshacer: confírmalo antes con la persona.
+Elimina una de las herramientas externas propias del curso. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -3478,7 +3478,7 @@ Matricula usuarios en un curso mediante matriculación manual, como hace el diá
 
 **Desmatricular a un usuario de un curso**
 
-Desmatricula a alguien de un curso: elimina todas sus matriculaciones que la persona puede eliminar, junto con sus roles y su pertenencia a grupos en el curso; removed y kept nombran los métodos de matriculación. Su trabajo en el curso se queda en Moodle, pero pierde el acceso. Confírmalo antes con la persona.
+Desmatricula a alguien de un curso: elimina todas sus matriculaciones que la persona puede eliminar, junto con sus roles y su pertenencia a grupos en el curso; removed y kept nombran los métodos de matriculación. Su trabajo en el curso se queda en Moodle, pero pierde el acceso. Confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -3606,7 +3606,7 @@ Cambia el nombre, la descripción, el número de ID o la clave de matriculación
 
 **Eliminar un grupo**
 
-Elimina un grupo; sus miembros siguen en el curso. Las actividades configuradas para trabajar por grupos lo pierden. No se puede deshacer: confírmalo antes con la persona.
+Elimina un grupo; sus miembros siguen en el curso. Las actividades configuradas para trabajar por grupos lo pierden. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -3674,7 +3674,7 @@ Crea un agrupamiento en un curso con el formulario de Moodle; asígnale sus grup
 
 **Eliminar un agrupamiento**
 
-Elimina un agrupamiento; sus grupos se mantienen. No se puede deshacer: confírmalo antes con la persona.
+Elimina un agrupamiento; sus grupos se mantienen. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -3886,7 +3886,7 @@ Cambia un mensaje del foro mediante el propio formulario de Moodle, como su auto
 
 **Eliminar un mensaje del foro**
 
-Elimina un mensaje del foro y sus respuestas mediante la propia confirmación de Moodle; el primer mensaje de un debate se lleva el debate entero. Solo un moderador elimina el mensaje de otra persona o uno con respuestas. No se puede deshacer: confírmalo antes con la persona.
+Elimina un mensaje del foro y sus respuestas mediante la propia confirmación de Moodle; el primer mensaje de un debate se lleva el debate entero. Solo un moderador elimina el mensaje de otra persona o uno con respuestas. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -4130,7 +4130,7 @@ Cambia una entrega de ejemplo: solo lo que se indica (attachments sustituye los 
 
 **Eliminar una entrega de ejemplo de un taller**
 
-Elimina una entrega de ejemplo con sus evaluaciones (la de referencia y las de práctica de los participantes). No se puede deshacer: confírmalo antes con la persona.
+Elimina una entrega de ejemplo con sus evaluaciones (la de referencia y las de práctica de los participantes). No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -4236,7 +4236,7 @@ Asigna un revisor a una entrega, como hace «Añadir revisor» en la página de 
 
 **Quitar un revisor de una entrega de un taller**
 
-Quita la asignación de un revisor a una entrega: Moodle borra su evaluación de ella. Una evaluación ya calificada solo se borra con evenIfAssessed, y su calificación se pierde. Devuelve después los revisores de la entrega. Confírmalo antes con la persona.
+Quita la asignación de un revisor a una entrega: Moodle borra su evaluación de ella. Una evaluación ya calificada solo se borra con evenIfAssessed, y su calificación se pierde. Devuelve después los revisores de la entrega. Confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -4481,7 +4481,7 @@ Cambia un evento del calendario mediante el propio formulario del calendario: so
 
 **Eliminar un evento del calendario**
 
-Elimina un evento del calendario que la persona puede gestionar (un evento de curso, o uno propio), por su id de list_events o create_event. Las fechas de las actividades se cambian en la actividad. No se puede deshacer: confírmalo antes con la persona.
+Elimina un evento del calendario que la persona puede gestionar (un evento de curso, o uno propio), por su id de list_events o create_event. Las fechas de las actividades se cambian en la actividad. No se puede deshacer: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>

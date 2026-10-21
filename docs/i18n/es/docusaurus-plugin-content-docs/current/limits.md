@@ -60,6 +60,12 @@ Así responde un asistente de solo lectura cuando le pides que califique:
 
 O una lista de ámbitos, separados por comas: `content`, `student-data`, `grading`, `communication`, `as-student`, `browser`. Por ejemplo, `content,communication` crea cursos y publica avisos, pero no lee entregas.
 
+## Confirmar lo que no se puede deshacer
+
+Algunas herramientas no se pueden deshacer: eliminar una actividad, una sección, un mensaje o una pregunta, dar de baja a alguien, reiniciar un curso, restaurar una copia de seguridad sobre un curso. Antes de que se ejecute una de ellas, moodle-mcp te pregunta él mismo, en tu aplicación: qué va a pasar, y un sí o un no. La respuesta va a moodle-mcp, nunca a la IA, así que la IA no puede saltarse la pregunta. Si dices que no, no pasa nada. Calificar no está entre ellas: una nota se puede volver a cambiar.
+
+Tu aplicación tiene que admitir estas preguntas (elicitation MCP), como hace Claude Code. En una que no las admite, estas herramientas se rechazan, salvo que tu aplicación ya te pregunte antes de cada herramienta y arranques moodle-mcp con `MOODLE_MCP_CONFIRM=client`. La referencia de herramientas dice cuáles preguntan.
+
 ## Herramientas avanzadas
 
 Algunas áreas de Moodle las usa poca gente: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenido, las notas sobre participantes y los bloques del curso. Sus 30 herramientas están desactivadas por defecto, para que no las pague cada chat. `MOODLE_MCP_ADVANCED=true` las activa, y los demás límites siguen aplicándose. `server_info` dice si están activas; el agente no puede activarlas por su cuenta.

@@ -60,6 +60,12 @@ This is how a read-only assistant answers a request to grade:
 
 Or a list of scopes, separated by commas: `content`, `student-data`, `grading`, `communication`, `as-student`, `browser`. For example, `content,communication` builds courses and posts announcements, but doesn't read submissions.
 
+## Confirming what can't be undone
+
+Some tools can't be undone: deleting an activity, a section, a post or a question, unenrolling someone, resetting a course, restoring a backup over a course. Before one of them runs, moodle-mcp asks you itself, in your app: what will happen and a yes or no. The answer goes to moodle-mcp, never to the AI, so the AI can't skip the question. If you say no, nothing happens. Grading isn't among them: a grade can be changed again.
+
+Your app needs to support these questions (MCP elicitation), as Claude Code does. In an app that doesn't, these tools are refused, unless your app already asks you before each tool and you start moodle-mcp with `MOODLE_MCP_CONFIRM=client`. The tools reference says which tools ask.
+
 ## Advanced tools
 
 Some areas of Moodle few people use: BigBlueButton, competencies, external tools (LTI), the content bank, notes about participants and course blocks. Their 30 tools are off by default, so every chat doesn't pay for them. `MOODLE_MCP_ADVANCED=true` turns them on, and the other limits still apply to them. `server_info` says whether they're on; the agent can't turn them on itself.

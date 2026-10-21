@@ -35,11 +35,12 @@ describe("loadConfig", () => {
       role: "all",
       access: "write",
       advanced: false,
+      confirm: "elicit",
       dataDir: path.join(homedir(), ".moodle-mcp"),
       sites: [{ name: "moodle.example.org", url: "https://moodle.example.org/campus/", origin: "configuration", profileDir: PROFILE }],
       activeSite: "moodle.example.org",
       limits: { scopes: ["content", "student-data", "grading", "communication", "as-student", "browser"], studentData: "pseudonymize", role: "all", access: "write" },
-      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment", scopes: "default", studentData: "default", role: "default", access: "default", advanced: "default" },
+      sources: { moodleUrl: "environment", profileDir: "environment", channel: "environment", headless: "environment", downloadBrowser: "environment", trail: "environment", scopes: "default", studentData: "default", role: "default", access: "default", advanced: "default", confirm: "default" },
     });
   });
 
@@ -53,7 +54,7 @@ describe("loadConfig", () => {
     assert.equal(config.channel, "chromium");
     assert.equal(config.headless, false);
     assert.equal(config.downloadBrowser, false);
-    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument", trail: "default", scopes: "default", studentData: "default", role: "default", access: "default", advanced: "default" });
+    assert.deepEqual(config.sources, { moodleUrl: "argument", profileDir: "default", channel: "argument", headless: "argument", downloadBrowser: "argument", trail: "default", scopes: "default", studentData: "default", role: "default", access: "default", advanced: "default", confirm: "default" });
   });
 
   it("starts without a site, and treats empty variables as unset", () => {
@@ -118,7 +119,9 @@ describe("loadConfig", () => {
   });
 
   it("rejects unknown channels, headless values and options", () => {
-    assert.throws(() => load(["--url", "http://localhost:8080", "--channel", "firefox"]), ConfigError);
+    assert.throws(() => load(["--url", "http://localhost:8080", "--channel", "safari"]), ConfigError);
+    // Playwright's own Firefox, since moodle-driver 0.11.
+    assert.equal(load(["--url", "http://localhost:8080", "--channel", "firefox"]).channel, "firefox");
     assert.throws(() => load(["--url", "http://localhost:8080"], { MOODLE_MCP_HEADLESS: "maybe" }), ConfigError);
     assert.throws(() => load(["--trail", "slow"]), ConfigError);
     assert.throws(() => load(["--password", "x"]), ConfigError);

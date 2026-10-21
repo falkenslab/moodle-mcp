@@ -51,6 +51,8 @@ export interface Config {
   access: AccessLevel;
   /** Whether the advanced tools exist (ADR-022); off unless the person turns them on. */
   advanced?: boolean;
+  /** Who confirms what can't be undone (ADR-023): the person through elicitation (default), or the client, trusted to have asked. */
+  confirm?: ConfirmMode;
   /** The server's own folder: the plugin's data folder (CLAUDE_PLUGIN_DATA) or ~/.moodle-mcp (ADR-021). */
   dataDir: string;
   /** The sites it knows; the active one's URL and profile are `moodleUrl` and `profileDir` (ADR-021). */
@@ -71,6 +73,7 @@ export interface Config {
     role: SettingSource;
     access: SettingSource;
     advanced?: SettingSource;
+    confirm?: SettingSource;
   };
   /** Settings the client passed as an unexpanded `${…}` placeholder, taken as not set (a client without the plugin's settings). */
   unexpanded?: string[];
@@ -98,7 +101,8 @@ Options (each overrides its environment variable):
                         {"name": "url" | {"url": "…"}}; the first is active
   --profile-dir <dir>   Browser profile folder (first site)  MOODLE_MCP_PROFILE_DIR (default: profile in the data folder,
                         CLAUDE_PLUGIN_DATA or ~/.moodle-mcp)
-  --channel <name>      Browser: msedge, chrome or chromium  MOODLE_MCP_CHANNEL (default: msedge, then chrome, then chromium)
+  --channel <name>      Browser: msedge, chrome, chromium    MOODLE_MCP_CHANNEL (default: msedge, then chrome, then chromium)
+                        or firefox (Playwright's, downloaded)
   --headless / --headed Run the browser without a window     MOODLE_MCP_HEADLESS (default: true)
   --no-download-browser Never download Chromium              MOODLE_MCP_DOWNLOAD_BROWSER (default: true)
   --trail <mode>        Student tools: realistic or fast     MOODLE_MCP_TRAIL (default: realistic)
@@ -113,6 +117,9 @@ Options (each overrides its environment variable):
                         or write
   --advanced            Also the advanced tools (BigBlueButton,  MOODLE_MCP_ADVANCED (default: false)
                         competencies, LTI, content bank, notes, blocks)
+  --confirm <who>       Who confirms what can't be undone: elicit MOODLE_MCP_CONFIRM (default: elicit)
+                        (the person, in their app) or client (the
+                        app asked them already)
   --help                Show this help
   --version             Show the version`;
 
@@ -191,6 +198,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         role: { type: "string" },
         access: { type: "string" },
         advanced: { type: "boolean" },
+        confirm: { type: "string" },
         help: { type: "boolean" },
         version: { type: "boolean" },
       },
@@ -219,6 +227,8 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const headless = pickBoolean(values.headed || values.headless ? !values.headed : undefined, "MOODLE_MCP_HEADLESS", env, unexpanded);
   const downloadBrowser = pickBoolean(values["no-download-browser"] ? false : undefined, "MOODLE_MCP_DOWNLOAD_BROWSER", env, unexpanded);
   const advanced = pickBoolean(values.advanced ? true : undefined, "MOODLE_MCP_ADVANCED", env, unexpanded, false);
+  const confirmSetting = pick(values.confirm, "MOODLE_MCP_CONFIRM", env, unexpanded);
+  const confirm = confirmSetting ? parseConfirm(confirmSetting.value) : "elicit";
 
   // The data folder is the plugin's when the server runs as one: each plugin its own sessions, gone with it (ADR-021).
   const dataDir = path.resolve(given(env.CLAUDE_PLUGIN_DATA, "CLAUDE_PLUGIN_DATA", unexpanded)?.trim() || path.join(homedir(), ".moodle-mcp"));
@@ -238,6 +248,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     role,
     access,
     advanced: advanced.value,
+    confirm,
     dataDir,
     sites,
     activeSite: sites[0]?.name,
@@ -254,6 +265,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       role: roleSetting?.source ?? "default",
       access: accessSetting?.source ?? "default",
       advanced: advanced.source,
+      confirm: confirmSetting?.source ?? "default",
     },
     ...(unexpanded.length > 0 && { unexpanded: [...new Set(unexpanded)] }),
   };
@@ -354,6 +366,16 @@ export function parseProfileDir(value: string, packageRoot: string = PACKAGE_ROO
 
 // Others reach the agent as aliases unless the person chooses otherwise (ADR-016).
 const DEFAULT_STUDENT_DATA: StudentDataLevel = "pseudonymize";
+
+/** Who confirms what can't be undone (ADR-023). */
+export const CONFIRM_MODES = ["elicit", "client"] as const;
+export type ConfirmMode = (typeof CONFIRM_MODES)[number];
+
+export function parseConfirm(value: string): ConfirmMode {
+  const mode = value.trim().toLowerCase();
+  if (!(CONFIRM_MODES as readonly string[]).includes(mode)) throw new ConfigError(`MOODLE_MCP_CONFIRM must be one of ${CONFIRM_MODES.join(", ")}, not "${value}".`);
+  return mode as ConfirmMode;
+}
 
 export function parseAccess(value: string): AccessLevel {
   const access = value.trim().toLowerCase();

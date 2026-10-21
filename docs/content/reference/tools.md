@@ -168,7 +168,7 @@ Make another known site the active one, by name (list_sites): every other tool w
 
 **Remove a Moodle site**
 
-Forget a site added at run time, by name, and delete its browser profile with its session. Not the active site (switch first) nor one from the person's configuration (they remove it there). Can't be undone: confirm with the person first.
+Forget a site added at run time, by name, and delete its browser profile with its session. Not the active site (switch first) nor one from the person's configuration (they remove it there). Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -388,7 +388,7 @@ Duplicate an activity right after itself, with its settings and content (not par
 
 **Delete an activity**
 
-Delete an activity from a course, with its participants' data (submissions, attempts, posts, grades). Destructive: confirm with the person first, naming the activity.
+Delete an activity from a course, with its participants' data (submissions, attempts, posts, grades). Destructive: confirm with the person first, naming the activity. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -445,7 +445,7 @@ Change a section: rename it, describe it, show or hide it (with its activities),
 
 **Delete a section**
 
-Delete a section and every activity in it, with their participants' data. Destructive: confirm with the person first, saying which activities go with it.
+Delete a section and every activity in it, with their participants' data. Destructive: confirm with the person first, saying which activities go with it. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -625,7 +625,7 @@ Show a chapter to students or hide it from them, as the table of contents' eye d
 
 **Delete a book's chapter**
 
-Delete a chapter with its files; deleting a chapter (not a subchapter) deletes its subchapters too. Returns the chapters afterwards. Can't be undone: confirm with the person first.
+Delete a chapter with its files; deleting a chapter (not a subchapter) deletes its subchapters too. Returns the chapters afterwards. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -722,7 +722,7 @@ Move a lesson's page after another (0: first), as the lesson editor's move link 
 
 **Delete a lesson's page**
 
-Delete a lesson's page. Answers of other pages that jumped to it are left as Moodle leaves them: check them with get_lesson_pages. Returns the page ids left, in order. Can't be undone: confirm with the person first.
+Delete a lesson's page. Answers of other pages that jumped to it are left as Moodle leaves them: check them with get_lesson_pages. Returns the page ids left, in order. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -793,7 +793,7 @@ Change a database field's name, description, whether it's required, or its type'
 
 **Delete a database's field**
 
-Delete a database field: what every entry has in it goes too, and its tags leave the templates. Returns the fields. Can't be undone: confirm with the person first.
+Delete a database field: what every entry has in it goes too, and its tags leave the templates. Returns the fields. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -857,7 +857,7 @@ List the presets a database activity can be given: Moodle's own (image gallery, 
 
 **Give a database a preset**
 
-Give a database activity a preset, as Moodle's "Use this preset" does: its fields are added, a field with the same name and type is kept with what entries have in it, every other field is deleted with its content, and its templates replace the database's. Returns the fields. Can delete entries' content: confirm with the person first.
+Give a database activity a preset, as Moodle's "Use this preset" does: its fields are added, a field with the same name and type is kept with what entries have in it, every other field is deleted with its content, and its templates replace the database's. Returns the fields. Can delete entries' content: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -925,7 +925,7 @@ Change a database entry through its edit form: the fields given (files too), the
 
 **Delete a database entry**
 
-Delete a database entry with its values and files. A student deletes their own while Moodle lets them change it; a teacher, anyone's. Can't be undone: confirm with the person first.
+Delete a database entry with its values and files. A student deletes their own while Moodle lets them change it; a teacher, anyone's. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1057,7 +1057,7 @@ Change a glossary entry: only what is given (attachments replaces its files, [] 
 
 **Delete a glossary entry**
 
-Delete a glossary entry with its files. A student deletes their own while the site's editing time lasts; a teacher, anyone's. Can't be undone: confirm with the person first.
+Delete a glossary entry with its files. A student deletes their own while the site's editing time lasts; a teacher, anyone's. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1324,7 +1324,7 @@ Move a feedback item to a position (from 1). Returns the items in order. Changes
 
 **Delete a feedback's question**
 
-Delete a feedback item; the answers people gave to it go with it. Returns the items left. Can't be undone: confirm with the person first.
+Delete a feedback item; the answers people gave to it go with it. Returns the items left. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1389,7 +1389,7 @@ Save a feedback activity's items as a new template: the course's own, or public 
 
 **Delete a feedback template**
 
-Delete a feedback template (a public one takes a manager's rights). Can't be undone: confirm with the person first.
+Delete a feedback template (a public one takes a manager's rights). Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1461,7 +1461,7 @@ Back a course up to a .mbz file in a local folder, through Moodle's backup wizar
 
 **Restore a course backup**
 
-Restore a .mbz backup through Moodle's restore wizard: into a new course in a category (no intoCourseId), or into an existing course, adding to its content (mode merge, the default) or replacing it (replace deletes the course's content first). Merged into a course, sectionId puts every restored activity at the end of that section, and afterSectionId the backup's sections as new ones after that one; the result names the new sections and activities, and warnings what was left broken (restrictions or links to what wasn't restored) for the person to fix. A new course takes the backup's names unless fullName and shortName are given. A backup from a newer Moodle, or with activity types this site doesn't offer, is refused. It can take minutes: Moodle does it in steps, and waits up to ten. Changes Moodle, and replace can't be undone: confirm with the person first.
+Restore a .mbz backup through Moodle's restore wizard: into a new course in a category (no intoCourseId), or into an existing course, adding to its content (mode merge, the default) or replacing it (replace deletes the course's content first). Merged into a course, sectionId puts every restored activity at the end of that section, and afterSectionId the backup's sections as new ones after that one; the result names the new sections and activities, and warnings what was left broken (restrictions or links to what wasn't restored) for the person to fix. A new course takes the backup's names unless fullName and shortName are given. A backup from a newer Moodle, or with activity types this site doesn't offer, is refused. It can take minutes: Moodle does it in steps, and waits up to ten. Changes Moodle, and replace can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1532,7 +1532,7 @@ Import activities from another course into a course, as Moodle's "Import" does: 
 
 **Reset a course for a new year**
 
-Reset a course as Moodle's reset form does: delete only what's named in delete (submissions, attempts, posts, grades… in every activity that has them), unenrol the people with unenrolRoles, move the start date (and the activities' dates with it), and set any other field of the form by name. Nothing is deleted unless named. Can't be undone: confirm every item with the person first. Returns Moodle's report.
+Reset a course as Moodle's reset form does: delete only what's named in delete (submissions, attempts, posts, grades… in every activity that has them), unenrol the people with unenrolRoles, move the start date (and the activities' dates with it), and set any other field of the form by name. Nothing is deleted unless named. Can't be undone: confirm every item with the person first. Returns Moodle's report. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1905,7 +1905,7 @@ Change a question of a bank through its type's form, with create_question's inpu
 
 **Delete questions from a bank**
 
-Delete questions from a bank, every version of each, as the bank's delete action does. Moodle doesn't delete a question a quiz uses: it hides it, and hidden lists those. Can't be undone: confirm with the person first.
+Delete questions from a bank, every version of each, as the bank's delete action does. Moodle doesn't delete a question a quiz uses: it hides it, and hidden lists those. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -1989,7 +1989,7 @@ Change a question bank's category: its name, description (HTML) or parent (movin
 
 **Delete a question category**
 
-Delete a question bank's category: its subcategories move up to its parent; one with questions needs moveTo, the category its questions go to. Moodle keeps a bank's last top-level category. Confirm with the person first.
+Delete a question bank's category: its subcategories move up to its parent; one with questions needs moveTo, the category its questions go to. Moodle keeps a bank's last top-level category. Confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -2374,7 +2374,7 @@ Change a grade item from get_gradebook_setup: move it into a category, set its w
 
 **Delete a manual grade item**
 
-Delete a manual grade item and every grade in it. An activity's item goes with its activity, so it's refused. Can't be undone: confirm with the person first.
+Delete a manual grade item and every grade in it. An activity's item goes with its activity, so it's refused. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -2428,7 +2428,7 @@ Change a grade category from get_gradebook_setup: its name, aggregation, weight 
 
 **Delete a grade category**
 
-Delete a grade category: Moodle moves what it held into its parent and deletes its total's grades; the course's own category can't be deleted. Can't be undone: confirm with the person first.
+Delete a grade category: Moodle moves what it held into its parent and deletes its total's grades; the course's own category can't be deleted. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -2600,7 +2600,7 @@ Read what completes a course, from its "Course completion" settings: activities,
 
 **Set what completes a course**
 
-Set a course's completion criteria: a criterion given replaces that kind's settings, one in remove goes, one not given stays; overall says whether all criteria or any one complete the course. Activities need completion tracking, roles the right to mark completion (get_course_completion_criteria's offered lists both). Once someone has met a criterion Moodle locks them: unlock deletes every participant's course completion data first (not their activity completion). Returns the criteria. Confirm with the person first, and twice with unlock.
+Set a course's completion criteria: a criterion given replaces that kind's settings, one in remove goes, one not given stays; overall says whether all criteria or any one complete the course. Activities need completion tracking, roles the right to mark completion (get_course_completion_criteria's offered lists both). Once someone has met a criterion Moodle locks them: unlock deletes every participant's course completion data first (not their activity completion). Returns the criteria. Confirm with the person first, and twice with unlock. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -2871,7 +2871,7 @@ Move a block to another region or place in it (weight: lower comes first). Retur
 
 **Delete a course page's block**
 
-Delete a block from a course's page, with its configuration. Can't be undone: confirm with the person first.
+Delete a block from a course's page, with its configuration. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -2950,7 +2950,7 @@ Save a content bank's content (its .h5p file) into a local folder.
 
 **Delete content from a content bank**
 
-Delete a content of a content bank. Can't be undone: confirm with the person first.
+Delete a content of a content bank. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -3012,7 +3012,7 @@ Publish a BigBlueButton recording to students, or hide it from them. Returns the
 
 **Delete a BigBlueButton recording**
 
-Delete a BigBlueButton recording. Can't be undone: confirm with the person first.
+Delete a BigBlueButton recording. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -3083,7 +3083,7 @@ Change a note's content (no aliases in it) or who sees it. Returns the note. Con
 
 **Delete a note about a participant**
 
-Delete a note. Can't be undone: confirm with the person first.
+Delete a note. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -3267,7 +3267,7 @@ Show a course's external tool in the activity chooser, or keep it out. Returns t
 
 **Delete a course's external tool**
 
-Delete one of the course's own external tools. Can't be undone: confirm with the person first.
+Delete one of the course's own external tools. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -3478,7 +3478,7 @@ Enrol users in a course by manual enrolment, as the "Enrol users" dialog does: w
 
 **Unenrol a user from a course**
 
-Unenrol someone from a course: removes every enrolment of theirs the person may remove, with their roles and group memberships in the course; removed and kept name the enrolment methods. Their work in the course stays in Moodle but they lose access. Confirm with the person first.
+Unenrol someone from a course: removes every enrolment of theirs the person may remove, with their roles and group memberships in the course; removed and kept name the enrolment methods. Their work in the course stays in Moodle but they lose access. Confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -3606,7 +3606,7 @@ Change a group's name, description, ID number or enrolment key; what isn't given
 
 **Delete a group**
 
-Delete a group; its members stay in the course. Activities set to work by groups lose it. Can't be undone: confirm with the person first.
+Delete a group; its members stay in the course. Activities set to work by groups lose it. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -3674,7 +3674,7 @@ Create a grouping in a course with Moodle's form; give it its groups with set_gr
 
 **Delete a grouping**
 
-Delete a grouping; its groups stay. Can't be undone: confirm with the person first.
+Delete a grouping; its groups stay. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -3886,7 +3886,7 @@ Change a forum post through Moodle's own form, as its author (within the site's 
 
 **Delete a forum post**
 
-Delete a forum post and its replies through Moodle's own confirmation; a discussion's first post takes the whole discussion. Only a moderator deletes someone else's post or one with replies. Can't be undone: confirm with the person first.
+Delete a forum post and its replies through Moodle's own confirmation; a discussion's first post takes the whole discussion. Only a moderator deletes someone else's post or one with replies. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -4130,7 +4130,7 @@ Change an example submission: only what is given (attachments replace those ther
 
 **Delete a workshop's example submission**
 
-Delete an example submission with its assessments (the reference one and participants' practice ones). Can't be undone: confirm with the person first.
+Delete an example submission with its assessments (the reference one and participants' practice ones). Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -4236,7 +4236,7 @@ Allocate a reviewer to a submission, as the manual allocation page's "Add review
 
 **Remove a reviewer from a workshop submission**
 
-Remove a reviewer's allocation to a submission: Moodle deletes their assessment of it. An assessment already graded is only deleted with evenIfAssessed, and its grade is lost. Returns the submission's reviewers afterwards. Confirm with the person first.
+Remove a reviewer's allocation to a submission: Moodle deletes their assessment of it. An assessment already graded is only deleted with evenIfAssessed, and its grade is lost. Returns the submission's reviewers afterwards. Confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -4481,7 +4481,7 @@ Change a calendar event through the calendar's own form: only what's given chang
 
 **Delete a calendar event**
 
-Delete a calendar event the person can manage (a course event, or their own), by its id from list_events or create_event. Activities' dates are changed in the activity instead. Can't be undone: confirm with the person first.
+Delete a calendar event the person can manage (a course event, or their own), by its id from list_events or create_event. Activities' dates are changed in the activity instead. Can't be undone: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>

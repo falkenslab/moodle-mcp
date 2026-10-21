@@ -62,10 +62,11 @@ Each setting can also be a command-line argument after the package name (such as
 | `MOODLE_MCP_STUDENT_DATA` | `--student-data` | `pseudonymize` | What the AI sees of other people: `block`, `pseudonymize` or `clear`. See [Students' privacy](./privacy.md). |
 | `MOODLE_MCP_ROLE` | `--role` | `all` | Only the tools for a role: `teacher`, `student` or `all`. See [Limiting the agent](./limits.md#your-role). |
 | `MOODLE_MCP_ACCESS` | `--access` | `write` | `read` keeps only the tools that change nothing. See [Limiting the agent](./limits.md#read-only). |
+| `MOODLE_MCP_CONFIRM` | `--confirm` | `elicit` | Who confirms what can't be undone: `elicit` (you, in your app) or `client` (your app asks you before each tool already). See [Limiting the agent](./limits.md#confirming-what-cant-be-undone). |
 | `MOODLE_MCP_ADVANCED` | `--advanced` | `false` | `true` adds the advanced tools: BigBlueButton, competencies, external tools (LTI), the content bank, notes and course blocks. See [Limiting the agent](./limits.md#advanced-tools). |
 | `MOODLE_MCP_SCOPES` | `--scopes` | `all` | The kinds of tools: a profile or a list of scopes. See [Limiting the agent](./limits.md#scopes). |
 | `MOODLE_MCP_PROFILE_DIR` | `--profile-dir` | `~/.moodle-mcp/profile` | The browser profile folder that keeps your session (the first site's, with several). Inside a Claude Code plugin, the plugin's data folder holds it instead. |
-| `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome, then Chromium | Which browser to use: `msedge`, `chrome` or `chromium`. |
+| `MOODLE_MCP_CHANNEL` | `--channel` | Edge, then Chrome, then Chromium | Which browser to use: `msedge`, `chrome`, `chromium` or `firefox` (Playwright's own Firefox, downloaded the first time, never the one you have installed). |
 | `MOODLE_MCP_HEADLESS` | `--headless` / `--headed` | `true` | `false` works with a visible window all the time. Logging in always shows one. |
 | `MOODLE_MCP_DOWNLOAD_BROWSER` | `--no-download-browser` | `true` | `false` never downloads Chromium when there's no Edge or Chrome. |
 | `MOODLE_MCP_TRAIL` | `--trail` | `realistic` | Activities done as a student: `realistic` (real pages, at a reader's pace, so Moodle records views and completion) or `fast`. |
