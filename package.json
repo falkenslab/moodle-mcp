@@ -51,7 +51,7 @@
   ],
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@falkenslab/moodle-driver": "^0.11.0",
+    "@falkenslab/moodle-driver": "^0.12.0",
     "@falkenslab/pseudonym": "^0.2.1",
     "@modelcontextprotocol/sdk": "^1.32.1",
     "@types/node": "^20.19.0",

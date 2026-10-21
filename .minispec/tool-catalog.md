@@ -157,6 +157,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_quiz_results` | Attempts, grades and per-question marks | R | Page (`report.php?mode=overview`) | T quiz overview read | Done |
 | `get_quiz_structure` | A quiz's slots, pages and questions | R | Page (`mod/quiz/edit.php`) | T 13 quiz editor loads | Done |
 | `list_question_banks` | Banks of a course (per quiz and shared, 5.x) | R | Page (`question/banks.php`) | T bank navigation | Done |
+| `list_question_types` | The question types the site has enabled, plugins marked | R | Page (the bank's question chooser) | T before choosing a question type (#49) | Done |
 | `list_questions` | Questions in a bank with type and status | R | Fragment (`core_question` `question_data`) | T | Done |
 | `import_questions` | Import GIFT or Moodle XML into a bank | W | Form (question import page, with upload) | T quiz left empty after failing the type chooser; GIFT researched | Done |
 | `create_question` | One question of a given type | W | Form (`question/bank/editquestion/question.php`) | T failed twice | Done |

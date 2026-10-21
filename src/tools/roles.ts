@@ -121,6 +121,7 @@ const TEACHER = [
   "import_activities",
   "reset_course",
   "list_question_banks",
+  "list_question_types",
   "list_questions",
   "validate_gift",
   "import_questions",

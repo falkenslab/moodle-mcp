@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **266 herramientas**, 265 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **267 herramientas**, 266 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -1739,6 +1739,7 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
 | --- | --- | :-: | :-: | :-: |
 | [`list_question_banks`](#list-question-banks) | Listar los bancos de preguntas de un curso | ✓ | ✓ |  |
+| [`list_question_types`](#list-question-types) | Listar los tipos de pregunta que ofrece el sitio | ✓ | ✓ |  |
 | [`list_questions`](#list-questions) | Listar las preguntas de un banco | ✓ | ✓ |  |
 | [`validate_gift`](#validate-gift) | Comprobar preguntas GIFT antes de importarlas | ✓ | ✓ |  |
 | [`import_questions`](#import-questions) | Importar preguntas a un banco |  | ✓ |  |
@@ -1776,6 +1777,21 @@ Lista los bancos de preguntas de un curso: sus bancos compartidos (utilizables p
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `courseId` | ✅ | entero |  |
+
+</details>
+
+### `list_question_types` {#list-question-types}
+
+**Listar los tipos de pregunta que ofrece el sitio**
+
+Lista los tipos de pregunta que tiene activados el sitio, tal como te los ofrece el selector «Crear una nueva pregunta» del banco: el nombre interno de cada uno (el tipo que recibe create_question), el nombre y la descripción que muestra Moodle, si es un plugin y su grupo ("question" para los tipos que preguntan algo, "other" para una descripción). Consúltalo antes de elegir un tipo de pregunta: puede tener más tipos de los que create_question sabe crear (21) o menos, y funciona en un curso que aún no tiene preguntas. Vacío si puedes ver el banco pero no añadirle preguntas. Recibe el id del banco de list_question_banks.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | entero | El id del banco (un id de módulo del curso), tal como lo da list_question_banks |
 
 </details>
 

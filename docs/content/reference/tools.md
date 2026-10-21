@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **266 tools**, 265 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **267 tools**, 266 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -1739,6 +1739,7 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 | Tool | Description | Read only | Teacher | Student |
 | --- | --- | :-: | :-: | :-: |
 | [`list_question_banks`](#list-question-banks) | List a course's question banks | ✓ | ✓ |  |
+| [`list_question_types`](#list-question-types) | List the question types the site offers | ✓ | ✓ |  |
 | [`list_questions`](#list-questions) | List a bank's questions | ✓ | ✓ |  |
 | [`validate_gift`](#validate-gift) | Check GIFT questions before importing them | ✓ | ✓ |  |
 | [`import_questions`](#import-questions) | Import questions into a bank |  | ✓ |  |
@@ -1776,6 +1777,21 @@ List the question banks of a course: its shared banks (usable by any quiz in the
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `courseId` | ✅ | integer |  |
+
+</details>
+
+### `list_question_types` {#list-question-types}
+
+**List the question types the site offers**
+
+List the question types the site has enabled, as the bank's "Create a new question" chooser offers them to you: each one's internal name (the type create_question takes), the name and description Moodle shows, whether it's a plugin, and its group ("question" for the types that ask something, "other" for a description). Check it before choosing a question type: it may hold more types than create_question can make (21 of them) or fewer, and it works in a course with no questions yet. Empty when you may see the bank but not add questions to it. Takes the bank id from list_question_banks.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `bankId` | ✅ | integer | The bank's id (a course module id), as list_question_banks gives it |
 
 </details>
 

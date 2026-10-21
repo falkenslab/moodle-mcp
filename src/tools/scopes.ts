@@ -161,6 +161,7 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   get_activity_settings: ["activitySettings"],
   update_course: ["updateCourse"],
   list_question_banks: ["questionBanks"],
+  list_question_types: ["questionTypes"],
   list_questions: ["questions"],
   import_questions: ["importQuestions"],
   create_question: ["createQuestion"],

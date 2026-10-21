@@ -1095,6 +1095,14 @@
       "courseId": ""
     }
   },
+  "list_question_types": {
+    "source": "feb3ebcdc628",
+    "title": "Listar los tipos de pregunta que ofrece el sitio",
+    "description": "Lista los tipos de pregunta que tiene activados el sitio, tal como te los ofrece el selector «Crear una nueva pregunta» del banco: el nombre interno de cada uno (el tipo que recibe create_question), el nombre y la descripción que muestra Moodle, si es un plugin y su grupo (\"question\" para los tipos que preguntan algo, \"other\" para una descripción). Consúltalo antes de elegir un tipo de pregunta: puede tener más tipos de los que create_question sabe crear (21) o menos, y funciona en un curso que aún no tiene preguntas. Vacío si puedes ver el banco pero no añadirle preguntas. Recibe el id del banco de list_question_banks.",
+    "inputs": {
+      "bankId": "El id del banco (un id de módulo del curso), tal como lo da list_question_banks"
+    }
+  },
   "list_questions": {
     "source": "c125ca4ab2e8",
     "title": "Listar las preguntas de un banco",

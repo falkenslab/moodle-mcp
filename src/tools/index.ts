@@ -41,7 +41,7 @@ import { registerLogin } from "./login.js";
 import { registerLogout } from "./logout.js";
 import { registerGetConversation, registerListConversations, registerListNotifications, registerMarkNotificationsRead, registerMessageParticipants, registerSendMessage } from "./messaging.js";
 import { registerAnswerQuizQuestions, registerFinishQuizAttempt, registerGetAttemptReview, registerGetQuizAttempt, registerGetQuizInfo, registerStartQuizAttempt } from "./quizAttempts.js";
-import { registerCreateQuestion, registerDeleteQuestions, registerImportQuestions, registerListQuestionBanks, registerListQuestions, registerSetQuestionStatus, registerUpdateQuestion } from "./questionBank.js";
+import { registerCreateQuestion, registerDeleteQuestions, registerImportQuestions, registerListQuestionBanks, registerListQuestionTypes, registerListQuestions, registerSetQuestionStatus, registerUpdateQuestion } from "./questionBank.js";
 import { registerAddQuestionsToQuiz, registerAddQuizSection, registerEditQuizSlot, registerGetQuizStructure, registerRemoveQuizSlot, registerSetQuizPages } from "./quizStructure.js";
 import { registerGetScorm, registerOpenScorm } from "./scorm.js";
 import { registerServerInfo } from "./serverInfo.js";
@@ -285,6 +285,7 @@ export const TOOLS: RegisterTool[] = [
   registerImportActivities,
   registerResetCourse,
   registerListQuestionBanks,
+  registerListQuestionTypes,
   registerListQuestions,
   registerValidateGift,
   registerImportQuestions,

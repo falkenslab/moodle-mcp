@@ -1,6 +1,6 @@
 // The question bank tools: banks, their questions, importing and creating questions.
 import { z } from "zod";
-import { QUESTION_TYPES, createQuestion, deleteQuestions, importQuestions, questionBanks, questions, setQuestionStatus, updateQuestion } from "@falkenslab/moodle-driver";
+import { QUESTION_TYPES, createQuestion, deleteQuestions, importQuestions, questionBanks, questionTypes, questions, setQuestionStatus, updateQuestion } from "@falkenslab/moodle-driver";
 import { formSettings } from "./courseSettings.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
@@ -107,6 +107,30 @@ export const registerListQuestionBanks: RegisterTool = (server, { config, browse
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ courseId }) => reply({ banks: await questionBanks(...(await onSite(config, browser)), courseId) }),
+  );
+};
+
+export const registerListQuestionTypes: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "list_question_types",
+    {
+      title: "List the question types the site offers",
+      description: `List the question types the site has enabled, as the bank's "Create a new question" chooser offers them to you: each one's internal name (the type create_question takes), the name and description Moodle shows, whether it's a plugin, and its group ("question" for the types that ask something, "other" for a description). Check it before choosing a question type: it may hold more types than create_question can make (${QUESTION_TYPES.length} of them) or fewer, and it works in a course with no questions yet. Empty when you may see the bank but not add questions to it. Takes the bank id from list_question_banks.`,
+      inputSchema: { bankId },
+      outputSchema: {
+        types: z.array(
+          z.object({
+            type: z.string().describe('Moodle\'s internal name: "multichoice", "coderunner"…'),
+            name: z.string().describe("The name Moodle shows, in the site's language"),
+            summary: z.string(),
+            plugin: z.boolean().describe("An installed plugin, not one of Moodle's own types"),
+            group: z.enum(["question", "other"]),
+          }),
+        ),
+      },
+      annotations: { readOnlyHint: true, openWorldHint: true },
+    },
+    async ({ bankId }) => reply({ types: await questionTypes(...(await onSite(config, browser)), bankId) }),
   );
 };
 
