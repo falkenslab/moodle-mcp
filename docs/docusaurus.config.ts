@@ -42,13 +42,18 @@ const config: Config = {
               ? `https://github.com/falkenslab/moodle-mcp/edit/main/docs/content/${docPath}`
               : `https://github.com/falkenslab/moodle-mcp/edit/main/docs/i18n/${locale}/docusaurus-plugin-content-docs/current/${docPath}`,
           ...(released && {
-            versions: { current: { label: "Next (unreleased)", path: "next", banner: "unreleased" } },
+            versions: { current: { label: "Next", path: "next", banner: "unreleased" } },
           }),
         },
         blog: false,
         theme: { customCss: "./src/css/custom.css" },
       } satisfies Preset.Options,
     ],
+  ],
+
+  // Falken's Lab's faces (the falkenslab-site-style look: src/css/custom.css).
+  stylesheets: [
+    { href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" },
   ],
 
   themes: [
@@ -66,44 +71,33 @@ const config: Config = {
       title: "moodle-mcp",
       logo: { alt: "moodle-mcp", src: "img/logo.svg" },
       items: [
-        { type: "docSidebar", sidebarId: "guide", position: "left", label: "Guide" },
+        { type: "doc", docId: "getting-started/requirements", position: "left", label: "Get started" },
         { type: "doc", docId: "use-cases/index", position: "left", label: "Use cases" },
+        { type: "doc", docId: "privacy", position: "left", label: "Privacy" },
+        { type: "doc", docId: "limits", position: "left", label: "Limits" },
+        { type: "doc", docId: "settings", position: "left", label: "Settings" },
         { type: "doc", docId: "reference/tools", position: "left", label: "Tools" },
+        {
+          type: "dropdown",
+          label: "More",
+          position: "left",
+          items: [
+            { type: "doc", docId: "intro", label: "What is moodle-mcp?" },
+            { type: "doc", docId: "several-sites", label: "Several sites" },
+            { type: "doc", docId: "troubleshooting", label: "Troubleshooting" },
+            { type: "doc", docId: "releases", label: "Releases" },
+            { type: "doc", docId: "developers/index", label: "For developers" },
+            { href: "https://www.npmjs.com/package/@falkenslab/moodle-mcp", label: "npm" },
+          ],
+        },
         { type: "docsVersionDropdown", position: "right" },
         { type: "localeDropdown", position: "right" },
-        { href: "https://www.npmjs.com/package/@falkenslab/moodle-mcp", label: "npm", position: "right" },
-        { href: "https://github.com/falkenslab/moodle-mcp", label: "GitHub", position: "right" },
+        { href: "https://github.com/falkenslab/moodle-mcp", position: "right", className: "header-github-link", "aria-label": "GitHub" },
       ],
     },
+    // Only the signature (falkenslab-docs): the sections are in the navbar.
     footer: {
-      style: "dark",
-      links: [
-        {
-          title: "Documentation",
-          items: [
-            { label: "Getting started", to: "/getting-started/requirements" },
-            { label: "Use cases", to: "/use-cases" },
-            { label: "Students' privacy", to: "/privacy" },
-            { label: "Releases", to: "/releases" },
-          ],
-        },
-        {
-          title: "Project",
-          items: [
-            { label: "GitHub", href: "https://github.com/falkenslab/moodle-mcp" },
-            { label: "Issues", href: "https://github.com/falkenslab/moodle-mcp/issues" },
-            { label: "npm", href: "https://www.npmjs.com/package/@falkenslab/moodle-mcp" },
-          ],
-        },
-        {
-          title: "Related",
-          items: [
-            { label: "moodle-driver", href: "https://falkenslab.github.io/moodle-driver/" },
-            { label: "Model Context Protocol", href: "https://modelcontextprotocol.io" },
-            { label: "Moodle", href: "https://moodle.org" },
-          ],
-        },
-      ],
+      style: "light",
       copyright: "Made with 💖 by Falken's Lab Team",
     },
     prism: {

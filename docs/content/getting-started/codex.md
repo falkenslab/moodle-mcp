@@ -88,6 +88,25 @@ Start Codex (`codex` in a terminal) and ask:
 
 The first time, a browser window opens at your Moodle login page: log in as usual. See [Logging in the first time](./first-login.md). Inside Codex, `/mcp` lists the servers and their tools.
 
+## Other ways to add it
+
+### By hand
+
+Instead of `codex mcp add`, write the `[mcp_servers.moodle]` section of step 3 in `config.toml` yourself. Codex reads it in each new session.
+
+### The plugin
+
+Falken's Lab's marketplace has moodle-mcp as a Codex plugin, with skills that say how to do each job well: **moodle-teacher** for the courses you teach, **moodle-student** for those you take. Add the marketplace once, from a terminal:
+
+```bash
+codex plugin marketplace add falkenslab/agent-extensions
+```
+
+Then install one inside Codex with `/plugins`, or from the terminal with `codex plugin add moodle-teacher@falkenslab`.
+
+- Codex has no plugin settings, so the first time the agent asks you for your Moodle's address in the chat.
+- Codex keeps one server per name, and both plugins call theirs `moodle`, so enable only one of them, and not together with the server of step 1.
+
 ## Approving tool calls
 
 Codex asks you before each moodle-mcp tool that changes something in Moodle. To let it run moodle-mcp's tools without asking, add this line to the `[mcp_servers.moodle]` section:

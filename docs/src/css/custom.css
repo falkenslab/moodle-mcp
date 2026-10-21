@@ -1,26 +1,135 @@
-/* Moodle's orange for links and buttons, a deeper shade on white so text stays readable. */
+/*
+ * Falken's Lab's look for a Docusaurus site (src/css/custom.css): the same tokens as site.css, mapped
+ * onto Infima. Load Inter and JetBrains Mono in docusaurus.config's `stylesheets` (see SKILL.md).
+ */
 :root {
-  --ifm-color-primary: #c45a00;
-  --ifm-color-primary-dark: #b05100;
-  --ifm-color-primary-darker: #a74d00;
-  --ifm-color-primary-darkest: #893f00;
-  --ifm-color-primary-light: #d86300;
-  --ifm-color-primary-lighter: #e26800;
-  --ifm-color-primary-lightest: #f98012;
-  --ifm-code-font-size: 92%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --fl-accent: #e5483a;
+  --fl-accent-hover: #c93b2e;
+  --fl-accent-soft: rgba(229, 72, 58, 0.08);
+  --fl-glow: rgba(229, 72, 58, 0.1);
+  --fl-line: #e7e9ee;
+  --fl-panel: #ffffff;
+  --fl-bg-2: #f7f8fa;
+  --fl-text-2: #4b5260;
+  --fl-button-2: #eceef2;
+  --fl-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
+  --fl-shadow-lift: 0 2px 4px rgba(16, 24, 40, 0.05), 0 16px 40px rgba(16, 24, 40, 0.1);
+
+  --ifm-color-primary: #e5483a;
+  --ifm-color-primary-dark: #dd3526;
+  --ifm-color-primary-darker: #d33224;
+  --ifm-color-primary-darkest: #ad291e;
+  --ifm-color-primary-light: #e85c50;
+  --ifm-color-primary-lighter: #ea665b;
+  --ifm-color-primary-lightest: #ef857c;
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-font-color-base: #1c1e21;
+  --ifm-font-family-base: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ifm-font-family-monospace: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --ifm-heading-font-weight: 800;
+  --ifm-code-font-size: 90%;
+  --ifm-code-background: #f4f5f8;
+  --ifm-code-border-radius: 6px;
+  --ifm-global-radius: 10px;
+  --ifm-card-border-radius: 16px;
+  --ifm-navbar-height: 60px;
+  --ifm-navbar-shadow: none;
+  --ifm-toc-border-color: var(--fl-line);
+  --ifm-hr-background-color: var(--fl-line);
+  --docusaurus-highlighted-code-line-bg: rgba(229, 72, 58, 0.1);
 }
 
 [data-theme="dark"] {
-  --ifm-color-primary: #f98012;
-  --ifm-color-primary-dark: #ef7206;
-  --ifm-color-primary-darker: #e16c06;
-  --ifm-color-primary-darkest: #b95905;
-  --ifm-color-primary-light: #fa8f2f;
-  --ifm-color-primary-lighter: #fa973d;
-  --ifm-color-primary-lightest: #fbac67;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --fl-accent: #ff6b57;
+  --fl-accent-hover: #ff8574;
+  --fl-accent-soft: rgba(255, 107, 87, 0.12);
+  --fl-glow: rgba(255, 107, 87, 0.12);
+  --fl-line: #232836;
+  --fl-panel: #141821;
+  --fl-bg-2: #10131a;
+  --fl-text-2: #b3bac7;
+  --fl-button-2: #1e2430;
+  --fl-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --fl-shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.5);
+
+  --ifm-color-primary: #ff6b57;
+  --ifm-color-primary-dark: #ff5139;
+  --ifm-color-primary-darker: #ff442a;
+  --ifm-color-primary-darkest: #fb1d00;
+  --ifm-color-primary-light: #ff8575;
+  --ifm-color-primary-lighter: #ff9284;
+  --ifm-color-primary-lightest: #ffb9b0;
+  --ifm-background-color: #0b0d12;
+  --ifm-background-surface-color: #141821;
+  --ifm-font-color-base: #eceff4;
+  --ifm-code-background: #181c26;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 107, 87, 0.14);
 }
+
+/* The top bar: translucent over the page, a line under it, the brand in the mono face. */
+.navbar {
+  background: color-mix(in srgb, var(--ifm-background-color) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--fl-line);
+}
+.navbar__title {
+  font-family: var(--ifm-font-family-monospace);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.navbar__link { font-weight: 500; white-space: nowrap; }
+.navbar__item { padding: 0 10px; }
+.navbar__title { white-space: nowrap; }
+.navbar__brand { flex-shrink: 0; }
+/* Docusaurus marks every doc link of the current sidebar active; the sidebar already says where you are. */
+.navbar__items:not(.navbar__items--right) > .navbar__link--active { color: var(--ifm-navbar-link-color); }
+.navbar__items:not(.navbar__items--right) > .navbar__link--active:hover { color: var(--ifm-navbar-link-hover-color); }
+
+/* Headings: tight and heavy, as the pages' hero titles. */
+h1, h2, h3 { letter-spacing: -0.03em; text-wrap: balance; }
+.markdown h1:first-child { font-weight: 900; letter-spacing: -0.045em; }
+
+/* Buttons: the accent, flat, 8px corners, bold. */
+.button { border-radius: 8px; font-weight: 700; }
+.button--primary { --ifm-button-background-color: var(--fl-accent); --ifm-button-border-color: var(--fl-accent); }
+.button--primary:hover { --ifm-button-background-color: var(--fl-accent-hover); --ifm-button-border-color: var(--fl-accent-hover); }
+.button.button--secondary:not(.button--outline) { --ifm-button-background-color: var(--fl-button-2); --ifm-button-border-color: var(--fl-line); --ifm-button-color: var(--ifm-font-color-base); color: var(--ifm-font-color-base); }
+
+/* Cards and admonitions: panels with a hairline and a soft shadow. */
+.card, .alert { border: 1px solid var(--fl-line); box-shadow: var(--fl-shadow); }
+.card:hover { box-shadow: var(--fl-shadow-lift); }
+.alert { border-left-width: 3px; }
+.alert--info { border-left-color: var(--fl-accent); }
+
+/* Tables: hairlines, a quiet header. */
+.markdown table { border-collapse: separate; border-spacing: 0; border: 1px solid var(--fl-line); border-radius: 12px; overflow: hidden; }
+.markdown table thead tr { background: var(--fl-bg-2); }
+.markdown table th, .markdown table td { border: 0; border-top: 1px solid var(--fl-line); }
+.markdown table thead th { border-top: 0; }
+
+/* Inline code: a chip with a hairline. */
+.markdown code:not(pre code) { border: 1px solid var(--fl-line); padding: 0.1em 0.35em; }
+
+/* Tabs: underlined in the accent, as the pages' install card. */
+.tabs__item--active { border-bottom-color: var(--fl-accent); color: var(--fl-accent); }
+
+/* The footer: the signature alone, quiet, on a hairline. */
+.footer { background: var(--ifm-background-color); border-top: 1px solid var(--fl-line); }
+.footer__copyright { color: var(--ifm-color-emphasis-600); font-size: 14px; }
+
+/* A home page's hero (src/pages/index): the eyebrow, the heavy title, the radial glow. */
+.fl-hero { position: relative; text-align: center; padding: 84px 20px 36px; overflow: hidden; }
+.fl-hero::before { content: ""; position: absolute; inset: 0 0 auto; height: 560px; background: radial-gradient(55% 70% at 50% 0%, var(--fl-glow), transparent 72%); pointer-events: none; }
+.fl-hero > * { position: relative; }
+.fl-eyebrow { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fl-accent); padding-bottom: 6px; border-bottom: 2px solid var(--fl-accent); }
+.fl-hero > h1 { margin: 22px auto 0; max-width: 16ch; font-size: clamp(40px, 7vw, 72px); line-height: 1.02; font-weight: 900; letter-spacing: -0.045em; }
+.fl-hero > p { margin: 22px auto 0; max-width: 60ch; font-size: clamp(17px, 2vw, 20px); color: var(--fl-text-2); }
+.fl-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; max-width: 1000px; margin: 64px auto 0; text-align: left; }
+.fl-card { background: var(--fl-panel); border: 1px solid var(--fl-line); border-radius: 14px; padding: 18px 20px; box-shadow: var(--fl-shadow); }
+.fl-card .icon { font-size: 26px; line-height: 1; }
+.fl-card h3 { margin: 10px 0 6px; font-size: 17px; }
+.fl-card p { margin: 0; font-size: 15px; color: var(--fl-text-2); }
 
 /* The tools reference's inputs: a quiet box, not the info alert Docusaurus gives every <details>. */
 .alert.tool-inputs {
@@ -31,3 +140,14 @@
   --docusaurus-details-decoration-color: var(--ifm-color-emphasis-600);
   box-shadow: none;
 }
+
+/* The navbar's GitHub link: the mark alone, as the pages' top bar. */
+.header-github-link::before {
+  content: "";
+  display: flex;
+  width: 22px;
+  height: 22px;
+  background-color: var(--ifm-navbar-link-color);
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+.header-github-link:hover::before { background-color: var(--ifm-navbar-link-hover-color); }

@@ -26,5 +26,45 @@
   "item.label.GitHub": {
     "message": "GitHub",
     "description": "Navbar item with label GitHub"
+  },
+  "item.label.Get started": {
+    "message": "Empezar",
+    "description": "Navbar item with label Get started"
+  },
+  "item.label.Privacy": {
+    "message": "Privacidad",
+    "description": "Navbar item with label Privacy"
+  },
+  "item.label.Limits": {
+    "message": "Límites",
+    "description": "Navbar item with label Limits"
+  },
+  "item.label.Settings": {
+    "message": "Ajustes",
+    "description": "Navbar item with label Settings"
+  },
+  "item.label.More": {
+    "message": "Más",
+    "description": "Navbar item with label More"
+  },
+  "item.label.What is moodle-mcp?": {
+    "message": "¿Qué es moodle-mcp?",
+    "description": "Navbar item with label What is moodle-mcp?"
+  },
+  "item.label.Several sites": {
+    "message": "Varios sitios",
+    "description": "Navbar item with label Several sites"
+  },
+  "item.label.Troubleshooting": {
+    "message": "Solución de problemas",
+    "description": "Navbar item with label Troubleshooting"
+  },
+  "item.label.Releases": {
+    "message": "Versiones",
+    "description": "Navbar item with label Releases"
+  },
+  "item.label.For developers": {
+    "message": "Para desarrolladores",
+    "description": "Navbar item with label For developers"
   }
 }

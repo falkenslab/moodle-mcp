@@ -7,7 +7,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Getting started",
       collapsed: false,
-      items: ["getting-started/requirements", "getting-started/claude-code", "getting-started/claude-desktop", "getting-started/codex", "getting-started/first-login", "getting-started/watching"],
+      items: ["getting-started/requirements", "getting-started/claude-code", "getting-started/claude-desktop", "getting-started/codex", "getting-started/agent-kit", "getting-started/first-login", "getting-started/watching"],
     },
     {
       type: "category",

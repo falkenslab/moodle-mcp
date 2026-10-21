@@ -48,8 +48,28 @@ MOODLE_URL = "https://campus.example.org"
 MOODLE_MCP_ROLE = "teacher"
 ```
 
+Or `--env NAME=value` for each, when you add it with `codex mcp add`.
+
+</TabItem>
+<TabItem value="agent-kit" label="agent-kit">
+
+The moodle-teacher and moodle-student extensions ask for theirs when installed: `sites`, `headless`, `access` and `student_data` (see [agent-kit](./getting-started/agent-kit.md#its-settings)). An agent of your own gives any of these in its server's `env`.
+
 </TabItem>
 </Tabs>
+
+The Claude Code plugins ask for the same four as agent-kit's extensions; the Codex plugins have none, so the agent asks for your site in the chat.
+
+## Changing them later
+
+| Where you added it | How to change a setting |
+| --- | --- |
+| Claude Code, with `claude mcp add` | `claude mcp remove moodle` and add it again; or edit its `env` in `~/.claude.json` or `.mcp.json` and reconnect it in `/mcp` |
+| Claude Code, the plugin | `/plugin`, then the plugin's settings |
+| Claude Desktop | Edit `claude_desktop_config.json`, then quit and open Claude Desktop |
+| Codex | Edit `[mcp_servers.moodle.env]` in `~/.codex/config.toml`; a new session takes it |
+| agent-kit | `/extensions config moodle-teacher access=read` in the chat (it applies there and then), or `<agent> extension config moodle-teacher access=read` in a terminal |
+| Any of them, during a chat | Ask the agent: see [Changing settings during a chat](#changing-settings-during-a-chat) |
 
 Each setting can also be a command-line argument after the package name (such as `npx -y @falkenslab/moodle-mcp --role teacher`). If both are given, the argument wins.
 

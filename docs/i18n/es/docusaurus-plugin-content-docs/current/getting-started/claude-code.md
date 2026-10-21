@@ -101,12 +101,71 @@ Deja fuera de esa lista las herramientas que cambian Moodle (calificar, publicar
 Si solo das clase, o solo estudias, dile a moodle-mcp tu rol: Claude recibe solo las herramientas para ese rol y las elige mejor. Añade `-e MOODLE_MCP_ROLE=teacher` (o `student`) al comando del paso 1. Consulta [Limitar lo que puede hacer el agente](../limits.md).
 :::
 
+## Otras formas de añadirlo
+
+### Desde dentro de Claude Code: el plugin
+
+El marketplace de Falken's Lab tiene moodle-mcp como plugin de Claude Code, con skills que explican cómo hacer bien cada tarea: **moodle-teacher** para los cursos que impartes y **moodle-student** para los que cursas. En Claude Code:
+
+```text
+/plugin marketplace add falkenslab/agent-extensions
+/plugin install moodle-teacher@falkenslab
+```
+
+Te pide tus sitios Moodle (`nombre=dirección`, como `instituto=https://campus.miinstituto.org`), si el navegador trabaja sin verse, el acceso de solo lectura y cómo llegan los datos del alumnado. Los cambias después en `/plugin`. Lo mismo desde un terminal: `claude plugin marketplace add falkenslab/agent-extensions` y luego `claude plugin install moodle-teacher@falkenslab`.
+
+Usa el plugin o el servidor del paso 1, no los dos: serían dos copias de las mismas herramientas.
+
+### A mano: el fichero de configuración
+
+Claude Code lee sus servidores de dos ficheros:
+
+- `.mcp.json` en la carpeta de un proyecto: solo ahí, y puede ir en el repositorio del proyecto. Claude Code te pide que confíes en él la primera vez;
+- `~/.claude.json` (`%USERPROFILE%.claude.json` en Windows), bajo `mcpServers`: todas las carpetas. Es donde escribe `--scope user`.
+
+<Tabs groupId="os">
+<TabItem value="mac-linux" label="macOS y Linux" default>
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "moodle": {
+      "command": "npx",
+      "args": ["-y", "@falkenslab/moodle-mcp"],
+      "env": { "MOODLE_URL": "https://campus.example.org" }
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="windows" label="Windows">
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "moodle": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@falkenslab/moodle-mcp"],
+      "env": { "MOODLE_URL": "https://campus.example.org" }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+Los demás [ajustes](../settings.md) van en `env`. Claude Code lee el fichero al arrancar, o cuando reconectas el servidor en `/mcp`.
+
 ## Cambiarlo o quitarlo
 
-Para cambiar un ajuste, quita el servidor y vuelve a añadirlo con los valores nuevos:
+Para cambiar un ajuste, edita su `env` en el fichero, o quita el servidor y vuelve a añadirlo con los valores nuevos:
 
 ```bash
 claude mcp remove moodle --scope user
 ```
+
+Los ajustes de un plugin se cambian en `/plugin`, y `/plugin uninstall moodle-teacher@falkenslab` lo quita.
 
 Para usar una versión concreta en lugar de la última, escríbela después del nombre del paquete: `@falkenslab/moodle-mcp@0.1.0`.

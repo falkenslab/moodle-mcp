@@ -33,7 +33,7 @@
     "message": "Claude, Codex y más"
   },
   "home.feature.clients.text": {
-    "message": "Funciona con Claude Code, Claude Desktop, Codex y cualquier aplicación compatible con MCP, en Windows, macOS y Linux, con cualquier sitio Moodle 5."
+    "message": "Funciona con Claude Code, Claude Desktop, Codex, los agentes hechos con agent-kit y cualquier app compatible con MCP, en Windows, macOS y Linux, con Moodle 4.5 y 5.x."
   },
   "home.title": {
     "message": "Tu agente de IA en Moodle"
@@ -427,5 +427,224 @@
   "terminal.copy": {
     "message": "Copiar",
     "description": "The button that copies a terminal's commands"
+  },
+  "home.install.plugin": {
+    "message": "{teacher} es el plugin para los cursos que impartes y {student} para los que cursas: el mismo servidor, con skills que explican cómo hacer bien cada tarea. Te pide tus sitios Moodle al instalarlo."
+  },
+  "home.install.claudeCode.cli": {
+    "message": "En un terminal, con la dirección de tu Moodle. {scope} lo deja disponible en todas las carpetas."
+  },
+  "home.install.claudeCode.agent": {
+    "message": "Dentro de Claude Code, como plugin del marketplace de Falken's Lab:"
+  },
+  "home.install.claudeCode.file": {
+    "message": "En {project}, en la carpeta de un proyecto (solo ahí; Claude te pide que confíes en él una vez), o bajo {key} en {user} (todas las carpetas):"
+  },
+  "home.install.claudeDesktop.file": {
+    "message": "{path} abre {file}. Añade esto, cierra Claude Desktop y vuelve a abrirlo:"
+  },
+  "home.install.codex.cli": {
+    "message": "En un terminal, con la dirección de tu Moodle. Codex CLI, su extensión de VS Code y la app de Codex lo comparten."
+  },
+  "home.install.codex.timeouts": {
+    "message": "Después dale más tiempo para arrancar y para trabajar: las dos líneas de tiempo del fichero de configuración (A mano)."
+  },
+  "home.install.codex.agent": {
+    "message": "Añade el marketplace de Falken's Lab una vez, e instala el plugin desde dentro de Codex con {plugins}:"
+  },
+  "home.install.codex.plugin": {
+    "message": "Elige {teacher} o {student}, solo uno de los dos. Codex no tiene ajustes de plugins: el agente te pide la dirección de tu Moodle en el chat."
+  },
+  "home.install.codex.file": {
+    "message": "En {file}, con tiempo para arrancar y para trabajar:"
+  },
+  "home.install.agentKit.cli": {
+    "message": "Los agentes hechos con {kit}, el kit de Falken's Lab, lo instalan como extensión con su propio comando: miyagi para el profesorado, padawan para el alumnado, o el tuyo."
+  },
+  "home.install.agentKit.marketplace": {
+    "message": "Un agente cuyo marketplace propio no es el de Falken's Lab lo añade antes: {command}."
+  },
+  "home.install.agentKit.agent": {
+    "message": "En el chat del agente, y ya está en la misma conversación:"
+  },
+  "home.install.agentKit.file": {
+    "message": "En el código de un agente propio, entre sus servidores MCP:"
+  },
+  "home.install.method.cli": {
+    "message": "Línea de comandos"
+  },
+  "home.install.method.agent": {
+    "message": "Desde el agente"
+  },
+  "home.install.method.file": {
+    "message": "A mano"
+  },
+  "home.install.how": {
+    "message": "Cómo"
+  },
+  "home.install.os": {
+    "message": "Sistema operativo"
+  },
+  "home.install.next": {
+    "message": "Después pide «Lista mis cursos de Moodle»: se abre una ventana del navegador para que inicies sesión, una vez."
+  },
+  "home.install.guide": {
+    "message": "Paso a paso →"
+  },
+  "home.settings.url": {
+    "message": "Tu sitio Moodle. Sin él, el agente te lo pregunta."
+  },
+  "home.settings.sites": {
+    "message": "Varios sitios, con nombre; el primero es donde empieza."
+  },
+  "home.settings.role": {
+    "message": "Solo las herramientas de tu rol: menos herramientas, mejor elegidas."
+  },
+  "home.settings.access": {
+    "message": "read: solo mira, nunca cambia nada."
+  },
+  "home.settings.studentData": {
+    "message": "Las demás personas como alias, nada en absoluto, o con su nombre (solo para una IA en tu ordenador)."
+  },
+  "home.settings.scopes": {
+    "message": "Los tipos de datos que puede tocar; content crea cursos y nunca ve el trabajo del alumnado."
+  },
+  "home.settings.confirm": {
+    "message": "Quién te pregunta antes de lo que no se puede deshacer: moodle-mcp o tu app."
+  },
+  "home.settings.advanced": {
+    "message": "true añade BigBlueButton, competencias, LTI, el banco de contenidos, notas y bloques."
+  },
+  "home.settings.headless": {
+    "message": "false trabaja en una ventana visible. Para iniciar sesión siempre se ve una."
+  },
+  "home.settings.channel": {
+    "message": "Qué navegador: Edge, luego Chrome, luego Chromium, salvo que elijas."
+  },
+  "home.settings.profile": {
+    "message": "La carpeta que guarda tu sesión."
+  },
+  "home.settings.download": {
+    "message": "false nunca descarga Chromium cuando no hay Edge ni Chrome."
+  },
+  "home.settings.trail": {
+    "message": "Como alumno: páginas reales a ritmo de lectura (cuentan las visitas y la finalización), o rápido."
+  },
+  "home.settings.start": {
+    "message": "Al añadirlo"
+  },
+  "home.settings.start.claudeCode": {
+    "message": "-e NOMBRE=valor, uno por ajuste, en claude mcp add."
+  },
+  "home.settings.start.codex": {
+    "message": "--env NOMBRE=valor en codex mcp add."
+  },
+  "home.settings.files": {
+    "message": "Ficheros"
+  },
+  "home.settings.start.files": {
+    "message": "En env (JSON) o en [mcp_servers.moodle.env] (TOML)."
+  },
+  "home.settings.plugins": {
+    "message": "Plugins"
+  },
+  "home.settings.start.plugins": {
+    "message": "Los piden al instalarlos: sites, headless, access, student_data."
+  },
+  "home.settings.later": {
+    "message": "Después"
+  },
+  "home.settings.later.claudeCode": {
+    "message": "claude mcp remove moodle y vuelve a añadirlo; o edita el fichero; los de un plugin, en /plugin."
+  },
+  "home.settings.later.claudeDesktop": {
+    "message": "Edita el fichero y reinícialo."
+  },
+  "home.settings.later.codex": {
+    "message": "Edita ~/.codex/config.toml; lo toma una sesión nueva."
+  },
+  "home.settings.later.agentKit": {
+    "message": "/extensions config moodle-teacher access=read, en el momento."
+  },
+  "home.settings.chat": {
+    "message": "Durante un chat"
+  },
+  "home.settings.chat.any": {
+    "message": "Cualquier app"
+  },
+  "home.settings.chat.text": {
+    "message": "Pídelo sin más: «en este chat, solo lectura». El agente puede hacer sus límites más estrictos, nunca más laxos que los tuyos."
+  },
+  "home.docs.start": {
+    "message": "Primeros pasos"
+  },
+  "home.docs.start.text": {
+    "message": "Qué necesitas, cada app paso a paso y tu primer inicio de sesión."
+  },
+  "home.docs.cases": {
+    "message": "Casos de uso"
+  },
+  "home.docs.cases.text": {
+    "message": "Sesiones reales de un profesor y de un alumno, con qué pedir."
+  },
+  "home.docs.privacy": {
+    "message": "Privacidad del alumnado"
+  },
+  "home.docs.privacy.text": {
+    "message": "Los alias, qué ve la IA y cómo convertir un alias en un nombre."
+  },
+  "home.docs.limits": {
+    "message": "Límites"
+  },
+  "home.docs.limits.text": {
+    "message": "Rol, solo lectura, ámbitos, herramientas avanzadas y confirmaciones."
+  },
+  "home.docs.settings": {
+    "message": "Ajustes"
+  },
+  "home.docs.settings.text": {
+    "message": "Cada ajuste en detalle, y dónde va en cada app."
+  },
+  "home.docs.sites": {
+    "message": "Varios sitios"
+  },
+  "home.docs.sites.text": {
+    "message": "El Moodle de tu instituto y el de tu universidad, y copiar entre ellos."
+  },
+  "home.docs.tools": {
+    "message": "Herramientas"
+  },
+  "home.docs.tools.text": {
+    "message": "Todas las herramientas que recibe el agente, con sus entradas."
+  },
+  "home.docs.troubleshooting": {
+    "message": "Solución de problemas"
+  },
+  "home.docs.troubleshooting.text": {
+    "message": "Cuando no arranca, no inicia sesión o no encuentra algo."
+  },
+  "home.docs.developers": {
+    "message": "Para desarrolladores"
+  },
+  "home.docs.developers.text": {
+    "message": "Cómo se construye, se prueba y se publica."
+  },
+  "home.headline": {
+    "message": "Tu agente de IA en Moodle, como tú"
+  },
+  "home.settings.title": {
+    "message": "Los ajustes, en corto"
+  },
+  "home.settings.lead": {
+    "message": "Ninguno es obligatorio, y cada uno tiene un valor por defecto sensato (el primero). Son variables de entorno del servidor, así que van donde lo añadiste."
+  },
+  "home.settings.nextBadge": {
+    "message": "próxima versión"
+  },
+  "home.settings.more": {
+    "message": "Todos los ajustes en detalle →"
+  },
+  "home.docs.title": {
+    "message": "El manual"
   }
 }
