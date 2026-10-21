@@ -7,7 +7,7 @@ sidebar_label: Releases
 
 moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.4.1`.
 
-Each release's documentation is kept: pick it in the version menu at the top of the page. The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
 
 ## 0.4.1 (19 October 2026)
 
