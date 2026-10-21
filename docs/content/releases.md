@@ -5,9 +5,19 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.4.1`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.5.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.5.0 (21 October 2026)
+
+- **Classrooms: only the courses you give it.** `MOODLE_MCP_COURSES` lists your courses' URLs, on one site or several, and the agent works only there: other courses are refused, and so is anything it hasn't read in one of them, since Moodle's ids are unique across a site. Lists across courses show only your classrooms. See [Classrooms](./limits.md#classrooms).
+- **What can't be undone asks you.** Before deleting, unenrolling, resetting a course or restoring over one, moodle-mcp asks you itself, in your app, and the AI can't skip the question; you have ten minutes to answer. Claude Code and Codex support it. **In an app that can't ask (no MCP elicitation), these tools are refused**, unless it asks you before every tool and you set `MOODLE_MCP_CONFIRM=client`. See [Confirming what can't be undone](./limits.md#confirming-what-cant-be-undone).
+- **Firefox.** `MOODLE_MCP_CHANNEL=firefox` works with Playwright's own Firefox, downloaded the first time.
+- **The question types a site offers.** `list_question_types` lists them as the question bank's chooser does, plugins marked, so the agent knows what it can use before building a quiz.
+- **New use cases**: a lesson from your notes, the class glossary, an end-of-unit survey, and which quiz questions to fix by their statistics.
+- **The site, renewed**, in Falken's Lab's look: setup for agents built on agent-kit, and every setting in short, each value explained.
+- With moodle-driver 0.12.
 
 ## 0.4.1 (19 October 2026)
 

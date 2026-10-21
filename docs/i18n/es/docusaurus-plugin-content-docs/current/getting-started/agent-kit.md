@@ -55,14 +55,14 @@ const spec: AgentSpec<BaseSessionConfig> = {
   buildMcpServers: () => ({
     moodle: {
       command: "npx",
-      args: ["-y", "@falkenslab/moodle-mcp@0.4.1"],
+      args: ["-y", "@falkenslab/moodle-mcp@0.5.0"],
       env: { MOODLE_URL: "https://campus.example.org", MOODLE_MCP_ROLE: "teacher" },
     },
   }),
 };
 ```
 
-Fija una versión (`@0.4.1`) para que el agente no cambie sin que lo sepas. Sus herramientas son entonces `mcp__moodle__<herramienta>`. Consulta [Herramientas y MCP](https://falkenslab.github.io/agent-kit/es/docs/capabilities/tools-and-mcp) en agent-kit.
+Fija una versión (`@0.5.0`) para que el agente no cambie sin que lo sepas. Sus herramientas son entonces `mcp__moodle__<herramienta>`. Consulta [Herramientas y MCP](https://falkenslab.github.io/agent-kit/es/docs/capabilities/tools-and-mcp) en agent-kit.
 
 ## Pruébalo
 

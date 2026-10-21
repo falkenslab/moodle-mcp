@@ -5,9 +5,19 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.4.1`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.5.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.5.0 (21 de octubre de 2026)
+
+- **Aulas: solo los cursos que le des.** `MOODLE_MCP_COURSES` da las URL de tus cursos, en uno o varios sitios, y el agente solo trabaja ahí: otros cursos se rechazan, y también todo lo que no haya leído en uno de ellos, porque los ids de Moodle son únicos en todo el sitio. Las listas de varios cursos solo muestran tus aulas. Consulta [Aulas](./limits.md#aulas).
+- **Lo que no se puede deshacer te pregunta.** Antes de borrar, dar de baja, reiniciar un curso o restaurar sobre uno, moodle-mcp te pregunta él mismo, en tu aplicación, y la IA no puede saltarse la pregunta; tienes diez minutos para contestar. Claude Code y Codex lo admiten. **En una aplicación que no puede preguntar (sin elicitación MCP), estas herramientas se rechazan**, salvo que te pregunte antes de cada herramienta y pongas `MOODLE_MCP_CONFIRM=client`. Consulta [Confirmar lo que no se puede deshacer](./limits.md#confirmar-lo-que-no-se-puede-deshacer).
+- **Firefox.** `MOODLE_MCP_CHANNEL=firefox` funciona con el Firefox propio de Playwright, descargado la primera vez.
+- **Los tipos de pregunta que ofrece un sitio.** `list_question_types` los lista como el selector del banco de preguntas, con los plugins marcados, para que el agente sepa cuáles puede usar antes de montar un cuestionario.
+- **Nuevos casos de uso**: una lección a partir de tus apuntes, el glosario de la clase, una encuesta de fin de unidad y qué preguntas de un cuestionario arreglar según sus estadísticas.
+- **El sitio, renovado**, con el estilo de Falken's Lab: la configuración para agentes hechos con agent-kit, y todos los ajustes en corto, con cada valor explicado.
+- Con moodle-driver 0.12.
 
 ## 0.4.1 (19 de octubre de 2026)
 
