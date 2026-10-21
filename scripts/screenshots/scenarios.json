@@ -148,5 +148,47 @@
         "Sí, adelante."
       ]
     }
+  },
+  "lesson-from-notes": {
+    "client": "claude",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "In my Moodle course mcp-content, turn the page \"Apuntes: bucles\" into a short hidden lesson called \"Loops, step by step\" in the first section: one page per idea, each ending with a question; a right answer moves on to the next page, a wrong one goes back to the page that explains it. Tell me the plan before creating anything.",
+        "Looks good, create it."
+      ],
+      "es": [
+        "En mi curso de Moodle mcp-content, convierte la página \"Apuntes: bucles\" en una lección corta y oculta llamada \"Bucles, paso a paso\" en la primera sección: una página por idea, cada una acabando con una pregunta; si acierta pasa a la siguiente página, y si falla vuelve a la página que lo explica. Cuéntame el plan antes de crear nada.",
+        "Me parece bien, créala."
+      ]
+    }
+  },
+  "class-glossary": {
+    "client": "codex",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "In the glossary \"Glosario de la clase\" of my course mcp-content, which entries are waiting for my approval? Check each definition: tell me which are right and what is wrong in the others. Don't approve anything yet.",
+        "Approve the right ones, and leave the wrong one waiting."
+      ],
+      "es": [
+        "En el glosario \"Glosario de la clase\" de mi curso mcp-content, ¿qué entradas están esperando mi aprobación? Revisa cada definición: dime cuáles están bien y qué falla en las demás. No apruebes nada todavía.",
+        "Aprueba las correctas y deja esperando la incorrecta."
+      ]
+    }
+  },
+  "feedback-survey": {
+    "client": "claude",
+    "profile": "profile-teacher",
+    "turns": {
+      "en": [
+        "In my Moodle course mcp-content, create a hidden, anonymous feedback activity called \"How was unit 1?\" at the end of the first section, with three questions: how clear the unit was, from 1 to 5; which activity helped most (the notes, the quiz or the forum); and an open one for suggestions. Tell me what you'll create first.",
+        "Yes, create it."
+      ],
+      "es": [
+        "En mi curso de Moodle mcp-content, crea una encuesta (feedback) oculta y anónima llamada \"¿Qué tal la unidad 1?\" al final de la primera sección, con tres preguntas: lo clara que ha sido la unidad, del 1 al 5; qué actividad ayudó más (los apuntes, el cuestionario o el foro); y una abierta para sugerencias. Dime primero qué vas a crear.",
+        "Sí, créala."
+      ]
+    }
   }
 }

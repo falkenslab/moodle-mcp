@@ -1,8 +1,11 @@
 // In the container: the sandbox data the use cases start from, in course 3 (mcp-content) only.
-//   node seed.mjs setup              once: the assignment due soon and the exam the agenda finds
+//   node seed.mjs setup              once: the assignment due soon, the exam the agenda finds, and the
+//                                    class glossary, whose entries wait for the teacher's approval
 //   node seed.mjs reset <en|es>      before a language's teacher sessions: that language's quiz and page
 //                                    deleted, Tarea MCP submitted again (so it needs grading), a new
-//                                    unanswered question in Foro MCP
+//                                    unanswered question in Foro MCP, that language's lesson and
+//                                    feedback deleted, and the student's glossary entries made again,
+//                                    waiting for approval
 //   node seed.mjs attempt <en|es>    after them: the quiz the teacher made shown, and done by the student
 //                                    with one right answer and two wrong, for the quiz review
 // reset also gives the copy-between-sites session its second site, "uni": a copy of the teacher's
@@ -18,14 +21,25 @@ const LANG = {
   en: {
     quiz: "Loops: quick check",
     page: "How a for loop works",
+    lesson: "Loops, step by step",
+    feedback: "How was unit 1?",
     question: ["¿Qué hace range(1, 10, 2)?", "<p>En un ejemplo de clase aparece for i in range(1, 10, 2). Entiendo range(10), pero no sé qué hacen los otros dos números.</p>"],
   },
   es: {
     quiz: "Bucles: repaso rápido",
     page: "Cómo funciona un bucle for",
+    lesson: "Bucles, paso a paso",
+    feedback: "¿Qué tal la unidad 1?",
     question: ["¿Por qué mi bucle while no termina nunca?", "<p>He escrito un while que cuenta hasta 10, pero se queda colgado y nunca acaba. ¿Qué puede estar pasando?</p>"],
   },
 };
+const GLOSSARY = "Glosario de la clase";
+// The student's entries: two right, one wrong (an infinite loop doesn't run once), for the teacher to check.
+const ENTRIES = [
+  ["Iteración", "<p>Cada una de las veces que se ejecuta el bloque de un bucle.</p>"],
+  ["Bucle infinito", "<p>Un bucle que se ejecuta exactamente una vez y luego termina.</p>"],
+  ["Contador", "<p>Una variable que aumenta en cada vuelta del bucle para llevar la cuenta.</p>"],
+];
 const SUBMISSION =
   "<p>Un bucle es una instrucción que repite un bloque de código mientras se cumple una condición. Por ejemplo, <code>for i in range(5)</code> repite el bloque cinco veces, y <code>while saldo &gt; 0</code> lo repite hasta que el saldo llega a cero.</p><p>Sirven para no escribir lo mismo muchas veces, por ejemplo para recorrer una lista de notas y calcular la media.</p>";
 
@@ -55,11 +69,30 @@ if (command === "setup") {
     exam.setUTCHours(9, 0, 0, 0);
     await t.call("create_event", { courseId: COURSE, name: "Examen parcial: bucles y funciones", start: exam.toISOString(), durationMinutes: 60, description: "<p>En el aula 2.4. Entra todo lo visto hasta funciones.</p>" });
   }
+  if (!existing.some((a) => a.name === GLOSSARY)) {
+    await t.call("create_activity", {
+      courseId: COURSE,
+      sectionId: firstSection.id,
+      type: "glossary",
+      name: GLOSSARY,
+      visibility: "shown",
+      description: "<p>Las palabras de la unidad, definidas por vosotros. Cada entrada espera a que el profesor la apruebe.</p>",
+      settings: { defaultapproval: 0 },
+    });
+  }
   await t.close();
 } else if (command === "reset" && data) {
   const t = await open("profile-teacher");
   const all = await activities(t);
-  for (const a of all) if (a.name === data.quiz || a.name === data.page) await t.call("delete_activity", { courseId: COURSE, activityId: a.id });
+  for (const a of all) if ([data.quiz, data.page, data.lesson, data.feedback].includes(a.name)) await t.call("delete_activity", { courseId: COURSE, activityId: a.id });
+  // The glossary starts empty each run: the student's entries come again, waiting.
+  const glossary = all.find((a) => a.name === GLOSSARY);
+  if (glossary) {
+    for (const pending of [false, true]) {
+      const entries = (await t.call("list_glossary_entries", { glossaryId: glossary.id, pending, limit: 100 }))?.entries ?? [];
+      for (const e of entries) await t.call("delete_glossary_entry", { glossaryId: glossary.id, entryId: e.id });
+    }
+  }
   // The page copied between sites: the original is the oldest of that name, the others are copies.
   const notes = all.filter((a) => a.name === "Apuntes: bucles").sort((x, y) => x.id - y.id);
   for (const copy of notes.slice(1)) await t.call("delete_activity", { courseId: COURSE, activityId: copy.id });
@@ -74,6 +107,7 @@ if (command === "setup") {
   if ((await s.call("get_assignment", { assignmentId: ASSIGNMENT }))?.canEdit) await s.call("save_submission", { assignmentId: ASSIGNMENT, onlineText: SUBMISSION });
   if ((await s.call("get_assignment", { assignmentId: ASSIGNMENT }))?.canSubmit) await s.call("submit_assignment", { assignmentId: ASSIGNMENT, acceptStatement: true });
   await s.call("create_discussion", { forumId: FORUM, subject: data.question[0], message: data.question[1] });
+  if (glossary) for (const [concept, definition] of ENTRIES) await s.call("add_glossary_entry", { glossaryId: glossary.id, concept, definition });
   await s.close();
   unlock("profile-teacher");
   rmSync("/state/sites-data", { recursive: true, force: true });

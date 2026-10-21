@@ -20,7 +20,9 @@ export async function open(profile) {
   unlock(profile);
   const client = new Client({ name: "screenshots", version: "0" });
   // The SDK's default environment drops PLAYWRIGHT_BROWSERS_PATH: the server would download Chromium.
-  await client.connect(new StdioClientTransport({ command: "node", args: serverArgs(profile), env: { ...process.env, PSEUDONYM_HOME: "/state/pseudonym-home" }, stderr: "ignore" }));
+  // This client can't ask anyone, and whoever runs these scripts chose what they delete: --confirm client
+  // (the AI clients' sessions still ask, ADR-023).
+  await client.connect(new StdioClientTransport({ command: "node", args: [...serverArgs(profile), "--confirm", "client"], env: { ...process.env, PSEUDONYM_HOME: "/state/pseudonym-home" }, stderr: "ignore" }));
   const call = async (name, args = {}) => {
     const r = await client.callTool({ name, arguments: args }, undefined, { timeout: 240_000 }).catch((e) => ({ isError: true, content: [{ text: `client: ${e.message}` }] }));
     console.log(`${r.isError ? "✗" : "✓"} ${name} ${JSON.stringify(args).slice(0, 100)}${r.isError ? `: ${r.content[0].text.slice(0, 200)}` : ""}`);

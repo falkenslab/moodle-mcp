@@ -18,6 +18,9 @@ const quiz = byName("Loops: quick check");
 const page = byName("How a for loop works");
 const notes = byName("Apuntes: bucles");
 const scorm = byName("SCORM MCP (prueba)");
+const lesson = byName("Loops, step by step");
+const glossary = byName("Glosario de la clase");
+const feedback = byName("How was unit 1?");
 const lastSection = (await t.call("get_course_structure", { courseId: 3 })).sections.at(-1)?.id;
 await t.close();
 const s = await open("profile-student");
@@ -32,6 +35,10 @@ const SHOTS = {
     "page-with-image": `${SITE}/mod/page/view.php?id=${page}`,
     // The copy-between-sites session's page, at the end of the course's last section.
     "copied-page": `${SITE}/course/section.php?id=${lastSection}`,
+    // The lesson's pages and where each answer jumps, the glossary after the approvals, the feedback's questions.
+    lesson: `${SITE}/mod/lesson/edit.php?id=${lesson}&mode=full`,
+    glossary: `${SITE}/mod/glossary/view.php?id=${glossary}`,
+    feedback: `${SITE}/mod/feedback/edit.php?id=${feedback}`,
   },
   student: {
     // The conversation with the teacher (user 3), open: the reminder the falling-behind session sent.
@@ -42,7 +49,7 @@ const SHOTS = {
     "quiz-review": `${SITE}/mod/quiz/review.php?attempt=${attempt}`,
   },
 };
-const FULL_PAGE = ["page-with-image", "quiz-review", "study-page", "upcoming", "copied-page"];
+const FULL_PAGE = ["page-with-image", "quiz-review", "study-page", "upcoming", "copied-page", "lesson", "glossary", "feedback"];
 
 async function shoot(tab, name, url) {
   if (wanted.size && !wanted.has(name)) return;
