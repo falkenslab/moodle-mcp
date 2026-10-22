@@ -12,42 +12,55 @@ sidebar_label: agent-kit
 
 Las dos ejecutan el mismo moodle-mcp desde npm, en una versión fija. Los ejemplos usan miyagi y moodle-teacher: escribe en su lugar el comando de tu agente y la extensión que quieras.
 
-## Desde la línea de comandos
+## Empezar
 
 ```bash
 miyagi extension add moodle-teacher@falkenslab
 ```
 
-Te pide sus ajustes (más abajo) y ya está en la siguiente conversación del agente. Un agente cuyo marketplace propio no es el de Falken's Lab lo añade antes:
+Te pide sus ajustes (más abajo) y ya está en la siguiente conversación del agente. Un agente cuyo marketplace propio no es el de Falken's Lab lo añade antes: `mi-agente extension marketplace add falkenslab/agent-extensions`. Después pídele al agente **"Lista mis cursos de Moodle"**: la primera vez se abre una ventana del navegador en la página de acceso de tu Moodle ([Iniciar sesión la primera vez](./first-login.md)).
+
+### Sus ajustes {#its-settings}
+
+| Ajuste | Qué hace | Valores |
+| --- | --- | --- |
+| `sites` | Tus sitios Moodle, el primero donde empieza | `nombre=dirección` cada uno, separados por comas, como `instituto=https://campus.miinstituto.org`. Obligatorio |
+| `headless` | Si ves el navegador | **sí**: trabaja sin verse; se abre una ventana para iniciar sesión, o cuando pides verlo. no: una ventana visible |
+| `access` | Si el agente puede cambiar Moodle | **`write`**: lee y cambia. `read`: solo mira |
+| `student_data` | Qué ve la IA de las demás personas ([Privacidad del alumnado](../privacy.md)) | **`pseudonymize`**: alias. `block`: nada. `clear`: nombres, solo para una IA en tu propio ordenador |
+
+El rol lo pone la extensión: moodle-teacher tiene las herramientas del profesorado y moodle-student las del alumnado. Para dar los ajustes en el mismo comando, añade un `--set` por cada uno: `--set access=read`.
+
+## Dónde configurarlo {#where-to-set-it-up}
+
+Un agente guarda sus extensiones en dos ámbitos, como Claude Code:
+
+| Ámbito | Dónde está | Cómo |
+| --- | --- | --- |
+| El del agente | En todos sus proyectos | `extension add …` |
+| El de un proyecto | Solo en ese proyecto, por encima del del agente | `extension add … --project` |
+
+### En todas partes
+
+La extensión en el ámbito del agente, como en [Empezar](#empezar): todos los proyectos del agente tienen Moodle, con los mismos sitios y ajustes.
+
+- **Por qué**: una sola configuración; la forma habitual del agente.
+
+### Un proyecto con sus propios ajustes
+
+Un proyecto tuyo (un curso que estás preparando, los apuntes de una asignatura) donde la extensión debe tener otros ajustes: otro sitio, acceso de solo lectura.
 
 ```bash
-mi-agente extension marketplace add falkenslab/agent-extensions
+cd ~/cursos/programacion-1
+miyagi extension add moodle-teacher@falkenslab --project --set access=read
 ```
 
-Para dar los ajustes en el mismo comando, sin que te los pregunte, añade un `--set` por cada uno: `--set access=read`.
+- **Por qué**: los ajustes de ese proyecto ganan a los del agente, solo ahí.
+- **Ojo**: los ajustes de la extensión todavía no incluyen [aulas](../limits.md#aulas); para un agente limitado a unos cursos, mira el siguiente.
 
-## Sus ajustes {#its-settings}
+### Un agente propio
 
-La extensión los pide al instalarla:
-
-| Ajuste | Qué hace | Por defecto |
-| --- | --- | --- |
-| `sites` | Tus sitios Moodle, `nombre=dirección` cada uno, separados por comas; el primero es donde empieza. Por ejemplo `instituto=https://campus.miinstituto.org`. | obligatorio |
-| `headless` | El navegador trabaja sin verse. Se abre una ventana para iniciar sesión, o cuando pides verlo. | sí |
-| `access` | `read`: solo mira, nunca cambia nada. | `write` |
-| `student_data` | `pseudonymize` (alias), `block` (nada) o `clear` (nombres: solo para una IA en tu propio ordenador). Consulta [Privacidad del alumnado](../privacy.md). | `pseudonymize` |
-
-El rol lo fija la extensión: moodle-teacher da las herramientas del profesorado y moodle-student las del alumnado.
-
-Para cambiarlos después:
-
-- **en el chat**: `/extensions config moodle-teacher access=read`. El servidor vuelve a arrancar con él en la misma conversación;
-- **en un terminal**: `miyagi extension config moodle-teacher access=read`. El agente lo toma en su siguiente conversación;
-- **en un agente de escritorio**: en los ajustes de la extensión.
-
-## En un agente propio
-
-Un agente que crees con agent-kit puede arrancar moodle-mcp como uno de sus propios servidores MCP, con cualquiera de los [ajustes](../settings.md) como variables de entorno:
+Un agente que crees con agent-kit arranca moodle-mcp como uno de sus propios servidores MCP, con cualquier [ajuste](../settings.md), aulas incluidas:
 
 ```ts
 const spec: AgentSpec<BaseSessionConfig> = {
@@ -56,18 +69,21 @@ const spec: AgentSpec<BaseSessionConfig> = {
     moodle: {
       command: "npx",
       args: ["-y", "@falkenslab/moodle-mcp@0.5.0"],
-      env: { MOODLE_URL: "https://campus.example.org", MOODLE_MCP_ROLE: "teacher" },
+      env: { MOODLE_MCP_COURSES: "https://campus.example.org/course/view.php?id=12", MOODLE_MCP_ROLE: "teacher" },
     },
   }),
 };
 ```
 
-Fija una versión (`@0.5.0`) para que el agente no cambie sin que lo sepas. Sus herramientas son entonces `mcp__moodle__<herramienta>`. Consulta [Herramientas y MCP](https://falkenslab.github.io/agent-kit/es/docs/capabilities/tools-and-mcp) en agent-kit.
+- **Por qué**: el agente viene con Moodle, configurado como lo necesitas. Fija una versión (`@0.5.0`) para que no cambie sin que lo sepas. Sus herramientas son `mcp__moodle__<herramienta>`; consulta [Herramientas y MCP](https://falkenslab.github.io/agent-kit/es/docs/capabilities/tools-and-mcp) en agent-kit.
 
-## Pruébalo
+## Mientras lo usas
 
-Pídele al agente:
+En modo guiado, el agente te pregunta antes de las herramientas que cambian cosas; `extension config moodle-teacher confirm=off` deja que se ejecuten sin preguntar, para una extensión de la que te fíes. Lo que no se puede deshacer (borrar, dar de baja, reiniciar un curso) te lo vuelve a preguntar el propio moodle-mcp: consulta [Confirmar lo que no se puede deshacer](../limits.md#confirmar-lo-que-no-se-puede-deshacer).
 
-> Lista mis cursos de Moodle.
+## Cambiarlo o quitarlo
 
-La primera vez se abre una ventana del navegador en la página de acceso de tu Moodle: inicia sesión como siempre. Consulta [Iniciar sesión la primera vez](./first-login.md).
+- **En el chat**: `/extensions config moodle-teacher access=read`; el servidor vuelve a arrancar con él en la misma conversación.
+- **En un terminal**: `miyagi extension config moodle-teacher access=read`, que el agente toma en su siguiente conversación.
+- **En un agente de escritorio**: en los ajustes de la extensión.
+- **Para quitarla**: `miyagi extension remove moodle-teacher` (`--project` para la de un proyecto).

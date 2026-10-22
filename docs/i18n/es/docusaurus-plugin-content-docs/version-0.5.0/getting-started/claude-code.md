@@ -5,68 +5,27 @@ sidebar_label: Claude Code
 
 # Configurar Claude Code
 
-[Claude Code](https://claude.com/claude-code) es Claude en tu terminal, o en VS Code y otros editores. Si aún no lo tienes, sigue primero [su guía de instalación](https://docs.claude.com/en/docs/claude-code/setup).
+[Claude Code](https://claude.com/claude-code) es Claude en tu terminal, o en VS Code y otros editores; todos comparten la misma configuración. Si aún no lo tienes, sigue antes [su guía de instalación](https://docs.claude.com/en/docs/claude-code/setup).
 
-## 1. Añade moodle-mcp
+## Empezar
 
-Abre un terminal y ejecuta este comando, con **la dirección de tu sitio Moodle** en lugar de `https://campus.example.org`:
+En un terminal, con **la dirección de tu sitio Moodle** en lugar de `https://campus.example.org`:
 
 <Terminal title="Terminal">{`
 $ claude mcp add moodle --scope user -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
 Added stdio MCP server moodle with command: npx -y @falkenslab/moodle-mcp to user config
-`}</Terminal>
-
-Qué significa cada parte:
-
-- `moodle` es el nombre que le das al servidor. Las herramientas aparecen en Claude como herramientas de `moodle`.
-- `--scope user` lo deja disponible en cualquier carpeta en la que abras Claude Code. Es una de varias formas: consulta [Dónde configurarlo](#where-to-set-it-up).
-- `-e MOODLE_URL=…` es tu sitio. Puedes quitarlo, y Claude te pedirá el sitio la primera vez.
-- `npx -y @falkenslab/moodle-mcp` descarga y arranca la última versión.
-
-También puedes pedirle al propio Claude Code, en una conversación, que ejecute ese comando por ti: el servidor estará en tu siguiente conversación.
-
-## 2. Comprueba que está
-
-<Terminal title="Terminal">{`
 $ claude mcp list
-Checking MCP server health…
-
 moodle: npx -y @falkenslab/moodle-mcp - ✔ Connected
 `}</Terminal>
 
-Deberías ver `moodle` con `✔ Connected`, junto a los demás servidores que tengas.
+- `moodle` es el nombre del servidor: sus herramientas le llegan a Claude como `mcp__moodle__…`.
+- `--scope user` lo deja en todas las carpetas; la siguiente sección tiene otras opciones.
+- Cada `-e NOMBRE=valor` es un [ajuste](../settings.md). Sin `MOODLE_URL`, Claude te pide tu sitio la primera vez.
+- `npx -y @falkenslab/moodle-mcp` descarga y arranca la última versión; `@falkenslab/moodle-mcp@0.5.0` se queda en una.
 
-La primera vez, `npx` descarga moodle-mcp, así que puede tardar unos segundos.
+Después arranca Claude Code y pide **"Lista mis cursos de Moodle"**. La primera vez se abre una ventana del navegador en la página de acceso de tu Moodle: inicia sesión como siempre ([Iniciar sesión la primera vez](./first-login.md)). Dentro de Claude Code, `/mcp` muestra los servidores y sus herramientas.
 
-## 3. Arranca Claude y pruébalo
-
-Arranca Claude Code en cualquier carpeta y pide:
-
-> Lista mis cursos de Moodle.
-
-La primera vez se abre una ventana del navegador en la página de acceso de tu Moodle: inicia sesión como siempre. [Iniciar sesión la primera vez](./first-login.md) explica qué pasa después.
-
-Dentro de Claude Code, el comando `/mcp` muestra los servidores y sus herramientas, y te deja volver a conectar uno.
-
-## Aprobar las llamadas a herramientas
-
-Claude Code te pregunta antes de cada llamada a una herramienta, y te muestra su nombre y lo que va a enviar. Puedes responder *Yes* cada vez, o *Yes, and don't ask again* para una herramienta de la que te fíes.
-
-Para aprobar de una vez por todas las herramientas que solo leen Moodle, añádelas a tu configuración. Por ejemplo, en `~/.claude/settings.json`:
-
-```json
-{
-  "permissions": {
-    "allow": ["mcp__moodle__list_courses", "mcp__moodle__get_course_structure", "mcp__moodle__list_assignments"]
-  }
-}
-```
-
-Deja fuera de esa lista las herramientas que cambian Moodle (calificar, publicar, crear), para que Claude siga preguntándote antes de usarlas.
-
-:::tip Menos herramientas, mejores respuestas
-Si solo das clase, o solo estudias, dile a moodle-mcp tu rol: Claude recibe solo las herramientas para ese rol y las elige mejor. Añade `-e MOODLE_MCP_ROLE=teacher` (o `student`) al comando del paso 1. Consulta [Limitar lo que puede hacer el agente](../limits.md).
-:::
+También puedes pedirle a Claude Code, en una conversación, que ejecute ese comando por ti: el servidor estará en tu siguiente conversación.
 
 ## Dónde configurarlo {#where-to-set-it-up}
 
@@ -123,12 +82,34 @@ Las dos a la vez: moodle-mcp en todas partes (`user`) y, en la carpeta de un cur
 Todas estas configuraciones comparten tu sesión en un sitio, guardada en un perfil del navegador. Dos sesiones de Claude Code usando moodle-mcp a la vez en el mismo sitio, desde dos carpetas, no pueden abrirlo las dos: la segunda no consigue arrancar el navegador. Cierra una, o dale a una carpeta su propio perfil con `-e MOODLE_MCP_PROFILE_DIR=…` (e inicia sesión una vez allí).
 :::
 
-## A mano: el fichero de configuración
+## Mientras lo usas
 
-Claude Code lee sus servidores de dos ficheros:
+**Claude Code te pregunta antes de cada llamada a una herramienta**, con su nombre y lo que va a enviar: *Yes* cada vez, o *Yes, and don't ask again* para una de la que te fíes. Para aprobar de una vez las herramientas que solo leen Moodle, añádelas a tu configuración (`~/.claude/settings.json`); en moodle-mcp empiezan por `get_` o `list_`:
 
-- `.mcp.json` en la carpeta de un proyecto: solo ahí, y puede ir en el repositorio del proyecto. Claude Code te pide que confíes en él la primera vez. Es donde escribe `--scope project`;
-- `~/.claude.json` (`%USERPROFILE%\.claude.json` en Windows): bajo `mcpServers`, arriba del todo, en todas las carpetas (`--scope user`); bajo la entrada de una carpeta en `projects`, solo en esa carpeta (el ámbito por defecto, `local`). Es el fichero propio de Claude Code, con muchas más cosas: para estos dos, mejor `claude mcp add`.
+```json
+{
+  "permissions": {
+    "allow": ["mcp__moodle__get_*", "mcp__moodle__list_*"],
+    "ask": ["mcp__moodle__get_lesson_page"]
+  }
+}
+```
+
+La línea `ask` es la única excepción: como alumno, abrir una página de una lección registra tu avance en ella.
+
+`mcp__moodle__*` aprobaría todas las herramientas, también las que cambian Moodle: solo con acceso de solo lectura (`MOODLE_MCP_ACCESS=read`), donde ninguna puede.
+
+**Lo que no se puede deshacer te lo vuelve a preguntar** el propio moodle-mcp: antes de borrar una actividad, dar de baja a alguien o reiniciar un curso, una pregunta en Claude Code dice qué va a pasar, y no se hace nada hasta que dices que sí. Tienes diez minutos para contestar. Consulta [Confirmar lo que no se puede deshacer](../limits.md#confirmar-lo-que-no-se-puede-deshacer).
+
+## Cambiarlo o quitarlo
+
+`claude mcp get moodle` muestra su configuración y dónde está guardada. Para cambiar un ajuste, quítalo y vuelve a añadirlo con los valores nuevos, con el ámbito con el que lo añadiste:
+
+```bash
+claude mcp remove moodle --scope user
+```
+
+O edítalo a mano: un servidor `project` está en el `.mcp.json` de la carpeta; los `user` y `local`, en `~/.claude.json` (`%USERPROFILE%\.claude.json` en Windows), el fichero propio de Claude Code, arriba del todo bajo `mcpServers` y bajo la entrada de la carpeta en `projects`. El mismo bloque en cualquiera de ellos:
 
 ```json title=".mcp.json"
 {
@@ -136,20 +117,10 @@ Claude Code lee sus servidores de dos ficheros:
     "moodle": {
       "command": "npx",
       "args": ["-y", "@falkenslab/moodle-mcp"],
-      "env": { "MOODLE_URL": "https://campus.example.org" }
+      "env": { "MOODLE_URL": "https://campus.example.org", "MOODLE_MCP_ROLE": "teacher" }
     }
   }
 }
 ```
 
-Los demás [ajustes](../settings.md) van en `env`. Claude Code lee el fichero al arrancar, o cuando reconectas el servidor en `/mcp`.
-
-## Cambiarlo o quitarlo
-
-`claude mcp get moodle` muestra su configuración y dónde está guardada. Para cambiar un ajuste, edita su `env` en el fichero, o quita el servidor y vuelve a añadirlo con los valores nuevos, con el mismo ámbito con el que lo añadiste:
-
-```bash
-claude mcp remove moodle --scope user
-```
-
-Para usar una versión concreta en lugar de la última, escríbela después del nombre del paquete: `@falkenslab/moodle-mcp@0.5.0`.
+Claude Code lo lee al arrancar, o cuando reconectas el servidor en `/mcp`.

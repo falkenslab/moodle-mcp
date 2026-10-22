@@ -41,7 +41,7 @@ Lo que hizo el agente:
 4. **Las añadió al cuestionario** y puso una pregunta por página (`add_questions_to_quiz`, `set_quiz_pages`).
 
 :::warning Los agentes no siempre esperan
-En esta sesión, Codex estaba configurado para usar las herramientas de moodle-mcp sin preguntar (`default_tools_approval_mode = "approve"`), así que nada lo frenó cuando decidió no esperar. Si quieres revisar un plan antes, deja activada en Codex la aprobación de las herramientas que cambian Moodle, para que cada cambio espere tu visto bueno, y di claramente «no cambies nada todavía». Consulta [Configurar Codex](../../getting-started/codex.md#aprobar-las-llamadas-a-herramientas).
+En esta sesión, Codex estaba configurado para usar las herramientas de moodle-mcp sin preguntar (`default_tools_approval_mode = "approve"`), así que nada lo frenó cuando decidió no esperar. Si quieres revisar un plan antes, deja activada en Codex la aprobación de las herramientas que cambian Moodle, para que cada cambio espere tu visto bueno, y di claramente «no cambies nada todavía». Consulta [Configurar Codex](../../getting-started/codex.md#mientras-lo-usas).
 :::
 
 ## El resultado en Moodle

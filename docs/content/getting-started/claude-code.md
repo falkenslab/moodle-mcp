@@ -5,68 +5,27 @@ sidebar_label: Claude Code
 
 # Set up Claude Code
 
-[Claude Code](https://claude.com/claude-code) is Claude in your terminal, or in VS Code and other editors. If you don't have it yet, follow [its installation guide](https://docs.claude.com/en/docs/claude-code/setup) first.
+[Claude Code](https://claude.com/claude-code) is Claude in your terminal, or in VS Code and other editors; they share the same setup. If you don't have it yet, follow [its installation guide](https://docs.claude.com/en/docs/claude-code/setup) first.
 
-## 1. Add moodle-mcp
+## Start
 
-Open a terminal and run this command, with **your Moodle site's address** instead of `https://campus.example.org`:
+In a terminal, with **your Moodle site's address** instead of `https://campus.example.org`:
 
 <Terminal title="Terminal">{`
 $ claude mcp add moodle --scope user -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
 Added stdio MCP server moodle with command: npx -y @falkenslab/moodle-mcp to user config
-`}</Terminal>
-
-What each part means:
-
-- `moodle` is the name you give the server. The tools show up in Claude as `moodle` tools.
-- `--scope user` makes it available in every folder you open Claude Code in. It's one of several ways: see [Where to set it up](#where-to-set-it-up).
-- `-e MOODLE_URL=…` is your site. You can leave it out, and Claude will ask you for the site the first time.
-- `npx -y @falkenslab/moodle-mcp` downloads and starts the latest version.
-
-You can also ask Claude Code itself, in a conversation, to run that command for you: the server is there in your next conversation.
-
-## 2. Check it's there
-
-<Terminal title="Terminal">{`
 $ claude mcp list
-Checking MCP server health…
-
 moodle: npx -y @falkenslab/moodle-mcp - ✔ Connected
 `}</Terminal>
 
-You should see `moodle` with `✔ Connected`, next to any other servers you have.
+- `moodle` is the server's name: its tools reach Claude as `mcp__moodle__…`.
+- `--scope user` puts it in every folder; the next section has other choices.
+- Each `-e NAME=value` is a [setting](../settings.md). Without `MOODLE_URL`, Claude asks you for your site the first time.
+- `npx -y @falkenslab/moodle-mcp` downloads and starts the latest version; `@falkenslab/moodle-mcp@0.5.0` keeps one.
 
-The first time, `npx` downloads moodle-mcp, so it may take a few seconds.
+Then start Claude Code and ask **"List my Moodle courses"**. The first time, a browser window opens at your Moodle login page: log in as usual ([Logging in the first time](./first-login.md)). Inside Claude Code, `/mcp` shows the servers and their tools.
 
-## 3. Start Claude and try it
-
-Start Claude Code in any folder, and ask:
-
-> List my Moodle courses.
-
-The first time, a browser window opens at your Moodle login page: log in as usual. [Logging in the first time](./first-login.md) explains what happens next.
-
-Inside Claude Code, the `/mcp` command shows the servers and their tools, and lets you reconnect one.
-
-## Approving tool calls
-
-Claude Code asks you before each tool call, showing its name and what it will send. You can answer *Yes* each time, or *Yes, and don't ask again* for a tool you trust.
-
-To approve the tools that only read Moodle once and for all, add them to your settings. For example, in `~/.claude/settings.json`:
-
-```json
-{
-  "permissions": {
-    "allow": ["mcp__moodle__list_courses", "mcp__moodle__get_course_structure", "mcp__moodle__list_assignments"]
-  }
-}
-```
-
-Leave the tools that change Moodle (grading, posting, creating) out of that list, so Claude keeps asking before using them.
-
-:::tip Fewer tools, better answers
-If you only teach, or only study, tell moodle-mcp your role: Claude gets only the tools for it, and picks them better. Add `-e MOODLE_MCP_ROLE=teacher` (or `student`) to the command in step 1. See [Limiting what the agent can do](../limits.md).
-:::
+You can also ask Claude Code, in a conversation, to run that command for you: the server is there in your next conversation.
 
 ## Where to set it up
 
@@ -123,12 +82,34 @@ Both at once: moodle-mcp everywhere (`user`), and in a course's folder a server 
 All these setups share your login on a site, kept in one browser profile. Two Claude Code sessions using moodle-mcp on the same site at once, in two folders, can't both open it: the second one fails to start the browser. Close one, or give a folder its own profile with `-e MOODLE_MCP_PROFILE_DIR=…` (and log in once there).
 :::
 
-## By hand: the configuration file
+## While you use it
 
-Claude Code reads its servers from two files:
+**Claude Code asks before each tool call**, showing its name and what it will send: *Yes* each time, or *Yes, and don't ask again* for a tool you trust. To approve the tools that only read Moodle once and for all, add them to your settings (`~/.claude/settings.json`); in moodle-mcp they start with `get_` or `list_`:
 
-- `.mcp.json` in a project's folder: only there, and it can go in the project's repository. Claude Code asks you to trust it the first time. That's where `--scope project` writes;
-- `~/.claude.json` (`%USERPROFILE%\.claude.json` on Windows): under `mcpServers` at the top, every folder (`--scope user`); under a folder's entry in `projects`, only that folder (the default, `local`). It's Claude Code's own file, with much else in it: prefer `claude mcp add` for these two.
+```json
+{
+  "permissions": {
+    "allow": ["mcp__moodle__get_*", "mcp__moodle__list_*"],
+    "ask": ["mcp__moodle__get_lesson_page"]
+  }
+}
+```
+
+The `ask` line is the one exception: as a student, opening a lesson's page records your progress in it.
+
+`mcp__moodle__*` would approve every tool, those that change Moodle too: only with read-only access (`MOODLE_MCP_ACCESS=read`), where none of them can.
+
+**What can't be undone asks you again**, from moodle-mcp itself: before deleting an activity, unenrolling someone or resetting a course, a question in Claude Code says what will happen, and nothing runs until you say yes. You have ten minutes to answer. See [Confirming what can't be undone](../limits.md#confirming-what-cant-be-undone).
+
+## Changing or removing it
+
+`claude mcp get moodle` shows its setup and where it's kept. To change a setting, remove it and add it again with the new values, with the scope you added it with:
+
+```bash
+claude mcp remove moodle --scope user
+```
+
+Or edit it by hand: a `project` server is in the folder's `.mcp.json`; `user` and `local` ones are in `~/.claude.json` (`%USERPROFILE%\.claude.json` on Windows), Claude Code's own file, at the top under `mcpServers` and under the folder's entry in `projects`. The same block in either:
 
 ```json title=".mcp.json"
 {
@@ -136,20 +117,10 @@ Claude Code reads its servers from two files:
     "moodle": {
       "command": "npx",
       "args": ["-y", "@falkenslab/moodle-mcp"],
-      "env": { "MOODLE_URL": "https://campus.example.org" }
+      "env": { "MOODLE_URL": "https://campus.example.org", "MOODLE_MCP_ROLE": "teacher" }
     }
   }
 }
 ```
 
-Other [settings](../settings.md) go in `env`. Claude Code reads the file when it starts, or when you reconnect the server in `/mcp`.
-
-## Changing or removing it
-
-`claude mcp get moodle` shows its setup and where it's kept. To change a setting, edit its `env` in the file, or remove the server and add it again with the new values, with the same scope you added it with:
-
-```bash
-claude mcp remove moodle --scope user
-```
-
-To use a specific version instead of the latest, write it after the package name: `@falkenslab/moodle-mcp@0.5.0`.
+Claude Code reads it when it starts, or when you reconnect the server in `/mcp`.

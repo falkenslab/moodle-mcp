@@ -5,53 +5,78 @@ sidebar_label: Claude Desktop
 
 # Configurar Claude Desktop
 
-[Claude Desktop](https://claude.ai/download) es la aplicación de Claude para Windows y macOS. Añades moodle-mcp a su archivo de configuración una sola vez.
+[Claude Desktop](https://claude.ai/download) es la app de Claude para Windows y macOS. Añades moodle-mcp a su fichero de configuración una vez, y está en todos los chats.
 
-## 1. Abre el archivo de configuración
+## Empezar
 
-1. Abre Claude Desktop.
-2. Ve a **Settings** (en Windows, el menú ☰ → *File* → *Settings*; en macOS, *Claude* → *Settings*).
-3. Elige **Developer** y haz clic en **Edit Config**.
+1. En Claude Desktop, ve a **Settings** (en Windows, el menú ☰ → *File* → *Settings*; en macOS, *Claude* → *Settings*), elige **Developer** y pulsa **Edit Config**. Abre la carpeta con `claude_desktop_config.json` (`%APPDATA%\Claude` en Windows, `~/Library/Application Support/Claude` en macOS): abre ese fichero con un editor de texto.
+2. Pega esto, con **la dirección de tu sitio Moodle** en lugar de `https://campus.example.org`. Si el fichero ya tiene servidores bajo `mcpServers`, añade el bloque `"moodle": { … }` junto a ellos, con una coma entre bloques.
 
-Se abre la carpeta con `claude_desktop_config.json`. Abre ese archivo con un editor de texto (Bloc de notas, TextEdit, VS Code…). Está en:
+   ```json title="claude_desktop_config.json"
+   {
+     "mcpServers": {
+       "moodle": {
+         "command": "npx",
+         "args": ["-y", "@falkenslab/moodle-mcp"],
+         "env": { "MOODLE_URL": "https://campus.example.org" }
+       }
+     }
+   }
+   ```
 
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+3. Cierra Claude Desktop del todo (en Windows, también desde el icono junto al reloj) y vuelve a abrirlo. En un chat nuevo, el botón de **herramientas** (los deslizadores bajo el cuadro de mensaje) lista `moodle` con sus herramientas; si no, consulta [Solución de problemas](../troubleshooting.md): lo habitual es una coma o unas comillas que faltan.
+4. Pide **"Lista mis cursos de Moodle"**. La primera vez se abre una ventana del navegador en la página de acceso de tu Moodle: inicia sesión como siempre ([Iniciar sesión la primera vez](./first-login.md)).
 
-## 2. Añade moodle-mcp
+Cada línea de `env` es un [ajuste](../settings.md). Sin `MOODLE_URL`, Claude te pide tu sitio la primera vez.
 
-Pega esto en el archivo, con **la dirección de tu sitio Moodle** en lugar de `https://campus.example.org`:
+## Qué darle
 
-```json
-{
-  "mcpServers": {
-    "moodle": {
-      "command": "npx",
-      "args": ["-y", "@falkenslab/moodle-mcp"],
-      "env": { "MOODLE_URL": "https://campus.example.org" }
-    }
-  }
-}
-```
+Claude Desktop tiene una sola configuración para todos los chats, así que la elección es qué recibe moodle-mcp ahí. Tres habituales, iguales para docentes y alumnos; solo cambia el rol: `"MOODLE_MCP_ROLE": "teacher"` o `"student"` deja las herramientas de lo que haces.
 
-Si el archivo ya tiene otros servidores en `mcpServers`, añade el bloque `"moodle": { … }` junto a ellos, con una coma entre bloques.
+### Todo tu sitio
 
-Los demás [ajustes](../settings.md) también van en `env`. Por ejemplo, un docente que solo quiere las herramientas de docente:
+El bloque de [Empezar](#empezar), con tu rol:
 
 ```json
 "env": { "MOODLE_URL": "https://campus.example.org", "MOODLE_MCP_ROLE": "teacher" }
 ```
 
-## 3. Reinicia Claude Desktop
+- **Por qué**: todo lo que haces en Moodle, desde cualquier chat.
+- **Ojo**: el agente ve todos tus cursos, también los del año pasado.
 
-Cierra Claude Desktop del todo (en Windows, también desde el icono junto al reloj) y vuelve a abrirlo. En un chat nuevo, el botón de **herramientas** (el icono de controles deslizantes bajo el cuadro de mensaje) ya muestra `moodle` con sus herramientas.
+### Solo tus aulas
 
-Si no aparece, o muestra un error, consulta [Solución de problemas](../troubleshooting.md): la causa más habitual es que falte una coma o unas comillas en el archivo.
+Los cursos de este año, por su URL, en uno o varios sitios: los sitios salen de las URL, así que no hay `MOODLE_URL`.
 
-## 4. Pruébalo
+```json
+"env": {
+  "MOODLE_MCP_COURSES": "https://campus.example.org/course/view.php?id=12,https://campus.example.org/course/view.php?id=15",
+  "MOODLE_MCP_ROLE": "teacher"
+}
+```
 
-En un chat nuevo, pide:
+- **Por qué**: el agente no puede tocar otro curso, ni por error con un nombre parecido. Consulta [Aulas](../limits.md#aulas).
+- **Ojo**: un curso nuevo es una URL más en la lista, y un reinicio.
 
-> Lista mis cursos de Moodle.
+### Un asistente de solo lectura
 
-Claude te pide permiso la primera vez que usa cada herramienta: elige *Allow once* o *Allow always*. Después se abre una ventana del navegador en la página de acceso de tu Moodle: inicia sesión como siempre. Consulta [Iniciar sesión la primera vez](./first-login.md).
+Para preguntar por tus cursos (qué hay pendiente, cómo va la clase) sin que el agente pueda cambiar nada:
+
+```json
+"env": { "MOODLE_URL": "https://campus.example.org", "MOODLE_MCP_ACCESS": "read" }
+```
+
+- **Por qué**: puedes darle *Allow always* a todas las herramientas sin preocuparte, porque ninguna cambia Moodle.
+- **Ojo**: para calificar, publicar o crear, vuelve a cambiarlo.
+
+Se combinan: aulas y solo lectura a la vez, por ejemplo.
+
+## Mientras lo usas
+
+**Claude te pide permiso la primera vez que usa cada herramienta**: *Allow once* o *Allow always*. Deja las que cambian Moodle (calificar, publicar, crear) en *Allow once*, salvo que el acceso sea de solo lectura.
+
+**Lo que no se puede deshacer te lo vuelve a preguntar** el propio moodle-mcp, antes de borrar una actividad, dar de baja a alguien o reiniciar un curso: no se hace nada hasta que dices que sí, y tienes diez minutos para contestar. Tu aplicación tiene que admitir estas preguntas (elicitación MCP); si no, esas herramientas se rechazan con un mensaje que lo dice. Consulta [Confirmar lo que no se puede deshacer](../limits.md#confirmar-lo-que-no-se-puede-deshacer).
+
+## Cambiarlo o quitarlo
+
+Edita el bloque `env` de `claude_desktop_config.json`, o quita el bloque `"moodle"`, y después cierra Claude Desktop y vuelve a abrirlo.

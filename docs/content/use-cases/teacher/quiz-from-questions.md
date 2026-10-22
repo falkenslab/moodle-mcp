@@ -43,7 +43,7 @@ What the agent did:
 4. **Added them to the quiz** and set one question per page (`add_questions_to_quiz`, `set_quiz_pages`).
 
 :::warning Agents don't always wait
-In this session, Codex was set to run moodle-mcp's tools without asking (`default_tools_approval_mode = "approve"`), so nothing stopped it when it decided not to wait. If you want to review a plan first, leave Codex's approval on for tools that change Moodle, so each change waits for your OK, and say "don't change anything yet" plainly. See [Set up Codex](../../getting-started/codex.md#approving-tool-calls).
+In this session, Codex was set to run moodle-mcp's tools without asking (`default_tools_approval_mode = "approve"`), so nothing stopped it when it decided not to wait. If you want to review a plan first, leave Codex's approval on for tools that change Moodle, so each change waits for your OK, and say "don't change anything yet" plainly. See [Set up Codex](../../getting-started/codex.md#while-you-use-it).
 :::
 
 ## The result in Moodle
