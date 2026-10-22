@@ -71,7 +71,7 @@ Si solo das clase, o solo estudias, dile a moodle-mcp tu rol: Claude recibe solo
 Claude Code lee sus servidores de dos ficheros:
 
 - `.mcp.json` en la carpeta de un proyecto: solo ahí, y puede ir en el repositorio del proyecto. Claude Code te pide que confíes en él la primera vez;
-- `~/.claude.json` (`%USERPROFILE%.claude.json` en Windows), bajo `mcpServers`: todas las carpetas. Es donde escribe `--scope user`.
+- `~/.claude.json` (`%USERPROFILE%\.claude.json` en Windows), bajo `mcpServers`: todas las carpetas. Es donde escribe `--scope user`.
 
 ```json title=".mcp.json"
 {
