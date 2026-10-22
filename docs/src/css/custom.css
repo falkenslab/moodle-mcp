@@ -73,6 +73,9 @@
   backdrop-filter: saturate(1.4) blur(10px);
   border-bottom: 1px solid var(--fl-line);
 }
+/* A backdrop-filter makes the navbar the containing block of its fixed children: the phone menu would
+   be clipped to the bar's height. Off while that menu is open. */
+.navbar.navbar-sidebar--show { backdrop-filter: none; }
 .navbar__title {
   font-family: var(--ifm-font-family-monospace);
   font-weight: 700;
