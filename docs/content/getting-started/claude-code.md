@@ -5,86 +5,110 @@ sidebar_label: Claude Code
 
 # Set up Claude Code
 
-[Claude Code](https://claude.com/claude-code) is Claude in your terminal, or in VS Code and other editors; they share the same setup. If you don't have it yet, follow [its installation guide](https://docs.claude.com/en/docs/claude-code/setup) first.
+[Claude Code](https://claude.com/claude-code) is Claude in a terminal window, or inside VS Code and other editors. If you don't have it yet, follow [its installation guide](https://docs.claude.com/en/docs/claude-code/setup) first.
 
-## Start
+## 1. Install it
 
-In a terminal, with **your Moodle site's address** instead of `https://campus.example.org`:
-
-<Terminal title="Terminal">{`
-$ claude mcp add moodle --scope user -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
-Added stdio MCP server moodle with command: npx -y @falkenslab/moodle-mcp to user config
-$ claude mcp list
-moodle: npx -y @falkenslab/moodle-mcp - ✔ Connected
-`}</Terminal>
-
-- `moodle` is the server's name: its tools reach Claude as `mcp__moodle__…`.
-- `--scope user` puts it in every folder; the next section has other choices.
-- Each `-e NAME=value` is a [setting](../settings.md). Without `MOODLE_URL`, Claude asks you for your site the first time.
-- `npx -y @falkenslab/moodle-mcp` downloads and starts the latest version; `@falkenslab/moodle-mcp@0.5.0` keeps one.
-
-Then start Claude Code and ask **"List my Moodle courses"**. The first time, a browser window opens at your Moodle login page: log in as usual ([Logging in the first time](./first-login.md)). Inside Claude Code, `/mcp` shows the servers and their tools.
-
-You can also ask Claude Code, in a conversation, to run that command for you: the server is there in your next conversation.
-
-## Where to set it up
-
-Claude Code keeps a server in one of three places, its **scope**, which decides in which folders it's there:
-
-| Scope | Where it's there | Kept in | Shared |
-| --- | --- | --- | --- |
-| `user` | Every folder you open Claude Code in | `~/.claude.json` | No |
-| `local` (the default) | Only the folder where you added it | `~/.claude.json`, under that folder | No |
-| `project` | Only that folder, for whoever opens it | `.mcp.json` in the folder | Yes, if the folder is a repository |
-
-When the same name is in more than one, the folder's own wins: `local` first, then `project`, then `user`. Four ways to use that, the same for a teacher and a student; only the role changes: `MOODLE_MCP_ROLE=teacher` or `student` keeps the tools for what you do.
-
-### Everywhere
-
-You use Claude Code mostly for your courses, and want Moodle at hand wherever you open it.
+Make a folder for your work with Moodle, such as a `Moodle` folder in your Documents. Open a terminal in it and type:
 
 ```bash
-claude mcp add moodle --scope user -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -- npx -y @falkenslab/moodle-mcp
+claude mcp add moodle -- npx -y @falkenslab/moodle-mcp
 ```
 
-- **Why**: one setup for all your courses and sites; nothing to remember.
-- **Mind**: it's there in your other projects too. Claude Code loads tools only when it needs them, and the tools that change Moodle ask you first, but if you also program with Claude Code you may prefer one of the next ones.
+That's all. It tells Claude Code that, in this folder, it has a helper called `moodle`: moodle-mcp, which it downloads and starts by itself when needed.
 
-### A folder for Moodle
+## 2. Try it
 
-You also use Claude Code for other things, and want Moodle only where you work on your courses: a folder such as `~/moodle`, with your notes, rubrics or exams.
+Open Claude Code **in that same folder** (type `claude` in the terminal) and ask:
+
+> List my Moodle courses.
+
+The first time:
+
+1. **It asks you for your Moodle's address**, such as `https://campus.myschool.org`. Copy it from your browser when you're in Moodle. It remembers it for next time.
+2. **A browser window opens** at your Moodle's login page: log in as you always do. moodle-mcp never sees your password, and keeps you logged in for the next times. See [Logging in the first time](./first-login.md).
+
+Then the agent lists your courses. You're ready.
+
+## 3. Where it's kept
+
+Claude Code wrote that setup in its own file, `.claude.json`, in your user folder (`C:\Users\<you>\.claude.json` on Windows, `~/.claude.json` on macOS and Linux), under the folder where you installed it. To see it without opening the file:
 
 ```bash
-cd ~/moodle
-claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=student -- npx -y @falkenslab/moodle-mcp
+claude mcp get moodle
 ```
 
-- **Why**: Moodle stays out of your other projects; open Claude Code in that folder when you want it.
-- **Mind**: in any other folder, moodle-mcp isn't there.
+Inside the file, it looks like this:
 
-### A classroom per folder
+```json
+"mcpServers": {
+  "moodle": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@falkenslab/moodle-mcp"],
+    "env": {}
+  }
+}
+```
 
-You keep a folder per course (a subject's materials as a teacher, your notes as a student) and want the agent in each one to work **only in that course**: a [classroom](../limits.md#classrooms).
+`env` is where the settings go: each one is a line `"NAME": "value"`. It's empty for now, so moodle-mcp works with its defaults, which are safe ones.
+
+## 4. Make it yours {#make-it-yours}
+
+Each change below is one setting. The easiest way to add one is to remove moodle-mcp and add it again with the setting, `-e NAME=value`, in the same folder:
 
 ```bash
-cd ~/courses/programming-1
-claude mcp add moodle --scope project -e MOODLE_MCP_COURSES=https://campus.example.org/course/view.php?id=12 -e MOODLE_MCP_ROLE=teacher -- npx -y @falkenslab/moodle-mcp
+claude mcp remove moodle
+claude mcp add moodle -e MOODLE_MCP_ROLE=teacher -- npx -y @falkenslab/moodle-mcp
 ```
 
-- **Why**: the agent can't touch another course from there, not even by mistake with a similar name or last year's copy; the site comes from the course's URL.
-- **`project` or `local`**: `--scope project` writes `.mcp.json` in the folder. If it's a repository you share with the course's other teachers, they get the same setup when they open it: Claude Code asks each of them to approve it the first time, and each logs in with their own account. `.mcp.json` holds no password, only the course's URL and the settings. For a folder only you use, leave `--scope project` out.
+Several settings, several `-e`. You can also ask Claude Code, in a chat, to do it for you ("add the setting MOODLE_MCP_ROLE=teacher to moodle"). Either way, start a new conversation afterwards.
 
-### Everywhere, and a classroom where it matters
+### If you teach
 
-Both at once: moodle-mcp everywhere (`user`), and in a course's folder a server with the **same name**, `moodle`, held to that classroom (`project` or `local`). In that folder the classroom wins; everywhere else, the general one.
+`-e MOODLE_MCP_ROLE=teacher`
 
-:::caution One session at a time
-All these setups share your login on a site, kept in one browser profile. Two Claude Code sessions using moodle-mcp on the same site at once, in two folders, can't both open it: the second one fails to start the browser. Close one, or give a folder its own profile with `-e MOODLE_MCP_PROFILE_DIR=…` (and log in once there).
-:::
+The agent gets only a teacher's tools: building courses, grading, the forum, reports. Fewer tools to choose from, so it chooses better, and it doesn't offer you things like "start this quiz as a student".
 
-## While you use it
+### If you study
 
-**Claude Code asks before each tool call**, showing its name and what it will send: *Yes* each time, or *Yes, and don't ask again* for a tool you trust. To approve the tools that only read Moodle once and for all, add them to your settings (`~/.claude/settings.json`); in moodle-mcp they start with `get_` or `list_`:
+`-e MOODLE_MCP_ROLE=student`
+
+The agent gets only a student's tools: reading your courses, what's due, doing activities, your grades. About a third of them, so it's quicker and chooses better.
+
+### Your students' names
+
+You don't need to do anything: **by default the AI never sees other people's names**. It sees each person as an alias, such as `A-7KQ2XM`, always the same one, and only you can find out who it is, on your computer ([Students' privacy](../privacy.md)). Two other choices:
+
+- `-e MOODLE_MCP_STUDENT_DATA=block`: the AI sees nothing at all about other people; for an agent that only builds content.
+- `-e MOODLE_MCP_STUDENT_DATA=clear`: real names. Only with an AI that runs on your own computer, never with Claude.
+
+### So it only looks
+
+`-e MOODLE_MCP_ACCESS=read`
+
+The agent can read your courses, submissions and grades, but can't change anything: no grading, posting or creating. Good for trying it out calmly, or for an assistant that only answers questions.
+
+### Only this year's courses
+
+`-e MOODLE_MCP_COURSES=https://campus.myschool.org/course/view.php?id=12`
+
+The agent works only in the courses you list (their addresses, separated by commas), not in last year's or other ones. Copy each address from your browser when you're on the course's page. See [Classrooms](../limits.md#classrooms).
+
+### To watch what it does
+
+`-e MOODLE_MCP_HEADLESS=false`
+
+moodle-mcp works in a browser you don't see; with this, you see its window all the time. You can also just ask "show me the browser" when you want to watch ([Watching the agent](./watching.md)).
+
+Every setting, with all its choices, is in [Settings](../settings.md).
+
+## 5. While you use it {#while-you-use-it}
+
+- **Claude Code asks you before each step** that uses moodle-mcp: *Yes*, or *Yes, and don't ask again* for one you trust.
+- **What can't be undone asks you again**: before deleting something, unenrolling someone or resetting a course, moodle-mcp itself asks you, with a yes or no. Nothing happens until you say yes.
+
+To stop being asked for the steps that only read Moodle, add this to the file `.claude/settings.json` in your user folder:
 
 ```json
 {
@@ -95,32 +119,19 @@ All these setups share your login on a site, kept in one browser profile. Two Cl
 }
 ```
 
-The `ask` line is the one exception: as a student, opening a lesson's page records your progress in it.
+The `ask` line is the one exception: as a student, opening a lesson's page counts as progress in it.
 
-`mcp__moodle__*` would approve every tool, those that change Moodle too: only with read-only access (`MOODLE_MCP_ACCESS=read`), where none of them can.
+## 6. In other folders {#where-to-set-it-up}
 
-**What can't be undone asks you again**, from moodle-mcp itself: before deleting an activity, unenrolling someone or resetting a course, a question in Claude Code says what will happen, and nothing runs until you say yes. You have ten minutes to answer. See [Confirming what can't be undone](../limits.md#confirming-what-cant-be-undone).
+What you installed in step 1 is there only in that folder. That's a good start: Moodle stays where you work on your courses. When you want it otherwise:
 
-## Changing or removing it
+| You want | Add to the install command | Kept in |
+| --- | --- | --- |
+| Moodle in every folder | `--scope user` | `.claude.json`, for all your folders |
+| A folder for one course, shared with other teachers through a repository | `--scope project` | `.mcp.json` in that folder |
 
-`claude mcp get moodle` shows its setup and where it's kept. To change a setting, remove it and add it again with the new values, with the scope you added it with:
+- **A folder per course**: in each course's folder, install it with `-e MOODLE_MCP_COURSES=` and that course's address. There, the agent works only in that course. With `--scope project` it's written in a `.mcp.json` file in the folder: if you share the folder with other teachers (a repository), they get the same setup and each logs in with their own account; the file holds no password.
+- **Everywhere, and a course folder**: install it with `--scope user` for everywhere, and in a course's folder again with that course. In that folder, the folder's one wins.
+- **One at a time**: all of them share your login. Two Claude Code windows using moodle-mcp at the same time on the same Moodle can't both open it: close one, or give one its own login folder with `-e MOODLE_MCP_PROFILE_DIR=` and a folder.
 
-```bash
-claude mcp remove moodle --scope user
-```
-
-Or edit it by hand: a `project` server is in the folder's `.mcp.json`; `user` and `local` ones are in `~/.claude.json` (`%USERPROFILE%\.claude.json` on Windows), Claude Code's own file, at the top under `mcpServers` and under the folder's entry in `projects`. The same block in either:
-
-```json title=".mcp.json"
-{
-  "mcpServers": {
-    "moodle": {
-      "command": "npx",
-      "args": ["-y", "@falkenslab/moodle-mcp"],
-      "env": { "MOODLE_URL": "https://campus.example.org", "MOODLE_MCP_ROLE": "teacher" }
-    }
-  }
-}
-```
-
-Claude Code reads it when it starts, or when you reconnect the server in `/mcp`.
+To remove it from a folder: `claude mcp remove moodle` there (with `--scope user` or `--scope project` if you added it so).

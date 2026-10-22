@@ -5,78 +5,110 @@ sidebar_label: Claude Desktop
 
 # Set up Claude Desktop
 
-[Claude Desktop](https://claude.ai/download) is the Claude app for Windows and macOS. You add moodle-mcp to its configuration file once, and it's there in every chat.
+[Claude Desktop](https://claude.ai/download) is the Claude app for Windows and macOS. You add moodle-mcp once to its settings file, and it's there in every chat.
 
-## Start
+## 1. Open its settings file
 
-1. In Claude Desktop, go to **Settings** (on Windows, the menu ☰ → *File* → *Settings*; on macOS, *Claude* → *Settings*), choose **Developer** and click **Edit Config**. It opens the folder with `claude_desktop_config.json` (`%APPDATA%\Claude` on Windows, `~/Library/Application Support/Claude` on macOS): open that file with a text editor.
-2. Paste this, with **your Moodle site's address** instead of `https://campus.example.org`. If the file already has servers under `mcpServers`, add the `"moodle": { … }` block next to them, with a comma between blocks.
+In Claude Desktop, go to **Settings** (on Windows, the menu ☰ → *File* → *Settings*; on macOS, *Claude* → *Settings*), choose **Developer** and click **Edit Config**. A folder opens with the file `claude_desktop_config.json`; open it with a text editor, such as Notepad or TextEdit. It lives in:
 
-   ```json title="claude_desktop_config.json"
-   {
-     "mcpServers": {
-       "moodle": {
-         "command": "npx",
-         "args": ["-y", "@falkenslab/moodle-mcp"],
-         "env": { "MOODLE_URL": "https://campus.example.org" }
-       }
-     }
-   }
-   ```
+- **Windows**: `C:\Users\<you>\AppData\Roaming\Claude\claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
-3. Quit Claude Desktop completely (on Windows, also from the icon next to the clock) and open it again. In a new chat, the **tools** button (the sliders under the message box) lists `moodle` with its tools; if it doesn't, see [Troubleshooting](../troubleshooting.md): the usual cause is a missing comma or quote.
-4. Ask **"List my Moodle courses"**. The first time, a browser window opens at your Moodle login page: log in as usual ([Logging in the first time](./first-login.md)).
+## 2. Install it
 
-Each line in `env` is a [setting](../settings.md). Without `MOODLE_URL`, Claude asks you for your site the first time.
+Replace what's in the file with this, and save:
 
-## What to give it
-
-Claude Desktop has one configuration for every chat, so the choice is what moodle-mcp gets there. Three common ones, the same for a teacher and a student; only the role changes: `"MOODLE_MCP_ROLE": "teacher"` or `"student"` keeps the tools for what you do.
-
-### Your whole site
-
-The block of [Start](#start), with your role:
-
-```json
-"env": { "MOODLE_URL": "https://campus.example.org", "MOODLE_MCP_ROLE": "teacher" }
-```
-
-- **Why**: everything you do in Moodle, from any chat.
-- **Mind**: the agent sees every course of yours, last year's too.
-
-### Only your classrooms
-
-The courses of this year, by their URLs, on one site or several: the sites come from the URLs, so there's no `MOODLE_URL`.
-
-```json
-"env": {
-  "MOODLE_MCP_COURSES": "https://campus.example.org/course/view.php?id=12,https://campus.example.org/course/view.php?id=15",
-  "MOODLE_MCP_ROLE": "teacher"
+```json title="claude_desktop_config.json"
+{
+  "mcpServers": {
+    "moodle": {
+      "command": "npx",
+      "args": ["-y", "@falkenslab/moodle-mcp"]
+    }
+  }
 }
 ```
 
-- **Why**: the agent can't touch another course, not even by mistake with a similar name. See [Classrooms](../limits.md#classrooms).
-- **Mind**: a new course means a new URL in the list, and a restart.
+If the file already has other helpers under `mcpServers`, don't replace it: add the `"moodle": { … }` block next to them, with a comma between blocks.
 
-### A read-only assistant
+Then **quit Claude Desktop completely** (on Windows, also from its icon next to the clock) and open it again. In a new chat, the **tools** button (the sliders under the message box) lists `moodle`. If it doesn't, the file most likely has a missing comma or quote: see [Troubleshooting](../troubleshooting.md).
 
-To ask about your courses (what's pending, how the class is doing) without the agent being able to change anything:
+## 3. Try it
 
-```json
-"env": { "MOODLE_URL": "https://campus.example.org", "MOODLE_MCP_ACCESS": "read" }
+In a new chat, ask:
+
+> List my Moodle courses.
+
+The first time:
+
+1. **Claude asks your permission** to use moodle-mcp's tools: *Allow once* or *Allow always*.
+2. **It asks you for your Moodle's address**, such as `https://campus.myschool.org`. Copy it from your browser when you're in Moodle. It remembers it for next time.
+3. **A browser window opens** at your Moodle's login page: log in as you always do. moodle-mcp never sees your password, and keeps you logged in for the next times. See [Logging in the first time](./first-login.md).
+
+Then Claude lists your courses. You're ready.
+
+## 4. Make it yours {#make-it-yours}
+
+Each change below is one setting, a line in an `env` block you add inside `"moodle"`:
+
+```json title="claude_desktop_config.json"
+{
+  "mcpServers": {
+    "moodle": {
+      "command": "npx",
+      "args": ["-y", "@falkenslab/moodle-mcp"],
+      "env": {
+        "MOODLE_MCP_ROLE": "teacher"
+      }
+    }
+  }
+}
 ```
 
-- **Why**: you can then *Allow always* every tool without worry, since none of them changes Moodle.
-- **Mind**: to grade, post or create, change it back.
+Several settings, one line each, with a comma between lines. Save the file, quit Claude Desktop completely and open it again.
 
-These combine: classrooms and read-only together, for instance.
+### If you teach
 
-## While you use it
+`"MOODLE_MCP_ROLE": "teacher"`
 
-**Claude asks your permission the first time it uses each tool**: *Allow once* or *Allow always*. Keep the tools that change Moodle (grading, posting, creating) on *Allow once*, unless access is read-only.
+Claude gets only a teacher's tools: building courses, grading, the forum, reports. Fewer tools to choose from, so it chooses better, and it doesn't offer you things like "start this quiz as a student".
 
-**What can't be undone asks you again**, from moodle-mcp itself, before deleting an activity, unenrolling someone or resetting a course: nothing runs until you say yes, and you have ten minutes to answer. Your app has to support these questions (MCP elicitation); if it doesn't, those tools are refused with a message saying so. See [Confirming what can't be undone](../limits.md#confirming-what-cant-be-undone).
+### If you study
 
-## Changing or removing it
+`"MOODLE_MCP_ROLE": "student"`
 
-Edit the `env` block in `claude_desktop_config.json`, or remove the `"moodle"` block, then quit Claude Desktop and open it again.
+Claude gets only a student's tools: reading your courses, what's due, doing activities, your grades. About a third of them, so it's quicker and chooses better.
+
+### Your students' names
+
+You don't need to do anything: **by default the AI never sees other people's names**. It sees each person as an alias, such as `A-7KQ2XM`, always the same one, and only you can find out who it is, on your computer ([Students' privacy](../privacy.md)). Two other choices:
+
+- `"MOODLE_MCP_STUDENT_DATA": "block"`: the AI sees nothing at all about other people; for an assistant that only builds content.
+- `"MOODLE_MCP_STUDENT_DATA": "clear"`: real names. Only with an AI that runs on your own computer, never with Claude.
+
+### So it only looks
+
+`"MOODLE_MCP_ACCESS": "read"`
+
+Claude can read your courses, submissions and grades, but can't change anything: no grading, posting or creating. Then you can *Allow always* every tool without worry.
+
+### Only this year's courses
+
+`"MOODLE_MCP_COURSES": "https://campus.myschool.org/course/view.php?id=12"`
+
+Claude works only in the courses you list (their addresses, separated by commas), not in last year's or other ones. Copy each address from your browser when you're on the course's page. See [Classrooms](../limits.md#classrooms).
+
+### To watch what it does
+
+`"MOODLE_MCP_HEADLESS": "false"`
+
+moodle-mcp works in a browser you don't see; with this, you see its window all the time. You can also just ask "show me the browser" when you want to watch ([Watching the agent](./watching.md)).
+
+Every setting, with all its choices, is in [Settings](../settings.md).
+
+## 5. While you use it {#while-you-use-it}
+
+- **Claude asks your permission the first time it uses each tool**: keep the ones that change Moodle (grading, posting, creating) on *Allow once*, unless it can only look.
+- **What can't be undone asks you again**: before deleting something, unenrolling someone or resetting a course, moodle-mcp itself asks you, with a yes or no, and nothing happens until you say yes. This needs an app that can show that question (MCP elicitation); if yours can't, those steps are refused with a message saying so ([Confirming what can't be undone](../limits.md#confirming-what-cant-be-undone)).
+
+To remove moodle-mcp, delete its `"moodle"` block from the file, and restart Claude Desktop.

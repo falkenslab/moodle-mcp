@@ -31,17 +31,17 @@ moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI 
 
 ## 🚀 Quick start
 
-You need [Node.js](https://nodejs.org) 20 or later. Add moodle-mcp to your AI app, with your Moodle site's address:
+You need [Node.js](https://nodejs.org) 20 or later. Add moodle-mcp to your AI app:
 
 ```bash
 # Claude Code
-claude mcp add moodle -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
+claude mcp add moodle -- npx -y @falkenslab/moodle-mcp
 
 # Codex
-codex mcp add moodle --env MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
+codex mcp add moodle -- npx -y @falkenslab/moodle-mcp
 ```
 
-Then ask **"List my Moodle courses"**: the first time, a browser window opens for you to log in.
+Then ask **"List my Moodle courses"**: the first time, the agent asks for your Moodle's address and a browser window opens for you to log in. To make it yours (your role, your courses, your students' names), see the [setup guides](https://falkenslab.github.io/moodle-mcp/getting-started/requirements).
 
 <details>
 <summary>Claude Desktop</summary>
@@ -53,8 +53,7 @@ In Settings → Developer → Edit Config, add it to `claude_desktop_config.json
   "mcpServers": {
     "moodle": {
       "command": "npx",
-      "args": ["-y", "@falkenslab/moodle-mcp"],
-      "env": { "MOODLE_URL": "https://campus.example.org" }
+      "args": ["-y", "@falkenslab/moodle-mcp"]
     }
   }
 }
