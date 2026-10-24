@@ -109,6 +109,6 @@ Todos los ajustes, con todas sus opciones, están en [Ajustes](../settings.md).
 ## 5. Mientras lo usas {#while-you-use-it}
 
 - **Claude te pide permiso la primera vez que usa cada herramienta**: deja las que cambian Moodle (calificar, publicar, crear) en *Allow once*, salvo que solo pueda mirar.
-- **Lo que no se puede deshacer te lo vuelve a preguntar**: antes de borrar algo, dar de baja a alguien o reiniciar un curso, el propio moodle-mcp te pregunta, con un sí o un no, y no pasa nada hasta que dices que sí. Hace falta una aplicación que pueda mostrar esa pregunta (elicitación MCP); si la tuya no puede, esos pasos se rechazan con un mensaje que lo dice ([Confirmar lo que no se puede deshacer](../limits.md#confirmar-lo-que-no-se-puede-deshacer)).
+- **Lo que no se puede deshacer te lo vuelve a preguntar**: antes de borrar algo, dar de baja a alguien o reiniciar un curso, el propio moodle-mcp te pregunta, en Claude Desktop, con un sí o un no, y no pasa nada hasta que dices que sí. Tienes diez minutos para contestar ([Confirmar lo que no se puede deshacer](../limits.md#confirmar-lo-que-no-se-puede-deshacer)).
 
 Para quitar moodle-mcp, borra su bloque `"moodle"` del fichero y reinicia Claude Desktop.

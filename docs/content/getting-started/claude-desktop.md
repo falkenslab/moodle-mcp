@@ -109,6 +109,6 @@ Every setting, with all its choices, is in [Settings](../settings.md).
 ## 5. While you use it {#while-you-use-it}
 
 - **Claude asks your permission the first time it uses each tool**: keep the ones that change Moodle (grading, posting, creating) on *Allow once*, unless it can only look.
-- **What can't be undone asks you again**: before deleting something, unenrolling someone or resetting a course, moodle-mcp itself asks you, with a yes or no, and nothing happens until you say yes. This needs an app that can show that question (MCP elicitation); if yours can't, those steps are refused with a message saying so ([Confirming what can't be undone](../limits.md#confirming-what-cant-be-undone)).
+- **What can't be undone asks you again**: before deleting something, unenrolling someone or resetting a course, moodle-mcp itself asks you, in Claude Desktop, with a yes or no, and nothing happens until you say yes. You have ten minutes to answer ([Confirming what can't be undone](../limits.md#confirming-what-cant-be-undone)).
 
 To remove moodle-mcp, delete its `"moodle"` block from the file, and restart Claude Desktop.
