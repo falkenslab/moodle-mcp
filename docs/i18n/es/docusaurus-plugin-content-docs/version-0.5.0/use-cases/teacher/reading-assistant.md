@@ -21,7 +21,7 @@ Recibe 86 herramientas en lugar de 235. Consulta [Limitar al agente](../../limit
 
 ## Lo que pides
 
-> Dame un resumen rápido de cómo va mi curso de Moodle mcp-content: entregas por calificar, el calificador y la actividad del foro. Después pon un 10 a la entrega pendiente de "Tarea MCP".
+<Prompt>{`Dame un resumen rápido de cómo va mi curso de Moodle mcp-content: entregas por calificar, el calificador y la actividad del foro. Después pon un 10 a la entrega pendiente de "Tarea MCP".`}</Prompt>
 
 ## La sesión
 

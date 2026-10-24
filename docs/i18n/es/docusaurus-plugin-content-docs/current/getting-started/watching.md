@@ -7,13 +7,13 @@ sidebar_label: Ver al agente
 
 El agente trabaja en Moodle sin ventana, para no molestarte. Cuando quieras ver qué está haciendo, pide:
 
-> Enséñame el navegador.
+<Prompt>{`Enséñame el navegador.`}</Prompt>
 
 Se abre una ventana del navegador, ya con la sesión iniciada, y cada paso del agente aparece en ella: la página del curso, la entrega que lee, el formulario que rellena. Es una buena forma de conocer moodle-mcp, o de revisar una tarea de la que no estés seguro.
 
 Para volver a trabajar en segundo plano:
 
-> Oculta el navegador.
+<Prompt>{`Oculta el navegador.`}</Prompt>
 
 Cerrar tú la ventana hace lo mismo.
 
@@ -21,7 +21,7 @@ Cerrar tú la ventana hace lo mismo.
 
 Cada herramienta que crea algo le da al agente su enlace, así que puedes pedírselo:
 
-> Dame el enlace al cuestionario que acabas de crear.
+<Prompt>{`Dame el enlace al cuestionario que acabas de crear.`}</Prompt>
 
 Y todo lo que hace el agente queda en Moodle como si lo hubieras hecho tú: en el curso, en el calificador y en los registros de Moodle, a tu nombre.
 

@@ -11,8 +11,7 @@ Le das al agente preguntas en [formato GIFT](https://docs.moodle.org/en/GIFT_for
 
 ## Lo que pides
 
-```text
-En mi curso de Moodle mcp-content, crea un cuestionario oculto llamado "Bucles: repaso rápido" en la primera sección, importa estas preguntas GIFT en su banco, añádelas al cuestionario y pon una pregunta por página:
+<Prompt>{`En mi curso de Moodle mcp-content, crea un cuestionario oculto llamado "Bucles: repaso rápido" en la primera sección, importa estas preguntas GIFT en su banco, añádelas al cuestionario y pon una pregunta por página:
 
 ::Repetir:: ¿Cuántas veces ejecuta su bloque for i in range(3)? {=3 ~2 ~4}
 
@@ -20,8 +19,7 @@ En mi curso de Moodle mcp-content, crea un cuestionario oculto llamado "Bucles: 
 
 ::While:: Un bucle while se repite mientras su condición es verdadera. {T}
 
-Dime qué vas a hacer antes de cambiar nada.
-```
+Dime qué vas a hacer antes de cambiar nada.`}</Prompt>
 
 Después: "Sí, adelante."
 

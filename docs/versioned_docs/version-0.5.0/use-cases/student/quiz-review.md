@@ -11,7 +11,7 @@ After a quiz, the agent reads your attempt's review and explains each mistake, a
 
 ## What you ask
 
-> I just did the quiz "Loops: quick check" in my Moodle course mcp-content. What grade did I get, and which questions did I get wrong? Explain the right answers.
+<Prompt>{`I just did the quiz "Loops: quick check" in my Moodle course mcp-content. What grade did I get, and which questions did I get wrong? Explain the right answers.`}</Prompt>
 
 ## The session
 

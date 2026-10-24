@@ -11,7 +11,7 @@ SCORM packages are interactive lessons that run inside Moodle's player, each wit
 
 ## What you ask
 
-> In my Moodle course mcp-content, do the SCORM activity "SCORM MCP (prueba)" in a new attempt, answering its questions as well as you can, and then tell me what grade Moodle recorded.
+<Prompt>{`In my Moodle course mcp-content, do the SCORM activity "SCORM MCP (prueba)" in a new attempt, answering its questions as well as you can, and then tell me what grade Moodle recorded.`}</Prompt>
 
 ## The session
 

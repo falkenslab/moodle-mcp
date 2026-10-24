@@ -25,7 +25,7 @@ Our test setup has one Moodle, so for this session `school` and `uni` are the sa
 
 ## What you ask
 
-> For this demo, my Moodle sites "school" and "uni" are the same test Moodle under two names. Copy the page "Apuntes: bucles" from my course mcp-content on "school" to the same course on "uni", at the end of its last section. Tell me what you'll do first.
+<Prompt>{`For this demo, my Moodle sites "school" and "uni" are the same test Moodle under two names. Copy the page "Apuntes: bucles" from my course mcp-content on "school" to the same course on "uni", at the end of its last section. Tell me what you'll do first.`}</Prompt>
 
 Then: "Yes, go ahead."
 

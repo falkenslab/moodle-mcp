@@ -1,0 +1,75 @@
+/* An AI app's message box (Falken's Lab's look): the text, a quiet bar of icons, the accent send button. */
+.box {
+  position: relative;
+  margin: 0 0 var(--ifm-leading);
+  padding: 14px 16px 10px;
+  border: 1px solid var(--fl-line);
+  border-radius: 16px;
+  background: var(--fl-panel);
+  box-shadow: var(--fl-shadow);
+}
+
+.text {
+  margin: 0 0 10px;
+  padding-right: 4px;
+  color: var(--ifm-font-color-base);
+  font-size: 0.97rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 32px;
+  padding-right: 44px;
+  color: var(--fl-text-2);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.send {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: var(--fl-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.send:hover {
+  background: var(--fl-accent-hover);
+}
+
+.send svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-theme="dark"] .send {
+  color: #1a0b08;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .send {
+    transition: none;
+  }
+}

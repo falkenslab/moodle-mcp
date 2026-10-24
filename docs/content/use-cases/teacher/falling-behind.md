@@ -11,7 +11,7 @@ The agent checks the course's activity completion, finds who hasn't done somethi
 
 ## What you ask
 
-> In my Moodle course mcp-content, which students haven't completed the page "Apuntes: bucles" yet? Prepare a short, friendly reminder for them, and tell me who would get it before sending anything.
+<Prompt>{`In my Moodle course mcp-content, which students haven't completed the page "Apuntes: bucles" yet? Prepare a short, friendly reminder for them, and tell me who would get it before sending anything.`}</Prompt>
 
 Then: "Yes, send it."
 

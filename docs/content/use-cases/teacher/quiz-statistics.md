@@ -11,7 +11,7 @@ After your students take a quiz, the agent reads Moodle's statistics for it and 
 
 ## What you ask
 
-> Look at the statistics of the quiz "Repaso: bucles y funciones" in my course mcp-content: which questions should I review, and why? Don't change anything.
+<Prompt>{`Look at the statistics of the quiz "Repaso: bucles y funciones" in my course mcp-content: which questions should I review, and why? Don't change anything.`}</Prompt>
 
 Four students took this quiz. Its third question asks which of `for`, `while` and `def` is a loop, and only `for` is marked right, though `while` is one too.
 

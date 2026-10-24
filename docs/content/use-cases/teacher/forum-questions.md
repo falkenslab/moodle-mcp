@@ -11,7 +11,7 @@ The agent reads a forum, finds the questions nobody has answered, and drafts an 
 
 ## What you ask
 
-> Are there questions in the "Foro MCP" forum of my course mcp-content that nobody has answered yet? Read them and draft a short, friendly answer for each. Don't post anything yet.
+<Prompt>{`Are there questions in the "Foro MCP" forum of my course mcp-content that nobody has answered yet? Read them and draft a short, friendly answer for each. Don't post anything yet.`}</Prompt>
 
 Then: "Post it."
 

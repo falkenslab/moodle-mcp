@@ -11,9 +11,7 @@ sidebar_label: Codex
 
 Open a terminal and type:
 
-```bash
-codex mcp add moodle -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ codex mcp add moodle -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 That tells Codex it has a helper called `moodle`: moodle-mcp, which it downloads and starts by itself when needed.
 
@@ -43,7 +41,7 @@ Codex gives a helper 10 seconds to start and one minute for each task, and gives
 
 Start Codex (type `codex` in a terminal) and ask:
 
-> List my Moodle courses.
+<Prompt>{`List my Moodle courses.`}</Prompt>
 
 The first time:
 

@@ -11,7 +11,7 @@ El agente revisa todos tus cursos en busca de lo que tienes que entregar y te di
 
 ## Lo que pides
 
-> ¿Qué tengo que entregar en Moodle en las próximas dos semanas, en todos mis cursos? Ordénalo por fecha y dime qué me queda por hacer.
+<Prompt>{`¿Qué tengo que entregar en Moodle en las próximas dos semanas, en todos mis cursos? Ordénalo por fecha y dime qué me queda por hacer.`}</Prompt>
 
 ## La sesión
 

@@ -11,7 +11,7 @@ El agente revisa la finalización de actividades del curso, encuentra quién no 
 
 ## Lo que pides
 
-> En mi curso de Moodle mcp-content, ¿qué alumnos no han completado todavía la página "Apuntes: bucles"? Prepárales un recordatorio breve y amable, y dime a quién le llegaría antes de enviar nada.
+<Prompt>{`En mi curso de Moodle mcp-content, ¿qué alumnos no han completado todavía la página "Apuntes: bucles"? Prepárales un recordatorio breve y amable, y dime a quién le llegaría antes de enviar nada.`}</Prompt>
 
 Después: "Sí, envíalo."
 

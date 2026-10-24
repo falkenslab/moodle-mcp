@@ -35,7 +35,7 @@ The profile folder holds a live Moodle session, as good as your password while i
 
 If you didn't set `MOODLE_URL` when you added moodle-mcp, the agent asks you for your site the first time. You can also tell it:
 
-> Use the Moodle site https://campus.example.org.
+<Prompt>{`Use the Moodle site https://campus.example.org.`}</Prompt>
 
 It keeps that site until the AI app restarts. To make it permanent, add `MOODLE_URL` to the configuration ([Settings](../settings.md)).
 
@@ -43,7 +43,5 @@ It keeps that site until the AI app restarts. To make it permanent, add `MOODLE_
 
 Each profile folder keeps one session. To use two Moodle sites, or two accounts on the same site (say, your teacher account and a test student), add moodle-mcp twice with different names, and give each its own `MOODLE_MCP_PROFILE_DIR`:
 
-```bash
-claude mcp add moodle-campus -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
-claude mcp add moodle-test -e MOODLE_URL=https://test.example.org -e MOODLE_MCP_PROFILE_DIR=~/.moodle-mcp/test -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle-campus -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
+$ claude mcp add moodle-test -e MOODLE_URL=https://test.example.org -e MOODLE_MCP_PROFILE_DIR=~/.moodle-mcp/test -- npx -y @falkenslab/moodle-mcp`}</Terminal>

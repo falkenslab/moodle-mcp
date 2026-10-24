@@ -11,7 +11,7 @@ Después de un cuestionario, el agente lee la revisión de tu intento y te expli
 
 ## Lo que pides
 
-> Acabo de hacer el cuestionario "Bucles: repaso rápido" de mi curso de Moodle mcp-content. ¿Qué nota he sacado y qué preguntas he fallado? Explícame las respuestas correctas.
+<Prompt>{`Acabo de hacer el cuestionario "Bucles: repaso rápido" de mi curso de Moodle mcp-content. ¿Qué nota he sacado y qué preguntas he fallado? Explícame las respuestas correctas.`}</Prompt>
 
 ## La sesión
 

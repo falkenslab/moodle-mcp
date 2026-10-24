@@ -25,7 +25,7 @@ Nuestro entorno de pruebas tiene un solo Moodle, así que en esta sesión `schoo
 
 ## Lo que pides
 
-> Para esta demostración, mis sitios Moodle «school» y «uni» son el mismo Moodle de pruebas con dos nombres. Copia la página "Apuntes: bucles" de mi curso mcp-content en «school» al mismo curso en «uni», al final de su última sección. Dime antes qué vas a hacer.
+<Prompt>{`Para esta demostración, mis sitios Moodle «school» y «uni» son el mismo Moodle de pruebas con dos nombres. Copia la página "Apuntes: bucles" de mi curso mcp-content en «school» al mismo curso en «uni», al final de su última sección. Dime antes qué vas a hacer.`}</Prompt>
 
 Después: "Sí, adelante."
 

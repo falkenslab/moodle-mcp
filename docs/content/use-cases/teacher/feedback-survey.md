@@ -11,11 +11,11 @@ The agent creates an anonymous feedback activity with the questions you describe
 
 ## What you ask
 
-> In my Moodle course mcp-content, create a hidden, anonymous feedback activity called "How was unit 1?" at the end of the first section, with three questions: how clear the unit was, from 1 to 5; which activity helped most (the notes, the quiz or the forum); and an open one for suggestions. Tell me what you'll create first.
+<Prompt>{`In my Moodle course mcp-content, create a hidden, anonymous feedback activity called "How was unit 1?" at the end of the first section, with three questions: how clear the unit was, from 1 to 5; which activity helped most (the notes, the quiz or the forum); and an open one for suggestions. Tell me what you'll create first.`}</Prompt>
 
 Then:
 
-> Yes, create it.
+<Prompt>{`Yes, create it.`}</Prompt>
 
 ## The session
 

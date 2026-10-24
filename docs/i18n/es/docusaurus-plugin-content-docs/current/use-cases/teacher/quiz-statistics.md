@@ -11,7 +11,7 @@ Después de que tu alumnado haga un cuestionario, el agente lee sus estadística
 
 ## Lo que pides
 
-> Mira las estadísticas del cuestionario "Repaso: bucles y funciones" de mi curso mcp-content: ¿qué preguntas debería revisar y por qué? No cambies nada.
+<Prompt>{`Mira las estadísticas del cuestionario "Repaso: bucles y funciones" de mi curso mcp-content: ¿qué preguntas debería revisar y por qué? No cambies nada.`}</Prompt>
 
 Cuatro alumnos han hecho este cuestionario. Su tercera pregunta pide cuál de `for`, `while` y `def` es un bucle, y solo `for` está marcada como correcta, aunque `while` también lo es.
 

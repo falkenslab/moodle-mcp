@@ -37,7 +37,7 @@ Then **quit Claude Desktop completely** (on Windows, also from its icon next to 
 
 In a new chat, ask:
 
-> List my Moodle courses.
+<Prompt>{`List my Moodle courses.`}</Prompt>
 
 The first time:
 

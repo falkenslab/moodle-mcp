@@ -11,7 +11,7 @@ El agente lee las páginas y los libros del curso, y los convierte en una hoja d
 
 ## Lo que pides
 
-> Lee la página "Apuntes: bucles" y el libro "Libro: funciones" de mi curso de Moodle mcp-content, y hazme una hoja de estudio de una página con las ideas clave y un ejemplo de cada una.
+<Prompt>{`Lee la página "Apuntes: bucles" y el libro "Libro: funciones" de mi curso de Moodle mcp-content, y hazme una hoja de estudio de una página con las ideas clave y un ejemplo de cada una.`}</Prompt>
 
 ## La sesión
 

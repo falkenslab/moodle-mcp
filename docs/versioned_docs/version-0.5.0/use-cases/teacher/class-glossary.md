@@ -11,11 +11,11 @@ Your students define the unit's words in a glossary that waits for your approval
 
 ## What you ask
 
-> In the glossary "Glosario de la clase" of my course mcp-content, which entries are waiting for my approval? Check each definition: tell me which are right and what is wrong in the others. Don't approve anything yet.
+<Prompt>{`In the glossary "Glosario de la clase" of my course mcp-content, which entries are waiting for my approval? Check each definition: tell me which are right and what is wrong in the others. Don't approve anything yet.`}</Prompt>
 
 Then:
 
-> Approve the right ones, and leave the wrong one waiting.
+<Prompt>{`Approve the right ones, and leave the wrong one waiting.`}</Prompt>
 
 ## The session
 

@@ -11,11 +11,11 @@ The agent turns a page of notes into a Moodle lesson: one page per idea, each en
 
 ## What you ask
 
-> In my Moodle course mcp-content, turn the page "Apuntes: bucles" into a short hidden lesson called "Loops, step by step" in the first section: one page per idea, each ending with a question; a right answer moves on to the next page, a wrong one goes back to the page that explains it. Tell me the plan before creating anything.
+<Prompt>{`In my Moodle course mcp-content, turn the page "Apuntes: bucles" into a short hidden lesson called "Loops, step by step" in the first section: one page per idea, each ending with a question; a right answer moves on to the next page, a wrong one goes back to the page that explains it. Tell me the plan before creating anything.`}</Prompt>
 
 Then, after reading the plan:
 
-> Looks good, create it.
+<Prompt>{`Looks good, create it.`}</Prompt>
 
 ## The session
 

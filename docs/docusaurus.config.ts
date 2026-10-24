@@ -73,8 +73,6 @@ const config: Config = {
       items: [
         { type: "doc", docId: "getting-started/requirements", position: "left", label: "Get started" },
         { type: "doc", docId: "use-cases/index", position: "left", label: "Use cases" },
-        { type: "doc", docId: "privacy", position: "left", label: "Privacy" },
-        { type: "doc", docId: "limits", position: "left", label: "Limits" },
         { type: "doc", docId: "settings", position: "left", label: "Settings" },
         { type: "doc", docId: "reference/tools", position: "left", label: "Tools" },
         {
@@ -83,6 +81,8 @@ const config: Config = {
           position: "left",
           items: [
             { type: "doc", docId: "intro", label: "What is moodle-mcp?" },
+            { type: "doc", docId: "privacy", label: "Privacy" },
+            { type: "doc", docId: "limits", label: "Limits" },
             { type: "doc", docId: "several-sites", label: "Several sites" },
             { type: "doc", docId: "troubleshooting", label: "Troubleshooting" },
             { type: "doc", docId: "releases", label: "Releases" },

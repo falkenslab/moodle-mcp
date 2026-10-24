@@ -21,9 +21,7 @@ Un solo ajuste decide qué recibe la IA sobre otras personas (alumnos y compañe
 
 Por ejemplo, para bloquear del todo los datos del alumnado en Claude Code:
 
-```bash
-claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_STUDENT_DATA=block -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_STUDENT_DATA=block -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 ## Alias
 
@@ -31,15 +29,11 @@ Cada persona tiene siempre el mismo alias, en todos los cursos y en todas las se
 
 Para ver quién es un alias, ejecuta esto en **tu propio** terminal (no a través del agente):
 
-```bash
-npx @falkenslab/pseudonym whois A-7KQ2XM
-```
+<Terminal>{`$ npx @falkenslab/pseudonym whois A-7KQ2XM`}</Terminal>
 
 Para convertir en nombres todos los alias de un texto, por ejemplo unas notas que el agente ha escrito para ti:
 
-```bash
-npx @falkenslab/pseudonym reveal notes.md
-```
+<Terminal>{`$ npx @falkenslab/pseudonym reveal notes.md`}</Terminal>
 
 ### De dónde salen los alias
 

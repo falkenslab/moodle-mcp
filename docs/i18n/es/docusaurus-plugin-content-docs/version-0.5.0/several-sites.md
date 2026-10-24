@@ -25,25 +25,25 @@ $ claude mcp add moodle -e MOODLE_MCP_SITES=centro=https://campus.example.org,un
 
 Pídelo con tus palabras:
 
-> Cambia al Moodle de la universidad.
+<Prompt>{`Cambia al Moodle de la universidad.`}</Prompt>
 
 El agente llama a `use_site`, y desde entonces todas las herramientas trabajan en ese sitio. La primera vez que usas un sitio, se abre una ventana del navegador para que inicies sesión allí, igual que con el primero. Cada sitio guarda su propia sesión.
 
 Para verlos todos:
 
-> ¿Qué sitios Moodle conoces?
+<Prompt>{`¿Qué sitios Moodle conoces?`}</Prompt>
 
 ## Añadir un sitio mientras trabajas
 
 No hace falta cambiar la configuración para añadir un sitio: pídeselo al agente.
 
-> Añade el sitio Moodle https://moodle.uni.example.es, como «uni».
+<Prompt>{`Añade el sitio Moodle https://moodle.uni.example.es, como «uni».`}</Prompt>
 
 Si no dices qué sitio, y tu aplicación de IA puede preguntarte ella misma (elicitación MCP), se abre en la aplicación un pequeño formulario para su dirección y su nombre: van directamente a moodle-mcp, sin pasar por la IA.
 
 El sitio se guarda para las siguientes sesiones. Para olvidarlo, y borrar su sesión:
 
-> Quita el sitio «uni».
+<Prompt>{`Quita el sitio «uni».`}</Prompt>
 
 El agente te pregunta antes. Los sitios de tu configuración solo se quitan ahí.
 
@@ -51,7 +51,7 @@ El agente te pregunta antes. Los sitios de tu configuración solo se quitan ahí
 
 El agente puede copiar contenido de un curso de uno de tus sitios a otro: algunas actividades, algunas secciones o un curso entero.
 
-> Copia el cuestionario «Bucles: repaso rápido» y la página «Cómo funciona un bucle for» de mi curso Programación 1 de «centro» a mi curso Python de «uni», en su primera sección.
+<Prompt>{`Copia el cuestionario «Bucles: repaso rápido» y la página «Cómo funciona un bucle for» de mi curso Programación 1 de «centro» a mi curso Python de «uni», en su primera sección.`}</Prompt>
 
 moodle-mcp lo hace con la copia de seguridad del propio Moodle en el primer sitio y su restauración en el segundo, con la herramienta `copy_between_sites`:
 

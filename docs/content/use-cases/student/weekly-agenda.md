@@ -11,7 +11,7 @@ The agent looks through all your courses for what's due and tells you what's sti
 
 ## What you ask
 
-> What do I have due in Moodle in the next two weeks, across my courses? Order it by date and tell me what's still left to do.
+<Prompt>{`What do I have due in Moodle in the next two weeks, across my courses? Order it by date and tell me what's still left to do.`}</Prompt>
 
 ## The session
 

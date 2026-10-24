@@ -18,7 +18,7 @@ Como la [privacidad del alumnado](./privacy.md), solo los pones tú, en la confi
 
 Para ver los límites en vigor, pregúntale al agente:
 
-> ¿Cuáles son los límites actuales de moodle-mcp?
+<Prompt>{`¿Cuáles son los límites actuales de moodle-mcp?`}</Prompt>
 
 ## Tu rol
 
@@ -65,9 +65,7 @@ O una lista de ámbitos, separados por comas: `content`, `student-data`, `gradin
 
 Tu cuenta ve todos los cursos que impartes o cursas, también los del año pasado. `MOODLE_MCP_COURSES` limita al agente a los que le des, tus aulas, por su URL, en uno o varios Moodle:
 
-```bash
-claude mcp add moodle -e MOODLE_MCP_COURSES=https://campus.miinstituto.org/course/view.php?id=12,https://moodle.miuni.es/course/view.php?id=7 -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle -e MOODLE_MCP_COURSES=https://campus.miinstituto.org/course/view.php?id=12,https://moodle.miuni.es/course/view.php?id=7 -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 Sus sitios salen de las URL, así que no necesitas `MOODLE_URL` ni `MOODLE_MCP_SITES`; inicias sesión en cada uno la primera vez que el agente trabaje en él.
 
@@ -94,22 +92,16 @@ Algunas áreas de Moodle las usa poca gente: BigBlueButton, competencias, herram
 
 Un docente que quiere ayuda para crear cursos, y nada más:
 
-```bash
-claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 Son 135 herramientas, unos 31.000 tokens.
 
 Un asistente de estudio para un alumno que no puede entregar ni publicar nada:
 
-```bash
-claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=student -e MOODLE_MCP_ACCESS=read -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=student -e MOODLE_MCP_ACCESS=read -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 Un asistente de docente que informa sobre los cursos pero no puede cambiarlos, con los datos del alumnado bloqueados:
 
-```bash
-claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_ACCESS=read -e MOODLE_MCP_STUDENT_DATA=block -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_ACCESS=read -e MOODLE_MCP_STUDENT_DATA=block -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 En Claude Desktop y Codex, los mismos ajustes van en la sección `env` de la configuración: consulta [Ajustes](./settings.md).

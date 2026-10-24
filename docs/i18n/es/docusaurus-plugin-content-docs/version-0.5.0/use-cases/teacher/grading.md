@@ -11,11 +11,11 @@ El agente encuentra las entregas que faltan por calificar, las lee y propone una
 
 ## Lo que pides
 
-> En mi curso de Moodle mcp-content, ¿qué entregas de la tarea "Tarea MCP" faltan por calificar? Léelas y propón una nota con la rúbrica de la tarea, con un comentario breve. No guardes nada todavía.
+<Prompt>{`En mi curso de Moodle mcp-content, ¿qué entregas de la tarea "Tarea MCP" faltan por calificar? Léelas y propón una nota con la rúbrica de la tarea, con un comentario breve. No guardes nada todavía.`}</Prompt>
 
 Después, una vez leída la propuesta:
 
-> De acuerdo. Guarda esa nota y el comentario, sin notificar al alumno.
+<Prompt>{`De acuerdo. Guarda esa nota y el comentario, sin notificar al alumno.`}</Prompt>
 
 ## La sesión
 

@@ -25,25 +25,25 @@ $ claude mcp add moodle -e MOODLE_MCP_SITES=school=https://campus.example.org,un
 
 Ask in your own words:
 
-> Switch to my university's Moodle.
+<Prompt>{`Switch to my university's Moodle.`}</Prompt>
 
 The agent calls `use_site`, and every tool works on that site from then on. The first time you use a site, a browser window opens for you to log in there, as with the first site. Each site keeps its own session.
 
 To see them all:
 
-> Which Moodle sites do you know?
+<Prompt>{`Which Moodle sites do you know?`}</Prompt>
 
 ## Adding a site while you work
 
 You don't need to change your configuration to add a site: ask the agent.
 
-> Add the Moodle site https://moodle.uni.example.es, as "uni".
+<Prompt>{`Add the Moodle site https://moodle.uni.example.es, as "uni".`}</Prompt>
 
 If you don't say which site, and your AI app can ask you itself (MCP elicitation), a small form opens in the app for its address and name: they go straight to moodle-mcp, not through the AI.
 
 The site is kept for later sessions. To forget it, and delete its session:
 
-> Remove the site "uni".
+<Prompt>{`Remove the site "uni".`}</Prompt>
 
 The agent asks you first. Sites from your configuration can only be removed there.
 
@@ -51,7 +51,7 @@ The agent asks you first. Sites from your configuration can only be removed ther
 
 The agent can copy course content from one of your sites to another: some activities, some sections, or a whole course.
 
-> Copy the quiz "Loops: quick check" and the page "How a for loop works" from my course Programming 1 on "school" to my course Python on "uni", into its first section.
+<Prompt>{`Copy the quiz "Loops: quick check" and the page "How a for loop works" from my course Programming 1 on "school" to my course Python on "uni", into its first section.`}</Prompt>
 
 moodle-mcp does it through Moodle's own backup on the first site and restore on the second, with the `copy_between_sites` tool:
 

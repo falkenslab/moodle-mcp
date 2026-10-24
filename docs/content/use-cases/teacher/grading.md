@@ -11,11 +11,11 @@ The agent finds the submissions that still need grading, reads them, and propose
 
 ## What you ask
 
-> In my Moodle course mcp-content, which submissions to the assignment "Tarea MCP" still need grading? For each one, read it and propose a grade with the assignment's rubric, with a short feedback. Don't save anything yet.
+<Prompt>{`In my Moodle course mcp-content, which submissions to the assignment "Tarea MCP" still need grading? For each one, read it and propose a grade with the assignment's rubric, with a short feedback. Don't save anything yet.`}</Prompt>
 
 Then, once you've read the proposal:
 
-> Looks good. Save that grade and feedback, without notifying the student.
+<Prompt>{`Looks good. Save that grade and feedback, without notifying the student.`}</Prompt>
 
 ## The session
 

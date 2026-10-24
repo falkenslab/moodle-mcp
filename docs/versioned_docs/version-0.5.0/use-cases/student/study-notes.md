@@ -11,7 +11,7 @@ The agent reads the course's pages and books, and turns them into a study sheet:
 
 ## What you ask
 
-> Read the page "Apuntes: bucles" and the book "Libro: funciones" of my Moodle course mcp-content, and make me a one-page study sheet with the key ideas and an example of each.
+<Prompt>{`Read the page "Apuntes: bucles" and the book "Libro: funciones" of my Moodle course mcp-content, and make me a one-page study sheet with the key ideas and an example of each.`}</Prompt>
 
 ## The session
 

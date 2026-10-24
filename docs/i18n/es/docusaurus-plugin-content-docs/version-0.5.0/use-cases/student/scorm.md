@@ -11,7 +11,7 @@ Los paquetes SCORM son lecciones interactivas que se ejecutan dentro del reprodu
 
 ## Lo que pides
 
-> En mi curso de Moodle mcp-content, haz la actividad SCORM "SCORM MCP (prueba)" en un intento nuevo, respondiendo sus preguntas lo mejor que puedas, y después dime qué nota ha registrado Moodle.
+<Prompt>{`En mi curso de Moodle mcp-content, haz la actividad SCORM "SCORM MCP (prueba)" en un intento nuevo, respondiendo sus preguntas lo mejor que puedas, y después dime qué nota ha registrado Moodle.`}</Prompt>
 
 ## La sesión
 

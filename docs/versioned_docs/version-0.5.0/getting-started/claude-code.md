@@ -11,9 +11,7 @@ sidebar_label: Claude Code
 
 Make a folder for your work with Moodle, such as a `Moodle` folder in your Documents. Open a terminal in it and type:
 
-```bash
-claude mcp add moodle -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 That's all. It tells Claude Code that, in this folder, it has a helper called `moodle`: moodle-mcp, which it downloads and starts by itself when needed.
 
@@ -21,7 +19,7 @@ That's all. It tells Claude Code that, in this folder, it has a helper called `m
 
 Open Claude Code **in that same folder** (type `claude` in the terminal) and ask:
 
-> List my Moodle courses.
+<Prompt>{`List my Moodle courses.`}</Prompt>
 
 The first time:
 
@@ -34,9 +32,7 @@ Then the agent lists your courses. You're ready.
 
 Claude Code wrote that setup in its own file, `.claude.json`, in your user folder (`C:\Users\<you>\.claude.json` on Windows, `~/.claude.json` on macOS and Linux), under the folder where you installed it. To see it without opening the file:
 
-```bash
-claude mcp get moodle
-```
+<Terminal>{`$ claude mcp get moodle`}</Terminal>
 
 Inside the file, it looks like this:
 
@@ -57,10 +53,8 @@ Inside the file, it looks like this:
 
 Each change below is one setting. The easiest way to add one is to remove moodle-mcp and add it again with the setting, `-e NAME=value`, in the same folder:
 
-```bash
-claude mcp remove moodle
-claude mcp add moodle -e MOODLE_MCP_ROLE=teacher -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp remove moodle
+$ claude mcp add moodle -e MOODLE_MCP_ROLE=teacher -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 Several settings, several `-e`. You can also ask Claude Code, in a chat, to do it for you ("add the setting MOODLE_MCP_ROLE=teacher to moodle"). Either way, start a new conversation afterwards.
 

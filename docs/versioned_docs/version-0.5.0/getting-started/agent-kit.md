@@ -16,9 +16,7 @@ The examples use miyagi and moodle-teacher: write your agent's name and the one 
 
 In a terminal:
 
-```bash
-miyagi extension add moodle-teacher@falkenslab
-```
+<Terminal>{`$ miyagi extension add moodle-teacher@falkenslab`}</Terminal>
 
 It asks you a few questions; for now, only the first matters: **your Moodle sites**, as `name=address`, such as `school=https://campus.myschool.org`. Press Enter on the others to keep their defaults, which are safe ones.
 
@@ -28,7 +26,7 @@ It asks you a few questions; for now, only the first matters: **your Moodle site
 
 Open the agent and ask:
 
-> List my Moodle courses.
+<Prompt>{`List my Moodle courses.`}</Prompt>
 
 The first time, a browser window opens at your Moodle's login page: log in as you always do. moodle-mcp never sees your password, and keeps you logged in for the next times. See [Logging in the first time](./first-login.md).
 
@@ -36,10 +34,8 @@ The first time, a browser window opens at your Moodle's login page: log in as yo
 
 The agent keeps the extension and its answers with its own extensions. To see them:
 
-```bash
-miyagi extension info moodle-teacher
-miyagi extension config moodle-teacher
-```
+<Terminal>{`$ miyagi extension info moodle-teacher
+$ miyagi extension config moodle-teacher`}</Terminal>
 
 The second shows its settings and their values: `sites`, `courses`, `headless`, `access` and `student_data`.
 
@@ -47,9 +43,7 @@ The second shows its settings and their values: `sites`, `courses`, `headless`, 
 
 Change a setting with `extension config`, in a terminal, or with `/extensions config` in the agent's chat, where it applies straight away:
 
-```bash
-miyagi extension config moodle-teacher access=read
-```
+<Terminal>{`$ miyagi extension config moodle-teacher access=read`}</Terminal>
 
 ### If you teach, or study
 

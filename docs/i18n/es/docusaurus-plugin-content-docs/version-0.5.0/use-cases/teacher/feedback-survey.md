@@ -11,11 +11,11 @@ El agente crea una encuesta (feedback) anónima con las preguntas que describes,
 
 ## Lo que pides
 
-> En mi curso de Moodle mcp-content, crea una encuesta (feedback) oculta y anónima llamada "¿Qué tal la unidad 1?" al final de la primera sección, con tres preguntas: lo clara que ha sido la unidad, del 1 al 5; qué actividad ayudó más (los apuntes, el cuestionario o el foro); y una abierta para sugerencias. Dime primero qué vas a crear.
+<Prompt>{`En mi curso de Moodle mcp-content, crea una encuesta (feedback) oculta y anónima llamada "¿Qué tal la unidad 1?" al final de la primera sección, con tres preguntas: lo clara que ha sido la unidad, del 1 al 5; qué actividad ayudó más (los apuntes, el cuestionario o el foro); y una abierta para sugerencias. Dime primero qué vas a crear.`}</Prompt>
 
 Y después:
 
-> Sí, créala.
+<Prompt>{`Sí, créala.`}</Prompt>
 
 ## La sesión
 

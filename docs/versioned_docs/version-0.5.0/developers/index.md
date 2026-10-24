@@ -21,34 +21,26 @@ So a change to how Moodle is read or written goes to the driver's repository fir
 
 From a clone of [falkenslab/moodle-mcp](https://github.com/falkenslab/moodle-mcp), with Node.js 20 or later:
 
-```bash
-npm install
-npm run build       # bundles src/ into dist/server.mjs
-npm run dev         # rebuilds on every change
-npm run typecheck
-npm run lint
-```
+<Terminal>{`$ npm install
+$ npm run build       # bundles src/ into dist/server.mjs
+$ npm run dev         # rebuilds on every change
+$ npm run typecheck
+$ npm run lint`}</Terminal>
 
 To use your build in an AI app, give it `node` with the path to `dist/server.mjs` instead of `npx -y @falkenslab/moodle-mcp`:
 
-```bash
-claude mcp add moodle-dev -e MOODLE_URL=http://localhost:8080 -- node /path/to/moodle-mcp/dist/server.mjs
-```
+<Terminal>{`$ claude mcp add moodle-dev -e MOODLE_URL=http://localhost:8080 -- node /path/to/moodle-mcp/dist/server.mjs`}</Terminal>
 
 ## Trying the server by hand
 
 The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) opens a web page to list and call the tools:
 
-```bash
-npm run inspect
-```
+<Terminal>{`$ npm run inspect`}</Terminal>
 
 Or from the command line. This lists the tools with a check that their schemas work in every client (it must report no warnings), and calls one:
 
-```bash
-npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/list --strict
-npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/call --tool-name server_info
-```
+<Terminal>{`$ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/list --strict
+$ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/call --tool-name server_info`}</Terminal>
 
 ## Where things are
 
@@ -77,10 +69,8 @@ The [tools reference](../reference/tools.md) is generated from the server, so it
 
 `scripts/tool-tokens.mjs` gives, for each row of [Limiting the agent](../limits.md), how many tools the agent gets and how many tokens their descriptions take. It starts the built server with each row's settings (`tools/list` opens no browser) and counts the tokens with Anthropic's [token counting](https://platform.claude.com/docs/en/build-with-claude/token-counting) when `ANTHROPIC_API_KEY` is set:
 
-```bash
-npm run build
-ANTHROPIC_API_KEY=… node scripts/tool-tokens.mjs
-```
+<Terminal>{`$ npm run build
+$ ANTHROPIC_API_KEY=… node scripts/tool-tokens.mjs`}</Terminal>
 
 Without the key it gives the tools only. Run it again when a release changes the tools, and update the limits page with what it prints.
 
@@ -88,13 +78,11 @@ Without the key it gives the tools only. Run it again when a release changes the
 
 The site is [Docusaurus](https://docusaurus.io), in `docs/`, in English (`docs/content/`) and Spanish (`docs/i18n/es/`):
 
-```bash
-cd docs
-npm install
-npm run tools       # regenerates the tools reference from ../dist/server.mjs
-npm start           # English, with live reload
-npm run start:es    # Spanish
-npm run build       # both, into docs/build
-```
+<Terminal>{`$ cd docs
+$ npm install
+$ npm run tools       # regenerates the tools reference from ../dist/server.mjs
+$ npm start           # English, with live reload
+$ npm run start:es    # Spanish
+$ npm run build       # both, into docs/build`}</Terminal>
 
 It's published to GitHub Pages from `main` by `.github/workflows/docs.yml`. Each release keeps a copy of its docs, listed in the version menu.

@@ -11,11 +11,11 @@ El agente convierte una página de apuntes en una lección de Moodle: una págin
 
 ## Lo que pides
 
-> En mi curso de Moodle mcp-content, convierte la página "Apuntes: bucles" en una lección corta y oculta llamada "Bucles, paso a paso" en la primera sección: una página por idea, cada una acabando con una pregunta; si acierta pasa a la siguiente página, y si falla vuelve a la página que lo explica. Cuéntame el plan antes de crear nada.
+<Prompt>{`En mi curso de Moodle mcp-content, convierte la página "Apuntes: bucles" en una lección corta y oculta llamada "Bucles, paso a paso" en la primera sección: una página por idea, cada una acabando con una pregunta; si acierta pasa a la siguiente página, y si falla vuelve a la página que lo explica. Cuéntame el plan antes de crear nada.`}</Prompt>
 
 Y, después de leer el plan:
 
-> Me parece bien, créala.
+<Prompt>{`Me parece bien, créala.`}</Prompt>
 
 ## La sesión
 

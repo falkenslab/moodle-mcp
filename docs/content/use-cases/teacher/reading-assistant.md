@@ -21,7 +21,7 @@ It gets 86 tools instead of 235. See [Limiting the agent](../../limits.md).
 
 ## What you ask
 
-> Give me a quick overview of how my Moodle course mcp-content is going: submissions to grade, the gradebook, and forum activity. Then grade the pending submission of "Tarea MCP" with a 10.
+<Prompt>{`Give me a quick overview of how my Moodle course mcp-content is going: submissions to grade, the gradebook, and forum activity. Then grade the pending submission of "Tarea MCP" with a 10.`}</Prompt>
 
 ## The session
 

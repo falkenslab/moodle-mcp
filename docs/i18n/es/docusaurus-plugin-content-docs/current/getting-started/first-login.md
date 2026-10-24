@@ -35,7 +35,7 @@ La carpeta del perfil guarda una sesión de Moodle activa, que vale tanto como t
 
 Si no pusiste `MOODLE_URL` al añadir moodle-mcp, el agente te pide tu sitio la primera vez. También puedes decírselo tú:
 
-> Usa el sitio Moodle https://campus.example.org.
+<Prompt>{`Usa el sitio Moodle https://campus.example.org.`}</Prompt>
 
 Mantiene ese sitio hasta que se reinicia la aplicación de IA. Para que sea permanente, añade `MOODLE_URL` a la configuración ([Ajustes](../settings.md)).
 
@@ -43,7 +43,5 @@ Mantiene ese sitio hasta que se reinicia la aplicación de IA. Para que sea perm
 
 Cada carpeta de perfil guarda una sesión. Para usar dos sitios Moodle, o dos cuentas en el mismo sitio (por ejemplo, tu cuenta de docente y un alumno de prueba), añade moodle-mcp dos veces con nombres distintos, y dale a cada uno su propio `MOODLE_MCP_PROFILE_DIR`:
 
-```bash
-claude mcp add moodle-campus -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
-claude mcp add moodle-test -e MOODLE_URL=https://test.example.org -e MOODLE_MCP_PROFILE_DIR=~/.moodle-mcp/test -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ claude mcp add moodle-campus -e MOODLE_URL=https://campus.example.org -- npx -y @falkenslab/moodle-mcp
+$ claude mcp add moodle-test -e MOODLE_URL=https://test.example.org -e MOODLE_MCP_PROFILE_DIR=~/.moodle-mcp/test -- npx -y @falkenslab/moodle-mcp`}</Terminal>

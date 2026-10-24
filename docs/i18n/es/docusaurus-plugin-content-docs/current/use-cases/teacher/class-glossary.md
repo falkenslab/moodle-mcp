@@ -11,11 +11,11 @@ Tu alumnado define las palabras de la unidad en un glosario que espera tu aproba
 
 ## Lo que pides
 
-> En el glosario "Glosario de la clase" de mi curso mcp-content, ¿qué entradas están esperando mi aprobación? Revisa cada definición: dime cuáles están bien y qué falla en las demás. No apruebes nada todavía.
+<Prompt>{`En el glosario "Glosario de la clase" de mi curso mcp-content, ¿qué entradas están esperando mi aprobación? Revisa cada definición: dime cuáles están bien y qué falla en las demás. No apruebes nada todavía.`}</Prompt>
 
 Y después:
 
-> Aprueba las correctas y deja esperando la incorrecta.
+<Prompt>{`Aprueba las correctas y deja esperando la incorrecta.`}</Prompt>
 
 ## La sesión
 

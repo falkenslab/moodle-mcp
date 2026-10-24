@@ -37,7 +37,7 @@ Después **cierra Claude Desktop del todo** (en Windows, también desde su icono
 
 En un chat nuevo, pide:
 
-> Lista mis cursos de Moodle.
+<Prompt>{`Lista mis cursos de Moodle.`}</Prompt>
 
 La primera vez:
 

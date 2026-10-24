@@ -11,9 +11,7 @@ sidebar_label: Codex
 
 Abre un terminal y escribe:
 
-```bash
-codex mcp add moodle -- npx -y @falkenslab/moodle-mcp
-```
+<Terminal>{`$ codex mcp add moodle -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
 Eso le dice a Codex que tiene un ayudante llamado `moodle`: moodle-mcp, que descarga y arranca él solo cuando hace falta.
 
@@ -43,7 +41,7 @@ Codex le da a un ayudante 10 segundos para arrancar y un minuto para cada tarea,
 
 Arranca Codex (escribe `codex` en un terminal) y pide:
 
-> Lista mis cursos de Moodle.
+<Prompt>{`Lista mis cursos de Moodle.`}</Prompt>
 
 La primera vez:
 

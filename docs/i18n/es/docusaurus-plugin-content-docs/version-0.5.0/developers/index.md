@@ -21,34 +21,26 @@ Así que un cambio en cómo se lee o se escribe Moodle va primero al repositorio
 
 Desde un clon de [falkenslab/moodle-mcp](https://github.com/falkenslab/moodle-mcp), con Node.js 20 o posterior:
 
-```bash
-npm install
-npm run build       # bundles src/ into dist/server.mjs
-npm run dev         # rebuilds on every change
-npm run typecheck
-npm run lint
-```
+<Terminal>{`$ npm install
+$ npm run build       # bundles src/ into dist/server.mjs
+$ npm run dev         # rebuilds on every change
+$ npm run typecheck
+$ npm run lint`}</Terminal>
 
 Para usar tu compilación en una aplicación de IA, dale `node` con la ruta a `dist/server.mjs` en lugar de `npx -y @falkenslab/moodle-mcp`:
 
-```bash
-claude mcp add moodle-dev -e MOODLE_URL=http://localhost:8080 -- node /path/to/moodle-mcp/dist/server.mjs
-```
+<Terminal>{`$ claude mcp add moodle-dev -e MOODLE_URL=http://localhost:8080 -- node /path/to/moodle-mcp/dist/server.mjs`}</Terminal>
 
 ## Probar el servidor a mano
 
 El [MCP Inspector](https://github.com/modelcontextprotocol/inspector) abre una página web para listar y llamar a las herramientas:
 
-```bash
-npm run inspect
-```
+<Terminal>{`$ npm run inspect`}</Terminal>
 
 O desde la línea de comandos. Esto lista las herramientas comprobando que sus esquemas funcionan en todos los clientes (no debe mostrar ningún aviso), y llama a una:
 
-```bash
-npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/list --strict
-npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/call --tool-name server_info
-```
+<Terminal>{`$ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/list --strict
+$ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=http://localhost:8080 --method tools/call --tool-name server_info`}</Terminal>
 
 ## Dónde está cada cosa
 
@@ -77,10 +69,8 @@ La [referencia de herramientas](../reference/tools.md) se genera a partir del se
 
 `scripts/tool-tokens.mjs` da, para cada fila de [Limitar al agente](../limits.md), cuántas herramientas recibe el agente y cuántos tokens ocupan sus descripciones. Arranca el servidor compilado con los ajustes de cada fila (`tools/list` no abre ningún navegador) y cuenta los tokens con el [conteo de tokens](https://platform.claude.com/docs/en/build-with-claude/token-counting) de Anthropic cuando `ANTHROPIC_API_KEY` está puesta:
 
-```bash
-npm run build
-ANTHROPIC_API_KEY=… node scripts/tool-tokens.mjs
-```
+<Terminal>{`$ npm run build
+$ ANTHROPIC_API_KEY=… node scripts/tool-tokens.mjs`}</Terminal>
 
 Sin la clave da solo las herramientas. Vuelve a ejecutarlo cuando una versión cambie las herramientas, y actualiza la página de límites con lo que imprime.
 
@@ -88,13 +78,11 @@ Sin la clave da solo las herramientas. Vuelve a ejecutarlo cuando una versión c
 
 El sitio es [Docusaurus](https://docusaurus.io), en `docs/`, en inglés (`docs/content/`) y en español (`docs/i18n/es/`):
 
-```bash
-cd docs
-npm install
-npm run tools       # regenerates the tools reference from ../dist/server.mjs
-npm start           # English, with live reload
-npm run start:es    # Spanish
-npm run build       # both, into docs/build
-```
+<Terminal>{`$ cd docs
+$ npm install
+$ npm run tools       # regenerates the tools reference from ../dist/server.mjs
+$ npm start           # English, with live reload
+$ npm run start:es    # Spanish
+$ npm run build       # both, into docs/build`}</Terminal>
 
 Se publica en GitHub Pages desde `main` con `.github/workflows/docs.yml`. Cada versión conserva una copia de su documentación, que aparece en el menú de versiones.

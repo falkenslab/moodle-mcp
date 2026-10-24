@@ -7,13 +7,13 @@ sidebar_label: Watching the agent
 
 The agent works in Moodle without a window, so it doesn't get in your way. When you want to see what it's doing, ask:
 
-> Show me the browser.
+<Prompt>{`Show me the browser.`}</Prompt>
 
 A browser window opens, already logged in, and each step the agent takes shows up in it: the course page, the submission it reads, the form it fills. It's a good way to get to know moodle-mcp, or to check a task you're not sure about.
 
 To go back to working in the background:
 
-> Hide the browser.
+<Prompt>{`Hide the browser.`}</Prompt>
 
 Closing the window yourself does the same.
 
@@ -21,7 +21,7 @@ Closing the window yourself does the same.
 
 Every tool that creates something gives the agent its link, so you can ask for it:
 
-> Give me the link to the quiz you just created.
+<Prompt>{`Give me the link to the quiz you just created.`}</Prompt>
 
 And everything the agent does is in Moodle as if you had done it yourself: in the course, in the gradebook, and in Moodle's logs, under your name.
 

@@ -11,7 +11,7 @@ El agente lee un foro, encuentra las preguntas que nadie ha respondido y redacta
 
 ## Lo que pides
 
-> ¿Hay preguntas en el foro "Foro MCP" de mi curso mcp-content que nadie haya respondido todavía? Léelas y redacta una respuesta breve y cercana para cada una. No publiques nada todavía.
+<Prompt>{`¿Hay preguntas en el foro "Foro MCP" de mi curso mcp-content que nadie haya respondido todavía? Léelas y redacta una respuesta breve y cercana para cada una. No publiques nada todavía.`}</Prompt>
 
 Después: "Publícala."
 

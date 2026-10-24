@@ -9,15 +9,11 @@ sidebar_label: Pruebas
 
 Las pruebas abren navegadores. Ejecútalas en un contenedor, para que no se abra nada en tu escritorio:
 
-```bash
-npm run test:docker
-```
+<Terminal>{`$ npm run test:docker`}</Terminal>
 
 `test:docker` ejecuta `scripts/in-docker.mjs`, que envuelve cualquier comando de la misma forma: la imagen de Playwright, el repositorio montado con sus propios `node_modules` de Linux, un volumen para la caché de npm y sin pantalla. Si el Moodle de pruebas está en marcha, también se une a su red, con `localhost:8080` redirigido a él. Un solo archivo de pruebas:
 
-```bash
-node scripts/in-docker.mjs npx tsx --test test/tools/scopes.test.ts
-```
+<Terminal>{`$ node scripts/in-docker.mjs npx tsx --test test/tools/scopes.test.ts`}</Terminal>
 
 Desde Git Bash en Windows, ponle delante `MSYS_NO_PATHCONV=1`, para que las rutas lleguen al contenedor tal como están escritas.
 
@@ -38,9 +34,7 @@ Prueba también las herramientas nuevas contra el Moodle de pruebas, no solo con
 
 ## Antes de un commit
 
-```bash
-npm run typecheck && npm run lint && npm run build && npm run test:docker
-```
+<Terminal>{`$ npm run typecheck && npm run lint && npm run build && npm run test:docker`}</Terminal>
 
 Más la comprobación de esquemas de [Desarrollo](./index.md#probar-el-servidor-a-mano): `tools/list --strict` no debe mostrar ningún aviso.
 
@@ -48,11 +42,9 @@ Más la comprobación de esquemas de [Desarrollo](./index.md#probar-el-servidor-
 
 Las capturas de los casos de uso son reales: Claude Code y Codex, ejecutados en Docker en un terminal web contra el Moodle de pruebas, con Playwright escribiendo y fotografiando, y las páginas del propio Moodle con el resultado. `scripts/screenshots/` las regenera:
 
-```bash
-MOODLE_MCP_SHOTS_STATE=<carpeta> node scripts/screenshots/run.mjs              # todos los casos, en inglés y luego en español, y después las páginas de Moodle
-MOODLE_MCP_SHOTS_STATE=<carpeta> node scripts/screenshots/run.mjs --only grading --langs en
-MOODLE_MCP_SHOTS_STATE=<carpeta> node scripts/screenshots/run.mjs --moodle-only
-```
+<Terminal>{`$ MOODLE_MCP_SHOTS_STATE=<carpeta> node scripts/screenshots/run.mjs              # todos los casos, en inglés y luego en español, y después las páginas de Moodle
+$ MOODLE_MCP_SHOTS_STATE=<carpeta> node scripts/screenshots/run.mjs --only grading --langs en
+$ MOODLE_MCP_SHOTS_STATE=<carpeta> node scripts/screenshots/run.mjs --moodle-only`}</Terminal>
 
 - La carpeta de estado queda fuera del repositorio: `profile-teacher` y `profile-student`, con sesión iniciada en el Moodle de pruebas (lo hace la skill `sandbox-check`), y las transcripciones de las sesiones, para compararlas con lo que dice cada página.
 - La ejecución copia en ella tus credenciales de Claude Code y Codex, de solo lectura en el contenedor, y las borra al terminar, pase lo que pase. Solo cambia el curso 3: antes de las sesiones de cada idioma, `seed.mjs` vuelve a dejar la entrega por calificar y una pregunta sin responder en el foro, y borra el cuestionario y la página de ese idioma.

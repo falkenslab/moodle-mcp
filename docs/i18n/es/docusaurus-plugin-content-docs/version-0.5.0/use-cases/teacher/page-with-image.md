@@ -11,7 +11,7 @@ El agente escribe una página para tu curso y sube a ella una imagen de tu orden
 
 ## Lo que pides
 
-> En mi curso de Moodle mcp-content, crea una página oculta llamada "Cómo funciona un bucle for" en la primera sección, con una explicación breve para principiantes y este diagrama dentro: /home/teacher/Pictures/for-loop.png
+<Prompt>{`En mi curso de Moodle mcp-content, crea una página oculta llamada "Cómo funciona un bucle for" en la primera sección, con una explicación breve para principiantes y este diagrama dentro: /home/teacher/Pictures/for-loop.png`}</Prompt>
 
 Indica la ruta completa de la imagen en tu ordenador, como `C:\Users\you\Pictures\diagram.png` en Windows.
 

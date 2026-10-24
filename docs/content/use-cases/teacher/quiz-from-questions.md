@@ -11,8 +11,7 @@ You give the agent questions in [GIFT format](https://docs.moodle.org/en/GIFT_fo
 
 ## What you ask
 
-```text
-In my Moodle course mcp-content, create a hidden quiz called "Loops: quick check" in the first
+<Prompt>{`In my Moodle course mcp-content, create a hidden quiz called "Loops: quick check" in the first
 section, import these GIFT questions into its question bank, add them to the quiz and put one
 question per page:
 
@@ -22,8 +21,7 @@ question per page:
 
 ::While:: A while loop runs while its condition is true. {T}
 
-Tell me what you'll do before changing anything.
-```
+Tell me what you'll do before changing anything.`}</Prompt>
 
 Then: "Yes, go ahead."
 

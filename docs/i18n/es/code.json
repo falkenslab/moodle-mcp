@@ -487,5 +487,9 @@
   },
   "home.docs.title": {
     "message": "El manual"
+  },
+  "prompt.copy": {
+    "message": "Copiar esta petición",
+    "description": "The send button of an example request, which copies it"
   }
 }

@@ -83,6 +83,14 @@
 }
 .navbar__link { font-weight: 500; white-space: nowrap; }
 .navbar__item { padding: 0 10px; }
+/* Between the phone menu and a wide screen, longer labels (Spanish) would run into the right-hand items. */
+@media (max-width: 1400px) { .navbar__item { padding: 0 7px; } .navbar__link { font-size: 14.5px; } }
+/* Narrower still, the language switch keeps only its icon and the search box shrinks. */
+@media (min-width: 997px) and (max-width: 1200px) {
+  .navbar__items--right .dropdown > .navbar__link:has(> svg) { font-size: 0; }
+  .navbar__search-input { width: 8rem; }
+  [class*="searchHintContainer"] { display: none; }
+}
 .navbar__title { white-space: nowrap; }
 .navbar__brand { flex-shrink: 0; }
 /* Docusaurus marks every doc link of the current sidebar active; the sidebar already says where you are. */

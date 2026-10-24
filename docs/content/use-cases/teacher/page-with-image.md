@@ -11,7 +11,7 @@ The agent writes a page for your course and uploads a picture from your computer
 
 ## What you ask
 
-> In my Moodle course mcp-content, create a hidden page called "How a for loop works" in the first section, with a short explanation for beginners and this diagram in it: /home/teacher/Pictures/for-loop.png
+<Prompt>{`In my Moodle course mcp-content, create a hidden page called "How a for loop works" in the first section, with a short explanation for beginners and this diagram in it: /home/teacher/Pictures/for-loop.png`}</Prompt>
 
 Give the full path of the image on your computer, such as `C:\Users\you\Pictures\diagram.png` on Windows.
 

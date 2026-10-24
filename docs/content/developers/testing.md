@@ -9,15 +9,11 @@ sidebar_label: Testing
 
 The tests open browsers. Run them in a container, so nothing opens on your desktop:
 
-```bash
-npm run test:docker
-```
+<Terminal>{`$ npm run test:docker`}</Terminal>
 
 `test:docker` runs `scripts/in-docker.mjs`, which wraps any command the same way: Playwright's image, the repository mounted with Linux `node_modules` of its own, an npm cache volume, and no display. When the Moodle sandbox is up, it also joins its network, with `localhost:8080` forwarded to it. One test file:
 
-```bash
-node scripts/in-docker.mjs npx tsx --test test/tools/scopes.test.ts
-```
+<Terminal>{`$ node scripts/in-docker.mjs npx tsx --test test/tools/scopes.test.ts`}</Terminal>
 
 From Git Bash on Windows, prefix it with `MSYS_NO_PATHCONV=1`, so paths reach the container as written.
 
@@ -38,9 +34,7 @@ Check new tools against the sandbox too, not only the fake Moodle: a field the d
 
 ## Before a commit
 
-```bash
-npm run typecheck && npm run lint && npm run build && npm run test:docker
-```
+<Terminal>{`$ npm run typecheck && npm run lint && npm run build && npm run test:docker`}</Terminal>
 
 Plus the schema check from [Developing](./index.md#trying-the-server-by-hand): `tools/list --strict` must report no warnings.
 
@@ -48,11 +42,9 @@ Plus the schema check from [Developing](./index.md#trying-the-server-by-hand): `
 
 The use cases' screenshots are real: Claude Code and Codex, run in Docker in a web terminal against the sandbox, typed and photographed by Playwright, and Moodle's own pages with the result. `scripts/screenshots/` regenerates them:
 
-```bash
-MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs              # every use case, English then Spanish, then Moodle's pages
-MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs --only grading --langs en
-MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs --moodle-only
-```
+<Terminal>{`$ MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs              # every use case, English then Spanish, then Moodle's pages
+$ MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs --only grading --langs en
+$ MOODLE_MCP_SHOTS_STATE=<folder> node scripts/screenshots/run.mjs --moodle-only`}</Terminal>
 
 - The state folder stays outside the repository: `profile-teacher` and `profile-student`, logged in to the sandbox (the `sandbox-check` skill does it), and the sessions' transcripts, to compare with what a page says.
 - The run copies your Claude Code and Codex credentials into it, read-only in the container, and deletes them when it ends, whatever happens. It changes only course 3: before each language's sessions, `seed.mjs` puts back the submission to grade and an unanswered forum question, and deletes that language's quiz and page.
