@@ -35,13 +35,13 @@ export const registerCreateActivity: RegisterTool = (server, { config, browser }
     {
       title: "Create an activity or resource",
       description:
-        "Create an activity or resource of any type (page, label, url, resource, folder, assign, quiz, forum…) at the end of a section, through Moodle's own form, hidden from students by default. Common fields have their own inputs, access restrictions and completion included; any other setting goes in settings by its form field name. files are local paths uploaded to a file resource or folder, or a SCORM's package (type scorm, the first file). Returns the new activity's id and the course structure. Changes the course: confirm with the person first.",
+        "Create an activity or resource of any type (page, label, url, resource, folder, assign, quiz, forum…) at the end of a section, through Moodle's own form, hidden from students by default. Common fields have their own inputs, access restrictions and completion included; any other setting goes in settings by its form field name. files are local paths uploaded to a file resource or folder, a SCORM's package (type scorm, the first file) or an H5P activity's package (type h5pactivity, a .h5p, deployed when it's first opened; its settings worth naming: enabletracking 1 or 0, grademethod 1 highest, 2 average, 3 last or 4 first attempt, grade[modgrade_point] the maximum grade; the package plays only if the site has its H5P content type). Returns the new activity's id and the course structure. Changes the course: confirm with the person first.",
       inputSchema: {
         courseId: z.number().int().positive(),
         sectionId: z.number().int().positive().describe("The section's id, as get_course_structure gives it"),
         type: z.string().regex(/^[a-z0-9_]+$/).describe("Moodle's module name: page, label, url, resource, folder, assign, quiz, forum, book…"),
         name: z.string().min(1).optional().describe("Required except for labels"),
-        files: z.array(z.string()).optional().describe("Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip)"),
+        files: z.array(z.string()).optional().describe("Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip), an H5P activity's package (.h5p)"),
         toolId: z.number().int().positive().optional().describe("type lti: the external tool it's made from, as list_external_tools gives it (Moodle 5 makes LTI activities only from a tool)"),
         ...contentFields,
       },

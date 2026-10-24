@@ -16,6 +16,8 @@ let dir: string;
 before(async () => {
   dir = await mkdtemp(path.join(tmpdir(), "moodle-mcp-forms-"));
   await writeFile(path.join(dir, "brief.txt"), "Write a program.\n");
+  // A made-up package: the form only uploads it, Moodle would deploy it.
+  await writeFile(path.join(dir, "loops.h5p"), "PK\u0003\u0004 made-up h5p");
 });
 after(async () => {
   await browser?.close();
@@ -35,6 +37,21 @@ function activityForm(values: { name?: string; error?: string } = {}): string {
 <script>var filepicker = {"repositories":{"5":{"id":"5","name":"Upload a file","type":"upload"}}};</script>`;
 }
 
+/** An H5P activity's form, shaped like Moodle 5.2's: its package area and the settings the description names; made up. */
+function h5pForm(): string {
+  return `<form class="mform" action="modedit.php" method="post">
+<input type="hidden" name="course" value="5"><input type="hidden" name="modulename" value="h5pactivity"><input type="hidden" name="sesskey" value="s1">
+<input type="text" name="name" id="id_name" value=""><div id="id_error_name"></div>
+<textarea name="introeditor[text]" id="id_introeditor"></textarea>
+<input type="hidden" name="packagefile" value="888">
+<select name="enabletracking"><option value="1">Yes</option><option value="0">No</option></select>
+<select name="grademethod"><option value="1">Highest grade</option><option value="2">Average grade</option><option value="3">Last attempt</option><option value="4">First attempt</option></select>
+<input type="text" name="grade[modgrade_point]" value="100">
+<select name="visible"><option value="1">Show</option><option value="0">Hide</option></select>
+<input type="submit" name="submitbutton2" value="Save and return"></form>
+<script>var filepicker = {"repositories":{"5":{"id":"5","name":"Upload a file","type":"upload"}}};</script>`;
+}
+
 describe("create_activity and update_activity", { skip: !browser && "no system browser" }, () => {
   async function connect(): Promise<{ client: Client; context: BrowserContext; posts: URLSearchParams[]; uploads: string[]; course: CourseState }> {
     const course: CourseState = { section: [{ id: "10", number: 0, title: "General", cmlist: [] }, { id: "11", number: 1, title: "Unit 1", cmlist: [] }], cm: [] };
@@ -45,7 +62,7 @@ describe("create_activity and update_activity", { skip: !browser && "no system b
     const page = (body: string) => moodlePage({ userId: 3, body });
     await context.route(`${SITE}course/modedit.php**`, (route: Route) => {
       const request = route.request();
-      if (request.method() === "GET") return route.fulfill({ status: 200, contentType: "text/html", body: page(activityForm()) });
+      if (request.method() === "GET") return route.fulfill({ status: 200, contentType: "text/html", body: page(request.url().includes("add=h5pactivity") ? h5pForm() : activityForm()) });
       const form = new URLSearchParams(request.postData() ?? "");
       posts.push(form);
       // Moodle sends the form back with its error by field; else the activity exists.
@@ -81,6 +98,20 @@ describe("create_activity and update_activity", { skip: !browser && "no system b
     assert.equal(sent.get("introeditor[text]"), "<p>Read it</p>");
     assert.equal(sent.get("visible"), "0");
     assert.deepEqual(sent.getAll("showdescription"), ["0", "1"]);
+    await context.close();
+  });
+
+  it("creates an H5P activity from a package, with its tracking and grading settings", async () => {
+    const { client, context, posts, uploads } = await connect();
+    const result = await client.callTool({
+      name: "create_activity",
+      arguments: { courseId: 5, sectionId: 11, type: "h5pactivity", name: "Loops", files: [path.join(dir, "loops.h5p")], settings: { enabletracking: 1, grademethod: 3 } },
+    });
+    assert.notEqual(result.isError, true, JSON.stringify(result.content));
+    assert.deepEqual(uploads, ["888:loops.h5p"]);
+    const sent = posts[0]!;
+    assert.equal(sent.get("enabletracking"), "1");
+    assert.equal(sent.get("grademethod"), "3");
     await context.close();
   });
 

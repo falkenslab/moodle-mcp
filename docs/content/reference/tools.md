@@ -282,7 +282,7 @@ Save a file of the Moodle site to a local folder, with the person's session: a r
 
 **Create an activity or resource**
 
-Create an activity or resource of any type (page, label, url, resource, folder, assign, quiz, forum…) at the end of a section, through Moodle's own form, hidden from students by default. Common fields have their own inputs, access restrictions and completion included; any other setting goes in settings by its form field name. files are local paths uploaded to a file resource or folder, or a SCORM's package (type scorm, the first file). Returns the new activity's id and the course structure. Changes the course: confirm with the person first.
+Create an activity or resource of any type (page, label, url, resource, folder, assign, quiz, forum…) at the end of a section, through Moodle's own form, hidden from students by default. Common fields have their own inputs, access restrictions and completion included; any other setting goes in settings by its form field name. files are local paths uploaded to a file resource or folder, a SCORM's package (type scorm, the first file) or an H5P activity's package (type h5pactivity, a .h5p, deployed when it's first opened; its settings worth naming: enabletracking 1 or 0, grademethod 1 highest, 2 average, 3 last or 4 first attempt, grade[modgrade_point] the maximum grade; the package plays only if the site has its H5P content type). Returns the new activity's id and the course structure. Changes the course: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -293,7 +293,7 @@ Create an activity or resource of any type (page, label, url, resource, folder, 
 | `sectionId` | ✅ | integer | The section's id, as get_course_structure gives it |
 | `type` | ✅ | string | Moodle's module name: page, label, url, resource, folder, assign, quiz, forum, book… |
 | `name` |  | string | Required except for labels |
-| `files` |  | string list | Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip) |
+| `files` |  | string list | Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip), an H5P activity's package (.h5p) |
 | `toolId` |  | integer | type lti: the external tool it's made from, as list_external_tools gives it (Moodle 5 makes LTI activities only from a tool) |
 | `description` |  | string | The description (HTML), shown on the activity's page |
 | `content` |  | string | A page's content, or a label's text (HTML) |

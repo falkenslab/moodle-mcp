@@ -282,7 +282,7 @@ Guarda un archivo del sitio Moodle en una carpeta local, con la sesión de la pe
 
 **Crear una actividad o un recurso**
 
-Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, folder, assign, quiz, forum…) al final de una sección, mediante el propio formulario de Moodle, oculto a los estudiantes por defecto. Los campos comunes tienen sus propias entradas, incluidas las restricciones de acceso y la finalización; cualquier otro ajuste va en settings por el nombre de su campo del formulario. files son rutas locales que se suben a un recurso de archivo o a una carpeta, o el paquete de un SCORM (type scorm, el primer archivo). Devuelve el id de la nueva actividad y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
+Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, folder, assign, quiz, forum…) al final de una sección, mediante el propio formulario de Moodle, oculto a los estudiantes por defecto. Los campos comunes tienen sus propias entradas, incluidas las restricciones de acceso y la finalización; cualquier otro ajuste va en settings por el nombre de su campo del formulario. files son rutas locales que se suben a un recurso de archivo o a una carpeta, el paquete de un SCORM (type scorm, el primer archivo) o el de una actividad H5P (type h5pactivity, un .h5p, que se despliega la primera vez que se abre; sus ajustes a nombrar: enabletracking 1 o 0, grademethod 1 la mejor nota, 2 la media, 3 el último o 4 el primer intento, grade[modgrade_point] la nota máxima; el paquete solo se reproduce si el sitio tiene su tipo de contenido H5P). Devuelve el id de la nueva actividad y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -293,7 +293,7 @@ Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, f
 | `sectionId` | ✅ | entero | El id de la sección, tal como lo da get_course_structure |
 | `type` | ✅ | texto | El nombre del módulo en Moodle: page, label, url, resource, folder, assign, quiz, forum, book… |
 | `name` |  | texto | Obligatorio salvo para las etiquetas |
-| `files` |  | lista de texto | Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip) |
+| `files` |  | lista de texto | Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip), el de una actividad H5P (.h5p) |
 | `toolId` |  | entero | type lti: la herramienta externa a partir de la que se crea, tal como la da list_external_tools (Moodle 5 solo crea actividades LTI a partir de una herramienta) |
 | `description` |  | texto | La descripción (HTML), que se muestra en la página de la actividad |
 | `content` |  | texto | El contenido de una página, o el texto de una etiqueta (HTML) |
