@@ -106,6 +106,7 @@ const STUDENT = [
 const TEACHER = [
   "get_activity_settings",
   "create_activity",
+  "list_h5p_content_types",
   "update_activity",
   "edit_activity",
   "duplicate_activity",

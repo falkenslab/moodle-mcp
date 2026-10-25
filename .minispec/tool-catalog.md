@@ -92,6 +92,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_lesson_page` | Current page of a lesson | R | Page | S lesson gating an escape room | Done |
 | `answer_lesson_page` | Answer it and move on | W | Form | S | Done |
 | `get_h5p_activity` | H5P content type, attempts, score | R | Page | S 93 H5P pages; solving stays in the browser | Done |
+| `list_h5p_content_types` | The H5P content types the site can run, and whether the person may install new ones | R | Page (the content bank's Add menu) | T before building an H5P package (#52) | Done |
 | `get_scorm` | A SCORM's attempts, grade, and its SCOs' status and score | R | Page (`view.php`, `prereqs.php`) | Sandbox, 11 Oct 2026 | Done |
 | `open_scorm` | Enter the player (continue or new attempt) for the browser tools to do the package in its frame | W | Page (`player.php`) | Sandbox: a custom SCORM 1.2 done and graded | Done |
 

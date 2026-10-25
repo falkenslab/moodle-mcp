@@ -154,6 +154,7 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   get_lesson_page: ["lessonPage"],
   answer_lesson_page: ["answerLessonPage"],
   get_h5p_activity: ["h5pActivity"],
+  list_h5p_content_types: ["h5pContentTypes"],
   get_scorm: ["scorm"],
   // It leaves the browser tools' tab in the player, for them to do the package: the fallback's scope too.
   open_scorm: ["openScorm", "BrowserManager.tab"],

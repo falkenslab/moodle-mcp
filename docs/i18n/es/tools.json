@@ -914,6 +914,14 @@
       "settings": "Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., {\"duedate[enabled]\": true, \"duedate[day]\": 12, \"grade[modgrade_point]\": 10}"
     }
   },
+  "list_h5p_content_types": {
+    "source": "7b0decd60cea",
+    "title": "Listar los tipos de contenido H5P que puede ejecutar el sitio",
+    "description": "Lista los tipos de contenido H5P que puede ejecutar el sitio, tal como los ofrece para crear el banco de contenido de un curso: la biblioteca principal de cada uno (su nombre interno, como lo nombra el h5p.json de un paquete H5P), su versión y su título, y si puedes instalar tipos nuevos. Consúltalo antes de crear un paquete H5P que lleva solo su contenido: solo se reproduce donde su biblioteca principal es una de estas (salvo que puedas instalar tipos nuevos y el paquete lleve sus bibliotecas). Después, create_activity con type h5pactivity lo sube. Vacía si el sitio no tiene bibliotecas H5P, o si no puedes crear contenido en el banco de ese curso.",
+    "inputs": {
+      "courseId": "Un curso que impartes, de list_courses: los tipos se leen de su banco de contenido"
+    }
+  },
   "update_activity": {
     "source": "d30faed554b1",
     "title": "Actualizar los ajustes o el contenido de una actividad",

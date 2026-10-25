@@ -1,5 +1,6 @@
 import { registerGrantExtension, registerOverrideCompletion, registerSetDiscussionState, registerSetQuizOverride } from "./actOnParticipants.js";
 import { registerCreateActivity, registerUpdateActivity } from "./activityForms.js";
+import { registerListH5PContentTypes } from "./h5pContentTypes.js";
 import { registerCreateEvent, registerDeleteEvent, registerGetEvent, registerListEvents, registerUpdateEvent } from "./calendar.js";
 import { registerGetAssignment, registerSaveSubmission, registerSubmitAssignment } from "./assignSubmission.js";
 import { BROWSER_TOOLS } from "./browserTools.js";
@@ -184,6 +185,7 @@ export const TOOLS: RegisterTool[] = [
   registerSendMessage,
   registerMessageParticipants,
   registerCreateActivity,
+  registerListH5PContentTypes,
   registerUpdateActivity,
   registerValidateHtml,
   registerGetActivitySettings,

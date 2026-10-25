@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **267 tools**, 266 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **268 tools**, 267 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -190,6 +190,7 @@ Forget a site added at run time, by name, and delete its browser profile with it
 | [`get_activity_settings`](#get-activity-settings) | Get an activity's settings | ✓ | ✓ |  |
 | [`download_file`](#download-file) | Download a file from Moodle | ✓ | ✓ | ✓ |
 | [`create_activity`](#create-activity) | Create an activity or resource |  | ✓ |  |
+| [`list_h5p_content_types`](#list-h5p-content-types) | List the H5P content types the site can run | ✓ | ✓ |  |
 | [`update_activity`](#update-activity) | Update an activity's settings or content |  | ✓ |  |
 | [`validate_html`](#validate-html) | Check HTML before sending it to Moodle | ✓ | ✓ | ✓ |
 | [`edit_activity`](#edit-activity) | Move, rename, show or hide an activity |  | ✓ |  |
@@ -303,6 +304,21 @@ Create an activity or resource of any type (page, label, url, resource, folder, 
 | `completion` |  | object | When it counts as complete |
 | `embed` |  | string list | Absolute local files (images…) to embed in the HTML, which names each by its file name: &#60;img src="shot.png"&#62; |
 | `settings` |  | object | Any other form field by its name in Moodle's activity form, e.g. &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
+
+</details>
+
+### `list_h5p_content_types` {#list-h5p-content-types}
+
+**List the H5P content types the site can run**
+
+List the H5P content types the site can run, as a course's content bank offers them to create: each one's main library (its machine name, as an H5P package's h5p.json names it), version and title, and whether you may install new ones. Check it before building an H5P package that ships only its content: it plays only where its main library is one of these (unless you may install new ones, and the package carries its libraries). Then create_activity with type h5pactivity uploads it. Empty when the site has no H5P libraries, or you can't create content in that course's bank.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer | A course you teach, from list_courses: its content bank is where the types are read |
 
 </details>
 
