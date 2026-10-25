@@ -5,9 +5,16 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.5.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.6.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.6.0 (25 October 2026)
+
+- **H5P activities from a package.** `list_h5p_content_types` says which H5P content types your site can run (and whether you may install more), so the agent knows before it builds a package; `create_activity` creates the H5P activity from it, with its tracking and grading settings.
+- **Simpler setup guides**, in plain words: install with the shortest command, then make it yours step by step (teaching or studying, your students' names, read only, this year's courses), with where each app keeps its setup. Commands show in a terminal window, and example requests as you'd type them to the agent.
+- **Claude Desktop** shows moodle-mcp's question before what can't be undone, as Claude Code and Codex do.
+- With moodle-driver 0.13 and playwright-core 1.64.1.
 
 ## 0.5.0 (21 October 2026)
 

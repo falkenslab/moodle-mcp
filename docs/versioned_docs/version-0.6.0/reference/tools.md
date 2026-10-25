@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **267 tools**, 266 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **268 tools**, 267 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -190,6 +190,7 @@ Forget a site added at run time, by name, and delete its browser profile with it
 | [`get_activity_settings`](#get-activity-settings) | Get an activity's settings | ✓ | ✓ |  |
 | [`download_file`](#download-file) | Download a file from Moodle | ✓ | ✓ | ✓ |
 | [`create_activity`](#create-activity) | Create an activity or resource |  | ✓ |  |
+| [`list_h5p_content_types`](#list-h5p-content-types) | List the H5P content types the site can run | ✓ | ✓ |  |
 | [`update_activity`](#update-activity) | Update an activity's settings or content |  | ✓ |  |
 | [`validate_html`](#validate-html) | Check HTML before sending it to Moodle | ✓ | ✓ | ✓ |
 | [`edit_activity`](#edit-activity) | Move, rename, show or hide an activity |  | ✓ |  |
@@ -282,7 +283,7 @@ Save a file of the Moodle site to a local folder, with the person's session: a r
 
 **Create an activity or resource**
 
-Create an activity or resource of any type (page, label, url, resource, folder, assign, quiz, forum…) at the end of a section, through Moodle's own form, hidden from students by default. Common fields have their own inputs, access restrictions and completion included; any other setting goes in settings by its form field name. files are local paths uploaded to a file resource or folder, or a SCORM's package (type scorm, the first file). Returns the new activity's id and the course structure. Changes the course: confirm with the person first.
+Create an activity or resource of any type (page, label, url, resource, folder, assign, quiz, forum…) at the end of a section, through Moodle's own form, hidden from students by default. Common fields have their own inputs, access restrictions and completion included; any other setting goes in settings by its form field name. files are local paths uploaded to a file resource or folder, a SCORM's package (type scorm, the first file) or an H5P activity's package (type h5pactivity, a .h5p, deployed when it's first opened; its settings worth naming: enabletracking 1 or 0, grademethod 1 highest, 2 average, 3 last or 4 first attempt, grade[modgrade_point] the maximum grade; the package plays only if the site has its H5P content type). Returns the new activity's id and the course structure. Changes the course: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -293,7 +294,7 @@ Create an activity or resource of any type (page, label, url, resource, folder, 
 | `sectionId` | ✅ | integer | The section's id, as get_course_structure gives it |
 | `type` | ✅ | string | Moodle's module name: page, label, url, resource, folder, assign, quiz, forum, book… |
 | `name` |  | string | Required except for labels |
-| `files` |  | string list | Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip) |
+| `files` |  | string list | Absolute local paths: a file resource's file (the first is the main one), a folder's files, a SCORM's package (.zip), an H5P activity's package (.h5p) |
 | `toolId` |  | integer | type lti: the external tool it's made from, as list_external_tools gives it (Moodle 5 makes LTI activities only from a tool) |
 | `description` |  | string | The description (HTML), shown on the activity's page |
 | `content` |  | string | A page's content, or a label's text (HTML) |
@@ -303,6 +304,21 @@ Create an activity or resource of any type (page, label, url, resource, folder, 
 | `completion` |  | object | When it counts as complete |
 | `embed` |  | string list | Absolute local files (images…) to embed in the HTML, which names each by its file name: &#60;img src="shot.png"&#62; |
 | `settings` |  | object | Any other form field by its name in Moodle's activity form, e.g. &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
+
+</details>
+
+### `list_h5p_content_types` {#list-h5p-content-types}
+
+**List the H5P content types the site can run**
+
+List the H5P content types the site can run, as a course's content bank offers them to create: each one's main library (its machine name, as an H5P package's h5p.json names it), version and title, and whether you may install new ones. Check it before building an H5P package that ships only its content: it plays only where its main library is one of these (unless you may install new ones, and the package carries its libraries). Then create_activity with type h5pactivity uploads it. Empty when the site has no H5P libraries, or you can't create content in that course's bank.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | integer | A course you teach, from list_courses: its content bank is where the types are read |
 
 </details>
 

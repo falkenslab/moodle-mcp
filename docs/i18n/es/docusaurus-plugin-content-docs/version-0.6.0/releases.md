@@ -5,9 +5,16 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.5.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.6.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.6.0 (25 de octubre de 2026)
+
+- **Actividades H5P a partir de un paquete.** `list_h5p_content_types` dice qué tipos de contenido H5P puede ejecutar tu sitio (y si puedes instalar más), para que el agente lo sepa antes de crear un paquete; `create_activity` crea con él la actividad H5P, con sus ajustes de seguimiento y calificación.
+- **Guías de configuración más sencillas**, en lenguaje llano: instálalo con el comando más corto y después ajústalo a ti paso a paso (si das clase o estudias, los nombres de tu alumnado, solo lectura, los cursos de este año), con dónde guarda cada aplicación su configuración. Los comandos se muestran en una ventana de terminal, y las peticiones de ejemplo tal como se las escribirías al agente.
+- **Claude Desktop** muestra la pregunta de moodle-mcp antes de lo que no se puede deshacer, igual que Claude Code y Codex.
+- Con moodle-driver 0.13 y playwright-core 1.64.1.
 
 ## 0.5.0 (21 de octubre de 2026)
 

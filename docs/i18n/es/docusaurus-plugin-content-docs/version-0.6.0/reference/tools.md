@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **267 herramientas**, 266 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **268 herramientas**, 267 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -190,6 +190,7 @@ Olvida un sitio añadido durante el trabajo, por su nombre, y borra su perfil de
 | [`get_activity_settings`](#get-activity-settings) | Obtener los ajustes de una actividad | ✓ | ✓ |  |
 | [`download_file`](#download-file) | Descargar un archivo de Moodle | ✓ | ✓ | ✓ |
 | [`create_activity`](#create-activity) | Crear una actividad o un recurso |  | ✓ |  |
+| [`list_h5p_content_types`](#list-h5p-content-types) | Listar los tipos de contenido H5P que puede ejecutar el sitio | ✓ | ✓ |  |
 | [`update_activity`](#update-activity) | Actualizar los ajustes o el contenido de una actividad |  | ✓ |  |
 | [`validate_html`](#validate-html) | Comprobar HTML antes de enviarlo a Moodle | ✓ | ✓ | ✓ |
 | [`edit_activity`](#edit-activity) | Mover, renombrar, mostrar u ocultar una actividad |  | ✓ |  |
@@ -282,7 +283,7 @@ Guarda un archivo del sitio Moodle en una carpeta local, con la sesión de la pe
 
 **Crear una actividad o un recurso**
 
-Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, folder, assign, quiz, forum…) al final de una sección, mediante el propio formulario de Moodle, oculto a los estudiantes por defecto. Los campos comunes tienen sus propias entradas, incluidas las restricciones de acceso y la finalización; cualquier otro ajuste va en settings por el nombre de su campo del formulario. files son rutas locales que se suben a un recurso de archivo o a una carpeta, o el paquete de un SCORM (type scorm, el primer archivo). Devuelve el id de la nueva actividad y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
+Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, folder, assign, quiz, forum…) al final de una sección, mediante el propio formulario de Moodle, oculto a los estudiantes por defecto. Los campos comunes tienen sus propias entradas, incluidas las restricciones de acceso y la finalización; cualquier otro ajuste va en settings por el nombre de su campo del formulario. files son rutas locales que se suben a un recurso de archivo o a una carpeta, el paquete de un SCORM (type scorm, el primer archivo) o el de una actividad H5P (type h5pactivity, un .h5p, que se despliega la primera vez que se abre; sus ajustes a nombrar: enabletracking 1 o 0, grademethod 1 la mejor nota, 2 la media, 3 el último o 4 el primer intento, grade[modgrade_point] la nota máxima; el paquete solo se reproduce si el sitio tiene su tipo de contenido H5P). Devuelve el id de la nueva actividad y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -293,7 +294,7 @@ Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, f
 | `sectionId` | ✅ | entero | El id de la sección, tal como lo da get_course_structure |
 | `type` | ✅ | texto | El nombre del módulo en Moodle: page, label, url, resource, folder, assign, quiz, forum, book… |
 | `name` |  | texto | Obligatorio salvo para las etiquetas |
-| `files` |  | lista de texto | Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip) |
+| `files` |  | lista de texto | Rutas locales absolutas: el archivo de un recurso de archivo (el primero es el principal), los archivos de una carpeta, el paquete de un SCORM (.zip), el de una actividad H5P (.h5p) |
 | `toolId` |  | entero | type lti: la herramienta externa a partir de la que se crea, tal como la da list_external_tools (Moodle 5 solo crea actividades LTI a partir de una herramienta) |
 | `description` |  | texto | La descripción (HTML), que se muestra en la página de la actividad |
 | `content` |  | texto | El contenido de una página, o el texto de una etiqueta (HTML) |
@@ -303,6 +304,21 @@ Crea una actividad o un recurso de cualquier tipo (page, label, url, resource, f
 | `completion` |  | objeto | Cuándo cuenta como completado |
 | `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
 | `settings` |  | objeto | Cualquier otro campo del formulario por su nombre en el formulario de actividad de Moodle, p. ej., &#123;"duedate[enabled]": true, "duedate[day]": 12, "grade[modgrade_point]": 10&#125; |
+
+</details>
+
+### `list_h5p_content_types` {#list-h5p-content-types}
+
+**Listar los tipos de contenido H5P que puede ejecutar el sitio**
+
+Lista los tipos de contenido H5P que puede ejecutar el sitio, tal como los ofrece para crear el banco de contenido de un curso: la biblioteca principal de cada uno (su nombre interno, como lo nombra el h5p.json de un paquete H5P), su versión y su título, y si puedes instalar tipos nuevos. Consúltalo antes de crear un paquete H5P que lleva solo su contenido: solo se reproduce donde su biblioteca principal es una de estas (salvo que puedas instalar tipos nuevos y el paquete lleve sus bibliotecas). Después, create_activity con type h5pactivity lo sube. Vacía si el sitio no tiene bibliotecas H5P, o si no puedes crear contenido en el banco de ese curso.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `courseId` | ✅ | entero | Un curso que impartes, de list_courses: los tipos se leen de su banco de contenido |
 
 </details>
 
