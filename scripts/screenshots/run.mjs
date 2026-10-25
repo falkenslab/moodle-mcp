@@ -46,7 +46,7 @@ function sessions(pairs) {
   ].join("\n");
   const args = ["run", "--rm", "--init", "-v", `${REPO}:/work`, "-v", "moodle-mcp-node-modules:/work/node_modules", "-v", "moodle-mcp-shots-tools:/tools", "-v", `${STATE}:/state`];
   args.push("-v", `${path.join(REPO, "scripts/screenshots/files")}:/home/teacher/Pictures:ro`, "-w", "/work", "-e", "DISPLAY=", "-e", "WAYLAND_DISPLAY=", "--network", "moodle-sandbox_default");
-  args.push("mcr.microsoft.com/playwright:v1.64.0-noble", "bash", "-c", script);
+  args.push("mcr.microsoft.com/playwright:v1.64.1-noble", "bash", "-c", script);
   const result = spawnSync("docker", args, { stdio: "inherit", env: { ...process.env, MSYS_NO_PATHCONV: "1" } });
   if (result.status !== 0) throw new Error("the sessions' container failed");
 }
