@@ -2,6 +2,7 @@ import { chromium, firefox } from "playwright-core";
 import { z } from "zod";
 import { redactUrl } from "../config.js";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "../version.js";
+import { LANGUAGES, localeLanguage } from "./confirm.js";
 import { ROLES } from "./roles.js";
 import { ACCESS_LEVELS, SCOPES, STUDENT_DATA_LEVELS, activeScopes } from "./scopes.js";
 import type { RegisterTool, ToolContext } from "./types.js";
@@ -25,6 +26,7 @@ export const serverInfoSchema = {
   role: z.enum(ROLES).describe("The role whose tools the agent gets: teacher, student or all (ADR-018)"),
   access: z.enum(ACCESS_LEVELS).describe("read: only the tools that change nothing in Moodle; write: all (ADR-020)"),
   confirm: z.enum(["elicit", "client"]).describe("Who confirms what can't be undone: the person through elicitation, or the client, trusted to have asked (ADR-023)"),
+  confirmLanguage: z.enum(LANGUAGES).describe("The language the person is asked in, from the locale (LC_ALL, LC_MESSAGES, LANG): es for Spanish, else en"),
   advanced: z.boolean().describe("Whether the advanced tools are on: BigBlueButton, competencies, external tools, the content bank, notes, course blocks (ADR-022)"),
   classrooms: z.array(z.string()).optional().describe("The only courses the agent works in, by URL (ADR-025); every course when missing"),
   sources: z
@@ -62,6 +64,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     access: config.access,
     advanced: config.advanced ?? false,
     confirm: config.confirm ?? "elicit",
+    confirmLanguage: localeLanguage(),
     ...(config.classrooms && { classrooms: config.classrooms.map((c) => c.url) }),
     sources: { ...config.sources },
     ...(config.unexpanded && { unexpanded: config.unexpanded }),

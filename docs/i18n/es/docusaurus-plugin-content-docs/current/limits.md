@@ -84,6 +84,8 @@ Algunas herramientas no se pueden deshacer: eliminar una actividad, una sección
 
 Tienes diez minutos para contestar; pasado ese tiempo no se hace nada, y el agente lo dice. Tu aplicación tiene que admitir estas preguntas (elicitation MCP), como hacen Claude Code, Claude Desktop y Codex. En una que no las admite, estas herramientas se rechazan, salvo que tu aplicación ya te pregunte antes de cada herramienta y arranques moodle-mcp con `MOODLE_MCP_CONFIRM=client`. La referencia de herramientas dice cuáles preguntan.
 
+La pregunta sale en español cuando tu ordenador está en español (su configuración regional: `LANG`, `LC_MESSAGES` o `LC_ALL`, que agent-kit también da a sus extensiones), y en inglés en otro caso. `server_info` dice cuál.
+
 ## Herramientas avanzadas
 
 Algunas áreas de Moodle las usa poca gente: BigBlueButton, competencias, herramientas externas (LTI), el banco de contenido, las notas sobre participantes y los bloques del curso. Sus 30 herramientas están desactivadas por defecto, para que no las pague cada chat. `MOODLE_MCP_ADVANCED=true` las activa, y los demás límites siguen aplicándose. `server_info` dice si están activas; el agente no puede activarlas por su cuenta.

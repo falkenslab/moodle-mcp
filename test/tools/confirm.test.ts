@@ -5,7 +5,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { ElicitRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import type { Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
-import { CONFIRMED, CONFIRM_SENTENCE } from "../../src/tools/confirm.js";
+import { CONFIRMED, CONFIRM_SENTENCE, localeLanguage } from "../../src/tools/confirm.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 
 /** A client that answers the server's questions with `answer`, or one without elicitation. */
@@ -13,15 +13,17 @@ async function connect(config: Config, answer?: { action: "accept" | "decline" |
   const server = createServer({ config, browser: fakeBrowserManager() });
   const client = new Client({ name: "test", version: "0.0.0" }, answer ? { capabilities: { elicitation: {} } } : {});
   const asked: string[] = [];
+  const fields: unknown[] = [];
   if (answer)
     client.setRequestHandler(ElicitRequestSchema, (request) => {
       asked.push(request.params.message);
+      fields.push((request.params as { requestedSchema?: { properties?: Record<string, unknown> } }).requestedSchema?.properties?.confirm);
       return answer;
     });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
   const call = async (name: string, args: Record<string, unknown>) => JSON.stringify((await client.callTool({ name, arguments: args })).content);
-  return { client, call, asked };
+  return { client, call, asked, fields };
 }
 const site = "http://moodle.test/";
 
@@ -66,5 +68,40 @@ describe("what can't be undone, confirmed by the person (ADR-023)", () => {
     assert.match(await ask.call("restore_course", { file: "/tmp/b.mbz", intoCourseId: 3, mode: "replace" }), /said no/);
     assert.equal(ask.asked.length, 1);
     assert.match(ask.asked[0]!, /Replace course 3's content/);
+  });
+
+  it("asks in the person's language, from the locale", async () => {
+    assert.equal(localeLanguage({ LANG: "es_ES.UTF-8" }), "es");
+    assert.equal(localeLanguage({ LANG: "es" }), "es");
+    assert.equal(localeLanguage({ LC_ALL: "C", LANG: "es_ES.UTF-8" }), "en");
+    assert.equal(localeLanguage({ LC_MESSAGES: "es_MX.UTF-8", LANG: "en_US.UTF-8" }), "es");
+    assert.equal(localeLanguage({ LC_ALL: "", LANG: "es_AR" }), "es");
+    assert.equal(localeLanguage({ LANG: "en_GB.UTF-8" }), "en");
+    assert.equal(localeLanguage({ LANG: "eu_ES.UTF-8" }), "en");
+    assert.equal(localeLanguage({}), "en");
+
+    const saved = { LC_ALL: process.env.LC_ALL, LC_MESSAGES: process.env.LC_MESSAGES, LANG: process.env.LANG };
+    Object.assign(process.env, { LC_ALL: "", LC_MESSAGES: "", LANG: "es_ES.UTF-8" });
+    try {
+      const no = await connect(testConfig({ moodleUrl: site, confirm: "elicit" }), { action: "decline" });
+      // What the agent reads stays in English.
+      assert.match(await no.call("delete_activity", { courseId: 3, activityId: 5 }), /said no to delete_activity/);
+      assert.equal(no.asked[0], "Borrar la actividad 5 del curso 3, con todo lo que los participantes hicieron en ella (entregas, intentos, mensajes, calificaciones). No se puede deshacer. ¿Seguimos?");
+      assert.deepEqual(no.fields[0], { type: "boolean", title: "Sí, hazlo", description: "Déjalo sin marcar, o rechaza, para no cambiar nada" });
+      assert.equal(((await no.client.callTool({ name: "server_info", arguments: {} })).structuredContent as { confirmLanguage: string }).confirmLanguage, "es");
+    } finally {
+      for (const [k, v] of Object.entries(saved)) if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+  });
+
+  it("has every question in English and Spanish", () => {
+    const args = { courseId: 3, activityId: 5, sectionId: 7, intoCourseId: 3, mode: "replace", userId: 9, questionIds: [1, 2], bankId: 4, categoryId: 6, moveTo: 8, name: "elsewhere" };
+    for (const [name, rule] of Object.entries(CONFIRMED)) {
+      const { en, es } = rule.what(args);
+      assert.ok(en && es && en !== es, name);
+    }
+    assert.match(CONFIRMED.unenrol_user!.what({ courseId: 3, userId: 9 }).es, /Dar de baja al usuario 9 del curso 3/);
+    assert.match(CONFIRMED.unenrol_user!.what({ courseId: 3, user: "A-7KQ2XM" }).es, /Dar de baja a A-7KQ2XM del curso 3/);
   });
 });

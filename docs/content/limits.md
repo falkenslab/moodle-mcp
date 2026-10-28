@@ -84,6 +84,8 @@ Some tools can't be undone: deleting an activity, a section, a post or a questio
 
 You have ten minutes to answer; after that nothing is done, and the agent says so. Your app needs to support these questions (MCP elicitation), as Claude Code, Claude Desktop and Codex do. In an app that doesn't, these tools are refused, unless your app already asks you before each tool and you start moodle-mcp with `MOODLE_MCP_CONFIRM=client`. The tools reference says which tools ask.
 
+The question is in Spanish when your computer is set to Spanish (its locale: `LANG`, `LC_MESSAGES` or `LC_ALL`, which agent-kit also gives its extensions), and in English otherwise. `server_info` says which.
+
 ## Advanced tools
 
 Some areas of Moodle few people use: BigBlueButton, competencies, external tools (LTI), the content bank, notes about participants and course blocks. Their 30 tools are off by default, so every chat doesn't pay for them. `MOODLE_MCP_ADVANCED=true` turns them on, and the other limits still apply to them. `server_info` says whether they're on; the agent can't turn them on itself.
