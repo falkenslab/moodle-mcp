@@ -41,9 +41,7 @@ Aliases come from a secret key on your computer, together with a list of the peo
 
 - **Back up the key.** If it's lost, every alias changes, and your notes no longer match anyone:
 
-  ```bash
-  npx @falkenslab/pseudonym key export
-  ```
+  <Terminal>{`$ npx @falkenslab/pseudonym key export`}</Terminal>
 
 - **Keep the agent away from it.** An agent that can read that folder or run the `pseudonym` command could look aliases up. In Claude Code, deny both in your settings (`~/.claude/settings.json`):
 
@@ -54,6 +52,19 @@ Aliases come from a secret key on your computer, together with a list of the peo
     }
   }
   ```
+
+### Without a key {#plain-storage}
+
+By default, the list of people is encrypted with that key. If the system already protects the folder (a user account just for this, a container, an encrypted disk), you can keep the list as a readable file instead, `directory.json`, with no key:
+
+- **Nothing to lose.** There's no key to back up: the aliases are in the file itself.
+- **Nothing hidden.** Anyone who can read that folder sees who every alias is, with their names and emails in clear.
+
+To use it, add `PSEUDONYM_STORAGE=plain` to moodle-mcp's settings, as any other setting (in Claude Code, `-e PSEUDONYM_STORAGE=plain`), and set it too in the terminal where you run `pseudonym`. A folder that already has an encrypted list doesn't change on its own: moodle-mcp stops and says so. To convert it, keeping every alias:
+
+<Terminal>{`$ npx @falkenslab/pseudonym migrate --to plain`}</Terminal>
+
+People known only by their email can't come along: they get a new alias the next time they're met. pseudonym's [storage guide](https://falkenslab.github.io/pseudonym/docs/guides/storage) explains both ways step by step.
 
 ## What to know about `pseudonymize`
 

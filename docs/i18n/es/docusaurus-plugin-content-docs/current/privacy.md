@@ -41,9 +41,7 @@ Los alias salen de una clave secreta que hay en tu ordenador, junto con una list
 
 - **Haz una copia de seguridad de la clave.** Si se pierde, todos los alias cambian, y tus notas ya no corresponden a nadie:
 
-  ```bash
-  npx @falkenslab/pseudonym key export
-  ```
+  <Terminal>{`$ npx @falkenslab/pseudonym key export`}</Terminal>
 
 - **Mantén al agente lejos de ella.** Un agente que pueda leer esa carpeta o ejecutar el comando `pseudonym` podría consultar los alias. En Claude Code, prohíbe ambas cosas en tu configuración (`~/.claude/settings.json`):
 
@@ -54,6 +52,19 @@ Los alias salen de una clave secreta que hay en tu ordenador, junto con una list
     }
   }
   ```
+
+### Sin clave {#plain-storage}
+
+Por defecto, la lista de personas está cifrada con esa clave. Si el sistema ya protege la carpeta (una cuenta de usuario solo para esto, un contenedor, un disco cifrado), puedes guardar la lista como un archivo legible, `directory.json`, sin clave:
+
+- **Nada que perder.** No hay clave de la que hacer copia: los alias están en el propio archivo.
+- **Nada oculto.** Quien pueda leer esa carpeta ve quién es cada alias, con sus nombres y correos a la vista.
+
+Para usarlo, añade `PSEUDONYM_STORAGE=plain` a los ajustes de moodle-mcp, como cualquier otro ajuste (en Claude Code, `-e PSEUDONYM_STORAGE=plain`), y ponlo también en el terminal donde ejecutes `pseudonym`. Una carpeta que ya tiene una lista cifrada no cambia sola: moodle-mcp se detiene y lo dice. Para convertirla, conservando todos los alias:
+
+<Terminal>{`$ npx @falkenslab/pseudonym migrate --to plain`}</Terminal>
+
+Las personas que solo se conocían por su correo no pueden pasar: reciben un alias nuevo la próxima vez que aparezcan. La [guía de almacenamiento](https://falkenslab.github.io/pseudonym/es/docs/guides/storage) de pseudonym explica las dos formas paso a paso.
 
 ## Qué debes saber de `pseudonymize`
 
