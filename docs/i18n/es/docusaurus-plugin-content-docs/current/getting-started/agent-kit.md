@@ -94,12 +94,12 @@ Tus sitios, separados por comas; el primero es donde empieza.
   buildMcpServers: () => ({
     moodle: {
       command: "npx",
-      args: ["-y", "@falkenslab/moodle-mcp@0.6.0"],
+      args: ["-y", "@falkenslab/moodle-mcp@0.7.0"],
       env: { MOODLE_MCP_COURSES: "https://campus.miinstituto.org/course/view.php?id=12", MOODLE_MCP_ROLE: "teacher" },
     },
   }),
   ```
 
-  Fija una versión (`@0.6.0`) para que no cambie sin que lo sepas. Consulta [Herramientas y MCP](https://falkenslab.github.io/agent-kit/es/docs/capabilities/tools-and-mcp) en agent-kit.
+  Fija una versión (`@0.7.0`) para que no cambie sin que lo sepas. Consulta [Herramientas y MCP](https://falkenslab.github.io/agent-kit/es/docs/capabilities/tools-and-mcp) en agent-kit.
 
 Para quitarla: `miyagi extension remove moodle-teacher` (`--project` para la de un proyecto).

@@ -5,9 +5,14 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.6.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.7.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.7.0 (28 October 2026)
+
+- **The question before what can't be undone speaks your language.** On a computer set to Spanish, moodle-mcp asks "Borrar la actividad… No se puede deshacer. ¿Seguimos?"; otherwise in English, as before. It follows the computer's language settings (`LANG`, `LC_MESSAGES`, `LC_ALL`), which agent-kit also gives its extensions, and `server_info` says which language it uses.
+- **Aliases without a key, if you want.** With pseudonym 0.3, the list of people behind the aliases can be kept as a readable file instead of an encrypted one (`PSEUDONYM_STORAGE=plain`), for a folder your system already protects. Encrypted stays the default, and your aliases don't change. The [privacy page](./privacy.md#plain-storage) explains when it fits.
 
 ## 0.6.0 (25 October 2026)
 

@@ -5,9 +5,14 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.6.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.7.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.7.0 (28 de octubre de 2026)
+
+- **La pregunta antes de lo que no se puede deshacer, en tu idioma.** En un ordenador en español, moodle-mcp pregunta «Borrar la actividad… No se puede deshacer. ¿Seguimos?»; si no, en inglés, como antes. Sigue la configuración de idioma del ordenador (`LANG`, `LC_MESSAGES`, `LC_ALL`), que agent-kit también da a sus extensiones, y `server_info` dice qué idioma usa.
+- **Alias sin clave, si quieres.** Con pseudonym 0.3, la lista de personas que hay detrás de los alias puede guardarse como un archivo legible en lugar de cifrado (`PSEUDONYM_STORAGE=plain`), para una carpeta que tu sistema ya protege. Cifrada sigue siendo lo normal, y tus alias no cambian. La [página de privacidad](./privacy.md#plain-storage) explica cuándo conviene.
 
 ## 0.6.0 (25 de octubre de 2026)
 
