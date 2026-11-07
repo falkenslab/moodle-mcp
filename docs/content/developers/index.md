@@ -63,7 +63,7 @@ $ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=h
 3. A tool that shows or acts on other people goes through `src/people.ts`: aliases under `pseudonymize`, redacted text, and aliases refused in text written to Moodle.
 4. A test against the fake Moodle, the `--strict` check, and a check against a real Moodle ([Testing](./testing.md)), since the driver's outputs must match the tool's output schema exactly.
 
-The [tools reference](../reference/tools.md) is generated from the server, so it updates itself. The Claude Code skills in `.claude/skills/` (`add-tool`, `verify`, `update-docs`…) hold the full checklists.
+The [tools reference](../reference/tools.md) is generated from the server, so it updates itself. The Claude Code skills of Falken's Lab's `falkenslab-dev` plugin (`add-tool`, `verify`, `update-docs`…) hold the checklists, and `CLAUDE.md` what they need to know about this project.
 
 ## Measuring the tools
 

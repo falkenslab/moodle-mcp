@@ -63,7 +63,7 @@ $ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=h
 3. Una herramienta que muestra a otras personas o actúa sobre ellas pasa por `src/people.ts`: alias con `pseudonymize`, texto redactado, y alias rechazados en el texto que se escribe en Moodle.
 4. Una prueba contra el Moodle simulado, la comprobación `--strict` y una prueba contra un Moodle real ([Pruebas](./testing.md)), ya que las salidas del driver deben coincidir exactamente con el esquema de salida de la herramienta.
 
-La [referencia de herramientas](../reference/tools.md) se genera a partir del servidor, así que se actualiza sola. Las skills de Claude Code de `.claude/skills/` (`add-tool`, `verify`, `update-docs`…) contienen las listas de comprobación completas.
+La [referencia de herramientas](../reference/tools.md) se genera a partir del servidor, así que se actualiza sola. Las skills de Claude Code del plugin `falkenslab-dev` de Falken's Lab (`add-tool`, `verify`, `update-docs`…) contienen las listas de comprobación, y `CLAUDE.md` lo que necesitan saber de este proyecto.
 
 ## Medir las herramientas
 
