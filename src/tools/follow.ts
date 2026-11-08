@@ -4,6 +4,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { Config } from "../config.js";
 import { pageOf, recordingCalls, type DriverCall } from "../driver.js";
+import { TOOL_FUNCTIONS } from "./scopes.js";
 import type { ToolContext } from "./types.js";
 
 type Handler = (args: unknown, extra: unknown) => Promise<{ isError?: boolean; _meta?: Record<string, unknown> }>;
@@ -12,19 +13,20 @@ type Handler = (args: unknown, extra: unknown) => Promise<{ isError?: boolean; _
 const NAMES_A_PERSON = [/[?&](userid|user|relateduser)=\d/i, /[?&]item=user&itemid=\d/, /^(user\/(profile|view)\.php|message\/index\.php)\?id=\d/];
 
 /**
- * The page of the last call that has one, as an absolute URL; none for a tool that made no such call.
- * While others' data is pseudonymized or blocked, a page that names a person isn't given: ids are
- * what the aliases hide (ADR-019), and nothing guarantees a client keeps `_meta` from the model.
+ * The page of the tool's own call, as an absolute URL: the first of its functions (`TOOL_FUNCTIONS`, main
+ * one first) it called, the last time it did; what it looked up besides (a name, the participants)
+ * isn't what it did. None for a tool without a page. While others' data is pseudonymized or blocked,
+ * a page that names a person isn't given: ids are what the aliases hide (ADR-019), and nothing
+ * guarantees a client keeps `_meta` from the model.
  */
-export function pageFor(calls: readonly DriverCall[], config: Config): string | undefined {
+export function pageFor(tool: string, calls: readonly DriverCall[], config: Config): string | undefined {
   if (!config.moodleUrl) return undefined;
-  for (const call of [...calls].reverse()) {
-    const page = pageOf(call);
-    if (page === undefined) continue;
-    if (config.studentData !== "clear" && NAMES_A_PERSON.some((pattern) => pattern.test(page))) return undefined;
-    return new URL(page, config.moodleUrl).href;
-  }
-  return undefined;
+  const main = TOOL_FUNCTIONS[tool]?.find((name) => calls.some((call) => call.name === name));
+  const call = main ? calls.filter((c) => c.name === main).at(-1) : calls.at(-1);
+  const page = call && pageOf(call);
+  if (page === undefined) return undefined;
+  if (config.studentData !== "clear" && NAMES_A_PERSON.some((pattern) => pattern.test(page))) return undefined;
+  return new URL(page, config.moodleUrl).href;
 }
 
 /**
@@ -37,7 +39,7 @@ export function followTools(server: McpServer, { config, browser }: ToolContext)
   (server as unknown as { registerTool: typeof register }).registerTool = (name, settings, handler) =>
     register(name, settings, async (args, extra) => {
       const { value: result, calls } = await recordingCalls(() => handler(args, extra));
-      const page = result.isError ? undefined : pageFor(calls, config);
+      const page = result.isError ? undefined : pageFor(name, calls, config);
       if (page === undefined) return result;
       if (browser.visible()) await browser.show(page);
       return { ...result, _meta: { ...result._meta, page } };
