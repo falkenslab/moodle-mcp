@@ -12,21 +12,29 @@ type Handler = (args: unknown, extra: unknown) => Promise<{ isError?: boolean; _
 // Pages that name a person by their Moodle id: a profile, a conversation, a user's grades, notes or logs.
 const NAMES_A_PERSON = [/[?&](userid|user|relateduser)=\d/i, /[?&]item=user&itemid=\d/, /^(user\/(profile|view)\.php|message\/index\.php)\?id=\d/];
 
+// The driver's call whose page stands in for one that names a person: the list the person is in.
+const WITHOUT_THE_PERSON: Partial<Record<DriverCall["name"], (args: unknown[]) => DriverCall>> = {
+  gradeSubmission: ([activityId]) => ({ name: "assignmentSubmissions", args: [activityId], result: undefined }),
+  sendMessage: () => ({ name: "conversations", args: [], result: undefined }),
+};
+
 /**
  * The page of the tool's own call, as an absolute URL: the first of its functions (`TOOL_FUNCTIONS`, main
  * one first) it called, the last time it did; what it looked up besides (a name, the participants)
  * isn't what it did. None for a tool without a page. While others' data is pseudonymized or blocked,
- * a page that names a person isn't given: ids are what the aliases hide (ADR-019), and nothing
- * guarantees a client keeps `_meta` from the model.
+ * a page that names a person isn't given, or the list they're in instead: ids are what the aliases
+ * hide (ADR-019), and nothing guarantees a client keeps `_meta` from the model.
  */
 export function pageFor(tool: string, calls: readonly DriverCall[], config: Config): string | undefined {
   if (!config.moodleUrl) return undefined;
   const main = TOOL_FUNCTIONS[tool]?.find((name) => calls.some((call) => call.name === name));
   const call = main ? calls.filter((c) => c.name === main).at(-1) : calls.at(-1);
-  const page = call && pageOf(call);
-  if (page === undefined) return undefined;
-  if (config.studentData !== "clear" && NAMES_A_PERSON.some((pattern) => pattern.test(page))) return undefined;
-  return new URL(page, config.moodleUrl).href;
+  let page = call && pageOf(call);
+  if (page !== undefined && config.studentData !== "clear" && NAMES_A_PERSON.some((pattern) => pattern.test(page!))) {
+    const instead = call && WITHOUT_THE_PERSON[call.name]?.(call.args);
+    page = instead && pageOf(instead);
+  }
+  return page === undefined ? undefined : new URL(page, config.moodleUrl).href;
 }
 
 /**

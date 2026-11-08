@@ -93,8 +93,8 @@ describe("pseudonymous mode", { skip: !browser && "no system browser" }, () => {
     assert.equal(graded[0]?.userid, 7);
     assert.doesNotMatch(text(result), /user 7|Lovelace/);
     assert.match(text(result), new RegExp(users[0]!));
-    // Its page would name the student by id (the grader on them): none is given.
-    assert.equal(result._meta?.page, undefined);
+    // Its page would name the student by id (the grader on them): the grading list instead.
+    assert.equal(result._meta?.page, `${SITE}mod/assign/view.php?id=41&action=grading`);
 
     // An id where an alias is due, or an alias in text students read: refused before Moodle is touched.
     assert.match(text(await client.callTool({ name: "grade_submission", arguments: { assignmentId: 41, userId: 7, grade: "8" } })), /give the participant as user/);

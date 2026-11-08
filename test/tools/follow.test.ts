@@ -33,7 +33,8 @@ describe("each tool's page (_meta.page)", () => {
     assert.match(pageFor("grade_submission", graded, testConfig({ moodleUrl: site }))!, /userid=7/);
     for (const studentData of ["pseudonymize", "block"] as const) {
       const config = testConfig({ moodleUrl: site, studentData });
-      assert.equal(pageFor("grade_submission", graded, config), undefined);
+      assert.equal(pageFor("grade_submission", graded, config), `${site}mod/assign/view.php?id=41&action=grading`);
+      assert.equal(pageFor("send_message", [{ name: "sendMessage", args: [7, "Hi"], result: {} }], config), `${site}message/index.php`);
       assert.equal(pageFor("get_me", profile, config), undefined);
       assert.equal(pageFor("get_course_structure", [{ name: "courseStructure", args: [3], result: [] }], config), `${site}course/view.php?id=3`);
     }
