@@ -1,6 +1,6 @@
 // The question bank tools: banks, their questions, importing and creating questions.
 import { z } from "zod";
-import { QUESTION_TYPES, createQuestion, deleteQuestions, importQuestions, questionBanks, questionTypes, questions, setQuestionStatus, updateQuestion } from "@falkenslab/moodle-driver";
+import { QUESTION_TYPES, createQuestion, deleteQuestions, importQuestions, questionBanks, questionTypes, questions, setQuestionStatus, updateQuestion } from "../driver.js";
 import { formSettings } from "./courseSettings.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

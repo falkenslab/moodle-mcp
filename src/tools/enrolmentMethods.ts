@@ -1,6 +1,6 @@
 // How people get into a course: its enrolment methods (manual, self, guest, cohort sync…), never their keys.
 import { z } from "zod";
-import { enrolmentMethods, setEnrolmentMethod } from "@falkenslab/moodle-driver";
+import { enrolmentMethods, setEnrolmentMethod } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

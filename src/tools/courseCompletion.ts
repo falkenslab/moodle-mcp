@@ -2,7 +2,7 @@
 // Participants as aliases under pseudonymize.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { courseCompletionCriteria, courseCompletionStatus, markCourseComplete, setCourseCompletionCriteria, type CourseCompletionChanges, type CourseCompletionStatus } from "@falkenslab/moodle-driver";
+import { courseCompletionCriteria, courseCompletionStatus, markCourseComplete, setCourseCompletionCriteria, type CourseCompletionChanges, type CourseCompletionStatus } from "../driver.js";
 import type { Config } from "../config.js";
 import { requireSiteUrl } from "../config.js";
 import { people, personFields, shown, targetFields, targetName, targetUserId } from "../people.js";

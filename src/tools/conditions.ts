@@ -1,7 +1,7 @@
 // Access restrictions and completion, as the activity and section tools take and give them: flat objects
 // instead of the driver's unions (some clients reject a union of types), converted both ways here.
 import { z } from "zod";
-import { COMPLETION_STATES, type Completion, type Restriction, type Restrictions } from "@falkenslab/moodle-driver";
+import { COMPLETION_STATES, type Completion, type Restriction, type Restrictions } from "../driver.js";
 
 const condition = z.object({
   type: z.enum(["date", "grade", "completion", "group", "other"]).describe('"date": between from and until; "grade": a grade in activityId between min and max (percent); "completion": activityId in state; "group": a member of groupId; "other": a condition only Moodle\'s JSON can say'),

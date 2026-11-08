@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { COURSE_CLASSIFICATIONS, listCourses } from "@falkenslab/moodle-driver";
+import { COURSE_CLASSIFICATIONS, listCourses } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

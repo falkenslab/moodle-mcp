@@ -2,7 +2,7 @@
 // Authors are teachers, named only as Moodle shows them: an alias under pseudonymize where the directory knows them.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { contentBank, deleteContent, downloadContent, renameContent, uploadToContentBank, type BankContent } from "@falkenslab/moodle-driver";
+import { contentBank, deleteContent, downloadContent, renameContent, uploadToContentBank, type BankContent } from "../driver.js";
 import type { Config } from "../config.js";
 import { personByName } from "../people.js";
 import { onSite, reply } from "./reply.js";

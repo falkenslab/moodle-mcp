@@ -2,7 +2,7 @@
 // Authors and reviewers as aliases under pseudonymize; Moodle's report lines redacted.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { allocateRandomly, allocateReviewer, removeReviewer, scheduleAllocation, workshopAllocation, type WorkshopAllocatedSubmission, type WorkshopAllocation } from "@falkenslab/moodle-driver";
+import { allocateRandomly, allocateReviewer, removeReviewer, scheduleAllocation, workshopAllocation, type WorkshopAllocatedSubmission, type WorkshopAllocation } from "../driver.js";
 import type { Config } from "../config.js";
 import { requireSiteUrl } from "../config.js";
 import { people, personFields, shown, targetUserId, text } from "../people.js";

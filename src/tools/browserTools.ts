@@ -6,7 +6,7 @@ import path from "node:path";
 import type { Locator, Page } from "playwright-core";
 import { z } from "zod";
 import { requireSiteUrl } from "../config.js";
-import { NotLoggedInError } from "@falkenslab/moodle-driver";
+import { NotLoggedInError } from "../driver.js";
 import { readSessionFacts } from "@falkenslab/moodle-driver/internals";
 import { pageText, pseudonymizing } from "../people.js";
 import { showsPeople } from "./scopes.js";

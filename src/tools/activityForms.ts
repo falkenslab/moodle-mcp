@@ -1,6 +1,6 @@
 // create_activity and update_activity: the driver fills and submits Moodle's activity form.
 import { z } from "zod";
-import { ACTIVITY_VISIBILITIES, createActivity, updateActivity } from "@falkenslab/moodle-driver";
+import { ACTIVITY_VISIBILITIES, createActivity, updateActivity } from "../driver.js";
 import { completionSchema, restrictionsSchema, toCompletion, toRestrictions } from "./conditions.js";
 import { section } from "./getCourseStructure.js";
 import { scormFields } from "./scorm.js";

@@ -92,6 +92,8 @@ describe("create_activity and update_activity", { skip: !browser && "no system b
     assert.notEqual(result.isError, true, JSON.stringify(result.content));
     const output = result.structuredContent as { activityId: number; changed: string };
     assert.equal(output.activityId, 40);
+    // Its page is what was made, not the form that made it.
+    assert.equal(result._meta?.page, `${SITE}mod/resource/view.php?id=40`);
     assert.deepEqual(uploads, ["777:brief.txt"]);
     const sent = posts[0]!;
     assert.equal(sent.get("name"), "Brief");

@@ -2,7 +2,7 @@
 // Participants and authors as aliases under pseudonymize; others' notes redacted; no aliases in what's written.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { addNote, deleteNote, editNote, notes, type ParticipantNote } from "@falkenslab/moodle-driver";
+import { addNote, deleteNote, editNote, notes, type ParticipantNote } from "../driver.js";
 import type { Config } from "../config.js";
 import { requireSiteUrl } from "../config.js";
 import { people, personFields, refuseAliases, shown, targetFields, targetUserId, text } from "../people.js";

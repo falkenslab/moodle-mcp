@@ -3,7 +3,7 @@ import type { BrowserContext } from "playwright-core";
 import { z } from "zod";
 import { courseState, type CourseState } from "@falkenslab/moodle-driver/internals";
 import type { Config } from "../config.js";
-import { ACTIVITY_VISIBILITIES, addSection, deleteActivity, deleteSection, duplicateActivity, editActivity, editSection } from "@falkenslab/moodle-driver";
+import { ACTIVITY_VISIBILITIES, addSection, deleteActivity, deleteSection, duplicateActivity, editActivity, editSection } from "../driver.js";
 import { section } from "./getCourseStructure.js";
 import { restrictionsSchema, toRestrictions } from "./conditions.js";
 import { onSite, reply } from "./reply.js";

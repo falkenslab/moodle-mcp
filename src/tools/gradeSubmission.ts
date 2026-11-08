@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { WORKFLOW_STATES, gradeSubmission } from "@falkenslab/moodle-driver";
+import { WORKFLOW_STATES, gradeSubmission } from "../driver.js";
 import { refuseAliases, targetFields, targetName, targetUserId } from "../people.js";
 import { requireSiteUrl } from "../config.js";
 import { onSite, reply } from "./reply.js";

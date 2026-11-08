@@ -1,7 +1,7 @@
 // A backup file (.mbz) read or anonymized on this computer: no Moodle, no session.
 // What names a person in it (authors' names) redacted under pseudonymize.
 import { z } from "zod";
-import { anonymizeBackup, backupContents, type BackupIdentifier } from "@falkenslab/moodle-driver";
+import { anonymizeBackup, backupContents, type BackupIdentifier } from "../driver.js";
 import type { Config } from "../config.js";
 import { pseudonymizing } from "../people.js";
 import { reply } from "./reply.js";

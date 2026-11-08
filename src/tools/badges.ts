@@ -1,6 +1,6 @@
 // A course's badges: read by anyone in it, made and awarded by its teachers.
 import { z } from "zod";
-import { awardBadge, courseBadges, createBadge, setBadgeCriteria, setBadgeEnabled, type BadgeCriteriaChanges } from "@falkenslab/moodle-driver";
+import { awardBadge, courseBadges, createBadge, setBadgeCriteria, setBadgeEnabled, type BadgeCriteriaChanges } from "../driver.js";
 import { requireSiteUrl } from "../config.js";
 import { targetFields, targetName, targetUserId } from "../people.js";
 import { onSite, reply } from "./reply.js";

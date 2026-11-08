@@ -1,7 +1,7 @@
 // Who is in a course and how they do: participants, groups, the grader report, the progress report and
 // a quiz's results. Other people go through people.ts (ADR-013, ADR-016): aliases under pseudonymize.
 import { z } from "zod";
-import { completionReport, graderReport, groups, participants, quizResults, COMPLETION_STATES } from "@falkenslab/moodle-driver";
+import { completionReport, graderReport, groups, participants, quizResults, COMPLETION_STATES } from "../driver.js";
 import { people, personFields, pseudonymizing, shown, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

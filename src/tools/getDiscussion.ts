@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { discussion } from "@falkenslab/moodle-driver";
+import { discussion } from "../driver.js";
 import { people, pseudonymizing, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

@@ -1,6 +1,6 @@
 // The student's assignment tools: one file for three tools that share the assignment's schema.
 import { z } from "zod";
-import { saveSubmission, studentAssignment, submitForGrading } from "@falkenslab/moodle-driver";
+import { saveSubmission, studentAssignment, submitForGrading } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

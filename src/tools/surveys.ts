@@ -1,6 +1,6 @@
 // get_survey and submit_survey: the questionnaire plugin and Moodle's feedback, through their forms.
 import { z } from "zod";
-import { getSurvey, submitSurvey } from "@falkenslab/moodle-driver";
+import { getSurvey, submitSurvey } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

@@ -1,6 +1,6 @@
 // The calendar tools: upcoming events, and course events created or deleted through the calendar's own form and service.
 import { z } from "zod";
-import { calendarEvent, createEvent, deleteEvent, upcomingEvents, updateEvent } from "@falkenslab/moodle-driver";
+import { calendarEvent, createEvent, deleteEvent, upcomingEvents, updateEvent } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

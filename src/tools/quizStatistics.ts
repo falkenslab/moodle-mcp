@@ -1,7 +1,7 @@
 // A quiz's statistics report: how each question works. Aggregates only; responses others gave
 // redacted under pseudonymize.
 import { z } from "zod";
-import { quizStatistics, type QuizQuestionStatistics } from "@falkenslab/moodle-driver";
+import { quizStatistics, type QuizQuestionStatistics } from "../driver.js";
 import type { Config } from "../config.js";
 import { text } from "../people.js";
 import { onSite, reply } from "./reply.js";

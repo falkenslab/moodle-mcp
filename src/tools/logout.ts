@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { logOut } from "@falkenslab/moodle-driver";
+import { logOut } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 import { forgetSelf } from "../people.js";

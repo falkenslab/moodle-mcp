@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { downloadFile } from "@falkenslab/moodle-driver";
+import { downloadFile } from "../driver.js";
 import { onSite } from "./reply.js";
 import { OutOfScopeError, holdsOthersFiles, othersFilesAllowed, studentDataAllowed } from "./scopes.js";
 import type { RegisterTool } from "./types.js";

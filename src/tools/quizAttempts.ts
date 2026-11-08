@@ -1,6 +1,6 @@
 // The quiz tools: one file for six tools that share the question and detail schemas.
 import { z } from "zod";
-import { answerQuizQuestions, finishQuizAttempt, quizInfo, readAttempt, readReview, startQuizAttempt } from "@falkenslab/moodle-driver";
+import { answerQuizQuestions, finishQuizAttempt, quizInfo, readAttempt, readReview, startQuizAttempt } from "../driver.js";
 import { personByName, text } from "../people.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";

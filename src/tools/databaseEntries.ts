@@ -2,7 +2,7 @@
 // Authors as aliases under pseudonymize; others' values redacted, their files named only.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { addDatabaseEntry, databaseEntries, deleteDatabaseEntry, editDatabaseEntry, exportDatabaseEntries, importDatabaseEntries, setDatabaseEntryApproved, type DatabaseEntry, type DatabaseEntryValues } from "@falkenslab/moodle-driver";
+import { addDatabaseEntry, databaseEntries, deleteDatabaseEntry, editDatabaseEntry, exportDatabaseEntries, importDatabaseEntries, setDatabaseEntryApproved, type DatabaseEntry, type DatabaseEntryValues } from "../driver.js";
 import type { Config } from "../config.js";
 import { people, personFields, pseudonymizing, refuseAliases, shown, text } from "../people.js";
 import { more, pageInputs, pagedText } from "./paging.js";

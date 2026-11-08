@@ -1,71 +1,45 @@
-// Follow mode (ADR-011): the Moodle page that shows each tool's work, for the tools that work through
-// AJAX and open no page of their own (those that do are followed by `openSitePage`).
+// Each tool's page (ADR-011): the Moodle page that shows its work, from the driver's map
+// (`FOLLOWED_PAGES`) for the calls the tool made. It goes in the result's `_meta.page`, for a client to
+// link the action to it, and, while the person watches, it's shown in the browser.
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { Config } from "../config.js";
+import { pageOf, recordingCalls, type DriverCall } from "../driver.js";
 import type { ToolContext } from "./types.js";
 
-type Args = Record<string, number | undefined>;
+type Handler = (args: unknown, extra: unknown) => Promise<{ isError?: boolean; _meta?: Record<string, unknown> }>;
 
-const course = (a: Args) => `course/view.php?id=${a.courseId}`;
-
-/** Each AJAX tool's page, relative to the site, from its arguments. */
-export const FOLLOWED_PAGES: Record<string, (args: Args) => string> = {
-  get_me: () => "user/profile.php",
-  list_courses: () => "my/courses.php",
-  get_course_structure: course,
-  list_assignments: (a) => `mod/assign/index.php?id=${a.courseId}`,
-  list_pending: course,
-  get_activities_overview: (a) => `course/overview.php?id=${a.courseId}`,
-  list_deadlines: () => "calendar/view.php?view=upcoming",
-  get_course_updates: course,
-  get_discussion: (a) => `mod/forum/discuss.php?d=${a.discussionId}`,
-  get_submissions: (a) => `mod/assign/view.php?id=${a.assignmentId}&action=grading`,
-  // By alias (pseudonymous mode) the user id isn't known here: the grading list instead.
-  grade_submission: (a) => (a.userId ? `mod/assign/view.php?id=${a.assignmentId}&action=grader&userid=${a.userId}` : `mod/assign/view.php?id=${a.assignmentId}&action=grading`),
-  get_completion_report: (a) => `report/progress/index.php?course=${a.courseId}`,
-  list_participants: (a) => `user/index.php?id=${a.courseId}`,
-  list_groups: (a) => `group/index.php?id=${a.courseId}`,
-  set_discussion_state: (a) => `mod/forum/view.php?id=${a.forumId}`,
-  list_notifications: () => "message/output/popup/notifications.php",
-  mark_notifications_read: () => "message/output/popup/notifications.php",
-  list_conversations: () => "message/index.php",
-  get_conversation: () => "message/index.php",
-  send_message: () => "message/index.php",
-  get_rubric: (a) => `mod/assign/view.php?id=${a.assignmentId}`,
-  set_badge_enabled: (a) => `badges/overview.php?id=${a.badgeId}`,
-  get_event: () => "calendar/view.php?view=upcoming",
-  update_event: () => "calendar/view.php?view=upcoming",
-  set_user_roles: (a) => `user/index.php?id=${a.courseId}`,
-  list_competency_frameworks: (a) => `admin/tool/lp/coursecompetencies.php?courseid=${a.courseId}`,
-  list_course_competencies: (a) => `admin/tool/lp/coursecompetencies.php?courseid=${a.courseId}`,
-  add_course_competency: (a) => `admin/tool/lp/coursecompetencies.php?courseid=${a.courseId}`,
-  remove_course_competency: (a) => `admin/tool/lp/coursecompetencies.php?courseid=${a.courseId}`,
-  rename_content: (a) => `contentbank/view.php?id=${a.contentId}`,
-  list_events: (a) => `calendar/view.php?view=upcoming${a.courseId ? `&course=${a.courseId}` : ""}`,
-  create_event: (a) => `calendar/view.php?view=upcoming&course=${a.courseId}`,
-  delete_event: () => "calendar/view.php?view=upcoming",
-  update_grade_item: (a) => `grade/edit/tree/index.php?id=${a.courseId}`,
-  add_grade_category: (a) => `grade/edit/tree/index.php?id=${a.courseId}`,
-  edit_activity: course,
-  duplicate_activity: course,
-  delete_activity: course,
-  add_section: course,
-  edit_section: course,
-  delete_section: course,
-};
-
-type Handler = (args: Args, extra: unknown) => Promise<{ isError?: boolean }>;
+// Pages that name a person by their Moodle id: a profile, a conversation, a user's grades, notes or logs.
+const NAMES_A_PERSON = [/[?&](userid|user|relateduser)=\d/i, /[?&]item=user&itemid=\d/, /^(user\/(profile|view)\.php|message\/index\.php)\?id=\d/];
 
 /**
- * Makes every tool registered on `server` from now on show its page when it succeeds, while the
- * person watches. Showing is best effort (`BrowserManager.show`) and costs nothing otherwise.
+ * The page of the last call that has one, as an absolute URL; none for a tool that made no such call.
+ * While others' data is pseudonymized or blocked, a page that names a person isn't given: ids are
+ * what the aliases hide (ADR-019), and nothing guarantees a client keeps `_meta` from the model.
+ */
+export function pageFor(calls: readonly DriverCall[], config: Config): string | undefined {
+  if (!config.moodleUrl) return undefined;
+  for (const call of [...calls].reverse()) {
+    const page = pageOf(call);
+    if (page === undefined) continue;
+    if (config.studentData !== "clear" && NAMES_A_PERSON.some((pattern) => pattern.test(page))) return undefined;
+    return new URL(page, config.moodleUrl).href;
+  }
+  return undefined;
+}
+
+/**
+ * Makes every tool registered on `server` from now on give its page in `_meta.page` when it succeeds,
+ * and show it while the person watches. Showing is best effort (`BrowserManager.show`); the content
+ * the agent reads doesn't change.
  */
 export function followTools(server: McpServer, { config, browser }: ToolContext): void {
   const register = server.registerTool.bind(server) as (name: string, settings: unknown, handler: Handler) => unknown;
   (server as unknown as { registerTool: typeof register }).registerTool = (name, settings, handler) =>
     register(name, settings, async (args, extra) => {
-      const result = await handler(args, extra);
-      const page = FOLLOWED_PAGES[name];
-      if (page && !result.isError && config.moodleUrl && browser.visible()) await browser.show(new URL(page(args), config.moodleUrl).href);
-      return result;
+      const { value: result, calls } = await recordingCalls(() => handler(args, extra));
+      const page = result.isError ? undefined : pageFor(calls, config);
+      if (page === undefined) return result;
+      if (browser.visible()) await browser.show(page);
+      return { ...result, _meta: { ...result._meta, page } };
     });
 }

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ConfigError, atLeastAsStrict, parseCourseUrl, parseProfileDir, parseScopeSetting, type Classroom } from "../config.js";
 import { addSite, useSite } from "../sites.js";
-import { findMoodleSite } from "@falkenslab/moodle-driver";
+import { findMoodleSite } from "../driver.js";
 import { ROLES, roleWithin } from "./roles.js";
 import { ACCESS_LEVELS, STUDENT_DATA_LEVELS, applyScopes } from "./scopes.js";
 import { serverInfo, serverInfoSchema } from "./serverInfo.js";

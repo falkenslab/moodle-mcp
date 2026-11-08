@@ -1,7 +1,7 @@
 // get_scorm and open_scorm: a SCORM package is the teacher's own content in Moodle's player, so the agent
 // opens it here, does it with the browser fallback tools inside its frame, and reads back what Moodle recorded.
 import { z } from "zod";
-import { openScorm, scorm } from "@falkenslab/moodle-driver";
+import { openScorm, scorm } from "../driver.js";
 import { requireSiteUrl } from "../config.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { listAssignments } from "@falkenslab/moodle-driver";
+import { listAssignments } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

@@ -1,7 +1,7 @@
 // What people answered in a choice, a feedback or a questionnaire, for a teacher.
 // Respondents as aliases under pseudonymize, their text answers redacted; anonymous ones name no one.
 import { z } from "zod";
-import { choiceResults, surveyResults } from "@falkenslab/moodle-driver";
+import { choiceResults, surveyResults } from "../driver.js";
 import { people, personByName, personFields, shown, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

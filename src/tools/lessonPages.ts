@@ -1,7 +1,7 @@
 // A lesson's pages, as its teacher builds them in Moodle's lesson editor: content pages with their
 // buttons, question pages with their answers, and the jumps between them.
 import { z } from "zod";
-import { LESSON_JUMPS, LESSON_PAGE_TYPES, addLessonPage, deleteLessonPage, editLessonPage, lessonPages, moveLessonPage, type LessonJump, type LessonPageDefinition } from "@falkenslab/moodle-driver";
+import { LESSON_JUMPS, LESSON_PAGE_TYPES, addLessonPage, deleteLessonPage, editLessonPage, lessonPages, moveLessonPage, type LessonJump, type LessonPageDefinition } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

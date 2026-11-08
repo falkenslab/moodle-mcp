@@ -1,6 +1,6 @@
 // A course page's blocks (advanced, ADR-022): listed, added, configured, moved and deleted.
 import { z } from "zod";
-import { addBlock, configureBlock, courseBlocks, deleteBlock, moveBlock } from "@falkenslab/moodle-driver";
+import { addBlock, configureBlock, courseBlocks, deleteBlock, moveBlock } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

@@ -1,7 +1,7 @@
 // The sites a server knows, one active (ADR-021): list them, add one, switch, remove one. Session tools:
 // they read or change the server's own state, never Moodle's data.
 import { z } from "zod";
-import { findMoodleSite } from "@falkenslab/moodle-driver";
+import { findMoodleSite } from "../driver.js";
 import { redactUrl, type Config } from "../config.js";
 import { addSite, removeSite, useSite } from "../sites.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";

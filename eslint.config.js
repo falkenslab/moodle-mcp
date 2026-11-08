@@ -12,4 +12,9 @@ export default tseslint.config(
     files: ["src/**/*.ts"],
     rules: { "no-console": ["error", { allow: ["error"] }] },
   },
+  {
+    // Tools reach the driver through src/driver.ts, which records each call's page (_meta.page, follow mode).
+    files: ["src/tools/**/*.ts"],
+    rules: { "no-restricted-imports": ["error", { paths: [{ name: "@falkenslab/moodle-driver", message: "Import the driver from ../driver.js: it records each call's page." }] }] },
+  },
 );

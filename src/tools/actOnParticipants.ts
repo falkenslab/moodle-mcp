@@ -1,7 +1,7 @@
 // Decisions about participants: completion overrides, assignment extensions, quiz overrides, and a
 // discussion's pin and lock. Participants come as the reading tools give them (people.ts).
 import { z } from "zod";
-import { COMPLETION_STATES, grantExtension, overrideCompletion, setDiscussionState, setQuizOverride } from "@falkenslab/moodle-driver";
+import { COMPLETION_STATES, grantExtension, overrideCompletion, setDiscussionState, setQuizOverride } from "../driver.js";
 import { requireSiteUrl } from "../config.js";
 import { personByName, pseudonymizing, targetFields, targetName, targetUserId, text, userIdOf } from "../people.js";
 import { onSite, reply } from "./reply.js";

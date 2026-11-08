@@ -1,6 +1,6 @@
 // The H5P content types a site can run (#52): what an H5P package needs before it's built and uploaded.
 import { z } from "zod";
-import { h5pContentTypes } from "@falkenslab/moodle-driver";
+import { h5pContentTypes } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

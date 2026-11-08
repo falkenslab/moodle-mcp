@@ -52,7 +52,8 @@ describe("get_course_structure", { skip: !browser && "no system browser" }, () =
       services: { core_courseformat_get_state: () => JSON.stringify(STATE) },
     };
     const { client, context } = await connect(state);
-    await client.callTool({ name: "get_course_structure", arguments: { courseId: 5 } });
+    const quick = await client.callTool({ name: "get_course_structure", arguments: { courseId: 5 } });
+    assert.equal(quick._meta?.page, `${SITE}course/view.php?id=5`);
     const pagesBefore = state.pagesServed!.filter((p) => p.startsWith("/course/")).length;
     assert.equal(pagesBefore, 0);
     const result = await client.callTool({ name: "get_course_structure", arguments: { courseId: 5, details: true } });

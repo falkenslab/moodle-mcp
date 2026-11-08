@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { pendingActivities } from "@falkenslab/moodle-driver";
+import { pendingActivities } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

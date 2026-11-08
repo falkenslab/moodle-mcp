@@ -14,7 +14,7 @@ import {
   rate,
   setGrade,
   setWorkflowState,
-} from "@falkenslab/moodle-driver";
+} from "../driver.js";
 import { requireSiteUrl } from "../config.js";
 import { people, personByName, personFields, pseudonymizing, refuseAliases, shown, targetFields, targetName, targetsFields, targetsName, targetUserId, targetUserIds } from "../people.js";
 import { onSite, reply } from "./reply.js";

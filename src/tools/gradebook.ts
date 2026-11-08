@@ -1,6 +1,6 @@
 // The gradebook setup tools: categories and grade items, never anyone's grades.
 import { z } from "zod";
-import { GRADE_AGGREGATIONS, addGradeCategory, addGradeItem, deleteGradeCategory, deleteGradeItem, gradebookSetup, updateGradeCategory, updateGradeItem } from "@falkenslab/moodle-driver";
+import { GRADE_AGGREGATIONS, addGradeCategory, addGradeItem, deleteGradeCategory, deleteGradeItem, gradebookSetup, updateGradeCategory, updateGradeItem } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

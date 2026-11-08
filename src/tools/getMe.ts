@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { redactUrl } from "../config.js";
-import { whoAmI } from "@falkenslab/moodle-driver";
+import { whoAmI } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

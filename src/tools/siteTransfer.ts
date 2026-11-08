@@ -4,7 +4,7 @@
 import { mkdirSync, rmSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
-import { backupCourse, restoreCourse } from "@falkenslab/moodle-driver";
+import { backupCourse, restoreCourse } from "../driver.js";
 import { findSite, useSite } from "../sites.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

@@ -1,7 +1,7 @@
 // A course's external tools (LTI; advanced, ADR-022): listed, added, shown in the chooser, deleted,
 // and an LTI activity's launch link for the person. A tool's secret is never read back.
 import { z } from "zod";
-import { addExternalTool, deleteExternalTool, externalToolLaunchUrl, externalTools, setExternalToolInChooser } from "@falkenslab/moodle-driver";
+import { addExternalTool, deleteExternalTool, externalToolLaunchUrl, externalTools, setExternalToolInChooser } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

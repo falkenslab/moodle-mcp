@@ -50,6 +50,7 @@ $ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=h
 | `src/config.ts` | Los ajustes del entorno y de los argumentos |
 | `src/instructions.ts` | Lo que el servidor le dice al agente sobre cómo trabajar en Moodle |
 | `src/tools/` | Un archivo por herramienta o pequeña familia, registrados en `index.ts` |
+| `src/driver.ts` | El driver tal como lo importan las herramientas: cada llamada registrada, para la página del resultado de cada herramienta (`_meta.page`, y la ventana mientras se muestra) |
 | `src/tools/scopes.ts`, `roles.ts` | Qué funciones del driver llama cada herramienta, y a qué rol pertenece |
 | `src/people.ts` | Alias y redacción para las herramientas que muestran personas o actúan sobre ellas |
 | `test/` | Pruebas contra el Moodle simulado del driver |

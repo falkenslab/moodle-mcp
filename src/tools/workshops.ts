@@ -17,7 +17,7 @@ import {
   workshopInfo,
   workshopSubmission,
   type WorkshopInfo,
-} from "@falkenslab/moodle-driver";
+} from "../driver.js";
 import type { Config } from "../config.js";
 import { requireSiteUrl } from "../config.js";
 import { people, personFields, pseudonymizing, refuseAliases, shown, targetUserId, text } from "../people.js";

@@ -1,7 +1,7 @@
 // reply_to_post, create_discussion, edit_post, delete_post and set_discussion_subscription: the driver works
 // through Moodle's own post form and the discussion list's toggles.
 import { z } from "zod";
-import { deletePost, editPost, replyToPost, setDiscussionSubscription, startDiscussion } from "@falkenslab/moodle-driver";
+import { deletePost, editPost, replyToPost, setDiscussionSubscription, startDiscussion } from "../driver.js";
 import { people, personByName, pseudonymizing, refuseAliases, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

@@ -2,7 +2,7 @@
 // the data the driver says each of their functions touches. The person sets the limits at start-up;
 // configure only narrows them.
 import type { McpServer, RegisteredTool } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { DATA_CATEGORIES, moduleCategories, type DataCategory } from "@falkenslab/moodle-driver";
+import { DATA_CATEGORIES, moduleCategories, type DataCategory } from "../driver.js";
 import type { Config } from "../config.js";
 import { ADVANCED_TOOLS } from "./advanced.js";
 import { roleAllows } from "./roles.js";

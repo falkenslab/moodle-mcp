@@ -1,7 +1,7 @@
 // A quiz's questions as its edit page lists them, and the edit page's changes: adding questions, a slot's
 // mark and place, removing one, pages and sections.
 import { z } from "zod";
-import { addQuestionsToQuiz, addQuizSection, editQuizSlot, quizStructure, removeQuizSlot, setQuizPages } from "@falkenslab/moodle-driver";
+import { addQuestionsToQuiz, addQuizSection, editQuizSlot, quizStructure, removeQuizSlot, setQuizPages } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

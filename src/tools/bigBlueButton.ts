@@ -1,6 +1,6 @@
 // BigBlueButton activities (advanced, ADR-022): their state and recordings, and the person's join link.
 import { z } from "zod";
-import { bigBlueButton, bigBlueButtonJoinUrl, deleteRecording, setRecordingPublished } from "@falkenslab/moodle-driver";
+import { bigBlueButton, bigBlueButtonJoinUrl, deleteRecording, setRecordingPublished } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

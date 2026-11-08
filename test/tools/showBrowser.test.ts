@@ -44,15 +44,26 @@ describe("following the tools' pages", { skip: !browser && "no system browser" }
     return { client, context, shown };
   }
 
-  it("shows an AJAX tool's page while the person watches, and nothing otherwise", async () => {
+  it("gives a tool's page in _meta, and shows it while the person watches", async () => {
     const on = await watching(true);
-    await on.client.callTool({ name: "list_courses", arguments: {} });
+    const watched = await on.client.callTool({ name: "list_courses", arguments: {} });
     assert.deepEqual(on.shown, [`${SITE}my/courses.php`]);
+    assert.equal(watched._meta?.page, `${SITE}my/courses.php`);
     await on.context.close();
     const off = await watching(false);
-    await off.client.callTool({ name: "list_courses", arguments: {} });
+    const unwatched = await off.client.callTool({ name: "list_courses", arguments: {} });
     assert.deepEqual(off.shown, []);
+    assert.equal(unwatched._meta?.page, `${SITE}my/courses.php`);
+    // What the agent reads is the same: the page is only in _meta.
+    assert.deepEqual(unwatched.content, watched.content);
+    assert.doesNotMatch(JSON.stringify(unwatched.content), /my\/courses\.php/);
     await off.context.close();
+  });
+
+  it("gives no page for a tool without one", async () => {
+    const { client, context } = await watching(false);
+    assert.equal((await client.callTool({ name: "server_info", arguments: {} }))._meta?.page, undefined);
+    await context.close();
   });
 
 });

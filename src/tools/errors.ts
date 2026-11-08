@@ -1,7 +1,7 @@
 // The driver's errors speak of Moodle and the browser; a client needs to hear which tool or setting
 // fixes them. Applied to every tool as createServer registers them, like following (ADR-014).
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { MoodleError } from "@falkenslab/moodle-driver";
+import { MoodleError } from "../driver.js";
 
 /** What this server adds to a driver error, by its stable code: the tool or setting that fixes it. */
 const HINTS: Partial<Record<MoodleError["code"], (message: string) => string>> = {

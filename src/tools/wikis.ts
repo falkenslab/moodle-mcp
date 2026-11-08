@@ -2,7 +2,7 @@
 // Authors as aliases under pseudonymize; pages others wrote redacted.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { createWikiPage, editWikiPage, wikiPage, wikiPages, type WikiPage } from "@falkenslab/moodle-driver";
+import { createWikiPage, editWikiPage, wikiPage, wikiPages, type WikiPage } from "../driver.js";
 import type { Config } from "../config.js";
 import { requireSiteUrl } from "../config.js";
 import { people, personFields, pseudonymizing, refuseAliases, shown, targetUserId, text } from "../people.js";

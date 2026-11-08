@@ -1,7 +1,7 @@
 // Groups made at once: Moodle's auto-create (previewed first) and its CSV import.
 // Members as aliases under pseudonymize.
 import { z } from "zod";
-import { autoCreateGroups, importGroups } from "@falkenslab/moodle-driver";
+import { autoCreateGroups, importGroups } from "../driver.js";
 import { peopleByIds, personByName, personFields } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

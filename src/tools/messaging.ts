@@ -2,7 +2,7 @@
 // and members as aliases under pseudonymize, their texts redacted, aliases refused in what is sent.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { conversation, conversations, markNotificationsRead, messageParticipants, notifications, sendMessage, userById } from "@falkenslab/moodle-driver";
+import { conversation, conversations, markNotificationsRead, messageParticipants, notifications, sendMessage, userById } from "../driver.js";
 import { requireSiteUrl, type Config } from "../config.js";
 import { people, peopleByIds, personFields, pseudonymizing, refuseAliases, self, shown, targetFields, targetName, targetsFields, targetUserId, targetUserIds, text } from "../people.js";
 import { onSite, reply } from "./reply.js";

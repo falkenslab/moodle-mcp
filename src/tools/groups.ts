@@ -1,7 +1,7 @@
 // Groups and groupings as a course's structure: creating, changing and deleting them, and which groups
 // a grouping holds. Who is in a group is people's data: list_groups and set_group_members.
 import { z } from "zod";
-import { createGroup, createGrouping, deleteGroup, deleteGrouping, groupings, setGroupingGroups, updateGroup } from "@falkenslab/moodle-driver";
+import { createGroup, createGrouping, deleteGroup, deleteGrouping, groupings, setGroupingGroups, updateGroup } from "../driver.js";
 import { text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

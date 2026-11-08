@@ -1,6 +1,6 @@
 // Activities as the person does them: manual completion, choices, lessons and H5P activities.
 import { z } from "zod";
-import { answerChoice, answerLessonPage, getChoice, h5pActivity, lessonPage, setCompletion } from "@falkenslab/moodle-driver";
+import { answerChoice, answerLessonPage, getChoice, h5pActivity, lessonPage, setCompletion } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

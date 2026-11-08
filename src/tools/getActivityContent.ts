@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CONTENT_TYPES, activityContent } from "@falkenslab/moodle-driver";
+import { CONTENT_TYPES, activityContent } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

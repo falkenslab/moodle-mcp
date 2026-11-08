@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { WORKFLOW_STATES, assignmentSubmissions } from "@falkenslab/moodle-driver";
+import { WORKFLOW_STATES, assignmentSubmissions } from "../driver.js";
 import { people, personFields, pseudonymizing, shown, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";

@@ -2,7 +2,7 @@
 // competencies, and participants' ratings. Participants and raters as aliases under pseudonymize.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { addCourseCompetency, competencyFrameworks, competencyRating, courseCompetencies, rateCompetency, removeCourseCompetency, setActivityCompetencies, type CompetencyRating } from "@falkenslab/moodle-driver";
+import { addCourseCompetency, competencyFrameworks, competencyRating, courseCompetencies, rateCompetency, removeCourseCompetency, setActivityCompetencies, type CompetencyRating } from "../driver.js";
 import type { Config } from "../config.js";
 import { requireSiteUrl } from "../config.js";
 import { people, peopleByIds, personFields, refuseAliases, self, shown, targetFields, targetName, targetUserId, text } from "../people.js";

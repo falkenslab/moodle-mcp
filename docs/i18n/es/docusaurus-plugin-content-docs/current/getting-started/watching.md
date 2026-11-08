@@ -23,6 +23,8 @@ Cada herramienta que crea algo le da al agente su enlace, así que puedes pedír
 
 <Prompt>{`Dame el enlace al cuestionario que acabas de crear.`}</Prompt>
 
+Si construyes una aplicación sobre moodle-mcp: el resultado de cada herramienta lleva en `_meta.page` la dirección de la página de Moodle que muestra lo que hizo, para que tu aplicación ponga un enlace bajo la acción («Ver en Moodle»). Una creación da lo que creó, una edición el elemento que cambió y una lectura la página que lee. Una herramienta sin esa página no da ninguna, y mientras los datos de los demás se seudonimizan o se bloquean ninguna dirección nombra a una persona. El texto que lee el agente no cambia.
+
 Y todo lo que hace el agente queda en Moodle como si lo hubieras hecho tú: en el curso, en el calificador y en los registros de Moodle, a tu nombre.
 
 ## Mientras trabaja

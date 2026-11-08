@@ -13,7 +13,7 @@ import {
   setDatabaseTemplate,
   type DatabaseField,
   type DatabaseFieldOptions,
-} from "@falkenslab/moodle-driver";
+} from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

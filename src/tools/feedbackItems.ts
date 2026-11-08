@@ -1,6 +1,6 @@
 // A feedback activity's questions (items) and templates, as its teacher builds them.
 import { z } from "zod";
-import { FEEDBACK_ITEM_TYPES, addFeedbackItem, deleteFeedbackItem, deleteFeedbackTemplate, editFeedbackItem, feedbackItems, feedbackTemplates, moveFeedbackItem, saveFeedbackTemplate, useFeedbackTemplate, type FeedbackItemInput } from "@falkenslab/moodle-driver";
+import { FEEDBACK_ITEM_TYPES, addFeedbackItem, deleteFeedbackItem, deleteFeedbackTemplate, editFeedbackItem, feedbackItems, feedbackTemplates, moveFeedbackItem, saveFeedbackTemplate, useFeedbackTemplate, type FeedbackItemInput } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

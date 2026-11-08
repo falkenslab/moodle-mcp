@@ -1,6 +1,6 @@
 // A question bank's categories, and its questions exported to a file.
 import { z } from "zod";
-import { addQuestionCategory, deleteQuestionCategory, editQuestionCategory, exportQuestions, moveQuestions, questionCategories } from "@falkenslab/moodle-driver";
+import { addQuestionCategory, deleteQuestionCategory, editQuestionCategory, exportQuestions, moveQuestions, questionCategories } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

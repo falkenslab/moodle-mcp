@@ -1,6 +1,6 @@
 // A course's gradebook beyond single grades: a CSV of grades imported, its scales and grade letters.
 import { z } from "zod";
-import { addScale, courseScales, editScale, gradeLetters, importGrades, setGradeLetters } from "@falkenslab/moodle-driver";
+import { addScale, courseScales, editScale, gradeLetters, importGrades, setGradeLetters } from "../driver.js";
 import { pseudonymizing } from "../people.js";
 import { onSite, reply } from "./reply.js";
 import { OutOfScopeError, othersFilesAllowed } from "./scopes.js";

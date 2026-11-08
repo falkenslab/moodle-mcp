@@ -1,7 +1,7 @@
 // A course's life cycle: copying, backing up, restoring, importing activities and resetting. The content
 // tools by default: what involves people's data (with users) is checked here, against the limits in force.
 import { z } from "zod";
-import { backupCourse, copyCourse, importActivities, resetCourse, restoreCourse } from "@falkenslab/moodle-driver";
+import { backupCourse, copyCourse, importActivities, resetCourse, restoreCourse } from "../driver.js";
 import type { Config } from "../config.js";
 import { formSettings } from "./courseSettings.js";
 import { onSite, reply } from "./reply.js";

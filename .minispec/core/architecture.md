@@ -25,7 +25,8 @@ Everything that works Moodle is moodle-driver's (sibling repository, ADR-014): t
 - `tools/roles.ts` — the tools of each role (ADR-018): three lists (both, student, teacher), checked by a test against the registered tools; `toolAllowed` asks it first.
 - `tools/scopes.ts` — tool scopes and the student data policy (ADR-015, ADR-016): each tool's driver functions (`TOOL_FUNCTIONS`, a test fails on an unlisted tool), their `DATA_CATEGORIES` turned into required scopes, the strictest kept; tools out of scope disabled (`tools/list_changed`) and refused if called anyway; `download_file`'s and the deletions' guards without student data; the browser scope and others' files only with `clear`.
 - `tools/errors.ts` — the driver's errors in this server's terms: `NotLoggedInError` and login timeouts name `login`, browser and display errors name `MOODLE_MCP_*` settings.
-- `tools/follow.ts` — the Moodle page each AJAX tool shows while the person watches (ADR-011; the mechanism is the driver's).
+- `driver.ts` — the driver as tools import it: its exports, each function with a page (`FOLLOWED_PAGES`) recording its call during a tool call.
+- `tools/follow.ts` — each tool's page, from the driver's map for the last recorded call that has one: in the result's `_meta.page`, and shown while the person watches (ADR-011).
 - `tools/configure.ts` — `configure`: URL (checked with the driver's `findMoodleSite`), headless, trail, profile folder, in memory (ADR-009); closes the browser when the profile or the mode changes.
 - `tools/login.ts`, `tools/logout.ts` — the driver's `logIn` with progress notifications while the person logs in; `logOut`.
 - `tools/showBrowser.ts` — `show_browser` (ADR-011).

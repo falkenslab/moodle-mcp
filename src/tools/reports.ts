@@ -1,7 +1,7 @@
 // A course's reports: views per activity (counts only), who took part in an activity and the logs
 // (people's data, as aliases under pseudonymize; the logs never with an IP address).
 import { z } from "zod";
-import { LOG_ACTIONS, PARTICIPATION_ACTIONS, activityReport, courseLogs, participationReport } from "@falkenslab/moodle-driver";
+import { LOG_ACTIONS, PARTICIPATION_ACTIONS, activityReport, courseLogs, participationReport } from "../driver.js";
 import { requireSiteUrl } from "../config.js";
 import { people, personByName, personFields, pseudonymizing, redactAll, shown, targetFields, targetUserId } from "../people.js";
 import { onSite, reply } from "./reply.js";

@@ -1,6 +1,6 @@
 // A book's chapters, as its teacher writes them: listed, added, changed, moved, shown or hidden, deleted.
 import { z } from "zod";
-import { addBookChapter, bookChapters, deleteBookChapter, editBookChapter, moveBookChapter, setBookChapterVisible } from "@falkenslab/moodle-driver";
+import { addBookChapter, bookChapters, deleteBookChapter, editBookChapter, moveBookChapter, setBookChapterVisible } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

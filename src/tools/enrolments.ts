@@ -1,7 +1,7 @@
 // Who is in a course and with which roles and groups: enrolling, unenrolling, roles and group members.
 // People come and go as the reading tools give them (people.ts): aliases under pseudonymize, never emails.
 import { z } from "zod";
-import { enrolUsers, potentialUsers, setGroupMembers, setUserRoles, unenrolUser } from "@falkenslab/moodle-driver";
+import { enrolUsers, potentialUsers, setGroupMembers, setUserRoles, unenrolUser } from "../driver.js";
 import { requireSiteUrl } from "../config.js";
 import { people, peopleByIds, personFields, pseudonymizing, shown, targetFields, targetName, targetsFields, targetsName, targetUserId, targetUserIds } from "../people.js";
 import { onSite, reply } from "./reply.js";

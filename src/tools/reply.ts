@@ -1,4 +1,4 @@
-import type { BrowserManager } from "@falkenslab/moodle-driver";
+import type { BrowserManager } from "../driver.js";
 import type { BrowserContext } from "playwright-core";
 import { requireSiteUrl, type Config } from "../config.js";
 import { resolveActiveSite } from "../sites.js";

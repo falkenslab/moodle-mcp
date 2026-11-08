@@ -1,7 +1,7 @@
 // get_activities_overview, list_deadlines and get_course_updates: what's due, what needs doing and
 // what changed, from Moodle's services, without opening each activity.
 import { z } from "zod";
-import { activitiesOverview, courseUpdates, deadlines } from "@falkenslab/moodle-driver";
+import { activitiesOverview, courseUpdates, deadlines } from "../driver.js";
 import { onSite } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 

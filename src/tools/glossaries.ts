@@ -13,7 +13,7 @@ import {
   importGlossaryEntries,
   setGlossaryEntryApproved,
   type GlossaryEntry,
-} from "@falkenslab/moodle-driver";
+} from "../driver.js";
 import type { Config } from "../config.js";
 import { people, personFields, pseudonymizing, refuseAliases, shown, text } from "../people.js";
 import { more, pageInputs, pagedText } from "./paging.js";

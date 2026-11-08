@@ -1,6 +1,6 @@
 // get_activity_settings and update_course: a form's fields as Moodle holds them, and the course's own form.
 import { z } from "zod";
-import { activitySettings, updateCourse } from "@falkenslab/moodle-driver";
+import { activitySettings, updateCourse } from "../driver.js";
 import { completionSchema, fromCompletion, fromRestrictions, restrictionsSchema } from "./conditions.js";
 import { course } from "./listCourses.js";
 import { onSite, reply } from "./reply.js";

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { redactUrl, requireSiteUrl } from "../config.js";
-import { logIn } from "@falkenslab/moodle-driver";
+import { logIn } from "../driver.js";
 import type { RegisterTool } from "./types.js";
 import { forgetSelf } from "../people.js";
 

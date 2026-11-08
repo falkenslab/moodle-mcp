@@ -1,6 +1,6 @@
 // get_rubric and set_rubric: an assignment's advanced grading, read and defined.
 import { z } from "zod";
-import { rubric, setGradingDefinition } from "@falkenslab/moodle-driver";
+import { rubric, setGradingDefinition } from "../driver.js";
 import { onSite, reply } from "./reply.js";
 import type { RegisterTool } from "./types.js";
 
