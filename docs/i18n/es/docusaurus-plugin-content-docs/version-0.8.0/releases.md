@@ -5,9 +5,14 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.7.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.8.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.8.0 (8 de noviembre de 2026)
+
+- **Un enlace a Moodle con cada acción.** El resultado de cada herramienta lleva ahora la dirección de la página de Moodle que muestra lo que hizo, para que las aplicaciones construidas sobre moodle-mcp pongan un enlace «Ver en Moodle» bajo la acción. Una creación da lo que creó, no el formulario con el que se creó. Mientras los datos de los demás se seudonimizan o se bloquean, ninguna dirección nombra a una persona ([detalles](./getting-started/watching.md#comprobar-el-resultado-en-moodle)).
+- **La ventana termina en el resultado.** Cuando pides ver el navegador, casi todas las herramientas lo dejan ahora en la página que muestra su resultado.
 
 ## 0.7.0 (28 de octubre de 2026)
 

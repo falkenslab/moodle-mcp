@@ -50,6 +50,7 @@ $ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=h
 | `src/config.ts` | Los ajustes del entorno y de los argumentos |
 | `src/instructions.ts` | Lo que el servidor le dice al agente sobre cómo trabajar en Moodle |
 | `src/tools/` | Un archivo por herramienta o pequeña familia, registrados en `index.ts` |
+| `src/driver.ts` | El driver tal como lo importan las herramientas: cada llamada registrada, para la página del resultado de cada herramienta (`_meta.page`, y la ventana mientras se muestra) |
 | `src/tools/scopes.ts`, `roles.ts` | Qué funciones del driver llama cada herramienta, y a qué rol pertenece |
 | `src/people.ts` | Alias y redacción para las herramientas que muestran personas o actúan sobre ellas |
 | `test/` | Pruebas contra el Moodle simulado del driver |
@@ -63,7 +64,7 @@ $ npx @modelcontextprotocol/inspector --cli node dist/server.mjs -e MOODLE_URL=h
 3. Una herramienta que muestra a otras personas o actúa sobre ellas pasa por `src/people.ts`: alias con `pseudonymize`, texto redactado, y alias rechazados en el texto que se escribe en Moodle.
 4. Una prueba contra el Moodle simulado, la comprobación `--strict` y una prueba contra un Moodle real ([Pruebas](./testing.md)), ya que las salidas del driver deben coincidir exactamente con el esquema de salida de la herramienta.
 
-La [referencia de herramientas](../reference/tools.md) se genera a partir del servidor, así que se actualiza sola. Las skills de Claude Code de `.claude/skills/` (`add-tool`, `verify`, `update-docs`…) contienen las listas de comprobación completas.
+La [referencia de herramientas](../reference/tools.md) se genera a partir del servidor, así que se actualiza sola. Las skills de Claude Code del plugin `falkenslab-dev` de Falken's Lab (`add-tool`, `verify`, `update-docs`…) contienen las listas de comprobación, y `CLAUDE.md` lo que necesitan saber de este proyecto.
 
 ## Medir las herramientas
 

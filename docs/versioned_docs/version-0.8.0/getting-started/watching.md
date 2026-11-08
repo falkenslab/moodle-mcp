@@ -23,6 +23,8 @@ Every tool that creates something gives the agent its link, so you can ask for i
 
 <Prompt>{`Give me the link to the quiz you just created.`}</Prompt>
 
+If you build an app on moodle-mcp: each tool's result carries the address of the Moodle page that shows what it did in `_meta.page`, for your app to put a link under the action ("View in Moodle"). A creation gives what it made, an edit the item it changed, a read the page it reads. A tool with no such page gives none, and while others' data is pseudonymized or blocked no address names a person. The agent's text doesn't change.
+
 And everything the agent does is in Moodle as if you had done it yourself: in the course, in the gradebook, and in Moodle's logs, under your name.
 
 ## While it works

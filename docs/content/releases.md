@@ -5,9 +5,14 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.7.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.8.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.8.0 (8 November 2026)
+
+- **A link to Moodle with every action.** Each tool's result now carries the address of the Moodle page that shows what it did, for apps built on moodle-mcp to put a "View in Moodle" link under the action. A creation gives what it made, not the form that made it. While others' data is pseudonymized or blocked, no address names a person ([details](./getting-started/watching.md#checking-the-result-in-moodle)).
+- **The window ends on the result.** When you ask to watch the browser, nearly every tool now leaves it on the page that shows its result.
 
 ## 0.7.0 (28 October 2026)
 
