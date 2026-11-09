@@ -12,8 +12,8 @@ The driver rethrows the launch failure as it comes (falkenslab/moodle-driver#98)
 
 ## Solution
 
-**Needs moodle-driver first** (falkenslab/moodle-driver#98) for the error. Then the driver bump and a line in `src/tools/errors.ts` that tells the agent to ask the person. Here, decide with the owner whether the agent keeps `profileDir` in `configure`, or the person is asked first (ADR-023).
+**Needs moodle-driver first** (falkenslab/moodle-driver#98) for the error. Then the driver bump and a line in `src/tools/errors.ts` that tells the agent to ask the person. Done here: `configure` asks the person before moving the profile (`CONFIRMED`, ADR-023). The change stays in memory unless a later save of a run-time site writes the active site's new profile: to look at with the error.
 
 ## Verification
 
-A test of the explained error, and of `configure` under whichever rule is chosen; a launch on a long path on Windows.
+A test of the explained error; a launch on a long path on Windows. (`configure`'s question has its test.)

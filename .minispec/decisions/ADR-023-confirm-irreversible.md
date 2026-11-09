@@ -17,4 +17,5 @@ Rejected: a `confirmed: true` input (the model sets it), asking for every write 
 - One more step in the person's app for each irreversible call; none for the rest.
 - Clients without elicitation lose these tools unless the person sets `client`; the error says how.
 - The question is built from the inputs only (ids, modes): it names what's touched by its ids and what goes with it, without reading Moodle first.
+- Two entries aren't about undoing, but about what nobody asked for or can take back from the model: `configure` moving the browser's profile (#58, without "can't be undone" in the question) and `save_submission_files` (ADR-026).
 - A tool added that can't be undone belongs in the list; its description gets the sentence saying the server asks.

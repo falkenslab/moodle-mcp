@@ -70,6 +70,15 @@ describe("what can't be undone, confirmed by the person (ADR-023)", () => {
     assert.match(ask.asked[0]!, /Replace course 3's content/);
   });
 
+  it("asks before the agent moves the browser's profile, and for nothing else in configure", async () => {
+    const no = await connect(testConfig({ moodleUrl: site, confirm: "elicit" }), { action: "decline" });
+    assert.match(await no.call("configure", { profileDir: "/tmp/elsewhere" }), /said no to configure/);
+    assert.match(no.asked[0]!, /Move the browser's profile to \/tmp\/elsewhere.*log in again\. Go ahead\?$/);
+    assert.doesNotMatch(no.asked[0]!, /can't be undone/);
+    assert.doesNotMatch(await no.call("configure", { trail: "fast" }), /said no/);
+    assert.equal(no.asked.length, 1);
+  });
+
   it("asks in the person's language, from the locale", async () => {
     assert.equal(localeLanguage({ LANG: "es_ES.UTF-8" }), "es");
     assert.equal(localeLanguage({ LANG: "es" }), "es");

@@ -22,7 +22,7 @@ export function localeLanguage(env: NodeJS.ProcessEnv = process.env): Language {
  * The tools that ask, each with what will happen in a sentence, from its inputs; `when` limits a tool
  * to the calls that can't be undone (a restore that replaces, a reviewer whose assessment is graded).
  */
-export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; what: (a: Args) => Text }> = {
+export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; reversible?: boolean; what: (a: Args) => Text }> = {
   delete_activity: {
     what: (a) => ({
       en: `Delete activity ${a.activityId} from course ${a.courseId}, with everything participants did in it (submissions, attempts, posts, grades).`,
@@ -49,6 +49,15 @@ export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; what: (a: 
     what: (a) => ({
       en: `Replace course ${a.intoCourseId}'s content with the backup: everything in it now is deleted first.`,
       es: `Reemplazar el contenido del curso ${a.intoCourseId} por la copia de seguridad: antes se borra todo lo que tiene ahora.`,
+    }),
+  },
+  // Not irreversible, but the person's session stays behind, and nobody asked for it (#58).
+  configure: {
+    when: (a) => a.profileDir !== undefined,
+    reversible: true,
+    what: (a) => ({
+      en: `Move the browser's profile to ${a.profileDir}. The Moodle session stays in the current folder, so you'll have to log in again.`,
+      es: `Mover el perfil del navegador a ${a.profileDir}. La sesión de Moodle se queda en la carpeta actual, así que tendrás que volver a iniciar sesión.`,
     }),
   },
   // Sending what's inside a file to the model is what can't be undone (ADR-026).
@@ -154,9 +163,9 @@ export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; what: (a: 
 };
 
 /** The question's fixed texts: after what will happen, and the field the person ticks. */
-const ASK: Record<Language, { undone: string; yes: string; leave: string }> = {
-  en: { undone: "This can't be undone. Go ahead?", yes: "Yes, do it", leave: "Leave it unticked, or decline, to change nothing" },
-  es: { undone: "No se puede deshacer. ¿Seguimos?", yes: "Sí, hazlo", leave: "Déjalo sin marcar, o rechaza, para no cambiar nada" },
+const ASK: Record<Language, { undone: string; go: string; yes: string; leave: string }> = {
+  en: { undone: "This can't be undone. Go ahead?", go: "Go ahead?", yes: "Yes, do it", leave: "Leave it unticked, or decline, to change nothing" },
+  es: { undone: "No se puede deshacer. ¿Seguimos?", go: "¿Seguimos?", yes: "Sí, hazlo", leave: "Déjalo sin marcar, o rechaza, para no cambiar nada" },
 };
 
 /** How long the person has to answer: ten minutes, as long as a tool may take in the clients' guides (Codex's tool_timeout_sec). */
@@ -190,7 +199,7 @@ export function confirmTools(server: McpServer, config: Pick<Config, "confirm">)
         .elicitInput(
           {
             mode: "form",
-            message: `${rule.what(args)[language]} ${ask.undone}`,
+            message: `${rule.what(args)[language]} ${rule.reversible ? ask.go : ask.undone}`,
             requestedSchema: { type: "object", properties: { confirm: { type: "boolean", title: ask.yes, description: ask.leave } }, required: ["confirm"] },
           },
           { timeout: CONFIRM_TIMEOUT_MS },
