@@ -71,7 +71,8 @@ People known only by their email can't come along: they get a new alias the next
 - **It covers every tool, errors included.** Besides what each tool does, everything a tool returns goes through the same filter on its way to the AI.
 - **It's pseudonymization, not anonymity.** What people write about themselves can still identify them. Street addresses, dates of birth and the names of people moodle-mcp hasn't met yet aren't detected in free text.
 - **Students never see aliases.** If the agent writes an alias in feedback, a forum post or a message, moodle-mcp refuses to send it, since the student would read it as is. The agent addresses the student as "you" instead.
-- **Some things need `clear`**, because their content can't be filtered: files that other people submitted, a grades export, a course backup with its users, and screenshots of pages about people. Under `pseudonymize`, the agent can't open them.
+- **Files submitted to an assignment are the exception, and you decide each time.** So the agent can grade them, it can save them on your computer, one folder per alias and with neutral file names, after asking you. In plain text files, names are replaced by aliases. **A name written inside a PDF, a document or an image isn't hidden**, and the AI reads it.
+- **Some things need `clear`**, because their content can't be filtered: other people's files elsewhere (forum attachments, for example), a grades export, a course backup with its users, and screenshots of pages about people. Under `pseudonymize`, the agent can't open them.
 - **Going back doesn't make the AI forget.** If you switch from `clear` to `pseudonymize`, names the AI already saw may remain in your AI app's history or memory. Use `clear` only in a separate configuration, never shared with a cloud AI.
 
 ## What moodle-mcp never does

@@ -141,6 +141,7 @@ const TEACHER = [
   "list_questions_to_grade",
   "grade_quiz_question",
   "get_submissions",
+  "save_submission_files",
   "get_rubric",
   "set_rubric",
   "grade_submission",

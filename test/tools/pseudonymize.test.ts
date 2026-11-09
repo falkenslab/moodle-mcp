@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, describe, it } from "node:test";
@@ -133,6 +133,42 @@ describe("pseudonymous mode", { skip: !browser && "no system browser" }, () => {
     const refused = await client.callTool({ name: "download_file", arguments: { url: `${SITE}pluginfile.php/1/mod_forum/attachment/2/ada-lovelace.pdf`, destDir: home } });
     assert.match(text(refused), /pseudonymizes students' data/);
     await context.close();
+  });
+
+  it("saves submitted files under aliases, with neutral names and names hidden in text files", async () => {
+    const { state } = moodle();
+    const links = ["ada-lovelace.txt", "ada.lovelace", "ada-lovelace.pdf"].map((name) => `<div class="fileuploadsubmission"><a href="${SITE}pluginfile.php/17/assignsubmission_file/submission_files/8/${name}?forcedownload=1">${name}</a></div>`).join("");
+    state.services!.core_get_fragment = () => ({ html: `${PANEL.replace(/<div class="fileuploadsubmission">.*?<\/div>/, links)}<form class="gradeform mform"></form>`, javascript: "" });
+    const { client, context } = await connect(pseudonymous(), state);
+    // The driver downloads through the context's request API, which the fake's routes don't reach.
+    context.request.get = (async (url: string) => ({
+      ok: () => true,
+      status: () => 200,
+      url: () => url,
+      headers: () => ({ "content-type": "text/plain", "content-disposition": `attachment; filename="${new URL(url).pathname.split("/").pop()}"` }),
+      body: async () => Buffer.from("Written by Ada Lovelace, ada@example.org\n"),
+    })) as unknown as typeof context.request.get;
+    const destDir = mkdtempSync(path.join(tmpdir(), "submissions-"));
+    const result = await client.callTool({ name: "save_submission_files", arguments: { assignmentId: 41, destDir } });
+    assert.equal(result.isError, undefined, text(result));
+    const { submissions } = result.structuredContent as { submissions: { user?: string; files: { path: string; textChecked: boolean }[] }[] };
+    assert.equal(submissions.length, 1);
+    const [{ user, files }] = submissions as [{ user: string; files: { path: string; textChecked: boolean }[] }];
+    assert.match(user, ALIAS);
+    assert.deepEqual(files.map((f) => path.relative(destDir, f.path).replaceAll("\\", "/")), [`${user}/file-1.txt`, `${user}/file-2`, `${user}/file-3.pdf`]);
+    assert.deepEqual(files.map((f) => f.textChecked), [true, false, false]);
+    assert.doesNotMatch(text(result), /ada|lovelace|"userId"/i);
+    const saved = readFileSync(files[0]!.path, "utf8");
+    assert.doesNotMatch(saved, /Lovelace|ada@example/);
+    assert.match(saved, new RegExp(user));
+    assert.deepEqual(readdirSync(path.join(destDir, user)).sort(), ["file-1.txt", "file-2", "file-3.pdf"]);
+    rmSync(destDir, { recursive: true, force: true });
+    await context.close();
+
+    // Under block the tool isn't there.
+    const blocked = await connect(testConfig({ moodleUrl: SITE, studentData: "block" }), state);
+    assert.ok(!(await blocked.client.listTools()).tools.some((t) => t.name === "save_submission_files"));
+    await blocked.context.close();
   });
 
   it("keeps the browser tools off people's pages, and gives the people on other pages as aliases", async () => {

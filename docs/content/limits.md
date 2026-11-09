@@ -26,8 +26,8 @@ To see the limits in force, ask the agent:
 
 | Role | Tools | What's in it | Size of the tools' descriptions |
 | --- | --- | --- | --- |
-| `all` (default) | 237 | Everything | about 54,600 tokens |
-| `teacher` | 221 | Building and running courses, grading, people, reports, forums and messages | about 52,800 tokens |
+| `all` (default) | 238 | Everything | about 54,600 tokens |
+| `teacher` | 222 | Building and running courses, grading, people, reports, forums and messages | about 52,800 tokens |
 | `student` | 83 | Reading courses, doing activities, your grades and to-dos, forums and messages | about 15,500 tokens |
 
 Claude Code loads tools as it needs them, so the size matters less there. Claude Desktop, Codex and most other apps load them all at the start of each chat.
@@ -38,8 +38,8 @@ Claude Code loads tools as it needs them, so the size matters less there. Claude
 
 | With role | Tools left |
 | --- | --- |
-| `all` | 93 |
-| `teacher` | 88 |
+| `all` | 94 |
+| `teacher` | 89 |
 | `student` | 48 |
 
 Tools that look like reading but start something in Moodle (a lesson, a quiz attempt, a SCORM attempt) are left out too. Downloading a course's files or exporting its grades stays: it changes nothing in Moodle, only saves a file on your computer, and your AI app may still ask you before each.

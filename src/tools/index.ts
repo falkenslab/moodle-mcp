@@ -32,6 +32,7 @@ import { registerAutoCreateGroups, registerImportGroups } from "./autoGroups.js"
 import { registerAddFeedbackItem, registerDeleteFeedbackItem, registerDeleteFeedbackTemplate, registerEditFeedbackItem, registerGetFeedbackItems, registerListFeedbackTemplates, registerMoveFeedbackItem, registerSaveFeedbackTemplate, registerUseFeedbackTemplate } from "./feedbackItems.js";
 import { registerGetQuizStatistics } from "./quizStatistics.js";
 import { registerGetSubmissions } from "./getSubmissions.js";
+import { registerSaveSubmissionFiles } from "./saveSubmissionFiles.js";
 import { registerAddGradeCategory, registerAddGradeItem, registerDeleteGradeCategory, registerDeleteGradeItem, registerGetGradebookSetup, registerUpdateGradeCategory, registerUpdateGradeItem } from "./gradebook.js";
 import { registerGradeSubmission } from "./gradeSubmission.js";
 import { registerListAssignments } from "./listAssignments.js";
@@ -114,6 +115,7 @@ export const TOOLS: RegisterTool[] = [
   registerGetSurveyResults,
   registerListAssignments,
   registerGetSubmissions,
+  registerSaveSubmissionFiles,
   registerListDiscussions,
   registerGetDiscussion,
   registerGetMyGrades,

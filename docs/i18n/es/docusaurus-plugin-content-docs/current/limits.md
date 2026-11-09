@@ -26,8 +26,8 @@ Para ver los límites en vigor, pregúntale al agente:
 
 | Rol | Herramientas | Qué incluye | Tamaño de las descripciones de las herramientas |
 | --- | --- | --- | --- |
-| `all` (por defecto) | 237 | Todo | unos 54.600 tokens |
-| `teacher` | 221 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.800 tokens |
+| `all` (por defecto) | 238 | Todo | unos 54.600 tokens |
+| `teacher` | 222 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.800 tokens |
 | `student` | 83 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 15.500 tokens |
 
 Claude Code carga las herramientas a medida que las necesita, así que ahí el tamaño importa menos. Claude Desktop, Codex y la mayoría de las demás aplicaciones las cargan todas al empezar cada chat.
@@ -38,8 +38,8 @@ Claude Code carga las herramientas a medida que las necesita, así que ahí el t
 
 | Con el rol | Herramientas que quedan |
 | --- | --- |
-| `all` | 93 |
-| `teacher` | 88 |
+| `all` | 94 |
+| `teacher` | 89 |
 | `student` | 48 |
 
 También se quedan fuera las herramientas que parecen de lectura pero empiezan algo en Moodle (una lección, un intento de cuestionario, un intento de SCORM). Descargar los ficheros de un curso o exportar sus calificaciones sí se queda: no cambia nada en Moodle, solo guarda un fichero en tu ordenador, y tu aplicación de IA puede seguir preguntándote antes de cada uno.

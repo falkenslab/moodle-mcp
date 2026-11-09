@@ -23,7 +23,7 @@ export const registerDownloadFile: RegisterTool = (server, { config, browser }) 
       if (!othersFilesAllowed(config) && holdsOthersFiles(new URL(url))) {
         throw new OutOfScopeError(
           studentDataAllowed(config)
-            ? "That file belongs to someone's work (a submission, a forum attachment, a user's files): this server pseudonymizes students' data, and a file's content can't be."
+            ? "That file belongs to someone's work (a submission, a forum attachment, a user's files): this server pseudonymizes students' data, and a file's content can't be. For an assignment's submissions, save_submission_files saves them under aliases, with the person's yes."
             : "That file belongs to someone's work (a submission, a forum attachment, a user's files): this server is configured without students' data.",
         );
       }

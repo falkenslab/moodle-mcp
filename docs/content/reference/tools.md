@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **268 tools**, 267 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **269 tools**, 268 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -1593,6 +1593,7 @@ Copy a course's content from one of this server's sites to another (list_sites):
 | --- | --- | :-: | :-: | :-: |
 | [`list_assignments`](#list-assignments) | List a course's assignments | ✓ | ✓ | ✓ |
 | [`get_submissions`](#get-submissions) | Get an assignment's submissions | ✓ | ✓ |  |
+| [`save_submission_files`](#save-submission-files) | Save an assignment's submitted files | ✓ | ✓ |  |
 | [`get_rubric`](#get-rubric) | Get an assignment's grading criteria | ✓ | ✓ |  |
 | [`set_rubric`](#set-rubric) | Define an assignment's rubric or marking guide |  | ✓ |  |
 | [`grade_submission`](#grade-submission) | Grade a submission |  | ✓ |  |
@@ -1630,6 +1631,22 @@ Get the participants' submissions to a Moodle assignment, a page at a time (limi
 | `includeContent` |  | boolean | Include each submission's content: online text and file links (default true) |
 | `limit` |  | integer | How many participants (25 by default, up to 200) |
 | `offset` |  | integer | How many participants to skip first, in the grading table's order (0 by default) |
+
+</details>
+
+### `save_submission_files` {#save-submission-files}
+
+**Save an assignment's submitted files**
+
+Save the files participants submitted to a Moodle assignment in a local folder, one folder per participant named after their alias when the server pseudonymizes (else user-&#60;id&#62;), with neutral file names (file-1.pdf), so an agent can read and grade them. Gives only who, where and how big. The original file names aren't given, since they often carry a name. In plain text files, known people's names and contact data are replaced by aliases; a name written inside a PDF, a document or an image is not hidden, and whoever reads the file sees it: say so to the person. Saves on this computer and changes nothing in Moodle. Takes the assignment's id from list_assignments. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | integer | The assignment's id (its course module id), as list_assignments gives it |
+| `destDir` | ✅ | string | Absolute local folder to save into; created if missing |
 
 </details>
 

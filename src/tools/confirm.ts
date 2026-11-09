@@ -51,6 +51,13 @@ export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; what: (a: 
       es: `Reemplazar el contenido del curso ${a.intoCourseId} por la copia de seguridad: antes se borra todo lo que tiene ahora.`,
     }),
   },
+  // Sending what's inside a file to the model is what can't be undone (ADR-026).
+  save_submission_files: {
+    what: (a) => ({
+      en: `Save the files submitted to assignment ${a.assignmentId} in ${a.destDir}, one folder per student, so the AI model can read them. A name written inside a PDF, a document or an image isn't hidden.`,
+      es: `Guardar los archivos entregados en la tarea ${a.assignmentId} en ${a.destDir}, una carpeta por alumno, para que el modelo de IA pueda leerlos. Un nombre escrito dentro de un PDF, un documento o una imagen no se oculta.`,
+    }),
+  },
   unenrol_user: {
     // Who: the alias the agent gave, or the user id.
     what: (a) => ({
