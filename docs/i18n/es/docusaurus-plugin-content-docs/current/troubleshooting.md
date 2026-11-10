@@ -42,7 +42,7 @@ Si la ruta de la carpeta del perfil es muy larga (a partir de unos 230 caractere
 
 - **Puede que tus límites dejen fuera una herramienta.** Pregúntale al agente por los límites actuales de moodle-mcp y compáralos con [Limitar al agente](./limits.md).
 - **Puede que tu cuenta de Moodle no tenga permiso.** moodle-mcp solo puede hacer lo que puede hacer tu cuenta en Moodle. Prueba lo mismo en tu navegador.
-- **Puede que los datos del alumnado estén bloqueados o seudonimizados.** Algunas cosas, como los archivos que han entregado los alumnos, necesitan `clear`. Consulta [Privacidad del alumnado](./privacy.md).
+- **Puede que los datos del alumnado estén bloqueados o seudonimizados.** Algunas cosas, como una exportación de notas o los archivos adjuntos en un foro, necesitan `clear`. Consulta [Privacidad del alumnado](./privacy.md).
 
 ## Una herramienta tarda demasiado, o se agota el tiempo
 

@@ -42,7 +42,7 @@ If the path of the profile folder is very long (from about 230 characters), the 
 
 - **A tool may be left out by your limits.** Ask the agent for moodle-mcp's current limits, and compare with [Limiting the agent](./limits.md).
 - **Your Moodle account may not be allowed.** moodle-mcp can only do what your account can do in Moodle. Try the same thing in your browser.
-- **Students' data may be blocked or pseudonymized.** Some things, like files students submitted, need `clear`. See [Students' privacy](./privacy.md).
+- **Students' data may be blocked or pseudonymized.** Some things, like a grades export or files attached to a forum, need `clear`. See [Students' privacy](./privacy.md).
 
 ## A tool takes too long, or times out
 
