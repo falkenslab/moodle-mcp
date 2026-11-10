@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **268 herramientas**, 267 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **269 herramientas**, 268 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -84,7 +84,7 @@ Lo que el sitio Moodle dice de sí mismo: su nombre, URL, idioma, cómo se inici
 
 **Configurar el servidor**
 
-Establece la configuración de este servidor para esta sesión: el sitio Moodle (url; uno nuevo se añade a los sitios del servidor y se guarda, uno conocido pasa a ser el activo, consulta use_site), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role), el acceso a solo lectura (access) o los cursos en los que trabaja (courses) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria, salvo un sitio nuevo, que se queda entre los sitios del servidor. Devuelve la configuración efectiva, como server_info.
+Establece la configuración de este servidor para esta sesión: el sitio Moodle (url; uno nuevo se añade a los sitios del servidor y se guarda, uno conocido pasa a ser el activo, consulta use_site), si el navegador se ejecuta sin ventana (headless), cómo ven y hacen las cosas las herramientas de estudiante (trail) y la carpeta del perfil del navegador (profileDir). También puede restringir los tipos de herramientas (scopes), el rol (role), el acceso a solo lectura (access) o los cursos en los que trabaja (courses) y endurecer cómo te llegan los datos de otras personas (studentData), nunca al revés: ampliarlos corresponde a la persona, en la configuración del cliente. Cada uno es opcional; solo cambian los indicados. Se comprueba que la URL sea un sitio Moodle. Se guarda solo en memoria, salvo un sitio nuevo, que se queda entre los sitios del servidor. Devuelve la configuración efectiva, como server_info. El servidor pide a la persona que confirme antes en su aplicación (elicitación de MCP); si rechaza, no ocurre nada.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -1593,6 +1593,7 @@ Copia el contenido de un curso de uno de los sitios de este servidor a otro (lis
 | --- | --- | :-: | :-: | :-: |
 | [`list_assignments`](#list-assignments) | Listar las tareas de un curso | ✓ | ✓ | ✓ |
 | [`get_submissions`](#get-submissions) | Obtener las entregas de una tarea | ✓ | ✓ |  |
+| [`save_submission_files`](#save-submission-files) | Guardar los archivos entregados en una tarea | ✓ | ✓ |  |
 | [`get_rubric`](#get-rubric) | Obtener los criterios de calificación de una tarea | ✓ | ✓ |  |
 | [`set_rubric`](#set-rubric) | Definir la rúbrica o la guía de evaluación de una tarea |  | ✓ |  |
 | [`grade_submission`](#grade-submission) | Calificar una entrega |  | ✓ |  |
@@ -1630,6 +1631,22 @@ Obtiene las entregas de los participantes en una tarea de Moodle, por páginas (
 | `includeContent` |  | sí o no | Incluir el contenido de cada entrega: texto en línea y enlaces a archivos (true por defecto) |
 | `limit` |  | entero | Cuántos participantes (25 por defecto, hasta 200) |
 | `offset` |  | entero | Cuántos participantes saltarse primero, en el orden de la tabla de calificación (0 por defecto) |
+
+</details>
+
+### `save_submission_files` {#save-submission-files}
+
+**Guardar los archivos entregados en una tarea**
+
+Guarda los archivos que los participantes entregaron en una tarea de Moodle en una carpeta local, una carpeta por participante con el nombre de su alias cuando el servidor seudonimiza (si no, user-&#60;id&#62;), y con nombres de archivo neutros (file-1.pdf), para que un agente pueda leerlos y calificarlos. Solo da quién, dónde y cuánto ocupa. Los nombres originales de los archivos no se dan, porque a menudo llevan un nombre. En los archivos de texto plano, los nombres y datos de contacto de las personas conocidas se sustituyen por alias; un nombre escrito dentro de un PDF, un documento o una imagen no se oculta, y quien lea el archivo lo ve: díselo a la persona. Guarda en este ordenador y no cambia nada en Moodle. Toma el id de la tarea de list_assignments. El servidor pide a la persona que confirme antes en su aplicación (elicitación de MCP); si rechaza, no ocurre nada.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `assignmentId` | ✅ | entero | El id de la tarea (su id de módulo de curso), como lo da list_assignments |
+| `destDir` | ✅ | texto | Carpeta local absoluta donde guardar; se crea si no existe |
 
 </details>
 

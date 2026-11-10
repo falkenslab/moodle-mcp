@@ -26,8 +26,8 @@ To see the limits in force, ask the agent:
 
 | Role | Tools | What's in it | Size of the tools' descriptions |
 | --- | --- | --- | --- |
-| `all` (default) | 237 | Everything | about 54,600 tokens |
-| `teacher` | 221 | Building and running courses, grading, people, reports, forums and messages | about 52,800 tokens |
+| `all` (default) | 238 | Everything | about 54,600 tokens |
+| `teacher` | 222 | Building and running courses, grading, people, reports, forums and messages | about 52,800 tokens |
 | `student` | 83 | Reading courses, doing activities, your grades and to-dos, forums and messages | about 15,500 tokens |
 
 Claude Code loads tools as it needs them, so the size matters less there. Claude Desktop, Codex and most other apps load them all at the start of each chat.
@@ -38,8 +38,8 @@ Claude Code loads tools as it needs them, so the size matters less there. Claude
 
 | With role | Tools left |
 | --- | --- |
-| `all` | 93 |
-| `teacher` | 88 |
+| `all` | 94 |
+| `teacher` | 89 |
 | `student` | 48 |
 
 Tools that look like reading but start something in Moodle (a lesson, a quiz attempt, a SCORM attempt) are left out too. Downloading a course's files or exporting its grades stays: it changes nothing in Moodle, only saves a file on your computer, and your AI app may still ask you before each.
@@ -81,6 +81,8 @@ The agent can narrow the classrooms for a session (`configure` with fewer course
 ## Confirming what can't be undone
 
 Some tools can't be undone: deleting an activity, a section, a post or a question, unenrolling someone, resetting a course, restoring a backup over a course. Before one of them runs, moodle-mcp asks you itself, in your app: what will happen and a yes or no. The answer goes to moodle-mcp, never to the AI, so the AI can't skip the question. If you say no, nothing happens. Grading isn't among them: a grade can be changed again.
+
+It also asks before saving the files students submitted to an assignment, so the AI can read them ([details](./privacy.md)), and before the agent moves the browser's profile to another folder.
 
 You have ten minutes to answer; after that nothing is done, and the agent says so. Your app needs to support these questions (MCP elicitation), as Claude Code, Claude Desktop and Codex do. In an app that doesn't, these tools are refused, unless your app already asks you before each tool and you start moodle-mcp with `MOODLE_MCP_CONFIRM=client`. The tools reference says which tools ask.
 

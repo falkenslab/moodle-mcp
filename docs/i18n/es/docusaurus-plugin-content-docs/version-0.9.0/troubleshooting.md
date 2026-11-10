@@ -30,11 +30,19 @@ En un servidor o en un contenedor sin pantalla, la ventana de acceso no se puede
 
 Otro programa tiene el perfil abierto: una segunda aplicación de IA con moodle-mcp, o el comando de moodle-driver. Ciérralo, o da a cada uno su propio perfil con `MOODLE_MCP_PROFILE_DIR`.
 
+## El navegador se ha cerrado o ha fallado
+
+El agente te dice que ha perdido el navegador durante una tarea. Moodle no ha rechazado nada, y la siguiente petición vuelve a abrir el navegador. Si el agente estaba cambiando algo, compruébalo en Moodle antes de volver a pedirlo: el cambio puede haber llegado o no. Si sigue pasando, prueba con otro navegador con [`MOODLE_MCP_CHANNEL`](./settings.md#moodle_mcp_channel), o deja que moodle-mcp lo cambie solo con [`MOODLE_MCP_SWITCH_AFTER_CRASHES`](./settings.md#moodle_mcp_switch_after_crashes).
+
+## El navegador no arranca en Windows
+
+Si la ruta de la carpeta del perfil es muy larga (a partir de unos 230 caracteres), puede que el navegador no arranque. Pon en `MOODLE_MCP_PROFILE_DIR` una carpeta con una ruta más corta y vuelve a iniciar sesión. El agente también puede moverla, pero antes te pregunta.
+
 ## El agente dice que no puede hacer algo
 
 - **Puede que tus límites dejen fuera una herramienta.** Pregúntale al agente por los límites actuales de moodle-mcp y compáralos con [Limitar al agente](./limits.md).
 - **Puede que tu cuenta de Moodle no tenga permiso.** moodle-mcp solo puede hacer lo que puede hacer tu cuenta en Moodle. Prueba lo mismo en tu navegador.
-- **Puede que los datos del alumnado estén bloqueados o seudonimizados.** Algunas cosas, como los archivos que han entregado los alumnos, necesitan `clear`. Consulta [Privacidad del alumnado](./privacy.md).
+- **Puede que los datos del alumnado estén bloqueados o seudonimizados.** Algunas cosas, como una exportación de notas o los archivos adjuntos en un foro, necesitan `clear`. Consulta [Privacidad del alumnado](./privacy.md).
 
 ## Una herramienta tarda demasiado, o se agota el tiempo
 

@@ -5,9 +5,16 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.8.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.9.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.9.0 (10 November 2026)
+
+- **The agent can grade the files students submitted.** `save_submission_files` saves an assignment's submissions on your computer, one folder per alias and with neutral file names, after asking you. In plain text files, names are replaced by aliases; a name written inside a PDF, a document or an image isn't hidden ([details](./privacy.md)).
+- **Clear words when the browser fails.** If the browser closes or crashes during a task, the agent says so instead of blaming Moodle, and the next request opens it again. On Windows, a profile folder with a very long path is named as the likely reason the browser doesn't start ([what to do](./troubleshooting.md)).
+- **Another browser after repeated crashes, if you want.** With `MOODLE_MCP_SWITCH_AFTER_CRASHES`, moodle-mcp prefers another browser you have installed after that many crashes ([settings](./settings.md#moodle_mcp_switch_after_crashes)). It's off unless you set it.
+- **The agent asks before moving the browser's profile**, because you'd have to log in again.
 
 ## 0.8.0 (8 November 2026)
 

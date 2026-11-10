@@ -26,8 +26,8 @@ Para ver los límites en vigor, pregúntale al agente:
 
 | Rol | Herramientas | Qué incluye | Tamaño de las descripciones de las herramientas |
 | --- | --- | --- | --- |
-| `all` (por defecto) | 237 | Todo | unos 54.600 tokens |
-| `teacher` | 221 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.800 tokens |
+| `all` (por defecto) | 238 | Todo | unos 54.600 tokens |
+| `teacher` | 222 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.800 tokens |
 | `student` | 83 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 15.500 tokens |
 
 Claude Code carga las herramientas a medida que las necesita, así que ahí el tamaño importa menos. Claude Desktop, Codex y la mayoría de las demás aplicaciones las cargan todas al empezar cada chat.
@@ -38,8 +38,8 @@ Claude Code carga las herramientas a medida que las necesita, así que ahí el t
 
 | Con el rol | Herramientas que quedan |
 | --- | --- |
-| `all` | 93 |
-| `teacher` | 88 |
+| `all` | 94 |
+| `teacher` | 89 |
 | `student` | 48 |
 
 También se quedan fuera las herramientas que parecen de lectura pero empiezan algo en Moodle (una lección, un intento de cuestionario, un intento de SCORM). Descargar los ficheros de un curso o exportar sus calificaciones sí se queda: no cambia nada en Moodle, solo guarda un fichero en tu ordenador, y tu aplicación de IA puede seguir preguntándote antes de cada uno.
@@ -81,6 +81,8 @@ El agente puede reducir las aulas durante una sesión (`configure` con menos cur
 ## Confirmar lo que no se puede deshacer
 
 Algunas herramientas no se pueden deshacer: eliminar una actividad, una sección, un mensaje o una pregunta, dar de baja a alguien, reiniciar un curso, restaurar una copia de seguridad sobre un curso. Antes de que se ejecute una de ellas, moodle-mcp te pregunta él mismo, en tu aplicación: qué va a pasar, y un sí o un no. La respuesta va a moodle-mcp, nunca a la IA, así que la IA no puede saltarse la pregunta. Si dices que no, no pasa nada. Calificar no está entre ellas: una nota se puede volver a cambiar.
+
+También pregunta antes de guardar los archivos que los alumnos entregaron en una tarea, para que la IA pueda leerlos ([detalles](./privacy.md)), y antes de que el agente mueva el perfil del navegador a otra carpeta.
 
 Tienes diez minutos para contestar; pasado ese tiempo no se hace nada, y el agente lo dice. Tu aplicación tiene que admitir estas preguntas (elicitation MCP), como hacen Claude Code, Claude Desktop y Codex. En una que no las admite, estas herramientas se rechazan, salvo que tu aplicación ya te pregunte antes de cada herramienta y arranques moodle-mcp con `MOODLE_MCP_CONFIRM=client`. La referencia de herramientas dice cuáles preguntan.
 

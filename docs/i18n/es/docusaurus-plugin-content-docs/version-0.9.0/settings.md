@@ -21,6 +21,7 @@ Ninguno es obligatorio: sin sitio, el agente te lo pide la primera vez, y todo l
 | [`MOODLE_MCP_ADVANCED`](#moodle_mcp_advanced) | `false` | Las herramientas avanzadas |
 | [`MOODLE_MCP_CONFIRM`](#moodle_mcp_confirm) | `elicit` | Quién te pregunta antes de lo que no se puede deshacer |
 | [`MOODLE_MCP_CHANNEL`](#moodle_mcp_channel) | Edge, Chrome, Chromium | Qué navegador |
+| [`MOODLE_MCP_SWITCH_AFTER_CRASHES`](#moodle_mcp_switch_after_crashes) | Nunca | Cambiar de navegador si sigue fallando |
 | [`MOODLE_MCP_HEADLESS`](#moodle_mcp_headless) | `true` | Si ves el navegador |
 | [`MOODLE_MCP_PROFILE_DIR`](#moodle_mcp_profile_dir) | `~/.moodle-mcp/profile` | Dónde se guarda tu sesión |
 | [`MOODLE_MCP_DOWNLOAD_BROWSER`](#moodle_mcp_download_browser) | `true` | Descargar un navegador si no hay ninguno |
@@ -130,6 +131,17 @@ En qué navegador trabaja moodle-mcp, `--channel`.
 - `firefox`: el Firefox propio de Playwright, descargado la primera vez, nunca el que tengas instalado.
 
 `MOODLE_MCP_CHANNEL=firefox`. **En un chat**: no.
+
+### `MOODLE_MCP_SWITCH_AFTER_CRASHES` {#moodle_mcp_switch_after_crashes}
+
+Cuántas veces puede fallar un navegador antes de que moodle-mcp prefiera otro que tengas instalado, `--switch-after-crashes`.
+
+- **Sin poner**: nunca cambia de navegador.
+- Empieza a contar cada vez que se inicia moodle-mcp, y normalmente conservas la sesión, porque los dos navegadores usan el mismo perfil.
+- No hace nada si elegiste un navegador con `MOODLE_MCP_CHANNEL`, o si solo tienes uno.
+- Que cierres tú la ventana no cuenta como fallo.
+
+`MOODLE_MCP_SWITCH_AFTER_CRASHES=2`. **En un chat**: no.
 
 ### `MOODLE_MCP_HEADLESS` {#moodle_mcp_headless}
 

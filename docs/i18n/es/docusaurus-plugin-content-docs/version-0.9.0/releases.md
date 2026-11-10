@@ -5,9 +5,16 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.8.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.9.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.9.0 (10 de noviembre de 2026)
+
+- **El agente puede calificar los archivos que entregaron los alumnos.** `save_submission_files` guarda en tu ordenador las entregas de una tarea, una carpeta por alias y con nombres de archivo neutros, después de preguntarte. En los archivos de texto plano, los nombres se sustituyen por alias; un nombre escrito dentro de un PDF, un documento o una imagen no se oculta ([detalles](./privacy.md)).
+- **Mensajes claros cuando falla el navegador.** Si el navegador se cierra o falla durante una tarea, el agente lo dice en lugar de echarle la culpa a Moodle, y la siguiente petición lo vuelve a abrir. En Windows, una carpeta de perfil con una ruta muy larga aparece como la causa probable de que el navegador no arranque ([qué hacer](./troubleshooting.md)).
+- **Otro navegador tras varios fallos, si quieres.** Con `MOODLE_MCP_SWITCH_AFTER_CRASHES`, moodle-mcp prefiere otro navegador que tengas instalado después de ese número de fallos ([ajustes](./settings.md#moodle_mcp_switch_after_crashes)). Está desactivado salvo que lo pongas.
+- **El agente pregunta antes de mover el perfil del navegador**, porque tendrías que volver a iniciar sesión.
 
 ## 0.8.0 (8 de noviembre de 2026)
 
