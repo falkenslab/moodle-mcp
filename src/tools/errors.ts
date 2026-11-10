@@ -11,7 +11,7 @@ const HINTS: Partial<Record<MoodleError["code"], (message: string) => string>> =
   "browser-downloading": (message) => `${message} Tell the person: the server needs a browser first.`,
   "no-display": (message) => `${message} For this server: MOODLE_MCP_HEADLESS=true, or show_browser only where there's a screen.`,
   "browser-not-found": (message) => `${message} For this server: MOODLE_MCP_CHANNEL chooses the browser, MOODLE_MCP_DOWNLOAD_BROWSER=true lets it download Chromium.`,
-  "browser-lost": (message) => `${message} Moodle refused nothing: this says nothing about the site, the course or the person's permissions. The next call opens the browser again. If it keeps happening, tell the person: MOODLE_MCP_CHANNEL chooses another browser.`,
+  "browser-lost": (message) => `${message} Moodle refused nothing: this says nothing about the site, the course or the person's permissions. The next call opens the browser again. If it keeps happening, tell the person: MOODLE_MCP_CHANNEL chooses another browser, and MOODLE_MCP_SWITCH_AFTER_CRASHES changes it by itself.`,
   // Moving the profile loses the session, so it's the person's to decide (#58).
   "profile-path-too-long": (message) => `${message} Tell the person and let them choose the folder: MOODLE_MCP_PROFILE_DIR in the server's settings, or configure's profileDir, which asks them first. Either way they'll have to log in again.`,
   // The site's Moodle is too old for this, or an administrator turned the feature off: nothing the agent can work around.

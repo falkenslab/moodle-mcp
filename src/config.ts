@@ -44,6 +44,8 @@ export interface Config {
   profileDir: string;
   /** The browser to launch; `undefined` tries the system's, then the downloaded Chromium. */
   channel: Channel | undefined;
+  /** How many crashes in this run before the next launch prefers another installed browser; never when undefined. A chosen `channel` stays. */
+  switchAfterCrashes?: number;
   /** Whether Chromium may be downloaded when no system browser is found (ADR-001). */
   downloadBrowser: boolean;
   /** Whether the browser runs without a window (the login tool always shows one). */
@@ -76,6 +78,7 @@ export interface Config {
     moodleUrl?: SettingSource;
     profileDir: SettingSource;
     channel: SettingSource;
+    switchAfterCrashes?: SettingSource;
     headless: SettingSource;
     downloadBrowser: SettingSource;
     trail: SettingSource;
@@ -118,6 +121,9 @@ Options (each overrides its environment variable):
                         CLAUDE_PLUGIN_DATA or ~/.moodle-mcp)
   --channel <name>      Browser: msedge, chrome, chromium    MOODLE_MCP_CHANNEL (default: msedge, then chrome, then chromium)
                         or firefox (Playwright's, downloaded)
+  --switch-after-crashes <n>
+                        Prefer another installed browser     MOODLE_MCP_SWITCH_AFTER_CRASHES (default: never)
+                        after n crashes (without --channel)
   --headless / --headed Run the browser without a window     MOODLE_MCP_HEADLESS (default: true)
   --no-download-browser Never download Chromium              MOODLE_MCP_DOWNLOAD_BROWSER (default: true)
   --trail <mode>        Student tools: realistic or fast     MOODLE_MCP_TRAIL (default: realistic)
@@ -205,6 +211,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         courses: { type: "string" },
         "profile-dir": { type: "string" },
         channel: { type: "string" },
+        "switch-after-crashes": { type: "string" },
         headless: { type: "boolean" },
         headed: { type: "boolean" },
         "no-download-browser": { type: "boolean" },
@@ -232,6 +239,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const courses = coursesSetting ? parseCoursesSetting(coursesSetting.value) : undefined;
   const profile = pick(values["profile-dir"], "MOODLE_MCP_PROFILE_DIR", env, unexpanded);
   const channel = pick(values.channel, "MOODLE_MCP_CHANNEL", env, unexpanded);
+  const crashes = pick(values["switch-after-crashes"], "MOODLE_MCP_SWITCH_AFTER_CRASHES", env, unexpanded);
   const trail = pick(values.trail, "MOODLE_MCP_TRAIL", env, unexpanded);
   const scopes = pick(values.scopes, "MOODLE_MCP_SCOPES", env, unexpanded);
   const studentData = pick(values["student-data"], "MOODLE_MCP_STUDENT_DATA", env, unexpanded);
@@ -262,6 +270,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     moodleUrl: sites[0]?.url,
     profileDir: sites[0]?.profileDir ?? mainProfile,
     channel: channel ? parseChannel(channel.value) : undefined,
+    ...(crashes && { switchAfterCrashes: parseCrashes(crashes.value) }),
     headless: headless.value,
     downloadBrowser: downloadBrowser.value,
     trail: trail ? parseTrail(trail.value) : "realistic",
@@ -280,6 +289,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       ...(urlSource ? { moodleUrl: urlSource } : {}),
       profileDir: profile?.source ?? "default",
       channel: channel?.source ?? "default",
+      ...(crashes && { switchAfterCrashes: crashes.source }),
       headless: headless.source,
       downloadBrowser: downloadBrowser.source,
       trail: trail?.source ?? "default",
@@ -471,6 +481,11 @@ function parseChannel(value: string): Channel {
     throw new ConfigError(`MOODLE_MCP_CHANNEL must be one of ${CHANNELS.join(", ")}, not "${value}".`);
   }
   return channel as Channel;
+}
+
+function parseCrashes(value: string): number {
+  if (!/^[1-9]\d*$/.test(value.trim())) throw new ConfigError(`MOODLE_MCP_SWITCH_AFTER_CRASHES must be a whole number from 1, not "${value}".`);
+  return Number(value);
 }
 
 function isInside(child: string, parent: string): boolean {

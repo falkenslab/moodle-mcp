@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
+import { EventEmitter } from "node:events";
 import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import { describe, it } from "node:test";
+import { createBrowserManager } from "@falkenslab/moodle-driver";
 import { ConfigError, loadConfig, redactUrl, type Config } from "../src/config.js";
 
 const ROOT = path.join(tmpdir(), "moodle-mcp-root");
@@ -116,6 +118,30 @@ describe("loadConfig", () => {
   it("refuses a profile inside the server's folder", () => {
     assert.throws(() => load(["--url", "http://localhost:8080", "--profile-dir", ROOT]), ConfigError);
     assert.throws(() => load(["--url", "http://localhost:8080", "--profile-dir", path.join(ROOT, "dist", "profile")]), /server's folder/);
+  });
+
+  it("reads after how many crashes to prefer another browser, off unless it's set", () => {
+    const fromEnv = load(["--url", "http://localhost:8080"], { MOODLE_MCP_SWITCH_AFTER_CRASHES: "3" });
+    assert.equal(fromEnv.switchAfterCrashes, 3);
+    assert.equal(fromEnv.sources.switchAfterCrashes, "environment");
+    const fromArgument = load(["--url", "http://localhost:8080", "--switch-after-crashes", "1"], { MOODLE_MCP_SWITCH_AFTER_CRASHES: "3" });
+    assert.equal(fromArgument.switchAfterCrashes, 1);
+    assert.equal(fromArgument.sources.switchAfterCrashes, "argument");
+    assert.equal("switchAfterCrashes" in load(["--url", "http://localhost:8080"]), false);
+    for (const wrong of ["0", "-1", "two", "1.5"]) assert.throws(() => load(["--url", "http://localhost:8080"], { MOODLE_MCP_SWITCH_AFTER_CRASHES: wrong }), /whole number/);
+  });
+
+  it("hands the crashes setting to the browser manager, which then prefers the other browser", async () => {
+    const launched: string[] = [];
+    const launch = async (_dir: string, options?: { channel?: string }) => {
+      launched.push(options?.channel ?? "");
+      const context = new EventEmitter();
+      return Object.assign(context, { close: async () => void context.emit("close"), setDefaultNavigationTimeout: () => undefined, setDefaultTimeout: () => undefined, pages: () => [], cookies: async () => [], addCookies: async () => undefined });
+    };
+    const browser = createBrowserManager(load(["--url", "http://localhost:8080", "--profile-dir", PROFILE, "--switch-after-crashes", "1"]), launch as never);
+    await (await browser.context()).close();
+    await browser.context();
+    assert.deepEqual(launched, ["msedge", "chrome"]);
   });
 
   it("rejects unknown channels, headless values and options", () => {

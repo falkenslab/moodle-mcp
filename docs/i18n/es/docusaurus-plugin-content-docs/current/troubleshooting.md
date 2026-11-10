@@ -32,7 +32,7 @@ Otro programa tiene el perfil abierto: una segunda aplicación de IA con moodle-
 
 ## El navegador se ha cerrado o ha fallado
 
-El agente te dice que ha perdido el navegador durante una tarea. Moodle no ha rechazado nada, y la siguiente petición vuelve a abrir el navegador. Si el agente estaba cambiando algo, compruébalo en Moodle antes de volver a pedirlo: el cambio puede haber llegado o no. Si sigue pasando, prueba con otro navegador con [`MOODLE_MCP_CHANNEL`](./settings.md#moodle_mcp_channel).
+El agente te dice que ha perdido el navegador durante una tarea. Moodle no ha rechazado nada, y la siguiente petición vuelve a abrir el navegador. Si el agente estaba cambiando algo, compruébalo en Moodle antes de volver a pedirlo: el cambio puede haber llegado o no. Si sigue pasando, prueba con otro navegador con [`MOODLE_MCP_CHANNEL`](./settings.md#moodle_mcp_channel), o deja que moodle-mcp lo cambie solo con [`MOODLE_MCP_SWITCH_AFTER_CRASHES`](./settings.md#moodle_mcp_switch_after_crashes).
 
 ## El navegador no arranca en Windows
 

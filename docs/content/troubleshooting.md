@@ -32,7 +32,7 @@ Another program has the profile open: a second AI app with moodle-mcp, or moodle
 
 ## The browser closed or crashed
 
-The agent tells you the browser was lost during a task. Moodle didn't refuse anything, and the next request opens the browser again. If the agent was changing something, check it in Moodle before asking again: the change may or may not have arrived. If it keeps happening, try another browser with [`MOODLE_MCP_CHANNEL`](./settings.md#moodle_mcp_channel).
+The agent tells you the browser was lost during a task. Moodle didn't refuse anything, and the next request opens the browser again. If the agent was changing something, check it in Moodle before asking again: the change may or may not have arrived. If it keeps happening, try another browser with [`MOODLE_MCP_CHANNEL`](./settings.md#moodle_mcp_channel), or let moodle-mcp change it by itself with [`MOODLE_MCP_SWITCH_AFTER_CRASHES`](./settings.md#moodle_mcp_switch_after_crashes).
 
 ## The browser doesn't start on Windows
 
