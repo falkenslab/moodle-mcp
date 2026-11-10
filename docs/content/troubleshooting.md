@@ -30,6 +30,14 @@ On a server or in a container without a screen, the login window can't open. Log
 
 Another program has the profile open: a second AI app with moodle-mcp, or moodle-driver's command line. Close it, or give each one its own profile with `MOODLE_MCP_PROFILE_DIR`.
 
+## The browser closed or crashed
+
+The agent tells you the browser was lost during a task. Moodle didn't refuse anything, and the next request opens the browser again. If the agent was changing something, check it in Moodle before asking again: the change may or may not have arrived. If it keeps happening, try another browser with [`MOODLE_MCP_CHANNEL`](./settings.md#moodle_mcp_channel).
+
+## The browser doesn't start on Windows
+
+If the path of the profile folder is very long (from about 230 characters), the browser may not start. Set `MOODLE_MCP_PROFILE_DIR` to a folder with a shorter path, and log in again. The agent can also move it, but it asks you first.
+
 ## The agent says it can't do something
 
 - **A tool may be left out by your limits.** Ask the agent for moodle-mcp's current limits, and compare with [Limiting the agent](./limits.md).

@@ -1,7 +1,7 @@
 // The driver's errors speak of Moodle and the browser; a client needs to hear which tool or setting
 // fixes them. Applied to every tool as createServer registers them, like following (ADR-014).
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { MoodleError } from "../driver.js";
+import { BrowserLostError, MoodleError, isBrowserLost } from "../driver.js";
 
 /** What this server adds to a driver error, by its stable code: the tool or setting that fixes it. */
 const HINTS: Partial<Record<MoodleError["code"], (message: string) => string>> = {
@@ -11,6 +11,9 @@ const HINTS: Partial<Record<MoodleError["code"], (message: string) => string>> =
   "browser-downloading": (message) => `${message} Tell the person: the server needs a browser first.`,
   "no-display": (message) => `${message} For this server: MOODLE_MCP_HEADLESS=true, or show_browser only where there's a screen.`,
   "browser-not-found": (message) => `${message} For this server: MOODLE_MCP_CHANNEL chooses the browser, MOODLE_MCP_DOWNLOAD_BROWSER=true lets it download Chromium.`,
+  "browser-lost": (message) => `${message} Moodle refused nothing: this says nothing about the site, the course or the person's permissions. The next call opens the browser again. If it keeps happening, tell the person: MOODLE_MCP_CHANNEL chooses another browser.`,
+  // Moving the profile loses the session, so it's the person's to decide (#58).
+  "profile-path-too-long": (message) => `${message} Tell the person and let them choose the folder: MOODLE_MCP_PROFILE_DIR in the server's settings, or configure's profileDir, which asks them first. Either way they'll have to log in again.`,
   // The site's Moodle is too old for this, or an administrator turned the feature off: nothing the agent can work around.
   "not-available": (message) => `${message} Tell the person this site can't do it; don't try another way.`,
   "badges-disabled": (message) => `${message} Tell the person: a site administrator turns it on.`,
@@ -21,8 +24,10 @@ const HINTS: Partial<Record<MoodleError["code"], (message: string) => string>> =
 /** The same error, told in this server's terms: its tools, its settings. */
 export function explain(error: unknown): unknown {
   // By the driver's stable code, not its classes: the same code whichever copy of the package made it.
-  const hint = error instanceof MoodleError ? HINTS[error.code] : undefined;
-  return hint ? new Error(hint((error as Error).message)) : error;
+  // A lost browser is named only by the driver's Moodle object; the functions this server calls let Playwright's error through.
+  const known = isBrowserLost(error) ? new BrowserLostError() : error;
+  const hint = known instanceof MoodleError ? HINTS[known.code] : undefined;
+  return hint ? new Error(hint((known as Error).message)) : error;
 }
 
 type Handler = (args: unknown, extra: unknown) => Promise<unknown>;

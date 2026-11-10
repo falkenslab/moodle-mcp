@@ -114,6 +114,16 @@ describe("content tools against the fake Moodle", { skip: !browser && "no system
     await context.close();
   });
 
+  it("say the browser was lost when it goes in the middle of an import, not that there is no question bank", async () => {
+    const context = await browser!.newContext();
+    await serveFakeMoodle(context, { user: { id: 3, fullName: "Teacher" } });
+    await context.route(`${SITE}question/edit.php**`, () => void context.close());
+    const { error } = await call(await connect(context), "import_questions", { bankId: 5, format: "gift", text: "::Q:: x {T}" });
+    assert.match(error ?? "", /closed or crashed during this call/);
+    assert.match(error ?? "", /Moodle refused nothing/);
+    assert.doesNotMatch(error ?? "", /question bank/);
+  });
+
   it("read the gradebook setup", async () => {
     const row = (attrs: string, name: string, weight: string, icon = "core") => `<tr ${attrs}><td><img class="itemicon" src="${SITE}theme/image.php/boost/${icon}/1/monologo"><div class="rowtitle">${name}</div></td><td>${weight}</td></tr>`;
     const setup = `<table id="grade_edit_tree_table"><tbody>${row(`data-category="cg2" data-aggregation="13" data-grademax="15" data-itemid="4"`, "Course 3", "")}${row(`class="item" data-itemid="12" data-parent-category="cg2" data-grademax="10"`, "Quiz one", `<input type="checkbox" name="weightoverride_12" value="1"><input type="text" name="weight_12" value="50">`, "quiz")}${row(`class="item" data-itemid="4" data-grademax="15"`, "Course total", "")}</tbody></table>`;
