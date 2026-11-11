@@ -5,9 +5,15 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.9.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.10.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.10.0 (11 de noviembre de 2026)
+
+- **Cuestionarios página a página, como los harías tú.** Cuando el agente hace un cuestionario por ti, ahora recorre el intento página a página, así que Moodle registra una visita por página en lugar de todo el intento otra vez en cada paso. Después de la última página, ve el resumen de todas las preguntas antes de enviarlo. Una aplicación construida sobre moodle-mcp que esperaba todas las preguntas de una vez ahora lee las páginas una a una: `start_quiz_attempt` y `get_quiz_attempt` dan una página, con cuántas hay.
+- **El navegador puede parecer uno normal.** Sin ventana, Edge y Chrome dicen `HeadlessChrome` en cada petición, y los administradores de Moodle pueden verlo en los registros del sitio. Con `MOODLE_MCP_USER_AGENT=browser`, dicen lo que dice tu navegador con ventana ([ajustes](./settings.md#moodle_mcp_user_agent)). Está desactivado salvo que lo pongas.
+- **Comprobaciones de HTML más seguras.** El HTML que el agente envía a Moodle se comprueba con un analizador más reciente, con diecinueve arreglos de seguridad.
 
 ## 0.9.0 (10 de noviembre de 2026)
 

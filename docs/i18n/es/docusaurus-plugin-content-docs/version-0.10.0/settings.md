@@ -22,6 +22,7 @@ Ninguno es obligatorio: sin sitio, el agente te lo pide la primera vez, y todo l
 | [`MOODLE_MCP_CONFIRM`](#moodle_mcp_confirm) | `elicit` | Quién te pregunta antes de lo que no se puede deshacer |
 | [`MOODLE_MCP_CHANNEL`](#moodle_mcp_channel) | Edge, Chrome, Chromium | Qué navegador |
 | [`MOODLE_MCP_SWITCH_AFTER_CRASHES`](#moodle_mcp_switch_after_crashes) | Nunca | Cambiar de navegador si sigue fallando |
+| [`MOODLE_MCP_USER_AGENT`](#moodle_mcp_user_agent) | El del navegador | Qué dice el navegador que es |
 | [`MOODLE_MCP_HEADLESS`](#moodle_mcp_headless) | `true` | Si ves el navegador |
 | [`MOODLE_MCP_PROFILE_DIR`](#moodle_mcp_profile_dir) | `~/.moodle-mcp/profile` | Dónde se guarda tu sesión |
 | [`MOODLE_MCP_DOWNLOAD_BROWSER`](#moodle_mcp_download_browser) | `true` | Descargar un navegador si no hay ninguno |
@@ -142,6 +143,16 @@ Cuántas veces puede fallar un navegador antes de que moodle-mcp prefiera otro q
 - Que cierres tú la ventana no cuenta como fallo.
 
 `MOODLE_MCP_SWITCH_AFTER_CRASHES=2`. **En un chat**: no.
+
+### `MOODLE_MCP_USER_AGENT` {#moodle_mcp_user_agent}
+
+Qué dice el navegador que es en cada petición a Moodle, `--user-agent`. Sin ventana, Edge y Chrome dicen `HeadlessChrome`, y los administradores de Moodle pueden verlo en los registros del sitio.
+
+- **Sin poner**: lo que dice el navegador por sí mismo.
+- `browser`: lo que dice tu navegador cuando tiene ventana, también sin ella.
+- Cualquier otro texto: se envía tal cual.
+
+Firefox ya dice lo mismo con ventana y sin ella. `MOODLE_MCP_USER_AGENT=browser`. **En un chat**: no.
 
 ### `MOODLE_MCP_HEADLESS` {#moodle_mcp_headless}
 

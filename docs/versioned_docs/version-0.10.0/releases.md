@@ -5,9 +5,15 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.9.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.10.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.10.0 (11 November 2026)
+
+- **Quizzes page by page, as you'd take them.** When the agent takes a quiz for you, it now goes through the attempt one page at a time, so Moodle logs one view per page instead of the whole attempt again at every step. After the last page, it sees the summary of every question before submitting. An app built on moodle-mcp that expected every question at once now reads the pages one by one: `start_quiz_attempt` and `get_quiz_attempt` give one page, with how many there are.
+- **The browser can look like an ordinary one.** Without a window, Edge and Chrome say `HeadlessChrome` in every request, and Moodle's administrators can see it in the site's logs. With `MOODLE_MCP_USER_AGENT=browser`, they say what your browser says with a window ([settings](./settings.md#moodle_mcp_user_agent)). It's off unless you set it.
+- **Safer HTML checks.** The HTML the agent sends to Moodle is checked with a newer parser, with nineteen security fixes.
 
 ## 0.9.0 (10 November 2026)
 
