@@ -32,6 +32,22 @@ const question = z.object({
   comment: z.string().optional().describe("In a review: the teacher's comment, when graded by hand"),
 });
 
+const summaryRow = z.object({
+  slot: z.number().int(),
+  number: z.string(),
+  state: z.string().describe('Moodle\'s state: "answersaved", "notyetanswered"…'),
+  status: z.string().describe("The status as the summary says it, in the site's language"),
+});
+
+// Where an attempt is, page by page as a person goes (moodle-driver 0.16): each page read is a view Moodle logs.
+const attemptPage = {
+  attemptId: z.number().int(),
+  page: z.number().int().optional().describe("The page shown, from 0; missing at the summary"),
+  pages: z.number().int().describe("How many pages the attempt has"),
+  questions: z.array(question).describe("That page's questions; empty at the summary"),
+  summary: z.array(summaryRow).optional().describe("At the summary, after the last page: each question's status. finish_quiz_attempt submits from there"),
+};
+
 const reply = <T extends Record<string, unknown>>(output: T) => ({ content: [{ type: "text" as const, text: JSON.stringify(output, null, 2) }], structuredContent: output });
 
 export const registerGetQuizInfo: RegisterTool = (server, { config, browser }) => {
@@ -62,9 +78,9 @@ export const registerStartQuizAttempt: RegisterTool = (server, { config, browser
     {
       title: "Start or continue a quiz attempt",
       description:
-        "Start an attempt at a quiz, or continue the one in progress, as the quiz page's button does; returns the attempt's id and its questions with their fields and options. Starting uses up one of the attempts allowed, and a time limit starts running: confirm with the person first.",
+        "Start an attempt at a quiz, or continue the one in progress, as the quiz page's button does; returns the attempt's id, how many pages it has, and the page it opens on: its questions with their fields and options. The other pages come from get_quiz_attempt (page) or after answer_quiz_questions. Starting uses up one of the attempts allowed, and a time limit starts running: confirm with the person first.",
       inputSchema: { quizId },
-      outputSchema: { attemptId: z.number().int(), questions: z.array(question) },
+      outputSchema: { changed: z.string(), ...attemptPage },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
     async ({ quizId }) => reply(await startQuizAttempt(...(await onSite(config, browser)), quizId)),
@@ -75,13 +91,14 @@ export const registerGetQuizAttempt: RegisterTool = (server, { config, browser }
   server.registerTool(
     "get_quiz_attempt",
     {
-      title: "Read an attempt's questions",
-      description: "Read every question of an attempt in progress, page by page: text, images, fields with their options, and the answers saved so far.",
-      inputSchema: { attemptId },
-      outputSchema: { attemptId: z.number().int(), questions: z.array(question) },
+      title: "Read a page of an attempt",
+      description:
+        "Read one page of an attempt in progress: its questions' text, images, fields with their options, and the answers saved so far, with how many pages the attempt has. Without page, the page the attempt is on. Moodle logs each page read as a view, as it does a person's: read the pages you need.",
+      inputSchema: { attemptId, page: z.number().int().min(0).optional().describe("The page to read, from 0; without it, the page the attempt is on") },
+      outputSchema: attemptPage,
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
-    async ({ attemptId }) => reply({ attemptId, questions: await readAttempt(...(await onSite(config, browser)), attemptId) }),
+    async ({ attemptId, page }) => reply(await readAttempt(...(await onSite(config, browser)), attemptId, page === undefined ? {} : { page })),
   );
 };
 
@@ -91,12 +108,12 @@ export const registerAnswerQuizQuestions: RegisterTool = (server, { config, brow
     {
       title: "Answer quiz questions",
       description:
-        'Save answers in an attempt in progress, as the attempt\'s pages do; it doesn\'t finish the attempt. Each answer names a question\'s slot and its fields by name with the value to give: an option\'s value for choice and select fields, "1" or "0" for checkboxes, text for text fields. Returns the questions with their saved answers. With the realistic trail it pauses to read each page first.',
+        'Save answers in an attempt in progress, as the attempt\'s pages do; it doesn\'t finish the attempt. Each answer names a question\'s slot and its fields by name with the value to give: an option\'s value for choice and select fields, "1" or "0" for checkboxes, text for text fields; answers on several pages are saved page by page. Returns where that leaves the attempt: the next page with its questions, or after the last page the summary with each question\'s status, ready for finish_quiz_attempt. With the realistic trail it pauses to read each page first.',
       inputSchema: {
         attemptId,
         answers: z.array(z.object({ slot: z.number().int(), responses: z.record(z.string(), z.string()).describe("Field name → value, as get_quiz_attempt gives the fields") })).min(1),
       },
-      outputSchema: { attemptId: z.number().int(), questions: z.array(question) },
+      outputSchema: { changed: z.string(), ...attemptPage },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ attemptId, answers }, extra) => {
@@ -118,7 +135,7 @@ export const registerFinishQuizAttempt: RegisterTool = (server, { config, browse
       description:
         "Submit an attempt for grading, as \"Submit all and finish\" does: no answer can change afterwards. Returns the review when the quiz shows it. Final: confirm with the person first, after checking the answers with get_quiz_attempt.",
       inputSchema: { attemptId },
-      outputSchema: { attemptId: z.number().int(), finished: z.boolean(), review: z.object({ summary: z.array(detail), questions: z.array(question) }).optional() },
+      outputSchema: { changed: z.string(), attemptId: z.number().int(), finished: z.boolean(), review: z.object({ summary: z.array(detail), questions: z.array(question) }).optional() },
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     },
     async ({ attemptId }) => reply(await finishQuizAttempt(...(await onSite(config, browser)), attemptId)),

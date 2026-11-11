@@ -52,7 +52,7 @@ function fakeQuiz() {
           const last = saved.find((form) => form.has("q9:1_answer"));
           const q1 = Q1.replace("STATE1", last?.get("q9:1_answer") ? "answersaved" : "notyetanswered").replace("CHECKED1", last?.get("q9:1_answer") === "1" ? "checked" : "");
           const questions = p === "0" ? q1 + Q2 : Q3;
-          return html(page(`<form id="responseform" method="post" action="${SITE}mod/quiz/processattempt.php?cmid=26"><input type="hidden" name="attempt" value="9">${questions}<input type="submit" name="next" value="Next page"></form>${nav}`, "page-mod-quiz-attempt"));
+          return html(page(`<form id="responseform" method="post" action="${SITE}mod/quiz/processattempt.php?cmid=26"><input type="hidden" name="attempt" value="9"><input type="hidden" name="nextpage" value="${p === "0" ? "1" : "-1"}">${questions}<input type="submit" name="next" value="Next page"></form>${nav}`, "page-mod-quiz-attempt"));
         }
         case "/mod/quiz/processattempt.php": {
           const form = new URLSearchParams(request.postData() ?? "");
@@ -61,10 +61,10 @@ function fakeQuiz() {
             return go("mod/quiz/review.php?attempt=9&cmid=26");
           }
           saved.push(form);
-          return go("mod/quiz/attempt.php?attempt=9&cmid=26&page=1");
+          return go(form.get("nextpage") === "-1" ? "mod/quiz/summary.php?attempt=9&cmid=26" : `mod/quiz/attempt.php?attempt=9&cmid=26&page=${form.get("nextpage")}`);
         }
         case "/mod/quiz/summary.php":
-          return html(page(`<form method="post" action="${SITE}mod/quiz/processattempt.php"><input type="hidden" name="attempt" value="9"><input type="hidden" name="finishattempt" value="1"><button type="submit">Submit all and finish</button></form>`, "page-mod-quiz-summary"));
+          return html(page(`<table class="table generaltable quizsummaryofattempt"><tbody>${[1, 2, 3].map((slot) => `<tr class="quizsummary${slot} answersaved"><td><a href="${SITE}mod/quiz/attempt.php?attempt=9&amp;cmid=26#question-9-${slot}">${slot}</a></td><td>Answer saved</td></tr>`).join("")}</tbody></table><form method="post" action="${SITE}mod/quiz/processattempt.php"><input type="hidden" name="attempt" value="9"><input type="hidden" name="finishattempt" value="1"><button type="submit">Submit all and finish</button></form>`, "page-mod-quiz-summary"));
         case "/mod/quiz/review.php":
           return html(
             page(
@@ -112,7 +112,11 @@ describe("quiz attempt tools", { skip: !browser && "no system browser" }, () => 
     const { client, context, saved } = await connect();
     const started = await call(client, "start_quiz_attempt", { quizId: 26 });
     assert.equal(started.attemptId, 9);
-    assert.deepEqual((started.questions as { slot: number; page: number }[]).map((q) => [q.slot, q.page]), [[1, 0], [2, 0], [3, 1]]);
+    // One page at a time, as a person sees the attempt.
+    assert.deepEqual([started.page, started.pages], [0, 2]);
+    assert.deepEqual((started.questions as { slot: number; page: number }[]).map((q) => [q.slot, q.page]), [[1, 0], [2, 0]]);
+    const second = await call(client, "get_quiz_attempt", { attemptId: 9, page: 1 });
+    assert.deepEqual([second.page, (second.questions as { slot: number }[]).map((q) => q.slot)], [1, [3]]);
     const answered = await call(client, "answer_quiz_questions", {
       attemptId: 9,
       answers: [
@@ -125,7 +129,10 @@ describe("quiz attempt tools", { skip: !browser && "no system browser" }, () => 
     assert.equal(saved[0]?.get("q9:1_answer"), "1");
     assert.deepEqual(saved[0]?.getAll("q9:2_choice0"), ["0", "1"]);
     assert.equal(saved[1]?.get("q9:3_sub0"), "2");
-    assert.equal((answered.questions as { state: string }[])[0]?.state, "answersaved");
+    // After the last page, the summary: what finish_quiz_attempt submits from.
+    assert.equal(answered.page, undefined);
+    assert.deepEqual(answered.questions, []);
+    assert.deepEqual((answered.summary as { slot: number; state: string }[]).map((row) => [row.slot, row.state]), [[1, "answersaved"], [2, "answersaved"], [3, "answersaved"]]);
     const done = await call(client, "finish_quiz_attempt", { attemptId: 9 });
     const review = done.review as { summary: { value: string }[]; questions: { state: string; rightAnswer?: string }[] };
     assert.equal(review.summary[0]?.value, "Finished");

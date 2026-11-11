@@ -4615,7 +4615,7 @@ What changed in a course's activities since a date (settings, content files, for
 | [`submit_assignment`](#submit-assignment) | Submit my assignment for grading |  |  | ✓ |
 | [`get_quiz_info`](#get-quiz-info) | Get a quiz's information and my attempts | ✓ | ✓ | ✓ |
 | [`start_quiz_attempt`](#start-quiz-attempt) | Start or continue a quiz attempt |  |  | ✓ |
-| [`get_quiz_attempt`](#get-quiz-attempt) | Read an attempt's questions | ✓ |  | ✓ |
+| [`get_quiz_attempt`](#get-quiz-attempt) | Read a page of an attempt | ✓ |  | ✓ |
 | [`answer_quiz_questions`](#answer-quiz-questions) | Answer quiz questions |  |  | ✓ |
 | [`finish_quiz_attempt`](#finish-quiz-attempt) | Submit a quiz attempt |  |  | ✓ |
 | [`get_attempt_review`](#get-attempt-review) | Review a finished attempt | ✓ | ✓ | ✓ |
@@ -4712,7 +4712,7 @@ Read a quiz's page as the person: description, its rules (attempts allowed, grad
 
 **Start or continue a quiz attempt**
 
-Start an attempt at a quiz, or continue the one in progress, as the quiz page's button does; returns the attempt's id and its questions with their fields and options. Starting uses up one of the attempts allowed, and a time limit starts running: confirm with the person first.
+Start an attempt at a quiz, or continue the one in progress, as the quiz page's button does; returns the attempt's id, how many pages it has, and the page it opens on: its questions with their fields and options. The other pages come from get_quiz_attempt (page) or after answer_quiz_questions. Starting uses up one of the attempts allowed, and a time limit starts running: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -4725,9 +4725,9 @@ Start an attempt at a quiz, or continue the one in progress, as the quiz page's 
 
 ### `get_quiz_attempt` {#get-quiz-attempt}
 
-**Read an attempt's questions**
+**Read a page of an attempt**
 
-Read every question of an attempt in progress, page by page: text, images, fields with their options, and the answers saved so far.
+Read one page of an attempt in progress: its questions' text, images, fields with their options, and the answers saved so far, with how many pages the attempt has. Without page, the page the attempt is on. Moodle logs each page read as a view, as it does a person's: read the pages you need.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -4735,6 +4735,7 @@ Read every question of an attempt in progress, page by page: text, images, field
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `attemptId` | ✅ | integer | The attempt's id, as start_quiz_attempt or get_quiz_info gives it |
+| `page` |  | integer | The page to read, from 0; without it, the page the attempt is on |
 
 </details>
 
@@ -4742,7 +4743,7 @@ Read every question of an attempt in progress, page by page: text, images, field
 
 **Answer quiz questions**
 
-Save answers in an attempt in progress, as the attempt's pages do; it doesn't finish the attempt. Each answer names a question's slot and its fields by name with the value to give: an option's value for choice and select fields, "1" or "0" for checkboxes, text for text fields. Returns the questions with their saved answers. With the realistic trail it pauses to read each page first.
+Save answers in an attempt in progress, as the attempt's pages do; it doesn't finish the attempt. Each answer names a question's slot and its fields by name with the value to give: an option's value for choice and select fields, "1" or "0" for checkboxes, text for text fields; answers on several pages are saved page by page. Returns where that leaves the attempt: the next page with its questions, or after the last page the summary with each question's status, ready for finish_quiz_attempt. With the realistic trail it pauses to read each page first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>

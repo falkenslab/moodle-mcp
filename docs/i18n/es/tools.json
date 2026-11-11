@@ -529,25 +529,26 @@
     }
   },
   "start_quiz_attempt": {
-    "source": "5e4a80f17d98",
+    "source": "6acc4178a597",
     "title": "Iniciar o continuar un intento de cuestionario",
-    "description": "Inicia un intento de un cuestionario, o continúa el que está en curso, como hace el botón de la página del cuestionario; devuelve el id del intento y sus preguntas con sus campos y opciones. Iniciarlo consume uno de los intentos permitidos, y empieza a correr el límite de tiempo: confírmalo antes con la persona.",
+    "description": "Inicia un intento de un cuestionario, o continúa el que está en curso, como hace el botón de la página del cuestionario; devuelve el id del intento, cuántas páginas tiene y la página en la que se abre: sus preguntas con sus campos y opciones. Las demás páginas llegan con get_quiz_attempt (page) o después de answer_quiz_questions. Iniciarlo consume uno de los intentos permitidos, y empieza a correr el límite de tiempo: confírmalo antes con la persona.",
     "inputs": {
       "quizId": "El id del cuestionario (id del módulo del curso), tal como lo da get_course_structure"
     }
   },
   "get_quiz_attempt": {
-    "source": "4555a148ec87",
-    "title": "Leer las preguntas de un intento",
-    "description": "Lee todas las preguntas de un intento en curso, página a página: texto, imágenes, campos con sus opciones y las respuestas guardadas hasta el momento.",
+    "source": "80149850a1ba",
+    "title": "Leer una página de un intento",
+    "description": "Lee una página de un intento en curso: el texto de sus preguntas, las imágenes, los campos con sus opciones y las respuestas guardadas hasta el momento, con cuántas páginas tiene el intento. Sin page, la página en la que está el intento. Moodle registra cada página leída como una visita, igual que las de una persona: lee las páginas que necesites.",
     "inputs": {
-      "attemptId": "El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info"
+      "attemptId": "El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info",
+      "page": "La página que leer, desde 0; sin ella, la página en la que está el intento"
     }
   },
   "answer_quiz_questions": {
-    "source": "083649643302",
+    "source": "54e39d3f1d78",
     "title": "Responder preguntas de un cuestionario",
-    "description": "Guarda respuestas en un intento en curso, como hacen las páginas del intento; no termina el intento. Cada respuesta indica el hueco de una pregunta y sus campos por nombre con el valor que dar: el valor de una opción para campos de elección y desplegables, \"1\" o \"0\" para casillas de verificación, texto para campos de texto. Devuelve las preguntas con sus respuestas guardadas. Con el rastro realistic se detiene a leer cada página antes.",
+    "description": "Guarda respuestas en un intento en curso, como hacen las páginas del intento; no termina el intento. Cada respuesta indica el hueco de una pregunta y sus campos por nombre con el valor que dar: el valor de una opción para campos de elección y desplegables, \"1\" o \"0\" para casillas de verificación, texto para campos de texto; las respuestas de varias páginas se guardan página a página. Devuelve dónde queda el intento: la página siguiente con sus preguntas o, después de la última, el resumen con el estado de cada pregunta, listo para finish_quiz_attempt. Con el rastro realistic se detiene a leer cada página antes.",
     "inputs": {
       "attemptId": "El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info",
       "answers": ""

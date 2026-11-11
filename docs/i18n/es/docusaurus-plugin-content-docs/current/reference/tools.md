@@ -4615,7 +4615,7 @@ Lo que ha cambiado en las actividades de un curso desde una fecha (ajustes, arch
 | [`submit_assignment`](#submit-assignment) | Enviar mi tarea para calificar |  |  | ✓ |
 | [`get_quiz_info`](#get-quiz-info) | Obtener la información de un cuestionario y mis intentos | ✓ | ✓ | ✓ |
 | [`start_quiz_attempt`](#start-quiz-attempt) | Iniciar o continuar un intento de cuestionario |  |  | ✓ |
-| [`get_quiz_attempt`](#get-quiz-attempt) | Leer las preguntas de un intento | ✓ |  | ✓ |
+| [`get_quiz_attempt`](#get-quiz-attempt) | Leer una página de un intento | ✓ |  | ✓ |
 | [`answer_quiz_questions`](#answer-quiz-questions) | Responder preguntas de un cuestionario |  |  | ✓ |
 | [`finish_quiz_attempt`](#finish-quiz-attempt) | Enviar un intento de cuestionario |  |  | ✓ |
 | [`get_attempt_review`](#get-attempt-review) | Revisar un intento terminado | ✓ | ✓ | ✓ |
@@ -4712,7 +4712,7 @@ Lee la página de un cuestionario como la persona: descripción, sus reglas (int
 
 **Iniciar o continuar un intento de cuestionario**
 
-Inicia un intento de un cuestionario, o continúa el que está en curso, como hace el botón de la página del cuestionario; devuelve el id del intento y sus preguntas con sus campos y opciones. Iniciarlo consume uno de los intentos permitidos, y empieza a correr el límite de tiempo: confírmalo antes con la persona.
+Inicia un intento de un cuestionario, o continúa el que está en curso, como hace el botón de la página del cuestionario; devuelve el id del intento, cuántas páginas tiene y la página en la que se abre: sus preguntas con sus campos y opciones. Las demás páginas llegan con get_quiz_attempt (page) o después de answer_quiz_questions. Iniciarlo consume uno de los intentos permitidos, y empieza a correr el límite de tiempo: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -4725,9 +4725,9 @@ Inicia un intento de un cuestionario, o continúa el que está en curso, como ha
 
 ### `get_quiz_attempt` {#get-quiz-attempt}
 
-**Leer las preguntas de un intento**
+**Leer una página de un intento**
 
-Lee todas las preguntas de un intento en curso, página a página: texto, imágenes, campos con sus opciones y las respuestas guardadas hasta el momento.
+Lee una página de un intento en curso: el texto de sus preguntas, las imágenes, los campos con sus opciones y las respuestas guardadas hasta el momento, con cuántas páginas tiene el intento. Sin page, la página en la que está el intento. Moodle registra cada página leída como una visita, igual que las de una persona: lee las páginas que necesites.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -4735,6 +4735,7 @@ Lee todas las preguntas de un intento en curso, página a página: texto, imáge
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `attemptId` | ✅ | entero | El id del intento, tal como lo dan start_quiz_attempt o get_quiz_info |
+| `page` |  | entero | La página que leer, desde 0; sin ella, la página en la que está el intento |
 
 </details>
 
@@ -4742,7 +4743,7 @@ Lee todas las preguntas de un intento en curso, página a página: texto, imáge
 
 **Responder preguntas de un cuestionario**
 
-Guarda respuestas en un intento en curso, como hacen las páginas del intento; no termina el intento. Cada respuesta indica el hueco de una pregunta y sus campos por nombre con el valor que dar: el valor de una opción para campos de elección y desplegables, "1" o "0" para casillas de verificación, texto para campos de texto. Devuelve las preguntas con sus respuestas guardadas. Con el rastro realistic se detiene a leer cada página antes.
+Guarda respuestas en un intento en curso, como hacen las páginas del intento; no termina el intento. Cada respuesta indica el hueco de una pregunta y sus campos por nombre con el valor que dar: el valor de una opción para campos de elección y desplegables, "1" o "0" para casillas de verificación, texto para campos de texto; las respuestas de varias páginas se guardan página a página. Devuelve dónde queda el intento: la página siguiente con sus preguntas o, después de la última, el resumen con el estado de cada pregunta, listo para finish_quiz_attempt. Con el rastro realistic se detiene a leer cada página antes.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>

@@ -74,7 +74,7 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `get_quiz_info` | Attempts allowed and used, grading method, pass mark, time limit, dates, past attempts | R | Page | S about 30 attempts, 2nd attempts below 8/10 | Done |
 | `start_quiz_attempt` | Start or continue an attempt; questions with type, text, images, options | W | Form | S 683 attempt page loads | Done |
 | `answer_quiz_questions` | Save answers to questions of an attempt | W | Form | S one click per option, repeated clicks | Done |
-| `get_attempt_summary` | Which questions are answered before finishing | R | Page | S 86 summary pages | Done as `get_quiz_attempt` |
+| `get_attempt_summary` | Which questions are answered before finishing | R | Page | S 86 summary pages | Done: `answer_quiz_questions` after the last page, and `get_quiz_attempt` |
 | `finish_quiz_attempt` | Submit the attempt (asks for consent) | W | Form | S approval before each submit | Done |
 | `get_attempt_review` | Grade, per-question correctness and feedback | R | Page | S 45 review pages | Done |
 | `get_assignment` | Brief, attached files, dates, submission types, my status, grade, feedback | R | Page + AJAX (`mod_assign_get_participant`) | S final task brief and template | Done |
