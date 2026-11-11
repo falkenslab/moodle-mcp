@@ -46,6 +46,8 @@ export interface Config {
   channel: Channel | undefined;
   /** How many crashes in this run before the next launch prefers another installed browser; never when undefined. A chosen `channel` stays. */
   switchAfterCrashes?: number;
+  /** What every request says the browser is: `browser` for the installed browser's own with a window, any other text as it is; the browser's own (headless Edge and Chrome say HeadlessChrome) when undefined. */
+  userAgent?: string;
   /** Whether Chromium may be downloaded when no system browser is found (ADR-001). */
   downloadBrowser: boolean;
   /** Whether the browser runs without a window (the login tool always shows one). */
@@ -79,6 +81,7 @@ export interface Config {
     profileDir: SettingSource;
     channel: SettingSource;
     switchAfterCrashes?: SettingSource;
+    userAgent?: SettingSource;
     headless: SettingSource;
     downloadBrowser: SettingSource;
     trail: SettingSource;
@@ -124,6 +127,9 @@ Options (each overrides its environment variable):
   --switch-after-crashes <n>
                         Prefer another installed browser     MOODLE_MCP_SWITCH_AFTER_CRASHES (default: never)
                         after n crashes (without --channel)
+  --user-agent <text>   What requests say the browser is:  MOODLE_MCP_USER_AGENT (default: the browser's own,
+                        browser (the installed one's, as    HeadlessChrome when headless)
+                        with a window) or any text
   --headless / --headed Run the browser without a window     MOODLE_MCP_HEADLESS (default: true)
   --no-download-browser Never download Chromium              MOODLE_MCP_DOWNLOAD_BROWSER (default: true)
   --trail <mode>        Student tools: realistic or fast     MOODLE_MCP_TRAIL (default: realistic)
@@ -212,6 +218,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
         "profile-dir": { type: "string" },
         channel: { type: "string" },
         "switch-after-crashes": { type: "string" },
+        "user-agent": { type: "string" },
         headless: { type: "boolean" },
         headed: { type: "boolean" },
         "no-download-browser": { type: "boolean" },
@@ -240,6 +247,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
   const profile = pick(values["profile-dir"], "MOODLE_MCP_PROFILE_DIR", env, unexpanded);
   const channel = pick(values.channel, "MOODLE_MCP_CHANNEL", env, unexpanded);
   const crashes = pick(values["switch-after-crashes"], "MOODLE_MCP_SWITCH_AFTER_CRASHES", env, unexpanded);
+  const userAgent = pick(values["user-agent"], "MOODLE_MCP_USER_AGENT", env, unexpanded);
   const trail = pick(values.trail, "MOODLE_MCP_TRAIL", env, unexpanded);
   const scopes = pick(values.scopes, "MOODLE_MCP_SCOPES", env, unexpanded);
   const studentData = pick(values["student-data"], "MOODLE_MCP_STUDENT_DATA", env, unexpanded);
@@ -271,6 +279,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
     profileDir: sites[0]?.profileDir ?? mainProfile,
     channel: channel ? parseChannel(channel.value) : undefined,
     ...(crashes && { switchAfterCrashes: parseCrashes(crashes.value) }),
+    ...(userAgent && { userAgent: userAgent.value.trim() }),
     headless: headless.value,
     downloadBrowser: downloadBrowser.value,
     trail: trail ? parseTrail(trail.value) : "realistic",
@@ -290,6 +299,7 @@ export function loadConfig(argv: string[], env: NodeJS.ProcessEnv, packageRoot: 
       profileDir: profile?.source ?? "default",
       channel: channel?.source ?? "default",
       ...(crashes && { switchAfterCrashes: crashes.source }),
+      ...(userAgent && { userAgent: userAgent.source }),
       headless: headless.source,
       downloadBrowser: downloadBrowser.source,
       trail: trail?.source ?? "default",

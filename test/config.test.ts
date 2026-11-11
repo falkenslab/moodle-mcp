@@ -144,6 +144,22 @@ describe("loadConfig", () => {
     assert.deepEqual(launched, ["msedge", "chrome"]);
   });
 
+  it("reads what the browser says it is, off unless it's set, and hands it to the browser manager", async () => {
+    assert.equal("userAgent" in load(["--url", "http://localhost:8080"]), false);
+    const fromEnv = load(["--url", "http://localhost:8080"], { MOODLE_MCP_USER_AGENT: " browser " });
+    assert.deepEqual([fromEnv.userAgent, fromEnv.sources.userAgent], ["browser", "environment"]);
+    const config = load(["--url", "http://localhost:8080", "--profile-dir", PROFILE, "--user-agent", "Mozilla/5.0 Check"], { MOODLE_MCP_USER_AGENT: "browser" });
+    assert.deepEqual([config.userAgent, config.sources.userAgent], ["Mozilla/5.0 Check", "argument"]);
+    const agents: (string | undefined)[] = [];
+    const launch = async (_dir: string, options?: { userAgent?: string }) => {
+      agents.push(options?.userAgent);
+      const context = new EventEmitter();
+      return Object.assign(context, { close: async () => void context.emit("close"), setDefaultNavigationTimeout: () => undefined, setDefaultTimeout: () => undefined, pages: () => [], cookies: async () => [], addCookies: async () => undefined });
+    };
+    await createBrowserManager(config, launch as never).context();
+    assert.deepEqual(agents, ["Mozilla/5.0 Check"]);
+  });
+
   it("rejects unknown channels, headless values and options", () => {
     assert.throws(() => load(["--url", "http://localhost:8080", "--channel", "safari"]), ConfigError);
     // Playwright's own Firefox, since moodle-driver 0.11.

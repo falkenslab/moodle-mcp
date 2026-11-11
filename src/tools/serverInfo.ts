@@ -20,6 +20,7 @@ export const serverInfoSchema = {
   channel: z.string().describe('The configured browser: "msedge", "chrome", "chromium", "firefox" (Playwright\'s own, downloaded) or "auto" (Edge, then Chrome, then the downloaded Chromium)'),
   headless: z.boolean(),
   switchAfterCrashes: z.number().optional().describe("After how many crashes the next launch prefers another installed browser; never when missing, and not with a chosen channel"),
+  userAgent: z.string().optional().describe('What every request says the browser is: "browser" for the installed browser\'s own with a window, or the text set; the browser\'s own when missing'),
   downloadBrowser: z.boolean().describe("Whether Chromium may be downloaded when no system browser is found"),
   trail: z.enum(["realistic", "fast"]).describe("How student tools view and do things: through the real pages at a human pace, or as fast as possible"),
   scopes: z.array(z.enum(SCOPES)).describe("The kinds of tools in force (ADR-015), student data's blocks applied"),
@@ -31,7 +32,7 @@ export const serverInfoSchema = {
   advanced: z.boolean().describe("Whether the advanced tools are on: BigBlueButton, competencies, external tools, the content bank, notes, course blocks (ADR-022)"),
   classrooms: z.array(z.string()).optional().describe("The only courses the agent works in, by URL (ADR-025); every course when missing"),
   sources: z
-    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, switchAfterCrashes: source.optional(), headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source, advanced: source.optional(), confirm: source.optional(), classrooms: source.optional() })
+    .object({ moodleUrl: source.optional(), profileDir: source, channel: source, switchAfterCrashes: source.optional(), userAgent: source.optional(), headless: source, downloadBrowser: source, trail: source, scopes: source, studentData: source, role: source, access: source, advanced: source.optional(), confirm: source.optional(), classrooms: source.optional() })
     .describe("Where each setting came from: configure, argument, environment or default"),
   unexpanded: z.array(z.string()).optional().describe("Settings the client passed as unexpanded ${…} placeholders (its plugin settings missing), taken as not set: their defaults apply"),
   visible: z.boolean().describe("Whether the browser shows a window and follows the tools in it (show_browser), over headless"),
@@ -57,6 +58,7 @@ export function serverInfo({ config, browser }: ToolContext): ServerInfo {
     profileDir: config.profileDir,
     channel: config.channel ?? "auto",
     switchAfterCrashes: config.switchAfterCrashes,
+    userAgent: config.userAgent,
     headless: config.headless,
     downloadBrowser: config.downloadBrowser,
     trail: config.trail,
