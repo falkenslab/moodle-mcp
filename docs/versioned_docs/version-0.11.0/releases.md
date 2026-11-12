@@ -5,9 +5,18 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.10.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.11.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.11.0 (12 November 2026)
+
+- **Attendance.** The agent can set up an Attendance activity's sessions (one, or every week on the days you say until a date), take attendance and read the report, with each student's percentages. Students show as aliases unless you chose to see their names.
+- **A workshop's assessment form.** The agent can define the form reviewers fill in, for any grading strategy: aspects with their grades and weights, assertions, or a rubric with its levels.
+- **A board's columns.** A new Board activity comes with three columns called "Heading": the agent can now name them, add, lock and remove columns. It won't remove a column with notes unless you ask, and then you confirm.
+- **Questions for questionnaires and offline quizzes.** The agent can add questions to a Questionnaire (text, choices, rating scales, page breaks…) and bank questions to an Offline Quiz, and create its forms to print.
+- **Hidden sections.** A new section can be added hidden, so students don't see it until you show it.
+- **A clearer question before deleting an activity.** It now says which activity it is and what goes with it: a page's content, an assignment's submissions and grades, instead of the same list for everything.
 
 ## 0.10.0 (11 November 2026)
 

@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **269 tools**, 268 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **288 tools**, 287 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -421,7 +421,7 @@ Delete an activity from a course, with its participants' data (submissions, atte
 
 **Add a section**
 
-Add a section to a course, at the end or after a given section, optionally named and described. Returns its id and the course structure. Changes the course: confirm with the person first.
+Add a section to a course, at the end or after a given section, optionally named and described, and hidden from students with visible: false. Moodle only adds visible sections, so a hidden one is hidden right after it's added, before it's named or described: students may see it, empty and unnamed, for that moment. Returns its id and the course structure. Changes the course: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -433,6 +433,7 @@ Add a section to a course, at the end or after a given section, optionally named
 | `summary` |  | string | Its description (HTML) |
 | `embed` |  | string list | Absolute local files (images…) to embed in the HTML, which names each by its file name: &#60;img src="shot.png"&#62; |
 | `afterSectionId` |  | integer | Add it after this section; at the end when missing |
+| `visible` |  | boolean | false to add it hidden from students; shown when missing |
 
 </details>
 
@@ -494,7 +495,7 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 
 </details>
 
-## Books, lessons, wikis, glossaries, databases and feedback {#activities}
+## Books, lessons, wikis, glossaries, databases, feedback, questionnaires and boards {#activities}
 
 | Tool | Description | Read only | Teacher | Student |
 | --- | --- | :-: | :-: | :-: |
@@ -546,6 +547,13 @@ Change a course's full name, short name, summary (HTML) or any other setting by 
 | [`use_feedback_template`](#use-feedback-template) | Use a template in a feedback |  | ✓ |  |
 | [`save_feedback_template`](#save-feedback-template) | Save a feedback as a template |  | ✓ |  |
 | [`delete_feedback_template`](#delete-feedback-template) | Delete a feedback template |  | ✓ |  |
+| [`get_questionnaire_questions`](#get-questionnaire-questions) | Get a questionnaire's questions | ✓ | ✓ |  |
+| [`add_questionnaire_questions`](#add-questionnaire-questions) | Add questions to a questionnaire |  | ✓ |  |
+| [`get_board_columns`](#get-board-columns) | Get a board's columns | ✓ | ✓ |  |
+| [`set_board_columns`](#set-board-columns) | Set a board's columns |  | ✓ |  |
+| [`add_board_column`](#add-board-column) | Add a column to a board |  | ✓ |  |
+| [`edit_board_column`](#edit-board-column) | Rename or lock a board's column |  | ✓ |  |
+| [`remove_board_column`](#remove-board-column) | Remove a board's column |  | ✓ |  |
 
 ### `list_book_chapters` {#list-book-chapters}
 
@@ -1418,6 +1426,123 @@ Delete a feedback template (a public one takes a manager's rights). Can't be und
 
 </details>
 
+### `get_questionnaire_questions` {#get-questionnaire-questions}
+
+**Get a questionnaire's questions**
+
+A Questionnaire activity's questions as its teacher defines them, in order and page by page: each one's id, type, place, page, name, text, whether it's required, its choices and its type's settings; page breaks are listed too. For the questions as a participant answers them, get_survey.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `questionnaireId` | ✅ | integer | The questionnaire's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `add_questionnaire_questions` {#add-questionnaire-questions}
+
+**Add questions to a questionnaire**
+
+Add questions to a Questionnaire activity, after those it has, in the order given: yes/no, text, essay, radio, check, drop (a drop-down), rate, date, numeric, label (text between questions), and "pagebreak" to start a new page (not first, last nor two in a row). Everything is checked before anything is saved. A questionnaire someone has answered is refused unless evenWithResponses: their responses stay without the new questions. Returns the new questions' ids and every question afterwards. Changes the course: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `questionnaireId` | ✅ | integer | The questionnaire's id (course module id), as get_course_structure gives it |
+| `questions` | ✅ | object list |  |
+| `evenWithResponses` |  | boolean | Add them even when people have answered |
+
+</details>
+
+### `get_board_columns` {#get-board-columns}
+
+**Get a board's columns**
+
+A Board activity's columns, in order: each one's id, heading, colour, whether it's locked and how many notes it has (in every group when the person manages the board; one group's with groupId). Read before changing them.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | integer | The board's id (course module id), as get_course_structure gives it |
+| `groupId` |  | integer | Count only this group's notes, in a board with groups |
+
+</details>
+
+### `set_board_columns` {#set-board-columns}
+
+**Set a board's columns**
+
+Make a Board activity's columns these, in this order: its columns renamed in place, the missing ones added at the end, the extra ones removed from the end. A new board (create_activity) comes with three columns all titled "Heading": set them right after creating it. Renaming keeps a column's notes; removing a column with notes is refused before anything changes, unless deleteNotes. Returns the columns afterwards. Changes the course: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | integer | The board's id (course module id), as get_course_structure gives it |
+| `columns` | ✅ | object list | The columns, in order |
+| `deleteNotes` |  | boolean | Remove columns that have notes too, losing their notes with their comments and ratings; refused otherwise |
+
+</details>
+
+### `add_board_column` {#add-board-column}
+
+**Add a column to a board**
+
+Add a column at the end of a Board activity, locked if asked. Returns its id and the columns afterwards. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | integer | The board's id (course module id), as get_course_structure gives it |
+| `name` | ✅ | string | Its heading, up to 100 characters |
+| `locked` |  | boolean | Locked, so participants can't add notes to it |
+
+</details>
+
+### `edit_board_column` {#edit-board-column}
+
+**Rename or lock a board's column**
+
+Rename a Board activity's column, or lock or unlock it; only what is given changes, and its notes stay. Returns the columns afterwards. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | integer | The board's id (course module id), as get_course_structure gives it |
+| `columnId` | ✅ | integer | The column's id, as get_board_columns gives it |
+| `name` |  | string | Its heading, up to 100 characters |
+| `locked` |  | boolean | Locked, so participants can't add notes to it |
+
+</details>
+
+### `remove_board_column` {#remove-board-column}
+
+**Remove a board's column**
+
+Remove a column from a Board activity. A column with notes is refused unless deleteNotes: Moodle then deletes its notes, with their comments and ratings, and there's no undo. Returns the columns afterwards. Changes the course: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | integer | The board's id (course module id), as get_course_structure gives it |
+| `columnId` | ✅ | integer | The column's id, as get_board_columns gives it |
+| `deleteNotes` |  | boolean | Remove it even with notes, losing them |
+
+</details>
+
 ## Course life cycle {#lifecycle}
 
 | Tool | Description | Read only | Teacher | Student |
@@ -1793,6 +1918,9 @@ Allocate a marker (someone who can grade; several where the assignment uses seve
 | [`remove_quiz_slot`](#remove-quiz-slot) | Remove a question from a quiz |  | ✓ |  |
 | [`set_quiz_pages`](#set-quiz-pages) | Set a quiz's pages |  | ✓ |  |
 | [`add_quiz_section`](#add-quiz-section) | Add a section to a quiz |  | ✓ |  |
+| [`get_offline_quiz_groups`](#get-offline-quiz-groups) | Get an offline quiz's groups |  | ✓ |  |
+| [`add_questions_to_offline_quiz`](#add-questions-to-offline-quiz) | Add questions to an offline quiz |  | ✓ |  |
+| [`create_offline_quiz_forms`](#create-offline-quiz-forms) | Create an offline quiz's forms |  | ✓ |  |
 | [`get_quiz_results`](#get-quiz-results) | Get a quiz's results | ✓ | ✓ |  |
 | [`get_quiz_statistics`](#get-quiz-statistics) | Read a quiz's statistics | ✓ | ✓ |  |
 | [`set_quiz_override`](#set-quiz-override) | Set a quiz override for a participant |  | ✓ |  |
@@ -2187,6 +2315,54 @@ Add a section heading to a quiz, starting at a slot (the first of its page: see 
 | `firstSlot` | ✅ | integer | The slot's place in the quiz, from 1, as get_quiz_structure gives it |
 | `heading` | ✅ | string |  |
 | `shuffle` |  | boolean |  |
+
+</details>
+
+### `get_offline_quiz_groups` {#get-offline-quiz-groups}
+
+**Get an offline quiz's groups**
+
+An Offline Quiz activity's groups (A, B…, each printed on its own forms) with their questions in order (page, question, type, name, mark), its maximum grade, whether its forms exist and whether its questions can still change. Moodle makes a group it's set to have the first time its page opens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `offlineQuizId` | ✅ | integer | The offline quiz's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `add_questions_to_offline_quiz` {#add-questions-to-offline-quiz}
+
+**Add questions to an offline quiz**
+
+Add bank questions (by id, as list_questions gives them) to a group of an Offline Quiz activity, at its end or on a page. Refused once its forms exist or it has results. Returns the group afterwards. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `offlineQuizId` | ✅ | integer | The offline quiz's id (course module id), as get_course_structure gives it |
+| `questionIds` | ✅ | integer list |  |
+| `group` |  | integer | The group's number, from 1 (A); 1 when missing |
+| `page` |  | integer | Add them on this page; at the end when missing |
+
+</details>
+
+### `create_offline_quiz_forms` {#create-offline-quiz-forms}
+
+**Create an offline quiz's forms**
+
+Create an Offline Quiz activity's forms, as its "Create forms" button does: for every group, the question form, the answer form people fill in and the correction form, in the format it's set to (PDF by default). From then on its questions can't change. Every group needs questions first. When they exist already, gives them as they are. Returns each group's links, which download_file saves. Changes the course: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `offlineQuizId` | ✅ | integer | The offline quiz's id (course module id), as get_course_structure gives it |
 
 </details>
 
@@ -3445,7 +3621,7 @@ Read what people answered in a feedback or a questionnaire, as its reports show 
 
 </details>
 
-## Participants and groups {#participants}
+## Participants, groups and attendance {#participants}
 
 | Tool | Description | Read only | Teacher | Student |
 | --- | --- | :-: | :-: | :-: |
@@ -3467,6 +3643,13 @@ Read what people answered in a feedback or a questionnaire, as its reports show 
 | [`set_grouping_groups`](#set-grouping-groups) | Set a grouping's groups |  | ✓ |  |
 | [`auto_create_groups`](#auto-create-groups) | Create groups automatically |  | ✓ |  |
 | [`import_groups`](#import-groups) | Import groups from a CSV file |  | ✓ |  |
+| [`list_attendance_sessions`](#list-attendance-sessions) | List an attendance's sessions | ✓ | ✓ |  |
+| [`add_attendance_sessions`](#add-attendance-sessions) | Add attendance sessions |  | ✓ |  |
+| [`edit_attendance_session`](#edit-attendance-session) | Edit an attendance session |  | ✓ |  |
+| [`delete_attendance_session`](#delete-attendance-session) | Delete an attendance session |  | ✓ |  |
+| [`get_session_attendance`](#get-session-attendance) | Get a session's attendance | ✓ | ✓ |  |
+| [`take_attendance`](#take-attendance) | Take attendance |  | ✓ |  |
+| [`get_attendance_report`](#get-attendance-report) | Get an attendance report | ✓ | ✓ |  |
 
 ### `list_participants` {#list-participants}
 
@@ -3797,6 +3980,127 @@ Create groups from a local CSV file, as Moodle's "Import groups" does: a groupna
 
 </details>
 
+### `list_attendance_sessions` {#list-attendance-sessions}
+
+**List an attendance's sessions**
+
+An Attendance activity's sessions, by date: each one's id, start and duration, the group it's for, its description and whether attendance has been taken. Sessions before the course's start date aren't listed (Moodle hides them, and leaves them out of the report).
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | integer | The Attendance activity's id (course module id), as get_course_structure gives it |
+
+</details>
+
+### `add_attendance_sessions` {#add-attendance-sessions}
+
+**Add attendance sessions**
+
+Add sessions to an Attendance activity: one, or with repeatOn and repeatUntil one on each of those weekdays from the start's week until that day, every repeatEveryWeeks weeks, all at the start's time of day. With groupIds, one session for each group (the activity in group mode). Returns the new sessions. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | integer | The Attendance activity's id (course module id), as get_course_structure gives it |
+| `start` | ✅ | string | When the (first) session starts, ISO 8601 with its offset (2026-11-16T10:00:00+01:00) |
+| `durationMinutes` | ✅ | integer | How long each lasts; it must end the same day |
+| `description` |  | string | HTML |
+| `groupIds` |  | integer list | One session for each of these groups; for all students when missing |
+| `repeatOn` |  | `Mon`, `Tue`, `Wed`, `Thu`, `Fri`, `Sat`, `Sun` list | Repeat weekly on these days, with repeatUntil |
+| `repeatUntil` |  | string | The repeat's last day, YYYY-MM-DD, included |
+| `repeatEveryWeeks` |  | integer | Every how many weeks; 1 when missing |
+
+</details>
+
+### `edit_attendance_session` {#edit-attendance-session}
+
+**Edit an attendance session**
+
+Change an attendance session's start, duration or description; only what is given changes, and a new start keeps the duration unless one is given. Moodle doesn't move a session to another group. Returns the session afterwards. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | integer | The Attendance activity's id (course module id), as get_course_structure gives it |
+| `sessionId` | ✅ | integer | The session's id, as list_attendance_sessions gives it |
+| `start` |  | string | ISO 8601 with its offset (2026-11-16T10:00:00+01:00) |
+| `durationMinutes` |  | integer |  |
+| `description` |  | string | HTML |
+
+</details>
+
+### `delete_attendance_session` {#delete-attendance-session}
+
+**Delete an attendance session**
+
+Delete an attendance session, with the attendance taken for it; Moodle recalculates the activity's grades. Changes the course: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | integer | The Attendance activity's id (course module id), as get_course_structure gives it |
+| `sessionId` | ✅ | integer | The session's id, as list_attendance_sessions gives it |
+
+</details>
+
+### `get_session_attendance` {#get-session-attendance}
+
+**Get a session's attendance**
+
+An attendance session's statuses (id, acronym, name) and each participant it's for, with their status and remarks when marked. Read before take_attendance.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | integer | The Attendance activity's id (course module id), as get_course_structure gives it |
+| `sessionId` | ✅ | integer | The session's id, as list_attendance_sessions gives it |
+
+</details>
+
+### `take_attendance` {#take-attendance}
+
+**Take attendance**
+
+Take attendance for a session: each participant given gets a status of the session's set (by its acronym, its name or its id, as get_session_attendance gives them) and, when given, remarks; the others keep what they have. Every mark is checked before anything is saved: one Moodle wouldn't take refuses them all. Moodle marks the session taken and recalculates the grade. Returns the session's attendance afterwards. Changes the course: confirm with the person first.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | integer | The Attendance activity's id (course module id), as get_course_structure gives it |
+| `sessionId` | ✅ | integer | The session's id, as list_attendance_sessions gives it |
+| `marks` | ✅ | object list |  |
+
+</details>
+
+### `get_attendance_report` {#get-attendance-report}
+
+**Get an attendance report**
+
+An Attendance activity's report: for each participant, how many of their taken sessions have each status and that as a percentage, their points and percentage over taken sessions (what Moodle grades), over all sessions, and the most they can still reach. Sessions before the course's start date don't count.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | integer | The Attendance activity's id (course module id), as get_course_structure gives it |
+| `groupId` |  | integer | Only this group's participants |
+
+</details>
+
 ## Forums, workshops and messages {#communication}
 
 | Tool | Description | Read only | Teacher | Student |
@@ -3814,6 +4118,8 @@ Create groups from a local CSV file, as Moodle's "Import groups" does: a groupna
 | [`rate`](#rate) | Rate a post, entry or record |  | ✓ | ✓ |
 | [`get_workshop`](#get-workshop) | Read a workshop | ✓ | ✓ |  |
 | [`set_workshop_phase`](#set-workshop-phase) | Switch a workshop's phase |  | ✓ |  |
+| [`get_workshop_assessment_form`](#get-workshop-assessment-form) | Get a workshop's assessment form | ✓ | ✓ |  |
+| [`set_workshop_assessment_form`](#set-workshop-assessment-form) | Set a workshop's assessment form |  | ✓ |  |
 | [`assess_workshop_submission`](#assess-workshop-submission) | Assess a workshop submission |  | ✓ | ✓ |
 | [`get_workshop_submission`](#get-workshop-submission) | Read a workshop submission | ✓ | ✓ | ✓ |
 | [`save_workshop_submission`](#save-workshop-submission) | Submit to a workshop |  | ✓ | ✓ |
@@ -4063,6 +4369,41 @@ Switch a workshop to a phase (setup, submission, assessment, evaluation, closed)
 | --- | :-: | --- | --- |
 | `workshopId` | ✅ | integer | The workshop's id (course module id) |
 | `phase` | ✅ | `setup`, `submission`, `assessment`, `evaluation`, `closed` |  |
+
+</details>
+
+### `get_workshop_assessment_form` {#get-workshop-assessment-form}
+
+**Get a workshop's assessment form**
+
+A workshop's assessment form: its grading strategy and its aspects, assertions or criteria in order, each with what the strategy gives it (a best grade or a scale and a weight; a weight and its two words; a rubric's levels), the number-of-errors grade mapping and the rubric's layout. Read before set_workshop_assessment_form.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+
+</details>
+
+### `set_workshop_assessment_form` {#set-workshop-assessment-form}
+
+**Set a workshop's assessment form**
+
+Set a workshop's assessment form: the aspects (accumulative, comments), assertions (numerrors) or criteria (rubric) given, in order, replace those there. The strategy must be the workshop's own, chosen in its settings (update_activity). Accumulative takes a best grade (or a scale) and a weight per aspect; numerrors a weight and, optionally, its two words, and a grade for each number of errors; rubric its levels per criterion, each with a grade from 0 to 100, and the layout. Refused once assessments exist, unless evenIfAssessed: their grades then stay as they were given. Returns the form afterwards. Changes the course: confirm with the person first. The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+| `strategy` | ✅ | `accumulative`, `comments`, `numerrors`, `rubric` | The workshop's grading strategy |
+| `criteria` | ✅ | object list |  |
+| `gradeMapping` |  | object list | Number of errors: the grade for each number of weighted errors; Moodle's proportional default for those missing |
+| `layout` |  | `list`, `grid` | Rubric: how assessors see it; as it is when missing |
+| `evenIfAssessed` |  | boolean | Change it even when assessments made with it exist |
 
 </details>
 

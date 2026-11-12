@@ -5,9 +5,18 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.10.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.11.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.11.0 (12 de noviembre de 2026)
+
+- **Asistencia.** El agente puede preparar las sesiones de una actividad de Asistencia (una, o cada semana los días que digas hasta una fecha), tomar asistencia y leer el informe, con los porcentajes de cada alumno. Los alumnos aparecen como alias, salvo que hayas elegido ver sus nombres.
+- **El formulario de evaluación de un taller.** El agente puede definir el formulario que rellenan los evaluadores, para cualquier estrategia de calificación: aspectos con sus calificaciones y pesos, afirmaciones o una rúbrica con sus niveles.
+- **Las columnas de un tablero.** Un tablero nuevo trae tres columnas llamadas "Heading": ahora el agente puede ponerles nombre, añadir, bloquear y quitar columnas. No quita una columna con notas salvo que se lo pidas, y entonces lo confirmas tú.
+- **Preguntas para encuestas y cuestionarios offline.** El agente puede añadir preguntas a una encuesta (texto, opciones, escalas de valoración, saltos de página…) y preguntas del banco a un cuestionario offline, y crear sus formularios para imprimir.
+- **Secciones ocultas.** Una sección nueva se puede añadir oculta, para que los alumnos no la vean hasta que la muestres.
+- **Una pregunta más clara antes de borrar una actividad.** Ahora dice qué actividad es y qué se va con ella: el contenido de una página, las entregas y calificaciones de una tarea, en lugar de la misma lista para todo.
 
 ## 0.10.0 (11 de noviembre de 2026)
 
