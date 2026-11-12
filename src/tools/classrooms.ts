@@ -10,7 +10,7 @@ type Handler = (args: Args, extra: unknown) => Promise<unknown>;
 type Result = { content?: { type: string; text?: string }[]; structuredContent?: unknown; isError?: boolean };
 
 /** Ids that name a course module: every activity tool's own id is one, and a 5.x question bank too. */
-const ACTIVITY = new Set(["activity", "quiz", "assignment", "forum", "glossary", "feedback", "database", "workshop", "book", "lesson", "wiki", "choice", "bank", "scorm", "h5p", "survey", "bigbluebutton"]);
+const ACTIVITY = new Set(["activity", "quiz", "assignment", "forum", "glossary", "feedback", "database", "workshop", "book", "lesson", "wiki", "choice", "bank", "scorm", "h5p", "survey", "bigbluebutton", "attendance", "board", "questionnaire", "offlineQuiz"]);
 /** Other names for the same kind. */
 const ALIASES: Record<string, string> = {
   reviewer: "user", author: "user", participant: "user", marker: "user", respondent: "user", member: "user", add: "user", remove: "user",

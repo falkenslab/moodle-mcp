@@ -284,6 +284,27 @@ ${people.slice(1).map((p) => `<tr class="userrow" data-uid="${p.id}"><th><a clas
     await context.close();
   });
 
+  it("gives an attendance report's participants as aliases, and takes attendance by alias only", async () => {
+    const { state } = moodle();
+    const row = (id: number, name: string) =>
+      `<tr><td class="headcol"><a href="${SITE}mod/attendance/view.php?id=70&amp;studentid=${id}">${name}</a></td><td>1</td><td>0</td><td>1</td><td>2 / 2</td><td>100.0%</td><td>1</td><td>2 / 2</td><td>100.0%</td><td>2 / 2</td><td>100.0%</td></tr>`;
+    // The report's summary view, reduced: two statuses (P, A) and its eight totals.
+    state.bodies!["/mod/attendance/report.php"] = `<table class="attreport"><tr><th class="headcol"><a href="${SITE}mod/attendance/report.php?id=70&amp;sort=1">Name</a></th><th class="contrast">P</th><th class="contrast">A</th>${"<th>t</th>".repeat(8)}</tr>${row(7, "Ada Lovelace")}${row(8, "Alan Turing")}</table>`;
+    const { client, context } = await connect(pseudonymous(), state);
+    const result = await client.callTool({ name: "get_attendance_report", arguments: { attendanceId: 70 } });
+    assert.equal(result.isError, undefined, text(result));
+    const { participants } = result.structuredContent as { participants: { user?: string; statuses: { acronym: string; count: number }[] }[] };
+    assert.equal(participants.length, 2);
+    assert.ok(participants.every((p) => ALIAS.test(p.user ?? "")));
+    assert.deepEqual(participants[0]!.statuses.map((s) => `${s.acronym}${s.count}`), ["P1", "A0"]);
+    assert.doesNotMatch(text(result), /Lovelace|Turing|"userId"|"fullName"/);
+    const byId = await client.callTool({ name: "take_attendance", arguments: { attendanceId: 70, sessionId: 5, marks: [{ userId: 7, status: "P" }] } });
+    assert.match(text(byId), /give the participant as user/);
+    const aliasInRemarks = await client.callTool({ name: "take_attendance", arguments: { attendanceId: 70, sessionId: 5, marks: [{ user: participants[0]!.user, status: "P", remarks: `Late, like ${participants[1]!.user}` }] } });
+    assert.match(text(aliasInRemarks), /an alias: Moodle would show it/);
+    await context.close();
+  });
+
   it("gives who chose each option of a choice as aliases", async () => {
     const { state } = moodle();
     const toggle = (id: number) => `<div><div class="form-check p-0"><input id="select-response-option-${id}" type="checkbox"><label class="accesshide">Select all</label></div></div>`;

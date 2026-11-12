@@ -181,6 +181,10 @@ Most course editing, assignment grading, forum posts, messaging, calendar and co
 | `delete_event` | Delete a course or user event | W | AJAX (`core_calendar_delete_calendar_events`) | none | Done |
 | Workshop end to end | A student's submission, examples, grade calculation and overrides | R/W | Pages and forms | #29; sandbox, submission to override | Done |
 | Workshop allocation | Who assesses whom: read, by hand, at random, scheduled (`get_workshop_allocation`…) | R/W | Page and forms (`mod/workshop/allocation.php`) | #22; sandbox without submissions | Done |
+| Workshop assessment form | `get_workshop_assessment_form`, `set_workshop_assessment_form`, per grading strategy | R/W | Form (`mod/workshop/editform.php`) | #61; sandbox, rubric and accumulative | Done |
+| Attendance | Sessions (one, or weekly), taking attendance, the report (`list_attendance_sessions`…) | R/W | Pages and forms (mod_attendance) | #60; sandbox, weekly sessions taken and reported | Done |
+| Board columns | Name, add, lock and remove a board's columns (`get_board_columns`…) | R/W | The board's own calls (mod_board) | #64; sandbox | Done |
+| Questionnaire and Offline Quiz questions | `add_questionnaire_questions`, `add_questions_to_offline_quiz`, `create_offline_quiz_forms`… | R/W | Pages and forms (mod_questionnaire, mod_offlinequiz) | #65; sandbox | Done |
 
 ## Teacher: participants, progress and gradebook
 

@@ -2865,5 +2865,193 @@
       "assignmentId": "El id de la tarea (su id de módulo de curso), como lo da list_assignments",
       "destDir": "Carpeta local absoluta donde guardar; se crea si no existe"
     }
+  },
+  "get_workshop_assessment_form": {
+    "source": "afce0c44ac34",
+    "title": "Leer el formulario de evaluación de un taller",
+    "description": "El formulario de evaluación de un taller: su estrategia de calificación y sus aspectos, afirmaciones o criterios en orden, cada uno con lo que le da la estrategia (una calificación máxima o una escala y un peso; un peso y sus dos palabras; los niveles de una rúbrica), la correspondencia de calificaciones por número de errores y la disposición de la rúbrica. Léelo antes de set_workshop_assessment_form.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)"
+    }
+  },
+  "set_workshop_assessment_form": {
+    "source": "4d5601ede6cc",
+    "title": "Definir el formulario de evaluación de un taller",
+    "description": "Define el formulario de evaluación de un taller: los aspectos (accumulative, comments), afirmaciones (numerrors) o criterios (rubric) dados, en orden, sustituyen a los que hay. La estrategia tiene que ser la del taller, elegida en sus ajustes (update_activity). Accumulative lleva una calificación máxima (o una escala) y un peso por aspecto; numerrors un peso y, si se quiere, sus dos palabras, y una calificación para cada número de errores; rubric sus niveles por criterio, cada uno con una calificación de 0 a 100, y la disposición. Se rechaza si ya hay evaluaciones, salvo con evenIfAssessed: sus calificaciones se quedan entonces como se dieron. Devuelve el formulario después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)",
+      "strategy": "La estrategia de calificación del taller",
+      "criteria": "",
+      "gradeMapping": "Número de errores: la calificación para cada número de errores ponderados; para los que falten, el reparto proporcional de Moodle",
+      "layout": "Rúbrica: cómo la ven los evaluadores; como está si falta",
+      "evenIfAssessed": "Cambiarlo aunque ya haya evaluaciones hechas con él"
+    }
+  },
+  "list_attendance_sessions": {
+    "source": "078650bbacf3",
+    "title": "Listar las sesiones de una asistencia",
+    "description": "Las sesiones de una actividad de Asistencia, por fecha: el id de cada una, su inicio y duración, el grupo para el que es, su descripción y si ya se ha tomado asistencia. Las sesiones anteriores a la fecha de inicio del curso no aparecen (Moodle las oculta y las deja fuera del informe).",
+    "inputs": {
+      "attendanceId": "El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_attendance_sessions": {
+    "source": "7e93992ddc3a",
+    "title": "Añadir sesiones de asistencia",
+    "description": "Añade sesiones a una actividad de Asistencia: una, o con repeatOn y repeatUntil una en cada uno de esos días de la semana desde la semana del inicio hasta ese día, cada repeatEveryWeeks semanas, todas a la hora del inicio. Con groupIds, una sesión para cada grupo (la actividad en modo de grupos). Devuelve las sesiones nuevas. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "attendanceId": "El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure",
+      "start": "Cuándo empieza la (primera) sesión, en ISO 8601 con su desfase (2026-11-16T10:00:00+01:00)",
+      "durationMinutes": "Cuánto dura cada una; tiene que acabar el mismo día",
+      "description": "HTML",
+      "groupIds": "Una sesión para cada uno de estos grupos; para todos los alumnos si falta",
+      "repeatOn": "Repetirla cada semana estos días, con repeatUntil",
+      "repeatUntil": "El último día de la repetición, AAAA-MM-DD, incluido",
+      "repeatEveryWeeks": "Cada cuántas semanas; 1 si falta"
+    }
+  },
+  "edit_attendance_session": {
+    "source": "cfeff09f60fd",
+    "title": "Editar una sesión de asistencia",
+    "description": "Cambia el inicio, la duración o la descripción de una sesión de asistencia; solo cambia lo que se da, y un inicio nuevo conserva la duración salvo que se dé otra. Moodle no pasa una sesión a otro grupo. Devuelve la sesión después. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "attendanceId": "El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure",
+      "sessionId": "El id de la sesión, tal como lo da list_attendance_sessions",
+      "start": "En ISO 8601 con su desfase (2026-11-16T10:00:00+01:00)",
+      "durationMinutes": "",
+      "description": "HTML"
+    }
+  },
+  "delete_attendance_session": {
+    "source": "cd244f9eff63",
+    "title": "Borrar una sesión de asistencia",
+    "description": "Borra una sesión de asistencia, con la asistencia tomada en ella; Moodle vuelve a calcular las calificaciones de la actividad. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.",
+    "inputs": {
+      "attendanceId": "El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure",
+      "sessionId": "El id de la sesión, tal como lo da list_attendance_sessions"
+    }
+  },
+  "get_session_attendance": {
+    "source": "42dc576e4558",
+    "title": "Leer la asistencia de una sesión",
+    "description": "Los estados de una sesión de asistencia (id, acrónimo, nombre) y cada participante para el que es, con su estado y sus observaciones si ya está marcado. Léela antes de take_attendance.",
+    "inputs": {
+      "attendanceId": "El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure",
+      "sessionId": "El id de la sesión, tal como lo da list_attendance_sessions"
+    }
+  },
+  "take_attendance": {
+    "source": "fd651e4f5883",
+    "title": "Tomar asistencia",
+    "description": "Toma asistencia en una sesión: cada participante dado recibe un estado del conjunto de la sesión (por su acrónimo, su nombre o su id, tal como los da get_session_attendance) y, si se dan, observaciones; los demás se quedan como están. Todas las marcas se comprueban antes de guardar nada: una que Moodle no aceptaría hace que se rechacen todas. Moodle marca la sesión como tomada y vuelve a calcular la calificación. Devuelve después la asistencia de la sesión. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "attendanceId": "El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure",
+      "sessionId": "El id de la sesión, tal como lo da list_attendance_sessions",
+      "marks": ""
+    }
+  },
+  "get_attendance_report": {
+    "source": "0e72a1839e77",
+    "title": "Leer el informe de una asistencia",
+    "description": "El informe de una actividad de Asistencia: para cada participante, cuántas de sus sesiones tomadas tienen cada estado y qué porcentaje es, sus puntos y su porcentaje sobre las sesiones tomadas (lo que califica Moodle) y sobre todas las sesiones, y lo máximo que aún puede alcanzar. Las sesiones anteriores a la fecha de inicio del curso no cuentan.",
+    "inputs": {
+      "attendanceId": "El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure",
+      "groupId": "Solo los participantes de este grupo"
+    }
+  },
+  "get_board_columns": {
+    "source": "2b09faa99088",
+    "title": "Leer las columnas de un tablero",
+    "description": "Las columnas de una actividad Tablero, en orden: el id de cada una, su encabezado, su color, si está bloqueada y cuántas notas tiene (de todos los grupos si la persona gestiona el tablero; de uno con groupId). Léelas antes de cambiarlas.",
+    "inputs": {
+      "boardId": "El id del tablero (id del módulo del curso), tal como lo da get_course_structure",
+      "groupId": "Contar solo las notas de este grupo, en un tablero con grupos"
+    }
+  },
+  "set_board_columns": {
+    "source": "0e890103e0c8",
+    "title": "Definir las columnas de un tablero",
+    "description": "Deja las columnas de una actividad Tablero como estas, en este orden: sus columnas renombradas en su sitio, las que faltan añadidas al final y las que sobran quitadas del final. Un tablero nuevo (create_activity) trae tres columnas tituladas \"Heading\": defínelas justo después de crearlo. Renombrar conserva las notas de una columna; quitar una columna con notas se rechaza antes de cambiar nada, salvo con deleteNotes. Devuelve las columnas después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.",
+    "inputs": {
+      "boardId": "El id del tablero (id del módulo del curso), tal como lo da get_course_structure",
+      "columns": "Las columnas, en orden",
+      "deleteNotes": "Quitar también columnas que tienen notas, perdiendo sus notas con sus comentarios y valoraciones; si no, se rechaza"
+    }
+  },
+  "add_board_column": {
+    "source": "3ef5fe165fa3",
+    "title": "Añadir una columna a un tablero",
+    "description": "Añade una columna al final de una actividad Tablero, bloqueada si se pide. Devuelve su id y las columnas después. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "boardId": "El id del tablero (id del módulo del curso), tal como lo da get_course_structure",
+      "name": "Su encabezado, de hasta 100 caracteres",
+      "locked": "Bloqueada, para que los participantes no puedan añadirle notas"
+    }
+  },
+  "edit_board_column": {
+    "source": "da4e2c4d76b3",
+    "title": "Renombrar o bloquear la columna de un tablero",
+    "description": "Renombra una columna de una actividad Tablero, o la bloquea o desbloquea; solo cambia lo que se da, y sus notas se quedan. Devuelve las columnas después. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "boardId": "El id del tablero (id del módulo del curso), tal como lo da get_course_structure",
+      "columnId": "El id de la columna, tal como lo da get_board_columns",
+      "name": "Su encabezado, de hasta 100 caracteres",
+      "locked": "Bloqueada, para que los participantes no puedan añadirle notas"
+    }
+  },
+  "remove_board_column": {
+    "source": "da78cabcaf8e",
+    "title": "Quitar la columna de un tablero",
+    "description": "Quita una columna de una actividad Tablero. Una columna con notas se rechaza salvo con deleteNotes: Moodle borra entonces sus notas, con sus comentarios y valoraciones, y no se puede deshacer. Devuelve las columnas después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.",
+    "inputs": {
+      "boardId": "El id del tablero (id del módulo del curso), tal como lo da get_course_structure",
+      "columnId": "El id de la columna, tal como lo da get_board_columns",
+      "deleteNotes": "Quitarla aunque tenga notas, perdiéndolas"
+    }
+  },
+  "get_questionnaire_questions": {
+    "source": "8f32c1f97c3a",
+    "title": "Leer las preguntas de una encuesta",
+    "description": "Las preguntas de una encuesta (el plugin questionnaire) tal como las define su profesor, en orden y página a página: el id de cada una, su tipo, su posición, su página, su nombre, su texto, si es obligatoria, sus opciones y los ajustes de su tipo; también aparecen los saltos de página. Para las preguntas tal como las responde un participante, get_survey.",
+    "inputs": {
+      "questionnaireId": "El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_questionnaire_questions": {
+    "source": "a91d279c06cc",
+    "title": "Añadir preguntas a una encuesta",
+    "description": "Añade preguntas a una encuesta (el plugin questionnaire), después de las que tiene, en el orden dado: sí/no, texto, ensayo, radio, casillas, drop (un desplegable), valoración (rate), fecha, numérica, etiqueta (texto entre preguntas) y \"pagebreak\" para empezar una página nueva (ni el primero, ni el último ni dos seguidos). Se comprueba todo antes de guardar nada. Una encuesta que alguien ha respondido se rechaza salvo con evenWithResponses: sus respuestas se quedan sin las preguntas nuevas. Devuelve los ids de las preguntas nuevas y todas las preguntas después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.",
+    "inputs": {
+      "questionnaireId": "El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure",
+      "questions": "",
+      "evenWithResponses": "Añadirlas aunque ya haya respuestas"
+    }
+  },
+  "get_offline_quiz_groups": {
+    "source": "7cf59d66170e",
+    "title": "Leer los grupos de un cuestionario offline",
+    "description": "Los grupos de un cuestionario offline (A, B…, cada uno impreso en sus propios formularios) con sus preguntas en orden (página, pregunta, tipo, nombre, puntuación), su calificación máxima, si sus formularios existen y si sus preguntas aún pueden cambiar. Moodle crea un grupo de los que tiene configurados la primera vez que se abre su página.",
+    "inputs": {
+      "offlineQuizId": "El id del cuestionario offline (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "add_questions_to_offline_quiz": {
+    "source": "32131960673c",
+    "title": "Añadir preguntas a un cuestionario offline",
+    "description": "Añade preguntas del banco (por id, tal como las da list_questions) a un grupo de un cuestionario offline, al final o en una página. Se rechaza una vez que existen sus formularios o tiene resultados. Devuelve el grupo después. Cambia el curso: confírmalo antes con la persona.",
+    "inputs": {
+      "offlineQuizId": "El id del cuestionario offline (id del módulo del curso), tal como lo da get_course_structure",
+      "questionIds": "",
+      "group": "El número del grupo, desde 1 (A); 1 si falta",
+      "page": "Añadirlas en esta página; al final si falta"
+    }
+  },
+  "create_offline_quiz_forms": {
+    "source": "ef523c471d1f",
+    "title": "Crear los formularios de un cuestionario offline",
+    "description": "Crea los formularios de un cuestionario offline, como su botón \"Crear formularios\": para cada grupo, el formulario de preguntas, la hoja de respuestas que se rellena y el formulario de corrección, en el formato configurado (PDF por defecto). Desde entonces sus preguntas no pueden cambiar. Cada grupo necesita preguntas antes. Si ya existen, los da como están. Devuelve los enlaces de cada grupo, que download_file guarda. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.",
+    "inputs": {
+      "offlineQuizId": "El id del cuestionario offline (id del módulo del curso), tal como lo da get_course_structure"
+    }
   }
 }

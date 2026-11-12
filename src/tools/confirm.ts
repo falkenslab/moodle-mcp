@@ -160,6 +160,46 @@ export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; reversible
   remove_site: {
     what: (a) => ({ en: `Remove the site "${a.name}" from this server, with its browser session.`, es: `Quitar el sitio "${a.name}" de este servidor, con su sesión del navegador.` }),
   },
+  remove_board_column: {
+    when: (a) => a.deleteNotes === true,
+    what: (a) => ({
+      en: `Remove column ${a.columnId} of board ${a.boardId}, deleting its notes with their comments and ratings.`,
+      es: `Quitar la columna ${a.columnId} del tablero ${a.boardId}, borrando sus notas con sus comentarios y valoraciones.`,
+    }),
+  },
+  set_board_columns: {
+    when: (a) => a.deleteNotes === true,
+    what: (a) => ({
+      en: `Set board ${a.boardId}'s columns, deleting the notes, comments and ratings of the columns removed.`,
+      es: `Cambiar las columnas del tablero ${a.boardId}, borrando las notas, comentarios y valoraciones de las columnas que se quitan.`,
+    }),
+  },
+  delete_attendance_session: {
+    what: (a) => ({
+      en: `Delete session ${a.sessionId} of attendance ${a.attendanceId}, with the attendance taken for it; Moodle recalculates the grades.`,
+      es: `Borrar la sesión ${a.sessionId} de la asistencia ${a.attendanceId}, con la asistencia tomada en ella; Moodle vuelve a calcular las calificaciones.`,
+    }),
+  },
+  set_workshop_assessment_form: {
+    when: (a) => a.evenIfAssessed === true,
+    what: (a) => ({
+      en: `Change workshop ${a.workshopId}'s assessment form although assessments were made with it: their grades stay as they were given, with the old form.`,
+      es: `Cambiar el formulario de evaluación del taller ${a.workshopId} aunque ya hay evaluaciones hechas con él: sus calificaciones se quedan como se dieron, con el formulario anterior.`,
+    }),
+  },
+  create_offline_quiz_forms: {
+    what: (a) => ({
+      en: `Create offline quiz ${a.offlineQuizId}'s forms: from then on its questions can't change, as on paper.`,
+      es: `Crear los formularios del cuestionario offline ${a.offlineQuizId}: desde entonces sus preguntas no se pueden cambiar, como en papel.`,
+    }),
+  },
+  add_questionnaire_questions: {
+    when: (a) => a.evenWithResponses === true,
+    what: (a) => ({
+      en: `Add questions to questionnaire ${a.questionnaireId} although people have answered it: their responses stay without the new questions.`,
+      es: `Añadir preguntas a la encuesta ${a.questionnaireId} aunque ya hay respuestas: esas respuestas se quedan sin las preguntas nuevas.`,
+    }),
+  },
 };
 
 /** The question's fixed texts: after what will happen, and the field the person ticks. */

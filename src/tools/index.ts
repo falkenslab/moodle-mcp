@@ -71,7 +71,12 @@ import { registerAddDatabaseField, registerApplyDatabasePreset, registerDeleteDa
 import { registerAwardBadge, registerCreateBadge, registerListBadges, registerSetBadgeCriteria, registerSetBadgeEnabled } from "./badges.js";
 import type { RegisterTool } from "./types.js";
 
-/** Every tool the server exposes, in the order clients list them. */
+/** Every tool the server exposes, in the order clients list them. */import { registerAddAttendanceSessions, registerDeleteAttendanceSession, registerEditAttendanceSession, registerGetAttendanceReport, registerGetSessionAttendance, registerListAttendanceSessions, registerTakeAttendance } from "./attendance.js";
+import { registerAddBoardColumn, registerEditBoardColumn, registerGetBoardColumns, registerRemoveBoardColumn, registerSetBoardColumns } from "./boards.js";
+import { registerAddQuestionsToOfflineQuiz, registerCreateOfflineQuizForms, registerGetOfflineQuizGroups } from "./offlineQuiz.js";
+import { registerAddQuestionnaireQuestions, registerGetQuestionnaireQuestions } from "./questionnaires.js";
+import { registerGetWorkshopAssessmentForm, registerSetWorkshopAssessmentForm } from "./workshopForm.js";
+
 export const TOOLS: RegisterTool[] = [
   registerConfigure,
   registerLogin,
@@ -327,6 +332,25 @@ export const TOOLS: RegisterTool[] = [
   registerDeleteEvent,
   registerGetEvent,
   registerUpdateEvent,
+  registerGetWorkshopAssessmentForm,
+  registerSetWorkshopAssessmentForm,
+  registerListAttendanceSessions,
+  registerAddAttendanceSessions,
+  registerEditAttendanceSession,
+  registerDeleteAttendanceSession,
+  registerGetSessionAttendance,
+  registerTakeAttendance,
+  registerGetAttendanceReport,
+  registerGetBoardColumns,
+  registerSetBoardColumns,
+  registerAddBoardColumn,
+  registerEditBoardColumn,
+  registerRemoveBoardColumn,
+  registerGetQuestionnaireQuestions,
+  registerAddQuestionnaireQuestions,
+  registerGetOfflineQuizGroups,
+  registerAddQuestionsToOfflineQuiz,
+  registerCreateOfflineQuizForms,
   registerShowBrowser,
   ...BROWSER_TOOLS,
   registerServerInfo,

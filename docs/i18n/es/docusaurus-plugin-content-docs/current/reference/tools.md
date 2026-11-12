@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **269 herramientas**, 268 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **288 herramientas**, 287 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -495,7 +495,7 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 
 </details>
 
-## Libros, lecciones, wikis, glosarios, bases de datos y feedback {#activities}
+## Libros, lecciones, wikis, glosarios, bases de datos, feedback, encuestas y tableros {#activities}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
 | --- | --- | :-: | :-: | :-: |
@@ -547,6 +547,13 @@ Cambia el nombre completo, el nombre corto, el resumen (HTML) o cualquier otro a
 | [`use_feedback_template`](#use-feedback-template) | Usar una plantilla en un feedback |  | ✓ |  |
 | [`save_feedback_template`](#save-feedback-template) | Guardar un feedback como plantilla |  | ✓ |  |
 | [`delete_feedback_template`](#delete-feedback-template) | Eliminar una plantilla de feedback |  | ✓ |  |
+| [`get_questionnaire_questions`](#get-questionnaire-questions) | Leer las preguntas de una encuesta | ✓ | ✓ |  |
+| [`add_questionnaire_questions`](#add-questionnaire-questions) | Añadir preguntas a una encuesta |  | ✓ |  |
+| [`get_board_columns`](#get-board-columns) | Leer las columnas de un tablero | ✓ | ✓ |  |
+| [`set_board_columns`](#set-board-columns) | Definir las columnas de un tablero |  | ✓ |  |
+| [`add_board_column`](#add-board-column) | Añadir una columna a un tablero |  | ✓ |  |
+| [`edit_board_column`](#edit-board-column) | Renombrar o bloquear la columna de un tablero |  | ✓ |  |
+| [`remove_board_column`](#remove-board-column) | Quitar la columna de un tablero |  | ✓ |  |
 
 ### `list_book_chapters` {#list-book-chapters}
 
@@ -1419,6 +1426,123 @@ Elimina una plantilla de feedback (una pública requiere permisos de gestor). No
 
 </details>
 
+### `get_questionnaire_questions` {#get-questionnaire-questions}
+
+**Leer las preguntas de una encuesta**
+
+Las preguntas de una encuesta (el plugin questionnaire) tal como las define su profesor, en orden y página a página: el id de cada una, su tipo, su posición, su página, su nombre, su texto, si es obligatoria, sus opciones y los ajustes de su tipo; también aparecen los saltos de página. Para las preguntas tal como las responde un participante, get_survey.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `questionnaireId` | ✅ | entero | El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `add_questionnaire_questions` {#add-questionnaire-questions}
+
+**Añadir preguntas a una encuesta**
+
+Añade preguntas a una encuesta (el plugin questionnaire), después de las que tiene, en el orden dado: sí/no, texto, ensayo, radio, casillas, drop (un desplegable), valoración (rate), fecha, numérica, etiqueta (texto entre preguntas) y "pagebreak" para empezar una página nueva (ni el primero, ni el último ni dos seguidos). Se comprueba todo antes de guardar nada. Una encuesta que alguien ha respondido se rechaza salvo con evenWithResponses: sus respuestas se quedan sin las preguntas nuevas. Devuelve los ids de las preguntas nuevas y todas las preguntas después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `questionnaireId` | ✅ | entero | El id de la encuesta (id del módulo del curso), tal como lo da get_course_structure |
+| `questions` | ✅ | lista de objeto |  |
+| `evenWithResponses` |  | sí o no | Añadirlas aunque ya haya respuestas |
+
+</details>
+
+### `get_board_columns` {#get-board-columns}
+
+**Leer las columnas de un tablero**
+
+Las columnas de una actividad Tablero, en orden: el id de cada una, su encabezado, su color, si está bloqueada y cuántas notas tiene (de todos los grupos si la persona gestiona el tablero; de uno con groupId). Léelas antes de cambiarlas.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | entero | El id del tablero (id del módulo del curso), tal como lo da get_course_structure |
+| `groupId` |  | entero | Contar solo las notas de este grupo, en un tablero con grupos |
+
+</details>
+
+### `set_board_columns` {#set-board-columns}
+
+**Definir las columnas de un tablero**
+
+Deja las columnas de una actividad Tablero como estas, en este orden: sus columnas renombradas en su sitio, las que faltan añadidas al final y las que sobran quitadas del final. Un tablero nuevo (create_activity) trae tres columnas tituladas "Heading": defínelas justo después de crearlo. Renombrar conserva las notas de una columna; quitar una columna con notas se rechaza antes de cambiar nada, salvo con deleteNotes. Devuelve las columnas después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | entero | El id del tablero (id del módulo del curso), tal como lo da get_course_structure |
+| `columns` | ✅ | lista de objeto | Las columnas, en orden |
+| `deleteNotes` |  | sí o no | Quitar también columnas que tienen notas, perdiendo sus notas con sus comentarios y valoraciones; si no, se rechaza |
+
+</details>
+
+### `add_board_column` {#add-board-column}
+
+**Añadir una columna a un tablero**
+
+Añade una columna al final de una actividad Tablero, bloqueada si se pide. Devuelve su id y las columnas después. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | entero | El id del tablero (id del módulo del curso), tal como lo da get_course_structure |
+| `name` | ✅ | texto | Su encabezado, de hasta 100 caracteres |
+| `locked` |  | sí o no | Bloqueada, para que los participantes no puedan añadirle notas |
+
+</details>
+
+### `edit_board_column` {#edit-board-column}
+
+**Renombrar o bloquear la columna de un tablero**
+
+Renombra una columna de una actividad Tablero, o la bloquea o desbloquea; solo cambia lo que se da, y sus notas se quedan. Devuelve las columnas después. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | entero | El id del tablero (id del módulo del curso), tal como lo da get_course_structure |
+| `columnId` | ✅ | entero | El id de la columna, tal como lo da get_board_columns |
+| `name` |  | texto | Su encabezado, de hasta 100 caracteres |
+| `locked` |  | sí o no | Bloqueada, para que los participantes no puedan añadirle notas |
+
+</details>
+
+### `remove_board_column` {#remove-board-column}
+
+**Quitar la columna de un tablero**
+
+Quita una columna de una actividad Tablero. Una columna con notas se rechaza salvo con deleteNotes: Moodle borra entonces sus notas, con sus comentarios y valoraciones, y no se puede deshacer. Devuelve las columnas después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `boardId` | ✅ | entero | El id del tablero (id del módulo del curso), tal como lo da get_course_structure |
+| `columnId` | ✅ | entero | El id de la columna, tal como lo da get_board_columns |
+| `deleteNotes` |  | sí o no | Quitarla aunque tenga notas, perdiéndolas |
+
+</details>
+
 ## Ciclo de vida del curso {#lifecycle}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
@@ -1794,6 +1918,9 @@ Asigna un evaluador (alguien que puede calificar; varios donde la tarea usa vari
 | [`remove_quiz_slot`](#remove-quiz-slot) | Quitar una pregunta de un cuestionario |  | ✓ |  |
 | [`set_quiz_pages`](#set-quiz-pages) | Establecer las páginas de un cuestionario |  | ✓ |  |
 | [`add_quiz_section`](#add-quiz-section) | Añadir una sección a un cuestionario |  | ✓ |  |
+| [`get_offline_quiz_groups`](#get-offline-quiz-groups) | Leer los grupos de un cuestionario offline |  | ✓ |  |
+| [`add_questions_to_offline_quiz`](#add-questions-to-offline-quiz) | Añadir preguntas a un cuestionario offline |  | ✓ |  |
+| [`create_offline_quiz_forms`](#create-offline-quiz-forms) | Crear los formularios de un cuestionario offline |  | ✓ |  |
 | [`get_quiz_results`](#get-quiz-results) | Obtener los resultados de un cuestionario | ✓ | ✓ |  |
 | [`get_quiz_statistics`](#get-quiz-statistics) | Leer las estadísticas de un cuestionario | ✓ | ✓ |  |
 | [`set_quiz_override`](#set-quiz-override) | Establecer una excepción de cuestionario para un participante |  | ✓ |  |
@@ -2188,6 +2315,54 @@ Añade un encabezado de sección a un cuestionario, empezando en un hueco (el pr
 | `firstSlot` | ✅ | entero | La posición del hueco en el cuestionario, desde 1, tal como la da get_quiz_structure |
 | `heading` | ✅ | texto |  |
 | `shuffle` |  | sí o no |  |
+
+</details>
+
+### `get_offline_quiz_groups` {#get-offline-quiz-groups}
+
+**Leer los grupos de un cuestionario offline**
+
+Los grupos de un cuestionario offline (A, B…, cada uno impreso en sus propios formularios) con sus preguntas en orden (página, pregunta, tipo, nombre, puntuación), su calificación máxima, si sus formularios existen y si sus preguntas aún pueden cambiar. Moodle crea un grupo de los que tiene configurados la primera vez que se abre su página.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `offlineQuizId` | ✅ | entero | El id del cuestionario offline (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `add_questions_to_offline_quiz` {#add-questions-to-offline-quiz}
+
+**Añadir preguntas a un cuestionario offline**
+
+Añade preguntas del banco (por id, tal como las da list_questions) a un grupo de un cuestionario offline, al final o en una página. Se rechaza una vez que existen sus formularios o tiene resultados. Devuelve el grupo después. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `offlineQuizId` | ✅ | entero | El id del cuestionario offline (id del módulo del curso), tal como lo da get_course_structure |
+| `questionIds` | ✅ | lista de entero |  |
+| `group` |  | entero | El número del grupo, desde 1 (A); 1 si falta |
+| `page` |  | entero | Añadirlas en esta página; al final si falta |
+
+</details>
+
+### `create_offline_quiz_forms` {#create-offline-quiz-forms}
+
+**Crear los formularios de un cuestionario offline**
+
+Crea los formularios de un cuestionario offline, como su botón "Crear formularios": para cada grupo, el formulario de preguntas, la hoja de respuestas que se rellena y el formulario de corrección, en el formato configurado (PDF por defecto). Desde entonces sus preguntas no pueden cambiar. Cada grupo necesita preguntas antes. Si ya existen, los da como están. Devuelve los enlaces de cada grupo, que download_file guarda. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `offlineQuizId` | ✅ | entero | El id del cuestionario offline (id del módulo del curso), tal como lo da get_course_structure |
 
 </details>
 
@@ -3446,7 +3621,7 @@ Lee lo que respondieron las personas en un feedback o un cuestionario de encuest
 
 </details>
 
-## Participantes y grupos {#participants}
+## Participantes, grupos y asistencia {#participants}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
 | --- | --- | :-: | :-: | :-: |
@@ -3468,6 +3643,13 @@ Lee lo que respondieron las personas en un feedback o un cuestionario de encuest
 | [`set_grouping_groups`](#set-grouping-groups) | Establecer los grupos de un agrupamiento |  | ✓ |  |
 | [`auto_create_groups`](#auto-create-groups) | Crear grupos automáticamente |  | ✓ |  |
 | [`import_groups`](#import-groups) | Importar grupos desde un archivo CSV |  | ✓ |  |
+| [`list_attendance_sessions`](#list-attendance-sessions) | Listar las sesiones de una asistencia | ✓ | ✓ |  |
+| [`add_attendance_sessions`](#add-attendance-sessions) | Añadir sesiones de asistencia |  | ✓ |  |
+| [`edit_attendance_session`](#edit-attendance-session) | Editar una sesión de asistencia |  | ✓ |  |
+| [`delete_attendance_session`](#delete-attendance-session) | Borrar una sesión de asistencia |  | ✓ |  |
+| [`get_session_attendance`](#get-session-attendance) | Leer la asistencia de una sesión | ✓ | ✓ |  |
+| [`take_attendance`](#take-attendance) | Tomar asistencia |  | ✓ |  |
+| [`get_attendance_report`](#get-attendance-report) | Leer el informe de una asistencia | ✓ | ✓ |  |
 
 ### `list_participants` {#list-participants}
 
@@ -3798,6 +3980,127 @@ Crea grupos desde un archivo CSV local, como «Importar grupos» de Moodle: una 
 
 </details>
 
+### `list_attendance_sessions` {#list-attendance-sessions}
+
+**Listar las sesiones de una asistencia**
+
+Las sesiones de una actividad de Asistencia, por fecha: el id de cada una, su inicio y duración, el grupo para el que es, su descripción y si ya se ha tomado asistencia. Las sesiones anteriores a la fecha de inicio del curso no aparecen (Moodle las oculta y las deja fuera del informe).
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | entero | El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure |
+
+</details>
+
+### `add_attendance_sessions` {#add-attendance-sessions}
+
+**Añadir sesiones de asistencia**
+
+Añade sesiones a una actividad de Asistencia: una, o con repeatOn y repeatUntil una en cada uno de esos días de la semana desde la semana del inicio hasta ese día, cada repeatEveryWeeks semanas, todas a la hora del inicio. Con groupIds, una sesión para cada grupo (la actividad en modo de grupos). Devuelve las sesiones nuevas. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | entero | El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure |
+| `start` | ✅ | texto | Cuándo empieza la (primera) sesión, en ISO 8601 con su desfase (2026-11-16T10:00:00+01:00) |
+| `durationMinutes` | ✅ | entero | Cuánto dura cada una; tiene que acabar el mismo día |
+| `description` |  | texto | HTML |
+| `groupIds` |  | lista de entero | Una sesión para cada uno de estos grupos; para todos los alumnos si falta |
+| `repeatOn` |  | lista de `Mon`, `Tue`, `Wed`, `Thu`, `Fri`, `Sat`, `Sun` | Repetirla cada semana estos días, con repeatUntil |
+| `repeatUntil` |  | texto | El último día de la repetición, AAAA-MM-DD, incluido |
+| `repeatEveryWeeks` |  | entero | Cada cuántas semanas; 1 si falta |
+
+</details>
+
+### `edit_attendance_session` {#edit-attendance-session}
+
+**Editar una sesión de asistencia**
+
+Cambia el inicio, la duración o la descripción de una sesión de asistencia; solo cambia lo que se da, y un inicio nuevo conserva la duración salvo que se dé otra. Moodle no pasa una sesión a otro grupo. Devuelve la sesión después. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | entero | El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure |
+| `sessionId` | ✅ | entero | El id de la sesión, tal como lo da list_attendance_sessions |
+| `start` |  | texto | En ISO 8601 con su desfase (2026-11-16T10:00:00+01:00) |
+| `durationMinutes` |  | entero |  |
+| `description` |  | texto | HTML |
+
+</details>
+
+### `delete_attendance_session` {#delete-attendance-session}
+
+**Borrar una sesión de asistencia**
+
+Borra una sesión de asistencia, con la asistencia tomada en ella; Moodle vuelve a calcular las calificaciones de la actividad. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | entero | El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure |
+| `sessionId` | ✅ | entero | El id de la sesión, tal como lo da list_attendance_sessions |
+
+</details>
+
+### `get_session_attendance` {#get-session-attendance}
+
+**Leer la asistencia de una sesión**
+
+Los estados de una sesión de asistencia (id, acrónimo, nombre) y cada participante para el que es, con su estado y sus observaciones si ya está marcado. Léela antes de take_attendance.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | entero | El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure |
+| `sessionId` | ✅ | entero | El id de la sesión, tal como lo da list_attendance_sessions |
+
+</details>
+
+### `take_attendance` {#take-attendance}
+
+**Tomar asistencia**
+
+Toma asistencia en una sesión: cada participante dado recibe un estado del conjunto de la sesión (por su acrónimo, su nombre o su id, tal como los da get_session_attendance) y, si se dan, observaciones; los demás se quedan como están. Todas las marcas se comprueban antes de guardar nada: una que Moodle no aceptaría hace que se rechacen todas. Moodle marca la sesión como tomada y vuelve a calcular la calificación. Devuelve después la asistencia de la sesión. Cambia el curso: confírmalo antes con la persona.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | entero | El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure |
+| `sessionId` | ✅ | entero | El id de la sesión, tal como lo da list_attendance_sessions |
+| `marks` | ✅ | lista de objeto |  |
+
+</details>
+
+### `get_attendance_report` {#get-attendance-report}
+
+**Leer el informe de una asistencia**
+
+El informe de una actividad de Asistencia: para cada participante, cuántas de sus sesiones tomadas tienen cada estado y qué porcentaje es, sus puntos y su porcentaje sobre las sesiones tomadas (lo que califica Moodle) y sobre todas las sesiones, y lo máximo que aún puede alcanzar. Las sesiones anteriores a la fecha de inicio del curso no cuentan.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `attendanceId` | ✅ | entero | El id de la actividad de Asistencia (id del módulo del curso), tal como lo da get_course_structure |
+| `groupId` |  | entero | Solo los participantes de este grupo |
+
+</details>
+
 ## Foros, talleres y mensajes {#communication}
 
 | Herramienta | Descripción | Solo lectura | Profesor | Alumno |
@@ -3815,6 +4118,8 @@ Crea grupos desde un archivo CSV local, como «Importar grupos» de Moodle: una 
 | [`rate`](#rate) | Valorar un mensaje, entrada o registro |  | ✓ | ✓ |
 | [`get_workshop`](#get-workshop) | Leer un taller | ✓ | ✓ |  |
 | [`set_workshop_phase`](#set-workshop-phase) | Cambiar la fase de un taller |  | ✓ |  |
+| [`get_workshop_assessment_form`](#get-workshop-assessment-form) | Leer el formulario de evaluación de un taller | ✓ | ✓ |  |
+| [`set_workshop_assessment_form`](#set-workshop-assessment-form) | Definir el formulario de evaluación de un taller |  | ✓ |  |
 | [`assess_workshop_submission`](#assess-workshop-submission) | Evaluar una entrega de un taller |  | ✓ | ✓ |
 | [`get_workshop_submission`](#get-workshop-submission) | Leer una entrega de un taller | ✓ | ✓ | ✓ |
 | [`save_workshop_submission`](#save-workshop-submission) | Entregar en un taller |  | ✓ | ✓ |
@@ -4064,6 +4369,41 @@ Cambia un taller a una fase (setup, submission, assessment, evaluation, closed),
 | --- | :-: | --- | --- |
 | `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
 | `phase` | ✅ | `setup`, `submission`, `assessment`, `evaluation`, `closed` |  |
+
+</details>
+
+### `get_workshop_assessment_form` {#get-workshop-assessment-form}
+
+**Leer el formulario de evaluación de un taller**
+
+El formulario de evaluación de un taller: su estrategia de calificación y sus aspectos, afirmaciones o criterios en orden, cada uno con lo que le da la estrategia (una calificación máxima o una escala y un peso; un peso y sus dos palabras; los niveles de una rúbrica), la correspondencia de calificaciones por número de errores y la disposición de la rúbrica. Léelo antes de set_workshop_assessment_form.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+
+</details>
+
+### `set_workshop_assessment_form` {#set-workshop-assessment-form}
+
+**Definir el formulario de evaluación de un taller**
+
+Define el formulario de evaluación de un taller: los aspectos (accumulative, comments), afirmaciones (numerrors) o criterios (rubric) dados, en orden, sustituyen a los que hay. La estrategia tiene que ser la del taller, elegida en sus ajustes (update_activity). Accumulative lleva una calificación máxima (o una escala) y un peso por aspecto; numerrors un peso y, si se quiere, sus dos palabras, y una calificación para cada número de errores; rubric sus niveles por criterio, cada uno con una calificación de 0 a 100, y la disposición. Se rechaza si ya hay evaluaciones, salvo con evenIfAssessed: sus calificaciones se quedan entonces como se dieron. Devuelve el formulario después. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+| `strategy` | ✅ | `accumulative`, `comments`, `numerrors`, `rubric` | La estrategia de calificación del taller |
+| `criteria` | ✅ | lista de objeto |  |
+| `gradeMapping` |  | lista de objeto | Número de errores: la calificación para cada número de errores ponderados; para los que falten, el reparto proporcional de Moodle |
+| `layout` |  | `list`, `grid` | Rúbrica: cómo la ven los evaluadores; como está si falta |
+| `evenIfAssessed` |  | sí o no | Cambiarlo aunque ya haya evaluaciones hechas con él |
 
 </details>
 

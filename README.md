@@ -17,7 +17,7 @@ Your students stay anonymous to the AI, and you decide what it can do.
 
 </div>
 
-moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 230 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 4.5 or 5.x site.
+moodle-mcp is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent such as Claude or Codex about 260 tools for Moodle: grade with your rubrics, build a quiz from your questions, answer the forum, see what's due this week. It works through a real browser on your computer, logged in as you, on any Moodle 4.5 or 5.x site.
 
 ## ✨ Why moodle-mcp
 
