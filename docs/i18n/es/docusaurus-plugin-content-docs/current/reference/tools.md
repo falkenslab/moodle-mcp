@@ -421,7 +421,7 @@ Elimina una actividad de un curso, con los datos de sus participantes (entregas,
 
 **Añadir una sección**
 
-Añade una sección a un curso, al final o después de una sección dada, opcionalmente con nombre y descripción. Devuelve su id y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
+Añade una sección a un curso, al final o después de una sección dada, opcionalmente con nombre y descripción, y oculta a los alumnos con visible: false. Moodle solo añade secciones visibles, así que una oculta se oculta justo después de añadirla, antes de ponerle nombre o descripción: los alumnos pueden verla, vacía y sin nombre, durante ese momento. Devuelve su id y la estructura del curso. Cambia el curso: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -433,6 +433,7 @@ Añade una sección a un curso, al final o después de una sección dada, opcion
 | `summary` |  | texto | Su descripción (HTML) |
 | `embed` |  | lista de texto | Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: &#60;img src="shot.png"&#62; |
 | `afterSectionId` |  | entero | Añadirla después de esta sección; al final si falta |
+| `visible` |  | sí o no | false para añadirla oculta a los alumnos; visible si falta |
 
 </details>
 

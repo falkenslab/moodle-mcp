@@ -421,7 +421,7 @@ Delete an activity from a course, with its participants' data (submissions, atte
 
 **Add a section**
 
-Add a section to a course, at the end or after a given section, optionally named and described. Returns its id and the course structure. Changes the course: confirm with the person first.
+Add a section to a course, at the end or after a given section, optionally named and described, and hidden from students with visible: false. Moodle only adds visible sections, so a hidden one is hidden right after it's added, before it's named or described: students may see it, empty and unnamed, for that moment. Returns its id and the course structure. Changes the course: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -433,6 +433,7 @@ Add a section to a course, at the end or after a given section, optionally named
 | `summary` |  | string | Its description (HTML) |
 | `embed` |  | string list | Absolute local files (images…) to embed in the HTML, which names each by its file name: &#60;img src="shot.png"&#62; |
 | `afterSectionId` |  | integer | Add it after this section; at the end when missing |
+| `visible` |  | boolean | false to add it hidden from students; shown when missing |
 
 </details>
 

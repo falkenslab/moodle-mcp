@@ -982,15 +982,16 @@
     }
   },
   "add_section": {
-    "source": "7099770609a6",
+    "source": "44de327fed76",
     "title": "Añadir una sección",
-    "description": "Añade una sección a un curso, al final o después de una sección dada, opcionalmente con nombre y descripción. Devuelve su id y la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
+    "description": "Añade una sección a un curso, al final o después de una sección dada, opcionalmente con nombre y descripción, y oculta a los alumnos con visible: false. Moodle solo añade secciones visibles, así que una oculta se oculta justo después de añadirla, antes de ponerle nombre o descripción: los alumnos pueden verla, vacía y sin nombre, durante ese momento. Devuelve su id y la estructura del curso. Cambia el curso: confírmalo antes con la persona.",
     "inputs": {
       "courseId": "El id del curso, tal como lo da list_courses",
       "name": "",
       "summary": "Su descripción (HTML)",
       "embed": "Archivos locales absolutos (imágenes…) que incrustar en el HTML, que nombra cada uno por su nombre de archivo: <img src=\"shot.png\">",
-      "afterSectionId": "Añadirla después de esta sección; al final si falta"
+      "afterSectionId": "Añadirla después de esta sección; al final si falta",
+      "visible": "false para añadirla oculta a los alumnos; visible si falta"
     }
   },
   "edit_section": {

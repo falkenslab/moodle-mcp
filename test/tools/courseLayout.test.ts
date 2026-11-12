@@ -151,6 +151,13 @@ describe("course layout tools", { skip: !browser && "no system browser" }, () =>
     await context.close();
   });
 
+  it("adds a section hidden", async () => {
+    const { client, context } = await connect(fakeCourse().state);
+    const result = await call(client, "add_section", { name: "Unit 2", visible: false });
+    assert.equal(layout(result), "General:News | Unit 1:Notes,Task | Unit 2(h):");
+    await context.close();
+  });
+
   it("hides and moves a section, deletes an activity and a section with its activities", async () => {
     const { client, context } = await connect(fakeCourse().state);
     assert.equal(layout(await call(client, "edit_section", { sectionId: 11, visible: false, afterSectionId: 10 })), "General:News | Unit 1(h):Notes,Task");

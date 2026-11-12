@@ -95,13 +95,15 @@ export const registerAddSection: RegisterTool = (server, { config, browser }) =>
     "add_section",
     {
       title: "Add a section",
-      description: "Add a section to a course, at the end or after a given section, optionally named and described. Returns its id and the course structure. Changes the course: confirm with the person first.",
+      description:
+        "Add a section to a course, at the end or after a given section, optionally named and described, and hidden from students with visible: false. Moodle only adds visible sections, so a hidden one is hidden right after it's added, before it's named or described: students may see it, empty and unnamed, for that moment. Returns its id and the course structure. Changes the course: confirm with the person first.",
       inputSchema: {
         courseId,
         name: z.string().min(1).optional(),
         summary: z.string().optional().describe("Its description (HTML)"),
         embed: z.array(z.string()).optional().describe('Absolute local files (images…) to embed in the HTML, which names each by its file name: <img src="shot.png">'),
         afterSectionId: sectionId.optional().describe("Add it after this section; at the end when missing"),
+        visible: z.boolean().optional().describe("false to add it hidden from students; shown when missing"),
       },
       outputSchema: resultSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
