@@ -3,7 +3,9 @@
 // is in the person's language, from the locale; what the agent reads stays in English.
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
-import type { Config } from "../config.js";
+import { courseState } from "@falkenslab/moodle-driver/internals";
+import { onSite } from "./reply.js";
+import type { ToolContext } from "./types.js";
 
 type Args = Record<string, unknown>;
 
@@ -18,12 +20,57 @@ export function localeLanguage(env: NodeJS.ProcessEnv = process.env): Language {
   return /^es([_.@]|$)/i.test(locale) ? "es" : "en";
 }
 
+/** What a module keeps from participants, for deleting one of its activities: its name with an article, and that. */
+const MODULE_WORK: Record<string, { en: [string, string]; es: [string, string] }> = {
+  page: { en: ["a page", "its content"], es: ["una página", "su contenido"] },
+  resource: { en: ["a file", "its file"], es: ["un archivo", "su archivo"] },
+  folder: { en: ["a folder", "its files"], es: ["una carpeta", "sus archivos"] },
+  url: { en: ["a URL", "its link"], es: ["una URL", "su enlace"] },
+  label: { en: ["a text and media area", "its content"], es: ["un área de texto y medios", "su contenido"] },
+  book: { en: ["a book", "its chapters"], es: ["un libro", "sus capítulos"] },
+  imscp: { en: ["an IMS content package", "its content"], es: ["un paquete de contenido IMS", "su contenido"] },
+  assign: { en: ["an assignment", "its submissions, feedback and grades"], es: ["una tarea", "sus entregas, comentarios y calificaciones"] },
+  quiz: { en: ["a quiz", "its attempts and grades"], es: ["un cuestionario", "sus intentos y calificaciones"] },
+  forum: { en: ["a forum", "its discussions and posts"], es: ["un foro", "sus debates y mensajes"] },
+  workshop: { en: ["a workshop", "its submissions, assessments and grades"], es: ["un taller", "sus envíos, evaluaciones y calificaciones"] },
+  glossary: { en: ["a glossary", "its entries"], es: ["un glosario", "sus entradas"] },
+  data: { en: ["a database", "its entries"], es: ["una base de datos", "sus entradas"] },
+  wiki: { en: ["a wiki", "its pages"], es: ["una wiki", "sus páginas"] },
+  lesson: { en: ["a lesson", "its attempts and grades"], es: ["una lección", "sus intentos y calificaciones"] },
+  choice: { en: ["a choice", "its answers"], es: ["una consulta", "sus respuestas"] },
+  feedback: { en: ["a feedback", "its responses"], es: ["un feedback", "sus respuestas"] },
+  questionnaire: { en: ["a questionnaire", "its responses"], es: ["una encuesta", "sus respuestas"] },
+  survey: { en: ["a survey", "its responses"], es: ["una encuesta predefinida", "sus respuestas"] },
+  scorm: { en: ["a SCORM package", "its attempts and grades"], es: ["un paquete SCORM", "sus intentos y calificaciones"] },
+  h5pactivity: { en: ["an H5P activity", "its attempts and grades"], es: ["una actividad H5P", "sus intentos y calificaciones"] },
+  attendance: { en: ["an attendance", "its sessions and the attendance taken"], es: ["una asistencia", "sus sesiones y la asistencia tomada"] },
+  board: { en: ["a board", "its notes"], es: ["un tablero", "sus notas"] },
+  chat: { en: ["a chat", "its messages"], es: ["un chat", "sus mensajes"] },
+};
+
+/** The question for deleting an activity whose name and module are known: what it is, and what goes with it. */
+export function deleteActivityQuestion(a: Args, activity: { name: string; module: string }): Text {
+  const known = MODULE_WORK[activity.module];
+  const [enKind, enWork] = known?.en ?? [`a ${activity.module} activity`, "anything participants did in it"];
+  const [esKind, esWork] = known?.es ?? [`una actividad ${activity.module}`, "todo lo que los participantes hicieron en ella"];
+  return {
+    en: `Delete activity ${a.activityId}, "${activity.name}" (${enKind}), from course ${a.courseId}, with ${enWork}.`,
+    es: `Borrar la actividad ${a.activityId}, "${activity.name}" (${esKind}), del curso ${a.courseId}, con ${esWork}.`,
+  };
+}
+
 /**
  * The tools that ask, each with what will happen in a sentence, from its inputs; `when` limits a tool
  * to the calls that can't be undone (a restore that replaces, a reviewer whose assessment is graded).
+ * `look` words it from Moodle instead, when it can read what the call acts on; `what` when it can't.
  */
-export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; reversible?: boolean; what: (a: Args) => Text }> = {
+export const CONFIRMED: Record<string, { when?: (a: Args) => boolean; reversible?: boolean; look?: (a: Args, context: ToolContext) => Promise<Text | undefined>; what: (a: Args) => Text }> = {
   delete_activity: {
+    // Which activity, and what its module keeps: a page has no submissions to warn about (#62).
+    look: async (a, { config, browser }) => {
+      const activity = (await courseState(...(await onSite(config, browser)), Number(a.courseId))).cm.find((cm) => Number(cm.id) === a.activityId);
+      return activity && deleteActivityQuestion(a, activity);
+    },
     what: (a) => ({
       en: `Delete activity ${a.activityId} from course ${a.courseId}, with everything participants did in it (submissions, attempts, posts, grades).`,
       es: `Borrar la actividad ${a.activityId} del curso ${a.courseId}, con todo lo que los participantes hicieron en ella (entregas, intentos, mensajes, calificaciones).`,
@@ -215,13 +262,20 @@ export const CONFIRM_TIMEOUT_MS = 10 * 60_000;
 export const CONFIRM_SENTENCE = "The server asks the person to confirm in their app first (MCP elicitation); declined, nothing happens.";
 
 type Handler = (args: Args, extra: unknown) => Promise<unknown>;
+
+/** A rule's question: from Moodle when it can look, from the call's inputs otherwise (no session, a read that fails). */
+async function question(rule: (typeof CONFIRMED)[string], args: Args, context: ToolContext): Promise<Text> {
+  const looked = rule.look ? await rule.look(args, context).catch(() => undefined) : undefined;
+  return looked ?? rule.what(args);
+}
 type Settings = { description?: string };
 
 /**
  * Makes every confirmed tool registered on `server` from now on ask the person before it runs (ADR-023):
  * through elicitation where the client offers it; else refused, unless the person set `MOODLE_MCP_CONFIRM=client`.
  */
-export function confirmTools(server: McpServer, config: Pick<Config, "confirm">): void {
+export function confirmTools(server: McpServer, context: ToolContext): void {
+  const { config } = context;
   const language = localeLanguage();
   const register = server.registerTool.bind(server) as (name: string, settings: Settings, handler: Handler) => unknown;
   (server as unknown as { registerTool: typeof register }).registerTool = (name, settings, handler) => {
@@ -239,7 +293,7 @@ export function confirmTools(server: McpServer, config: Pick<Config, "confirm">)
         .elicitInput(
           {
             mode: "form",
-            message: `${rule.what(args)[language]} ${rule.reversible ? ask.go : ask.undone}`,
+            message: `${(await question(rule, args, context))[language]} ${rule.reversible ? ask.go : ask.undone}`,
             requestedSchema: { type: "object", properties: { confirm: { type: "boolean", title: ask.yes, description: ask.leave } }, required: ["confirm"] },
           },
           { timeout: CONFIRM_TIMEOUT_MS },

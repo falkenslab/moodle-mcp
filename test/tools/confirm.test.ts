@@ -5,7 +5,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { ElicitRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import type { Config } from "../../src/config.js";
 import { createServer } from "../../src/createServer.js";
-import { CONFIRMED, CONFIRM_SENTENCE, localeLanguage } from "../../src/tools/confirm.js";
+import { CONFIRMED, CONFIRM_SENTENCE, deleteActivityQuestion, localeLanguage } from "../../src/tools/confirm.js";
 import { fakeBrowserManager, testConfig } from "../helpers/fixtures.js";
 
 /** A client that answers the server's questions with `answer`, or one without elicitation. */
@@ -77,6 +77,19 @@ describe("what can't be undone, confirmed by the person (ADR-023)", () => {
     assert.doesNotMatch(no.asked[0]!, /can't be undone/);
     assert.doesNotMatch(await no.call("configure", { trail: "fast" }), /said no/);
     assert.equal(no.asked.length, 1);
+  });
+
+  it("words deleting an activity by what its module keeps, in both languages (#62)", () => {
+    const a = { courseId: 3, activityId: 5 };
+    assert.deepEqual(deleteActivityQuestion(a, { name: "Notes", module: "page" }), {
+      en: 'Delete activity 5, "Notes" (a page), from course 3, with its content.',
+      es: 'Borrar la actividad 5, "Notes" (una página), del curso 3, con su contenido.',
+    });
+    assert.deepEqual(deleteActivityQuestion(a, { name: "Essay", module: "assign" }), {
+      en: 'Delete activity 5, "Essay" (an assignment), from course 3, with its submissions, feedback and grades.',
+      es: 'Borrar la actividad 5, "Essay" (una tarea), del curso 3, con sus entregas, comentarios y calificaciones.',
+    });
+    assert.match(deleteActivityQuestion(a, { name: "Game", module: "game" }).es, /\(una actividad game\), del curso 3, con todo lo que los participantes hicieron en ella\.$/);
   });
 
   it("asks in the person's language, from the locale", async () => {

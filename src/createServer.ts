@@ -23,7 +23,7 @@ export function createServer(context: ToolContext): McpServer {
   // Classrooms before the confirmation, so a call outside them asks the person nothing (ADR-025).
   classroomTools(server, config);
   // Inside the scopes' check: a tool outside them is refused before the person is asked (ADR-023).
-  confirmTools(server, config);
+  confirmTools(server, context);
   // Installed last, so it wraps the others: a tool outside the scopes is refused before anything runs.
   scopeTools(server, config);
   for (const register of TOOLS) register(server, context);

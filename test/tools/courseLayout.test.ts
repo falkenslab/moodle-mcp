@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { after, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { ElicitRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import type { BrowserContext } from "playwright-core";
 import { createServer } from "../../src/createServer.js";
 import type { CourseState } from "@falkenslab/moodle-driver/internals";
@@ -163,6 +164,28 @@ describe("course layout tools", { skip: !browser && "no system browser" }, () =>
     assert.equal(layout(await call(client, "edit_section", { sectionId: 11, visible: false, afterSectionId: 10 })), "General:News | Unit 1(h):Notes,Task");
     assert.equal(layout(await call(client, "delete_activity", { activityId: 21 })), "General:News | Unit 1(h):Task");
     assert.equal(layout(await call(client, "delete_section", { sectionId: 11 })), "General:News");
+    await context.close();
+  });
+
+  it("asks before deleting an activity with what its module keeps, not every kind of data (#62)", async () => {
+    const context = await browser!.newContext();
+    await serveFakeMoodle(context, fakeCourse().state);
+    const server = createServer({ config: testConfig({ moodleUrl: SITE, confirm: "elicit" }), browser: fakeBrowserManager({ context: async () => context }) });
+    const client = new Client({ name: "test", version: "0.0.0" }, { capabilities: { elicitation: {} } });
+    const asked: string[] = [];
+    client.setRequestHandler(ElicitRequestSchema, (request) => {
+      asked.push(request.params.message);
+      return { action: "decline" };
+    });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+    for (const activityId of [21, 22, 99]) await client.callTool({ name: "delete_activity", arguments: { courseId: 5, activityId } });
+    assert.deepEqual(asked, [
+      `Delete activity 21, "Notes" (a page), from course 5, with its content. This can't be undone. Go ahead?`,
+      `Delete activity 22, "Task" (an assignment), from course 5, with its submissions, feedback and grades. This can't be undone. Go ahead?`,
+      // Not in the course: the question from the inputs, and the tool says what's wrong once the person agrees.
+      "Delete activity 99 from course 5, with everything participants did in it (submissions, attempts, posts, grades). This can't be undone. Go ahead?",
+    ]);
     await context.close();
   });
 
