@@ -5,9 +5,14 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.11.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.11.1`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.11.1 (13 de noviembre de 2026)
+
+- **Las respuestas de emparejamiento por arrastre se guardan.** Cuando el agente hacía un cuestionario por ti, una pregunta de emparejamiento por arrastre podía darse por respondida y luego calificarse como sin responder. Ahora la respuesta se guarda, o el agente sabe que no se guardó.
+- **Las preguntas CodeRunner y las páginas de emparejamiento de las lecciones se leen mejor.** El agente ve ahora el enunciado de una pregunta CodeRunner, con cada hueco nombrado donde va, y a qué elemento corresponde cada desplegable de una página de emparejamiento de una lección.
 
 ## 0.11.0 (12 de noviembre de 2026)
 

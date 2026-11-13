@@ -5,9 +5,14 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.11.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.11.1`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.11.1 (13 November 2026)
+
+- **Drag-and-drop matching answers are saved.** When the agent took a quiz for you, a drag-and-drop matching question could be reported as answered and then graded as not answered. Now the answer is saved, or the agent is told it wasn't.
+- **CodeRunner questions and lesson matching pages read better.** The agent now sees a CodeRunner question's statement, with each gap named where it goes, and which item each drop-down of a lesson's matching page is for.
 
 ## 0.11.0 (12 November 2026)
 
