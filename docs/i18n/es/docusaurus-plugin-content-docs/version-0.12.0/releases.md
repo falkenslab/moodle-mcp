@@ -5,9 +5,13 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.11.1`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.12.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.12.0 (15 de noviembre de 2026)
+
+- **Un taller tal como participas en él.** El agente de un alumno ya puede ver lo que un taller le pide: la fase, sus tareas, su propia entrega, los trabajos que tiene asignados para evaluar y el formulario de evaluación con las calificaciones que admite cada criterio. Así puede ayudarte a evaluar a tus compañeros sin recorrer las páginas. Los demás alumnos aparecen como alias, salvo que hayas elegido ver sus nombres.
 
 ## 0.11.1 (13 de noviembre de 2026)
 
