@@ -52,6 +52,7 @@ const SHARED = [
   "add_database_entry",
   "edit_database_entry",
   "delete_database_entry",
+  "get_my_workshop",
   "get_workshop_submission",
   "assess_workshop_example",
   "list_participants",

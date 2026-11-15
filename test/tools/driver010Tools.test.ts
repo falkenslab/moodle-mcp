@@ -18,7 +18,7 @@ async function connect(config: Config): Promise<Client> {
 const text = (result: Record<string, unknown>) => JSON.stringify(result.content);
 const site = "http://moodle.test/";
 
-const READS = ["read_backup", "list_glossary_entries", "list_glossary_categories", "list_database_entries", "get_choice_results", "get_survey_results", "get_workshop_submission", "list_workshop_examples", "get_course_completion_criteria", "get_course_completion_status", "list_question_categories"];
+const READS = ["read_backup", "list_glossary_entries", "list_glossary_categories", "list_database_entries", "get_choice_results", "get_survey_results", "get_workshop_submission", "get_my_workshop", "list_workshop_examples", "get_course_completion_criteria", "get_course_completion_status", "list_question_categories"];
 const DESTRUCTIVE = ["delete_glossary_entry", "delete_database_entry", "delete_workshop_example", "set_course_completion_criteria", "delete_question_category"];
 
 describe("the tools of moodle-driver 0.10, first batch", () => {
@@ -33,10 +33,11 @@ describe("the tools of moodle-driver 0.10, first batch", () => {
     for (const tool of ["add_glossary_entry", "list_glossary_categories", "list_question_categories", "export_questions", "set_course_completion_criteria", "add_workshop_example"]) assert.deepEqual(scopes(tool), ["content"], tool);
     assert.deepEqual(scopes("list_database_entries"), ["student-data"]);
     assert.deepEqual(scopes("get_workshop_submission"), ["student-data"]);
+    assert.deepEqual(scopes("get_my_workshop"), ["content", "student-data"]);
     assert.deepEqual(scopes("mark_course_complete"), ["grading"]);
     assert.deepEqual(scopes("calculate_workshop_grades"), ["grading", "student-data"]);
     const student = (await (await connect(testConfig({ moodleUrl: site, role: "student" }))).listTools()).tools.map((t) => t.name);
-    assert.ok(student.includes("add_glossary_entry") && student.includes("save_workshop_submission") && !student.includes("get_survey_results") && !student.includes("export_questions"));
+    assert.ok(student.includes("add_glossary_entry") && student.includes("save_workshop_submission") && student.includes("get_my_workshop") && !student.includes("get_survey_results") && !student.includes("export_questions"));
     // Exports change nothing in Moodle: read-only access keeps them, as it keeps export_grades.
     const readOnly = (await (await connect(testConfig({ moodleUrl: site, access: "read" }))).listTools()).tools.map((t) => t.name);
     for (const name of [...READS, "export_glossary", "export_database_entries", "export_questions"]) assert.ok(readOnly.includes(name), name);

@@ -1,4 +1,5 @@
-// Workshops as a teacher runs them: the phase, every submission and assessment, and assessing one.
+// Workshops as a teacher runs them (the phase, every submission and assessment) and as a participant
+// sees them (their tasks, their submission, what they have to assess), and assessing one.
 // Authors and reviewers as aliases under pseudonymize; titles redacted; no aliases in feedback.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
@@ -16,6 +17,7 @@ import {
   workshopExamples,
   workshopInfo,
   workshopSubmission,
+  workshopView,
   type WorkshopInfo,
 } from "../driver.js";
 import type { Config } from "../config.js";
@@ -68,7 +70,7 @@ async function shownWorkshop(config: Config, context: BrowserContext, siteUrl: s
 /** An assessment as the agent gives it: a grade and comment per criterion, feedback, other fields. */
 const assessmentInputs = {
   criteria: z
-    .array(z.object({ grade: z.string().optional().describe("Points, or a level's name"), comment: z.string().optional().describe("No aliases in it") }))
+    .array(z.object({ grade: z.string().optional().describe("As get_my_workshop's form gives it: points, a scale item, 1 or -1 for an assertion, a rubric level's position; or its name"), comment: z.string().optional().describe("No aliases in it") }))
     .optional()
     .describe("In the form's order"),
   feedback: z.string().optional().describe("Overall feedback for the author (HTML); no aliases in it"),
@@ -88,7 +90,7 @@ export const registerGetWorkshop: RegisterTool = (server, { config, browser }) =
     {
       title: "Read a workshop",
       description:
-        "Read a workshop's phase and its report as a teacher sees it: every submission (author, title, grade once calculated) and every assessment (reviewer, the submission's author, the grade it gives, its weight, the grade for assessing). People as aliases when the server pseudonymizes. Empty lists before the submission phase, or for someone who can't see every submission.",
+        "Read a workshop's phase and its report as a teacher sees it: every submission (author, title, grade once calculated) and every assessment (reviewer, the submission's author, the grade it gives, its weight, the grade for assessing). People as aliases when the server pseudonymizes. Empty lists before the submission phase, or for someone who can't see every submission: a participant reads get_my_workshop.",
       inputSchema: { workshopId },
       outputSchema: { activityId: z.number().int(), phase: z.enum(WORKSHOP_PHASES), submissions: z.array(submissionSchema), assessments: z.array(assessmentSchema) },
       annotations: { readOnlyHint: true, openWorldHint: true },
@@ -97,6 +99,72 @@ export const registerGetWorkshop: RegisterTool = (server, { config, browser }) =
       const [context, siteUrl] = await onSite(config, browser);
       const info = await workshopInfo(context, siteUrl, id);
       return reply({ activityId: info.activityId, phase: info.phase, ...(await shownWorkshop(config, context, siteUrl, info)) });
+    },
+  );
+};
+
+const STRATEGIES = ["accumulative", "comments", "numerrors", "rubric"] as const;
+
+export const registerGetMyWorkshop: RegisterTool = (server, { config, browser }) => {
+  server.registerTool(
+    "get_my_workshop",
+    {
+      title: "Read a workshop as you take part",
+      description:
+        "Read a workshop as its page shows it to the person, participant or teacher: the phase and their tasks in it, the instructions for authors or reviewers shown in this phase, their own submission, and the submissions allocated to them to assess (submission id, title, author, whether assessed and the grade given). While assessing is open, the assessment form as a reviewer fills it: each criterion's description, the grades it takes as assess_workshop_submission takes them (a rubric's levels by position, without their points) and whether it takes a comment. Authors as aliases and their titles redacted when the server pseudonymizes. Read before assess_workshop_submission.",
+      inputSchema: { workshopId },
+      outputSchema: {
+        activityId: z.number().int(),
+        phase: z.enum(WORKSHOP_PHASES),
+        tasks: z.array(z.object({ title: z.string(), state: z.enum(["done", "todo", "failed", "info"]), details: z.array(z.string()) })).describe("The person's tasks in this phase, as the site words them"),
+        instructions: z.object({ authors: z.string().optional(), reviewers: z.string().optional() }).describe("HTML, as shown in this phase"),
+        ownSubmission: z.object({ id: z.number().int(), title: z.string() }).optional().describe("None before they submit, or for a teacher"),
+        toAssess: z.array(
+          z.object({
+            submissionId: z.number().int(),
+            title: z.string(),
+            author: z.object(personFields).optional().describe("None when the workshop hides authors from reviewers"),
+            assessed: z.boolean(),
+            grade: z.number().optional().describe("The grade the person's assessment gives, out of maxGrade"),
+            maxGrade: z.number().optional(),
+          }),
+        ),
+        form: z
+          .object({
+            strategy: z.enum(STRATEGIES),
+            criteria: z.array(z.object({ description: z.string().describe("HTML"), grades: z.array(z.object({ grade: z.number(), label: z.string() })).describe("What to give as the criterion's grade, and its label; none for comments"), comment: z.boolean() })),
+            feedback: z.boolean().describe("Whether it takes overall feedback for the author"),
+          })
+          .optional()
+          .describe("Only while assessing is open and something is allocated to the person"),
+      },
+      annotations: { readOnlyHint: true, openWorldHint: true },
+    },
+    async ({ workshopId: id }) => {
+      const [context, siteUrl] = await onSite(config, browser);
+      const view = await workshopView(context, siteUrl, id);
+      const authors = view.toAssess.filter((a) => a.authorId !== undefined).map((a) => ({ userId: a.authorId!, fullName: a.author ?? "" }));
+      const who = await people(config, context, siteUrl, authors);
+      const byId = new Map(authors.map((p, i) => [p.userId, shown(who[i]!)]));
+      const toAssess = await Promise.all(
+        view.toAssess.map(async (a) => ({
+          submissionId: a.submissionId,
+          title: await text(config, siteUrl, a.title),
+          ...(a.authorId !== undefined && { author: byId.get(a.authorId) }),
+          assessed: a.assessed,
+          ...(a.grade !== undefined && { grade: a.grade }),
+          ...(a.maxGrade !== undefined && { maxGrade: a.maxGrade }),
+        })),
+      );
+      return reply({
+        activityId: view.activityId,
+        phase: view.phase,
+        tasks: view.tasks,
+        instructions: view.instructions,
+        ...(view.ownSubmission && { ownSubmission: view.ownSubmission }),
+        toAssess,
+        ...(view.form && { form: view.form }),
+      });
     },
   );
 };
@@ -122,7 +190,7 @@ export const registerAssessWorkshopSubmission: RegisterTool = (server, { config,
       title: "Assess a workshop submission",
       description:
         "Assess a workshop submission as the person, through the workshop's assessment form (its grading strategy's): a grade and comment per criterion in the form's order, overall feedback for the author (HTML), and any other field by name. A new assessment the first time, the same one changed after. Only in the assessment phase. Returns the grade it gives. The author reads it: confirm with the person first.",
-      inputSchema: { workshopId, submissionId: z.number().int().positive().describe("As get_workshop gives it"), ...assessmentInputs },
+      inputSchema: { workshopId, submissionId: z.number().int().positive().describe("As get_my_workshop gives it (or get_workshop, for a teacher)"), ...assessmentInputs },
       outputSchema: { changed: z.string(), assessmentId: z.number().int(), grade: z.number().optional(), maxGrade: z.number().optional() },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
@@ -153,10 +221,10 @@ export const registerGetWorkshopSubmission: RegisterTool = (server, { config, br
     {
       title: "Read a workshop submission",
       description:
-        "Read a workshop submission as its page shows it: title, text (HTML), attached files, author (an alias when the server pseudonymizes, where Moodle shows authors) and whether the person can edit it now. Without submissionId or author, the person's own (none when they haven't submitted); a teacher reads anyone's, a reviewer those allocated to them.",
+        "Read a workshop submission as its page shows it: title, text (HTML), attached files, author (an alias when the server pseudonymizes, where Moodle shows authors) and whether the person can edit it now. Without submissionId or author, the person's own (none when they haven't submitted); a teacher reads anyone's, a reviewer those allocated to them (get_my_workshop lists them).",
       inputSchema: {
         workshopId,
-        submissionId: z.number().int().positive().optional().describe("As get_workshop gives it"),
+        submissionId: z.number().int().positive().optional().describe("As get_my_workshop or get_workshop gives it"),
         author: z.string().optional().describe("Or its author's alias, when the server pseudonymizes"),
         authorId: z.number().int().positive().optional().describe("Or its author's user id, when the server shows names"),
       },

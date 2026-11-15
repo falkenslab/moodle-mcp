@@ -284,6 +284,29 @@ ${people.slice(1).map((p) => `<tr class="userrow" data-uid="${p.id}"><th><a clas
     await context.close();
   });
 
+  it("gives the authors of what a reviewer has to assess in a workshop as aliases, and redacts their titles (#66)", async () => {
+    const { state } = moodle();
+    const allocated = (asid: number, id: number, title: string, author: [number, string], graded: boolean) =>
+      `<div class="assessment-summary ${graded ? "graded" : "notgraded"}"><div class="submission-summary"><a class="title" href="${SITE}mod/workshop/submission.php?cmid=58&amp;id=${id}">${title}</a><div class="author"><div class="fullname">by <a href="${SITE}user/view.php?id=${author[0]}&amp;course=5">${author[1]}</a></div></div></div><form method="get" action="${SITE}mod/workshop/assessment.php"><input type="hidden" name="asid" value="${asid}"></form></div>`;
+    // The workshop's page in its evaluation phase as a reviewer sees it, reduced from Moodle 5.2's: two allocated, one assessed.
+    const phases = [10, 20, 30, 40, 50].map((code) => `<dl class="phase"><dt class="phase${code} ${code === 40 ? "active" : "nonactive"}"></dt><dd class="phase${code} ${code === 40 ? "active" : "nonactive"}"></dd></dl>`).join("");
+    state.bodies!["/mod/workshop/view.php"] = `<div class="userplan">${phases}</div>
+<div id="workshop-viewlet-ownsubmission"><div class="submission-summary"><a class="title" href="${SITE}mod/workshop/submission.php?cmid=58&amp;id=30">My essay</a></div></div>
+<div id="workshop-viewlet-assignedassessments">${allocated(50, 31, "Ada Lovelace's essay", [7, "Ada Lovelace"], false)}${allocated(51, 32, "Notes by Alan Turing", [8, "Alan Turing"], true)}</div>`;
+    state.bodies!["/mod/workshop/assessment.php"] = `<div class="assessment-full"><div class="header"><div class="grade">Grade: 64.00 of 80.00</div></div></div>`;
+    const { client, context } = await connect(pseudonymous(), state);
+    const result = await client.callTool({ name: "get_my_workshop", arguments: { workshopId: 58 } });
+    assert.equal(result.isError, undefined, text(result));
+    const view = result.structuredContent as { phase: string; ownSubmission: { title: string }; toAssess: { submissionId: number; author?: { user?: string }; assessed: boolean; grade?: number }[] };
+    assert.equal(view.phase, "evaluation");
+    assert.equal(view.ownSubmission.title, "My essay");
+    assert.deepEqual(view.toAssess.map((a) => [a.submissionId, a.assessed, a.grade]), [[31, false, undefined], [32, true, 64]]);
+    assert.ok(view.toAssess.every((a) => ALIAS.test(a.author?.user ?? "")));
+    assert.notEqual(view.toAssess[0]!.author!.user, view.toAssess[1]!.author!.user);
+    assert.doesNotMatch(text(result), /Lovelace|Turing|"userId"|"fullName"/);
+    await context.close();
+  });
+
   it("gives an attendance report's participants as aliases, and takes attendance by alias only", async () => {
     const { state } = moodle();
     const row = (id: number, name: string) =>

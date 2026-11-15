@@ -280,3 +280,4 @@ export const workshopExamples = recorded("workshopExamples", moodle.workshopExam
 export const workshopForm = recorded("workshopForm", moodle.workshopForm);
 export const workshopInfo = recorded("workshopInfo", moodle.workshopInfo);
 export const workshopSubmission = recorded("workshopSubmission", moodle.workshopSubmission);
+export const workshopView = recorded("workshopView", moodle.workshopView);

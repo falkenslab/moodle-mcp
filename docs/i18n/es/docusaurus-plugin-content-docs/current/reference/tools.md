@@ -7,7 +7,7 @@ sidebar_label: Herramientas
 
 # Herramientas
 
-moodle-mcp tiene **288 herramientas**, 287 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
+moodle-mcp tiene **289 herramientas**, 288 con el nivel de privacidad por defecto. Esta página se genera desde el propio servidor, así que las muestra tal y como las recibe tu aplicación de IA, con las descripciones que lee el agente, traducidas (el agente las recibe en inglés). Tú no llamas a las herramientas: pides las cosas con tus palabras y el agente las elige.
 
 En las tablas, ✓ marca las herramientas que sigues teniendo con cada límite: **Solo lectura** con el [acceso de solo lectura](../limits.md#solo-lectura), **Profesor** y **Alumno** con cada [rol](../limits.md#tu-rol). El acceso de solo lectura deja fuera todas las herramientas que cambian algo en Moodle (una nota, un mensaje, una actividad, un intento); las de sesión, como iniciar sesión o mostrar el navegador, siempre están, igual que `download_file` y `export_grades`, que solo guardan un fichero en tu ordenador.
 
@@ -4117,6 +4117,7 @@ El informe de una actividad de Asistencia: para cada participante, cuántas de s
 | [`grade_forum_user`](#grade-forum-user) | Poner una calificación global del foro |  | ✓ |  |
 | [`rate`](#rate) | Valorar un mensaje, entrada o registro |  | ✓ | ✓ |
 | [`get_workshop`](#get-workshop) | Leer un taller | ✓ | ✓ |  |
+| [`get_my_workshop`](#get-my-workshop) | Leer un taller tal como participas | ✓ | ✓ | ✓ |
 | [`set_workshop_phase`](#set-workshop-phase) | Cambiar la fase de un taller |  | ✓ |  |
 | [`get_workshop_assessment_form`](#get-workshop-assessment-form) | Leer el formulario de evaluación de un taller | ✓ | ✓ |  |
 | [`set_workshop_assessment_form`](#set-workshop-assessment-form) | Definir el formulario de evaluación de un taller |  | ✓ |  |
@@ -4345,7 +4346,22 @@ Valora un mensaje del foro, una entrada de glosario o un registro de base de dat
 
 **Leer un taller**
 
-Lee la fase de un taller y su informe tal como lo ve un profesor: cada entrega (autor, título, calificación una vez calculada) y cada evaluación (revisor, el autor de la entrega, la calificación que da, su peso, la calificación por evaluar). Las personas como alias cuando el servidor seudonimiza. Listas vacías antes de la fase de envío, o para alguien que no puede ver todas las entregas.
+Lee la fase de un taller y su informe tal como lo ve un profesor: cada entrega (autor, título, calificación una vez calculada) y cada evaluación (revisor, el autor de la entrega, la calificación que da, su peso, la calificación por evaluar). Las personas como alias cuando el servidor seudonimiza. Listas vacías antes de la fase de envío, o para alguien que no puede ver todas las entregas: un participante lee get_my_workshop.
+
+<details className="tool-inputs">
+<summary>Parámetros</summary>
+
+| Parámetro | Obligatorio | Tipo | Descripción |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
+
+</details>
+
+### `get_my_workshop` {#get-my-workshop}
+
+**Leer un taller tal como participas**
+
+Lee un taller tal como su página se lo muestra a la persona, participante o profesor: la fase y sus tareas en ella, las instrucciones para autores o revisores que se muestran en esta fase, su propia entrega y las entregas que tiene asignadas para evaluar (id de la entrega, título, autor, si está evaluada y la calificación dada). Mientras la evaluación está abierta, el formulario de evaluación tal como lo rellena un revisor: la descripción de cada criterio, las calificaciones que admite tal como las toma assess_workshop_submission (los niveles de una rúbrica por su posición, sin sus puntos) y si admite un comentario. Los autores como alias y sus títulos ocultos cuando el servidor seudonimiza. Léelo antes de assess_workshop_submission.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -4419,7 +4435,7 @@ Evalúa una entrega de un taller como la persona, mediante el formulario de eval
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
-| `submissionId` | ✅ | entero | Tal como lo da get_workshop |
+| `submissionId` | ✅ | entero | Tal como lo da get_my_workshop (o get_workshop, para un profesor) |
 | `criteria` |  | lista de objeto | En el orden del formulario |
 | `feedback` |  | texto | Comentarios de retroalimentación generales para el autor (HTML); sin alias |
 | `fields` |  | objeto | Cualquier otro campo del formulario, por nombre |
@@ -4430,7 +4446,7 @@ Evalúa una entrega de un taller como la persona, mediante el formulario de eval
 
 **Leer una entrega de un taller**
 
-Lee una entrega de un taller tal como la muestra su página: título, texto (HTML), archivos adjuntos, autor (un alias cuando el servidor seudonimiza, donde Moodle muestra los autores) y si la persona puede editarla ahora. Sin submissionId ni autor, la de la propia persona (ninguna si no ha entregado); un profesor lee cualquiera, un revisor las que tiene asignadas.
+Lee una entrega de un taller tal como la muestra su página: título, texto (HTML), archivos adjuntos, autor (un alias cuando el servidor seudonimiza, donde Moodle muestra los autores) y si la persona puede editarla ahora. Sin submissionId ni autor, la de la propia persona (ninguna si no ha entregado); un profesor lee cualquiera, un revisor las que tiene asignadas (get_my_workshop las lista).
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -4438,7 +4454,7 @@ Lee una entrega de un taller tal como la muestra su página: título, texto (HTM
 | Parámetro | Obligatorio | Tipo | Descripción |
 | --- | :-: | --- | --- |
 | `workshopId` | ✅ | entero | El id del taller (id del módulo del curso) |
-| `submissionId` |  | entero | Tal como lo da get_workshop |
+| `submissionId` |  | entero | Tal como lo da get_my_workshop o get_workshop |
 | `author` |  | texto | O el alias de su autor, cuando el servidor seudonimiza |
 | `authorId` |  | entero | O el id de usuario de su autor, cuando el servidor muestra los nombres |
 

@@ -807,9 +807,9 @@
     }
   },
   "get_workshop": {
-    "source": "eb99167eb774",
+    "source": "043143ec485c",
     "title": "Leer un taller",
-    "description": "Lee la fase de un taller y su informe tal como lo ve un profesor: cada entrega (autor, título, calificación una vez calculada) y cada evaluación (revisor, el autor de la entrega, la calificación que da, su peso, la calificación por evaluar). Las personas como alias cuando el servidor seudonimiza. Listas vacías antes de la fase de envío, o para alguien que no puede ver todas las entregas.",
+    "description": "Lee la fase de un taller y su informe tal como lo ve un profesor: cada entrega (autor, título, calificación una vez calculada) y cada evaluación (revisor, el autor de la entrega, la calificación que da, su peso, la calificación por evaluar). Las personas como alias cuando el servidor seudonimiza. Listas vacías antes de la fase de envío, o para alguien que no puede ver todas las entregas: un participante lee get_my_workshop.",
     "inputs": {
       "workshopId": "El id del taller (id del módulo del curso)"
     }
@@ -824,12 +824,12 @@
     }
   },
   "assess_workshop_submission": {
-    "source": "29ecdd6a8646",
+    "source": "79a3a94e82eb",
     "title": "Evaluar una entrega de un taller",
     "description": "Evalúa una entrega de un taller como la persona, mediante el formulario de evaluación del taller (el de su estrategia de calificación): una calificación y un comentario por criterio en el orden del formulario, comentarios de retroalimentación generales para el autor (HTML) y cualquier otro campo por nombre. Una evaluación nueva la primera vez, la misma cambiada después. Solo en la fase de evaluación. Devuelve la calificación que da. El autor la lee: confírmalo antes con la persona.",
     "inputs": {
       "workshopId": "El id del taller (id del módulo del curso)",
-      "submissionId": "Tal como lo da get_workshop",
+      "submissionId": "Tal como lo da get_my_workshop (o get_workshop, para un profesor)",
       "criteria": "En el orden del formulario",
       "feedback": "Comentarios de retroalimentación generales para el autor (HTML); sin alias",
       "fields": "Cualquier otro campo del formulario, por nombre"
@@ -1953,12 +1953,12 @@
     }
   },
   "get_workshop_submission": {
-    "source": "4ed3769ca31b",
+    "source": "b7bc51d8abca",
     "title": "Leer una entrega de un taller",
-    "description": "Lee una entrega de un taller tal como la muestra su página: título, texto (HTML), archivos adjuntos, autor (un alias cuando el servidor seudonimiza, donde Moodle muestra los autores) y si la persona puede editarla ahora. Sin submissionId ni autor, la de la propia persona (ninguna si no ha entregado); un profesor lee cualquiera, un revisor las que tiene asignadas.",
+    "description": "Lee una entrega de un taller tal como la muestra su página: título, texto (HTML), archivos adjuntos, autor (un alias cuando el servidor seudonimiza, donde Moodle muestra los autores) y si la persona puede editarla ahora. Sin submissionId ni autor, la de la propia persona (ninguna si no ha entregado); un profesor lee cualquiera, un revisor las que tiene asignadas (get_my_workshop las lista).",
     "inputs": {
       "workshopId": "El id del taller (id del módulo del curso)",
-      "submissionId": "Tal como lo da get_workshop",
+      "submissionId": "Tal como lo da get_my_workshop o get_workshop",
       "author": "O el alias de su autor, cuando el servidor seudonimiza",
       "authorId": "O el id de usuario de su autor, cuando el servidor muestra los nombres"
     }
@@ -3052,6 +3052,14 @@
     "description": "Crea los formularios de un cuestionario offline, como su botón \"Crear formularios\": para cada grupo, el formulario de preguntas, la hoja de respuestas que se rellena y el formulario de corrección, en el formato configurado (PDF por defecto). Desde entonces sus preguntas no pueden cambiar. Cada grupo necesita preguntas antes. Si ya existen, los da como están. Devuelve los enlaces de cada grupo, que download_file guarda. Cambia el curso: confírmalo antes con la persona. El servidor pide antes la confirmación de la persona en su aplicación (elicitation MCP); si dice que no, no pasa nada.",
     "inputs": {
       "offlineQuizId": "El id del cuestionario offline (id del módulo del curso), tal como lo da get_course_structure"
+    }
+  },
+  "get_my_workshop": {
+    "source": "c0d7da760e49",
+    "title": "Leer un taller tal como participas",
+    "description": "Lee un taller tal como su página se lo muestra a la persona, participante o profesor: la fase y sus tareas en ella, las instrucciones para autores o revisores que se muestran en esta fase, su propia entrega y las entregas que tiene asignadas para evaluar (id de la entrega, título, autor, si está evaluada y la calificación dada). Mientras la evaluación está abierta, el formulario de evaluación tal como lo rellena un revisor: la descripción de cada criterio, las calificaciones que admite tal como las toma assess_workshop_submission (los niveles de una rúbrica por su posición, sin sus puntos) y si admite un comentario. Los autores como alias y sus títulos ocultos cuando el servidor seudonimiza. Léelo antes de assess_workshop_submission.",
+    "inputs": {
+      "workshopId": "El id del taller (id del módulo del curso)"
     }
   }
 }

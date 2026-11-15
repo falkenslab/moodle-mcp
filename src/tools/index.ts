@@ -58,7 +58,7 @@ import { registerEnrolUsers, registerListPotentialUsers, registerSetGroupMembers
 import { registerAllocateMarker, registerExportGrades, registerGetForumGrades, registerGradeForumUser, registerGradeQuizQuestion, registerListQuestionsToGrade, registerRate, registerSetGrade, registerSetWorkflowState } from "./gradingWork.js";
 import { registerCreateGroup, registerCreateGrouping, registerDeleteGroup, registerDeleteGrouping, registerListGroupings, registerSetGroupingGroups, registerUpdateGroup } from "./groups.js";
 import { registerGetActivityReport, registerGetCourseLogs, registerGetParticipationReport } from "./reports.js";
-import { registerAddWorkshopExample, registerAssessWorkshopExample, registerAssessWorkshopSubmission, registerCalculateWorkshopGrades, registerDeleteWorkshopExample, registerEditWorkshopExample, registerGetWorkshop, registerGetWorkshopSubmission, registerListWorkshopExamples, registerOverrideWorkshopGrade, registerSaveWorkshopSubmission, registerSetWorkshopPhase } from "./workshops.js";
+import { registerAddWorkshopExample, registerAssessWorkshopExample, registerAssessWorkshopSubmission, registerCalculateWorkshopGrades, registerDeleteWorkshopExample, registerEditWorkshopExample, registerGetMyWorkshop, registerGetWorkshop, registerGetWorkshopSubmission, registerListWorkshopExamples, registerOverrideWorkshopGrade, registerSaveWorkshopSubmission, registerSetWorkshopPhase } from "./workshops.js";
 import { registerAddGlossaryCategory, registerAddGlossaryEntry, registerDeleteGlossaryEntry, registerEditGlossaryEntry, registerExportGlossary, registerImportGlossary, registerListGlossaryCategories, registerListGlossaryEntries, registerSetGlossaryEntryApproved } from "./glossaries.js";
 import { registerAddDatabaseEntry, registerDeleteDatabaseEntry, registerEditDatabaseEntry, registerExportDatabaseEntries, registerImportDatabaseEntries, registerListDatabaseEntries, registerSetDatabaseEntryApproved } from "./databaseEntries.js";
 import { registerGetChoiceResults, registerGetSurveyResults } from "./surveyResults.js";
@@ -169,6 +169,7 @@ export const TOOLS: RegisterTool[] = [
   registerGradeForumUser,
   registerRate,
   registerGetWorkshop,
+  registerGetMyWorkshop,
   registerSetWorkshopPhase,
   registerAssessWorkshopSubmission,
   registerGetWorkshopSubmission,

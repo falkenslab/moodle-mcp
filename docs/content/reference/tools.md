@@ -7,7 +7,7 @@ sidebar_label: Tools
 
 # Tools
 
-moodle-mcp has **288 tools**, 287 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
+moodle-mcp has **289 tools**, 288 at the default privacy level. This page is generated from the server itself, so it lists them exactly as your AI app gets them, with the descriptions the agent reads. You don't call tools yourself: you ask in your own words, and the agent picks them.
 
 In the tables, ✓ marks the tools you still get with each limit: **Read only** with [read-only access](../limits.md#read-only), **Teacher** and **Student** with each [role](../limits.md#your-role). Read-only access leaves out every tool that changes something in Moodle (a grade, a post, an activity, an attempt); session tools, such as logging in or showing the browser, are always there, and so are `download_file` and `export_grades`, which only save a file on your computer.
 
@@ -4117,6 +4117,7 @@ An Attendance activity's report: for each participant, how many of their taken s
 | [`grade_forum_user`](#grade-forum-user) | Give a whole-forum grade |  | ✓ |  |
 | [`rate`](#rate) | Rate a post, entry or record |  | ✓ | ✓ |
 | [`get_workshop`](#get-workshop) | Read a workshop | ✓ | ✓ |  |
+| [`get_my_workshop`](#get-my-workshop) | Read a workshop as you take part | ✓ | ✓ | ✓ |
 | [`set_workshop_phase`](#set-workshop-phase) | Switch a workshop's phase |  | ✓ |  |
 | [`get_workshop_assessment_form`](#get-workshop-assessment-form) | Get a workshop's assessment form | ✓ | ✓ |  |
 | [`set_workshop_assessment_form`](#set-workshop-assessment-form) | Set a workshop's assessment form |  | ✓ |  |
@@ -4345,7 +4346,22 @@ Rate a forum post, a glossary entry or a database record as the person, as the r
 
 **Read a workshop**
 
-Read a workshop's phase and its report as a teacher sees it: every submission (author, title, grade once calculated) and every assessment (reviewer, the submission's author, the grade it gives, its weight, the grade for assessing). People as aliases when the server pseudonymizes. Empty lists before the submission phase, or for someone who can't see every submission.
+Read a workshop's phase and its report as a teacher sees it: every submission (author, title, grade once calculated) and every assessment (reviewer, the submission's author, the grade it gives, its weight, the grade for assessing). People as aliases when the server pseudonymizes. Empty lists before the submission phase, or for someone who can't see every submission: a participant reads get_my_workshop.
+
+<details className="tool-inputs">
+<summary>Inputs</summary>
+
+| Input | Required | Type | Description |
+| --- | :-: | --- | --- |
+| `workshopId` | ✅ | integer | The workshop's id (course module id) |
+
+</details>
+
+### `get_my_workshop` {#get-my-workshop}
+
+**Read a workshop as you take part**
+
+Read a workshop as its page shows it to the person, participant or teacher: the phase and their tasks in it, the instructions for authors or reviewers shown in this phase, their own submission, and the submissions allocated to them to assess (submission id, title, author, whether assessed and the grade given). While assessing is open, the assessment form as a reviewer fills it: each criterion's description, the grades it takes as assess_workshop_submission takes them (a rubric's levels by position, without their points) and whether it takes a comment. Authors as aliases and their titles redacted when the server pseudonymizes. Read before assess_workshop_submission.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -4419,7 +4435,7 @@ Assess a workshop submission as the person, through the workshop's assessment fo
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `workshopId` | ✅ | integer | The workshop's id (course module id) |
-| `submissionId` | ✅ | integer | As get_workshop gives it |
+| `submissionId` | ✅ | integer | As get_my_workshop gives it (or get_workshop, for a teacher) |
 | `criteria` |  | object list | In the form's order |
 | `feedback` |  | string | Overall feedback for the author (HTML); no aliases in it |
 | `fields` |  | object | Any other field of the form, by name |
@@ -4430,7 +4446,7 @@ Assess a workshop submission as the person, through the workshop's assessment fo
 
 **Read a workshop submission**
 
-Read a workshop submission as its page shows it: title, text (HTML), attached files, author (an alias when the server pseudonymizes, where Moodle shows authors) and whether the person can edit it now. Without submissionId or author, the person's own (none when they haven't submitted); a teacher reads anyone's, a reviewer those allocated to them.
+Read a workshop submission as its page shows it: title, text (HTML), attached files, author (an alias when the server pseudonymizes, where Moodle shows authors) and whether the person can edit it now. Without submissionId or author, the person's own (none when they haven't submitted); a teacher reads anyone's, a reviewer those allocated to them (get_my_workshop lists them).
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -4438,7 +4454,7 @@ Read a workshop submission as its page shows it: title, text (HTML), attached fi
 | Input | Required | Type | Description |
 | --- | :-: | --- | --- |
 | `workshopId` | ✅ | integer | The workshop's id (course module id) |
-| `submissionId` |  | integer | As get_workshop gives it |
+| `submissionId` |  | integer | As get_my_workshop or get_workshop gives it |
 | `author` |  | string | Or its author's alias, when the server pseudonymizes |
 | `authorId` |  | integer | Or its author's user id, when the server shows names |
 

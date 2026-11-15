@@ -145,6 +145,7 @@ export const TOOL_FUNCTIONS: Record<string, readonly string[]> = {
   rate: ["rate"],
   export_grades: ["exportGrades"],
   get_workshop: ["workshopInfo"],
+  get_my_workshop: ["workshopView"],
   set_workshop_phase: ["setWorkshopPhase"],
   assess_workshop_submission: ["assessWorkshopSubmission"],
   edit_post: ["editPost"],
