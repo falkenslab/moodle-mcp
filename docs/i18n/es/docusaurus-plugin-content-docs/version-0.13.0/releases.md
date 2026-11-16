@@ -5,9 +5,14 @@ sidebar_label: Versiones
 
 # Versiones
 
-moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.12.0`.
+moodle-mcp está en npm como [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). Con `npx -y @falkenslab/moodle-mcp`, tu aplicación de IA arranca cada vez la última versión. Para quedarte en una versión, escríbela después del nombre: `npx -y @falkenslab/moodle-mcp@0.13.0`.
 
 El sitio muestra la documentación de la última versión, y la de la siguiente en *Próxima*, en el menú de versiones de la parte de arriba de la página. La de una versión anterior está en el repositorio, en su etiqueta (`docs/content/` en [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), por ejemplo). Las notas completas están en [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.13.0 (16 de noviembre de 2026)
+
+- **Guardar o entregar una tarea, sin confusión.** Antes de guardar tu trabajo, el agente puede saber si guardar deja un borrador que aún tienes que enviar o si ya lo entrega, y la declaración que el sitio pide aceptar (que es trabajo tuyo…). Cuando guardar ya lo entrega y pide la declaración, el agente te pregunta antes. Después dice si lo guardado es un borrador o ya está entregado.
+- **Mensajes privados dentro de tus aulas.** Cuando limitas el agente a algunos cursos, ahora puede enviar un mensaje privado, pero solo a un participante de esos cursos: un alumno que escribe a su profesor, por ejemplo.
 
 ## 0.12.0 (15 de noviembre de 2026)
 

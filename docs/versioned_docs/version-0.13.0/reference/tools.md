@@ -4765,7 +4765,7 @@ Read a message conversation: its members and each message's sender (aliases when
 
 **Send a private message**
 
-Send a private message to someone, as the messaging drawer does: to user (an alias) when the server pseudonymizes, else userId. The text is plain; no aliases in it, since the recipient reads it. Returns the message and its conversation. Sent as the person, visibly: confirm the text and the recipient with the person first.
+Send a private message to someone, as the messaging drawer does: to user (an alias) when the server pseudonymizes, else userId. The text is plain; no aliases in it, since the recipient reads it. Returns the message and its conversation. With classrooms, only to a participant of one of their courses. Sent as the person, visibly: confirm the text and the recipient with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -5006,7 +5006,7 @@ Get the logged-in person's grade report for a course: each grade item (with its 
 
 **Get an assignment as a student**
 
-Read an assignment as the logged-in student sees it: the brief and its files, dates, the submission's status and content, grade and feedback, and whether it can be edited or submitted now.
+Read an assignment as the logged-in student sees it: the brief and its files, dates, the submission's status and content, grade and feedback, whether it can be edited or submitted now, and whether saving leaves a draft to submit with submit_assignment or hands it in, and the statement submitting asks to accept. Read it before save_submission.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -5021,7 +5021,7 @@ Read an assignment as the logged-in student sees it: the brief and its files, da
 
 **Save my submission**
 
-Save the logged-in student's submission to an assignment: its online text (HTML, replacing what was there) and files to add (absolute local paths). Doesn't submit it for grading when the assignment asks students to click submit: submit_assignment does. Returns the assignment as the student sees it. Changes the submission: confirm with the person first.
+Save the logged-in student's submission to an assignment: its online text (HTML, replacing what was there) and files to add (absolute local paths). With drafts (get_assignment's drafts), what's saved stays a draft, not handed in, until submit_assignment submits it; without them, saving hands it in, and when the site asks to accept a statement the call fails quoting it until acceptStatement is true. Returns the assignment as the student sees it. Changes the submission: confirm with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>
@@ -5031,6 +5031,7 @@ Save the logged-in student's submission to an assignment: its online text (HTML,
 | `assignmentId` | ✅ | integer | The assignment's id (course module id), as get_course_structure gives it |
 | `onlineText` |  | string |  |
 | `files` |  | string list |  |
+| `acceptStatement` |  | boolean | The person accepts the site's submission statement, when saving hands the submission in |
 
 </details>
 

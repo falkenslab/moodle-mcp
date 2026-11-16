@@ -4765,7 +4765,7 @@ Lee una conversación de mensajes: sus miembros y, de cada mensaje, el remitente
 
 **Enviar un mensaje privado**
 
-Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.
+Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Con aulas, solo a un participante de alguno de sus cursos. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -5006,7 +5006,7 @@ Obtiene el informe de calificaciones de la persona que ha iniciado sesión en un
 
 **Obtener una tarea como estudiante**
 
-Lee una tarea tal como la ve el estudiante con la sesión iniciada: el enunciado y sus archivos, las fechas, el estado y el contenido de la entrega, la calificación y los comentarios de retroalimentación, y si se puede editar o enviar ahora.
+Lee una tarea tal como la ve el estudiante con la sesión iniciada: el enunciado y sus archivos, las fechas, el estado y el contenido de la entrega, la calificación y los comentarios de retroalimentación, si se puede editar o enviar ahora, si guardar deja un borrador que hay que enviar con submit_assignment o ya la entrega, y la declaración que pide aceptar al enviarla. Léela antes de save_submission.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -5021,7 +5021,7 @@ Lee una tarea tal como la ve el estudiante con la sesión iniciada: el enunciado
 
 **Guardar mi entrega**
 
-Guarda la entrega del estudiante con la sesión iniciada en una tarea: su texto en línea (HTML, que sustituye lo que hubiera) y archivos que añadir (rutas locales absolutas). No la envía para calificar cuando la tarea pide a los estudiantes que pulsen enviar: eso lo hace submit_assignment. Devuelve la tarea tal como la ve el estudiante. Cambia la entrega: confírmalo antes con la persona.
+Guarda la entrega del estudiante con la sesión iniciada en una tarea: su texto en línea (HTML, que sustituye lo que hubiera) y archivos que añadir (rutas locales absolutas). Con borradores (drafts de get_assignment), lo guardado queda como borrador, sin entregar, hasta que submit_assignment lo envía; sin ellos, guardar ya la entrega, y si el sitio pide aceptar una declaración, la llamada falla citándola hasta que acceptStatement es true. Devuelve la tarea tal como la ve el estudiante. Cambia la entrega: confírmalo antes con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>
@@ -5031,6 +5031,7 @@ Guarda la entrega del estudiante con la sesión iniciada en una tarea: su texto 
 | `assignmentId` | ✅ | entero | El id de la tarea (id del módulo del curso), tal como lo da get_course_structure |
 | `onlineText` |  | texto |  |
 | `files` |  | lista de texto |  |
+| `acceptStatement` |  | sí o no | La persona acepta la declaración de entrega del sitio, cuando guardar ya entrega la tarea |
 
 </details>
 

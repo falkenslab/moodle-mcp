@@ -5,9 +5,14 @@ sidebar_label: Releases
 
 # Releases
 
-moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.12.0`.
+moodle-mcp is on npm as [@falkenslab/moodle-mcp](https://www.npmjs.com/package/@falkenslab/moodle-mcp). With `npx -y @falkenslab/moodle-mcp`, your AI app starts the latest version each time. To stay on one version, write it after the name: `npx -y @falkenslab/moodle-mcp@0.13.0`.
 
 The site shows the latest release's documentation, and the next one's under *Next* in the version menu at the top of the page. An older release's documentation is in the repository at its tag (`docs/content/` at [v0.3.0](https://github.com/falkenslab/moodle-mcp/tree/v0.3.0/docs/content), for example). The full notes are on [GitHub](https://github.com/falkenslab/moodle-mcp/releases).
+
+## 0.13.0 (16 November 2026)
+
+- **Saving or handing in an assignment, told apart.** Before saving your work, the agent can now tell whether saving leaves a draft you still have to submit, or already hands it in, and the statement the site asks you to accept (that it's your own work…). When saving hands it in and asks for the statement, the agent asks you first. Afterwards it says whether what it saved is a draft or submitted.
+- **Private messages within your classrooms.** When you limit the agent to some courses, it can now send a private message, but only to a participant of those courses: a student writing to their teacher, for example.
 
 ## 0.12.0 (15 November 2026)
 

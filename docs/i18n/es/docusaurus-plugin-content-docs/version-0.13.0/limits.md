@@ -26,9 +26,9 @@ Para ver los límites en vigor, pregúntale al agente:
 
 | Rol | Herramientas | Qué incluye | Tamaño de las descripciones de las herramientas |
 | --- | --- | --- | --- |
-| `all` (por defecto) | 238 | Todo | unos 54.600 tokens |
-| `teacher` | 222 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.800 tokens |
-| `student` | 83 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 15.500 tokens |
+| `all` (por defecto) | 258 | Todo | unos 54.600 tokens |
+| `teacher` | 242 | Crear y gestionar cursos, calificar, personas, informes, foros y mensajes | unos 52.800 tokens |
+| `student` | 84 | Leer cursos, hacer actividades, tus notas y tareas pendientes, foros y mensajes | unos 15.500 tokens |
 
 Claude Code carga las herramientas a medida que las necesita, así que ahí el tamaño importa menos. Claude Desktop, Codex y la mayoría de las demás aplicaciones las cargan todas al empezar cada chat.
 
@@ -38,9 +38,9 @@ Claude Code carga las herramientas a medida que las necesita, así que ahí el t
 
 | Con el rol | Herramientas que quedan |
 | --- | --- |
-| `all` | 94 |
-| `teacher` | 89 |
-| `student` | 48 |
+| `all` | 101 |
+| `teacher` | 96 |
+| `student` | 49 |
 
 También se quedan fuera las herramientas que parecen de lectura pero empiezan algo en Moodle (una lección, un intento de cuestionario, un intento de SCORM). Descargar los ficheros de un curso o exportar sus calificaciones sí se queda: no cambia nada en Moodle, solo guarda un fichero en tu ordenador, y tu aplicación de IA puede seguir preguntándote antes de cada uno.
 
@@ -74,7 +74,8 @@ Con aulas:
 - **Las listas solo las muestran a ellas**: tus cursos, lo pendiente, el calendario.
 - **Otro curso se rechaza**, pida lo que pida el agente.
 - **También todo lo que no haya leído en un aula.** En Moodle el número de una actividad o de un mensaje es único en todo el sitio, así que uno inventado o recordado podría ser de otro curso. moodle-mcp solo actúa sobre lo que el agente ha leído en un aula durante la sesión: primero lee el curso, como hace siempre. A Moodle no se le pregunta nada más, así que nada va más lento.
-- **Algunas herramientas se apagan**: las [del navegador](./reference/tools.md#browser), que pueden abrir cualquier página del sitio, y los mensajes y notificaciones, que llegan a cualquiera. Sobre las personas se actúa a través del curso o la actividad de un aula, como exige Moodle.
+- **Algunas herramientas se apagan**: las [del navegador](./reference/tools.md#browser), que pueden abrir cualquier página del sitio, y las conversaciones y notificaciones, que llegan de cualquiera. Sobre las personas se actúa a través del curso o la actividad de un aula, como exige Moodle.
+- **Los mensajes privados solo van a la gente de las aulas.** El agente puede seguir escribiendo a alguien, como al profesor de tu curso, pero solo a un participante de alguno de los cursos de las aulas; a cualquier otra persona se rechaza antes de enviar nada.
 
 El agente puede reducir las aulas durante una sesión (`configure` con menos cursos), nunca añadir una.
 
@@ -98,7 +99,7 @@ Un docente que quiere ayuda para crear cursos, y nada más:
 
 <Terminal>{`$ claude mcp add moodle -e MOODLE_URL=https://campus.example.org -e MOODLE_MCP_ROLE=teacher -e MOODLE_MCP_SCOPES=content -- npx -y @falkenslab/moodle-mcp`}</Terminal>
 
-Son 136 herramientas, unos 31.000 tokens.
+Son 149 herramientas, unos 31.000 tokens.
 
 Un asistente de estudio para un alumno que no puede entregar ni publicar nada:
 
