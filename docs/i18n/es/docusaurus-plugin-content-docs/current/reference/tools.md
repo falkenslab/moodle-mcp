@@ -4765,7 +4765,7 @@ Lee una conversación de mensajes: sus miembros y, de cada mensaje, el remitente
 
 **Enviar un mensaje privado**
 
-Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.
+Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Con aulas, solo a un participante de alguno de sus cursos. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.
 
 <details className="tool-inputs">
 <summary>Parámetros</summary>

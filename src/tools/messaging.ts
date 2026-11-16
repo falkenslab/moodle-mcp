@@ -2,7 +2,7 @@
 // and members as aliases under pseudonymize, their texts redacted, aliases refused in what is sent.
 import { z } from "zod";
 import type { BrowserContext } from "playwright-core";
-import { conversation, conversations, markNotificationsRead, messageParticipants, notifications, sendMessage, userById } from "../driver.js";
+import { conversation, conversations, markNotificationsRead, messageParticipants, notifications, participants, sendMessage, userById } from "../driver.js";
 import { requireSiteUrl, type Config } from "../config.js";
 import { people, peopleByIds, personFields, pseudonymizing, refuseAliases, self, shown, targetFields, targetName, targetsFields, targetUserId, targetUserIds, text } from "../people.js";
 import { onSite, reply } from "./reply.js";
@@ -24,6 +24,19 @@ async function byUserId(config: Config, context: BrowserContext, siteUrl: string
   const everyone = [...withMe, ...looked];
   const who = await people(config, context, siteUrl, everyone);
   return new Map(everyone.map((p, i) => [p.userId, shown(who[i]!)]));
+}
+
+/**
+ * With classrooms (ADR-025), a private message goes only to a participant of one of the active
+ * site's classrooms: their participants are read (not shown) before anything is sent.
+ */
+async function refuseOutsideClassrooms(config: Config, context: BrowserContext, siteUrl: string, userId: number): Promise<void> {
+  if (!config.classrooms) return;
+  const courses = config.classrooms.filter((c) => c.site === config.activeSite).map((c) => c.courseId);
+  for (const courseId of courses) {
+    if ((await participants(context, siteUrl, courseId)).some((p) => p.userId === userId)) return;
+  }
+  throw new Error(`send_message: with classrooms, this server writes only to participants of the classrooms' courses (${courses.join(", ") || "none on this site"}), and the recipient isn't one. Take them from list_participants in a classroom.`);
 }
 
 /** A sender: the site itself (a negative id), someone known, or someone Moodle didn't give. */
@@ -144,7 +157,7 @@ export const registerSendMessage: RegisterTool = (server, { config, browser }) =
     {
       title: "Send a private message",
       description:
-        "Send a private message to someone, as the messaging drawer does: to user (an alias) when the server pseudonymizes, else userId. The text is plain; no aliases in it, since the recipient reads it. Returns the message and its conversation. Sent as the person, visibly: confirm the text and the recipient with the person first.",
+        "Send a private message to someone, as the messaging drawer does: to user (an alias) when the server pseudonymizes, else userId. The text is plain; no aliases in it, since the recipient reads it. Returns the message and its conversation. With classrooms, only to a participant of one of their courses. Sent as the person, visibly: confirm the text and the recipient with the person first.",
       inputSchema: { ...targetFields, text: z.string().min(1) },
       outputSchema: { changed: z.string(), messageId: z.number().int(), conversationId: z.number().int().optional() },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
@@ -152,7 +165,9 @@ export const registerSendMessage: RegisterTool = (server, { config, browser }) =
     async ({ user, userId, text: body }) => {
       refuseAliases(config, body);
       const target = await targetUserId(config, requireSiteUrl(config), { user, userId });
-      const sent = await sendMessage(...(await onSite(config, browser)), target, body);
+      const [context, siteUrl] = await onSite(config, browser);
+      await refuseOutsideClassrooms(config, context, siteUrl, target);
+      const sent = await sendMessage(context, siteUrl, target, body);
       return reply({ ...sent, changed: `Message sent to ${targetName({ user, userId })}.` });
     },
   );

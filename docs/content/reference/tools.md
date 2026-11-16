@@ -4765,7 +4765,7 @@ Read a message conversation: its members and each message's sender (aliases when
 
 **Send a private message**
 
-Send a private message to someone, as the messaging drawer does: to user (an alias) when the server pseudonymizes, else userId. The text is plain; no aliases in it, since the recipient reads it. Returns the message and its conversation. Sent as the person, visibly: confirm the text and the recipient with the person first.
+Send a private message to someone, as the messaging drawer does: to user (an alias) when the server pseudonymizes, else userId. The text is plain; no aliases in it, since the recipient reads it. Returns the message and its conversation. With classrooms, only to a participant of one of their courses. Sent as the person, visibly: confirm the text and the recipient with the person first.
 
 <details className="tool-inputs">
 <summary>Inputs</summary>

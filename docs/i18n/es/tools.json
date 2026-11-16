@@ -871,9 +871,9 @@
     }
   },
   "send_message": {
-    "source": "2e75b781caf0",
+    "source": "578b13d87581",
     "title": "Enviar un mensaje privado",
-    "description": "Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.",
+    "description": "Envía un mensaje privado a alguien, como hace el panel de mensajería: a user (un alias) cuando el servidor seudonimiza; si no, a userId. El texto es plano; sin alias, ya que lo lee el destinatario. Devuelve el mensaje y su conversación. Con aulas, solo a un participante de alguno de sus cursos. Se envía como la persona, de forma visible: confirma antes el texto y el destinatario con la persona.",
     "inputs": {
       "user": "El alias del participante, tal como lo dan las herramientas de lectura cuando el servidor seudonimiza",
       "userId": "El id de usuario del participante, cuando el servidor muestra los nombres",

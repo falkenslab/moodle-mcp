@@ -58,7 +58,7 @@ Los únicos cursos en los que trabaja el agente, tus aulas, `--courses`; sus sit
 - Sus URL, separadas por comas: `https://campus.miinstituto.org/course/view.php?id=12,https://moodle.miuni.es/course/view.php?id=7`.
 - **Sin poner**: todos tus cursos.
 
-Con aulas, otro curso, y todo lo que no se haya leído en un aula, se rechaza; las herramientas del navegador, los mensajes y las notificaciones se apagan. **En un chat**: menos aulas, nunca más.
+Con aulas, otro curso, y todo lo que no se haya leído en un aula, se rechaza; las herramientas del navegador, las conversaciones y las notificaciones se apagan, y los mensajes privados solo van a participantes de las aulas. **En un chat**: menos aulas, nunca más.
 
 ## Qué puede hacer el agente
 

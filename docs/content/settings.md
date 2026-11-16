@@ -58,7 +58,7 @@ The only courses the agent works in, your classrooms, `--courses`; their sites a
 - Their URLs, separated by commas: `https://campus.myschool.org/course/view.php?id=12,https://moodle.myuni.edu/course/view.php?id=7`.
 - **Not set**: every course of yours.
 
-With classrooms, another course, and anything not read in a classroom, is refused; the browser tools, messages and notifications are off. **In a chat**: fewer of them, never more.
+With classrooms, another course, and anything not read in a classroom, is refused; the browser tools, conversations and notifications are off, and private messages go only to the classrooms' participants. **In a chat**: fewer of them, never more.
 
 ## What the agent may do
 

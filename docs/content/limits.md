@@ -74,7 +74,8 @@ With classrooms:
 - **Lists show only them**: your courses, what's due, the calendar.
 - **Another course is refused**, whatever the agent asks.
 - **So is anything it hasn't read in a classroom.** In Moodle an activity's or a post's number is unique on the whole site, so a made-up or remembered one could belong to another course. moodle-mcp acts only on what the agent has read in a classroom during the session: it reads the course first, as it does anyway. Nothing extra is asked of Moodle, so nothing slows down.
-- **Some tools are off**: the [browser tools](./reference/tools.md#browser), which can open any page of the site, and messages and notifications, which reach anyone on it. People are acted on through a classroom's course or activity, as Moodle requires.
+- **Some tools are off**: the [browser tools](./reference/tools.md#browser), which can open any page of the site, and conversations and notifications, which come from anyone on it. People are acted on through a classroom's course or activity, as Moodle requires.
+- **Private messages go only to the classrooms' people.** The agent can still write to someone, such as your course's teacher, but only to a participant of one of the classrooms' courses; anyone else is refused before anything is sent.
 
 The agent can narrow the classrooms for a session (`configure` with fewer courses), never add one.
 

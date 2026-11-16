@@ -7,7 +7,8 @@
 - The sites come from the URLs (one per origin); `MOODLE_MCP_SITES` isn't needed.
 - A `courseId` input must be one of the classrooms. Any other id an input takes (an activity, a submission, a discussion, a post, a question…) must be one the server has **seen** in this session in a tool's output from a classroom, recorded with its kind (where it appeared in the output: `activities[].id` is an activity). An unseen id is refused, with how to get it (read the course first). Nothing asks Moodle which course an id belongs to.
 - Lists across courses (pending work, deadlines, notifications, courses) keep only the classrooms' items.
-- Tools that can't be held to the classrooms are off: the browser fallback tools (any page of the site) and messaging users (anyone on the site).
+- Tools that can't be held to the classrooms are off: the browser fallback tools (any page of the site), conversations and notifications (from anyone on the site).
+- A private message (`send_message`) goes only to a participant of one of the active site's classrooms, checked against their participants before anything is sent; `message_participants` is held by its `courseId` (amended for #68, 16 November 2026: a student writing to their course's teacher).
 - Like the other limits, `configure` can narrow the classrooms, never widen them; `server_info` gives them.
 
 Decided by the owner, 21 October 2026.
@@ -22,4 +23,4 @@ Rejected: replacing `MOODLE_MCP_SITES` (a site is where the person logs in, with
 
 - Each tool's outputs say which of their ids are of which kind, and each tool's inputs which kind they take; a test fails on an id input no tool's output can give.
 - The seen ids live in the server's memory: a new session reads again.
-- With classrooms, the browser tools and messaging users are off; without them, nothing changes.
+- With classrooms, the browser tools, conversations and notifications are off, and a private message costs a read of the classrooms' participants; without them, nothing changes.

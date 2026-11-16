@@ -117,10 +117,10 @@ describe("classrooms", () => {
     assert.deepEqual((await call("list_courses")).out, { courses: [{ id: 3 }, { id: 2 }] });
   });
 
-  it("turns off the browser, messages and adding sites", () => {
+  it("turns off the browser, conversations, notifications and adding sites, not private messages (#68)", () => {
     const config = testConfig({ classrooms });
-    for (const tool of ["browser_navigate", "send_message", "list_notifications", "add_site"]) assert.equal(toolAllowed(tool, config), false, tool);
-    for (const tool of ["get_course_structure", "use_site", "server_info"]) assert.equal(toolAllowed(tool, config), true, tool);
+    for (const tool of ["browser_navigate", "list_conversations", "list_notifications", "add_site"]) assert.equal(toolAllowed(tool, config), false, tool);
+    for (const tool of ["get_course_structure", "use_site", "server_info", "send_message", "message_participants"]) assert.equal(toolAllowed(tool, config), true, tool);
     assert.equal(toolAllowed("browser_navigate", testConfig()), true);
   });
 

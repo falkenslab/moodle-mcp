@@ -360,10 +360,11 @@ export function activeScopes(config: Pick<Config, "scopes" | "studentData" | "cl
 }
 
 /**
- * What classrooms turn off (ADR-025), besides the browser: messages and notifications reach anyone on
- * the site, and a site added at run time has no classrooms.
+ * What classrooms turn off (ADR-025), besides the browser: conversations and notifications come from
+ * anyone on the site, and a site added at run time has no classrooms. send_message stays, held to the
+ * classrooms' participants.
  */
-export const CLASSROOMS_OFF = new Set(["send_message", "list_conversations", "get_conversation", "list_notifications", "mark_notifications_read", "add_site"]);
+export const CLASSROOMS_OFF = new Set(["list_conversations", "get_conversation", "list_notifications", "mark_notifications_read", "add_site"]);
 
 /** Whether a tool exists for the agent under this configuration. */
 export function toolAllowed(tool: string, config: Pick<Config, "scopes" | "studentData" | "role" | "access" | "advanced" | "classrooms">): boolean {

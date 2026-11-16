@@ -74,7 +74,8 @@ Con aulas:
 - **Las listas solo las muestran a ellas**: tus cursos, lo pendiente, el calendario.
 - **Otro curso se rechaza**, pida lo que pida el agente.
 - **También todo lo que no haya leído en un aula.** En Moodle el número de una actividad o de un mensaje es único en todo el sitio, así que uno inventado o recordado podría ser de otro curso. moodle-mcp solo actúa sobre lo que el agente ha leído en un aula durante la sesión: primero lee el curso, como hace siempre. A Moodle no se le pregunta nada más, así que nada va más lento.
-- **Algunas herramientas se apagan**: las [del navegador](./reference/tools.md#browser), que pueden abrir cualquier página del sitio, y los mensajes y notificaciones, que llegan a cualquiera. Sobre las personas se actúa a través del curso o la actividad de un aula, como exige Moodle.
+- **Algunas herramientas se apagan**: las [del navegador](./reference/tools.md#browser), que pueden abrir cualquier página del sitio, y las conversaciones y notificaciones, que llegan de cualquiera. Sobre las personas se actúa a través del curso o la actividad de un aula, como exige Moodle.
+- **Los mensajes privados solo van a la gente de las aulas.** El agente puede seguir escribiendo a alguien, como al profesor de tu curso, pero solo a un participante de alguno de los cursos de las aulas; a cualquier otra persona se rechaza antes de enviar nada.
 
 El agente puede reducir las aulas durante una sesión (`configure` con menos cursos), nunca añadir una.
 
