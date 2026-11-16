@@ -21,8 +21,11 @@ after(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-/** A made-up assignment (cmid 30) whose pages follow Moodle 5.2's; `statement` asks to accept one. */
-function fakeAssignment(statement = false, files = true) {
+/**
+ * A made-up assignment (cmid 30) whose pages follow Moodle 5.2's; `statement` asks to accept one.
+ * Without `drafts`, saving submits, the statement is in the edit form, and a submission stays editable.
+ */
+function fakeAssignment(statement = false, files = true, drafts = true) {
   const state = { stage: "new" as "new" | "draft" | "submitted", text: "", files: [] as string[], posts: [] as URLSearchParams[] };
   const page = (body: string, bodyId: string) => moodlePage({ userId: 4, body, bodyId });
   const action = (name: string) => `<form method="get" action="${SITE}mod/assign/view.php"><input type="hidden" name="id" value="30"><input type="hidden" name="action" value="${name}"><button>x</button></form>`;
@@ -33,7 +36,7 @@ function fakeAssignment(statement = false, files = true) {
       state.text ? `<tr><th>Online text</th><td>${state.text}</td></tr>` : "",
       state.files.length ? `<tr><th>Files</th><td>${state.files.map((f) => `<a href="${SITE}pluginfile.php/9/assignsubmission_file/submission_files/1/${f}">${f}</a>`).join("")}</td></tr>` : "",
     ].join("");
-    const actions = state.stage === "submitted" ? "" : action("editsubmission") + (state.stage === "draft" ? action("submit") : "");
+    const actions = state.stage === "submitted" && drafts ? "" : action("editsubmission") + (state.stage === "draft" ? action("submit") : "");
     return page(
       `<div class="activity-description" id="intro"><p>Write a program.</p><a href="${SITE}pluginfile.php/9/mod_assign/introattachment/0/template.docx">template.docx</a></div>
 <div data-region="activity-dates"><div class="date-item"><span class="date-item-label">Due:</span> Friday</div></div>
@@ -50,17 +53,18 @@ function fakeAssignment(statement = false, files = true) {
         const form = new URLSearchParams(request.postData() ?? "");
         state.posts.push(form);
         if (form.get("action") === "savesubmission") {
-          state.stage = "draft";
+          state.stage = drafts ? "draft" : "submitted";
           if (form.has("onlinetext_editor[text]")) state.text = form.get("onlinetext_editor[text]")!.replace(/<[^>]+>/g, "");
         } else if (form.get("action") === "confirmsubmit") state.stage = "submitted";
         return html(view());
       }
       if (actionParam === "editsubmission") {
-        if (state.stage === "submitted") return html(page("<p>Not allowed</p>", "page-mod-assign-view"));
+        if (state.stage === "submitted" && drafts) return html(page("<p>Not allowed</p>", "page-mod-assign-view"));
         const fileField = files ? `<input type="hidden" name="files_filemanager" value="321">` : "";
+        const box = statement && !drafts ? `<div class="form-check"><input type="hidden" name="submissionstatement" value="0"><input type="checkbox" name="submissionstatement" value="1"> This is my own work.</div>` : "";
         return html(
           page(
-            `<form class="mform" method="post" action="${SITE}mod/assign/view.php"><input type="hidden" name="action" value="savesubmission"><textarea name="onlinetext_editor[text]"></textarea><input type="hidden" name="onlinetext_editor[format]" value="1">${fileField}<input type="submit" name="submitbutton" value="Save changes"></form>
+            `<form class="mform" method="post" action="${SITE}mod/assign/view.php"><input type="hidden" name="action" value="savesubmission"><textarea name="onlinetext_editor[text]"></textarea><input type="hidden" name="onlinetext_editor[format]" value="1">${fileField}${box}<input type="submit" name="submitbutton" value="Save changes"></form>
 <script>var fp = {"repositories":{"5":{"id":"5","name":"Upload a file","type":"upload"}}};</script>`,
             "page-mod-assign-editsubmission",
           ),
@@ -81,10 +85,10 @@ function fakeAssignment(statement = false, files = true) {
 }
 
 describe("student assignment tools", { skip: !browser && "no system browser" }, () => {
-  async function connect(statement = false, files = true) {
+  async function connect(statement = false, files = true, drafts = true) {
     const context = await browser!.newContext();
     await serveFakeMoodle(context, { user: { id: 4, fullName: "Student" } });
-    const assignment = fakeAssignment(statement, files);
+    const assignment = fakeAssignment(statement, files, drafts);
     await assignment.routes(context);
     const server = createServer({ config: testConfig({ moodleUrl: SITE }), browser: fakeBrowserManager({ context: async () => context }) });
     const client = new Client({ name: "test", version: "0.0.0" });
@@ -120,6 +124,28 @@ describe("student assignment tools", { skip: !browser && "no system browser" }, 
     assert.equal(state.stage, "draft");
     const accepted = await call(client, "submit_assignment", { assignmentId: 30, acceptStatement: true });
     assert.equal(accepted.out.submissionState, "submitted");
+    assert.deepEqual(state.posts.at(-1)?.getAll("submissionstatement"), ["0", "1"]);
+    await context.close();
+  });
+
+  it("tells a draft to submit and the statement it asks for (#67)", async () => {
+    const { client, context } = await connect(true);
+    await call(client, "save_submission", { assignmentId: 30, onlineText: "<p>x</p>" });
+    const read = (await call(client, "get_assignment", { assignmentId: 30 })).out;
+    assert.deepEqual([read.drafts, read.statement], [true, "This is my own work."]);
+    await context.close();
+  });
+
+  it("tells, before saving, that saving hands it in, and asks to accept the statement when saving (#67)", async () => {
+    const { client, context, state } = await connect(true, true, false);
+    const before = (await call(client, "get_assignment", { assignmentId: 30 })).out;
+    assert.deepEqual([before.drafts, before.statement], [false, "This is my own work."]);
+    const refused = await call(client, "save_submission", { assignmentId: 30, onlineText: "<p>x</p>" });
+    assert.match(refused.error ?? "", /This is my own work/);
+    assert.equal(state.stage, "new");
+    const saved = (await call(client, "save_submission", { assignmentId: 30, onlineText: "<p>x</p>", acceptStatement: true })).out;
+    assert.equal(saved.submissionState, "submitted");
+    assert.match(String(saved.changed), /submitted for grading/);
     assert.deepEqual(state.posts.at(-1)?.getAll("submissionstatement"), ["0", "1"]);
     await context.close();
   });

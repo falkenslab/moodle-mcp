@@ -22,6 +22,8 @@ const assignmentSchema = {
   group: z.object({ id: z.number().int().optional(), name: z.string() }).optional().describe("The student's group, in a group assignment"),
   canEdit: z.boolean().describe("save_submission can change the submission now"),
   canSubmit: z.boolean().describe("submit_assignment can submit the draft now"),
+  drafts: z.boolean().optional().describe("Saving leaves a draft that submit_assignment must then submit (true), or saving hands it in (false). Absent when Moodle's pages don't tell yet, as often before the first save: then don't tell the person either way; save_submission's changed says it"),
+  statement: z.string().optional().describe("The statement the person accepts when submitting (when saving, without drafts), in the site's words; absent with drafts known means none"),
 };
 
 const reply = <T extends Record<string, unknown>>(output: T) => ({ content: [{ type: "text" as const, text: JSON.stringify(output, null, 2) }], structuredContent: output });
@@ -31,7 +33,7 @@ export const registerGetAssignment: RegisterTool = (server, { config, browser })
     "get_assignment",
     {
       title: "Get an assignment as a student",
-      description: "Read an assignment as the logged-in student sees it: the brief and its files, dates, the submission's status and content, grade and feedback, and whether it can be edited or submitted now.",
+      description: "Read an assignment as the logged-in student sees it: the brief and its files, dates, the submission's status and content, grade and feedback, whether it can be edited or submitted now, and whether saving leaves a draft to submit with submit_assignment or hands it in, and the statement submitting asks to accept. Read it before save_submission.",
       inputSchema: { assignmentId },
       outputSchema: assignmentSchema,
       annotations: { readOnlyHint: true, openWorldHint: true },
@@ -46,13 +48,18 @@ export const registerSaveSubmission: RegisterTool = (server, { config, browser }
     {
       title: "Save my submission",
       description:
-        "Save the logged-in student's submission to an assignment: its online text (HTML, replacing what was there) and files to add (absolute local paths). Doesn't submit it for grading when the assignment asks students to click submit: submit_assignment does. Returns the assignment as the student sees it. Changes the submission: confirm with the person first.",
-      inputSchema: { assignmentId, onlineText: z.string().optional(), files: z.array(z.string()).optional() },
+        "Save the logged-in student's submission to an assignment: its online text (HTML, replacing what was there) and files to add (absolute local paths). With drafts (get_assignment's drafts), what's saved stays a draft, not handed in, until submit_assignment submits it; without them, saving hands it in, and when the site asks to accept a statement the call fails quoting it until acceptStatement is true. Returns the assignment as the student sees it. Changes the submission: confirm with the person first.",
+      inputSchema: {
+        assignmentId,
+        onlineText: z.string().optional(),
+        files: z.array(z.string()).optional(),
+        acceptStatement: z.boolean().optional().describe("The person accepts the site's submission statement, when saving hands the submission in"),
+      },
       outputSchema: assignmentSchema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ assignmentId, onlineText, files }) => {
-      const { changed, assignment } = await saveSubmission(...(await onSite(config, browser)), assignmentId, { onlineText, files });
+    async ({ assignmentId, onlineText, files, acceptStatement }) => {
+      const { changed, assignment } = await saveSubmission(...(await onSite(config, browser)), assignmentId, { onlineText, files, acceptStatement });
       return reply({ changed, ...assignment });
     },
   );
